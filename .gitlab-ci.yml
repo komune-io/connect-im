@@ -1,9 +1,5 @@
 include:
-  - project: 'framework/fixers/cicd'
-    file: 'fixers/.gitlab-ci-base.yml'
-  - project: 'framework/fixers/cicd'
-    file: 'fixers/.gitlab-ci-libs.yml'
-  - project: 'framework/fixers/cicd'
-    file: 'fixers/.gitlab-ci-docs.yml'
-  - project: 'framework/fixers/cicd'
-    file: 'fixers/.gitlab-ci-docker.yml'
+  - remote: 'https://gitlab.smartb.city/framework/fixers/cicd/-/blob/main/fixers/.gitlab-ci-base.yml'
+  - remote: 'https://gitlab.smartb.city/framework/fixers/cicd/-/blob/main/fixers/.gitlab-ci-libs.yml'
+  - remote: 'https://gitlab.smartb.city/framework/fixers/cicd/-/blob/main/fixers/.gitlab-ci-docs.yml'
+  - remote: 'https://gitlab.smartb.city/framework/fixers/cicd/-/blob/main/fixers/.gitlab-ci-docker.yml'
