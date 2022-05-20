@@ -1,0 +1,14 @@
+import { CodeHighlighter, DescriptedCode } from '@smartb/g2-documentation'
+import OrganizationPageResultDesc from './desc.md'
+import OrganizationPageResultVisualJson from './visualJson.json'
+
+<DescriptedCode
+  leftElement={<OrganizationPageResultDesc />}
+  rightElement={
+    <CodeHighlighter
+      object={OrganizationPageResultVisualJson}
+      language={"json"}
+      title={"Example"}
+    />
+  }
+/>

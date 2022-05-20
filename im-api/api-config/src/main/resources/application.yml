@@ -1,0 +1,26 @@
+spring:
+  main:
+    web-application-type: reactive
+
+keycloak:
+  auth-server-url: https://auth.tracabois.smart-b.io/auth
+  realm: test
+  clients:
+    admin:
+      realm: test
+      clientId: i2-api
+      clientSecret: ab7a340d-bffe-445a-a021-3ec10d380153
+
+i2:
+#  jwt-issuer-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}
+  #jwk-set-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}/protocol/openid-connect/certs
+  #filter:
+    #organizationId: 919036e9-886a-4798-a3d8-d55b3a651540
+  organization:
+    insee:
+      token: ${INSEE_TOKEN}
+      sirene-api: https://api.insee.fr/entreprises/sirene/V3
+  auth-client: admin
+
+server:
+  port : 8009

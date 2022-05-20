@@ -1,0 +1,10 @@
+{
+  "id" : "e8322a0b-b4cf-4643-a398-c442d22504be",
+  "email" : "user@smartb.city",
+  "givenName" : "John",
+  "familyName" : "Deuf",
+  "phone" : "06 12 34 56 78",
+  "sendEmailLink" : "true",
+  "memberOf" : "85171569-8970-45fb-b52a-85b59f06c292",
+  "roles" : [ "admin" ]
+}

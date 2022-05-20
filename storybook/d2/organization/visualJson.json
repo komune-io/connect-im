@@ -1,0 +1,13 @@
+{
+  "id" : "85171569-8970-45fb-b52a-85b59f06c292",
+  "siret" : "84488096300013",
+  "name" : "SmartB",
+  "description" : "We use technology, design and systems thinking to tackle global sustainability & financing challenges.",
+  "address" : {
+    "street" : "2 Rue du pavillon",
+    "postalCode" : "34090",
+    "city" : "Montpellier"
+  },
+  "website" : "https://smartb.city/",
+  "roles" : [ "admin", "write_user", "read_user", "write_organization", "read_organization" ]
+}

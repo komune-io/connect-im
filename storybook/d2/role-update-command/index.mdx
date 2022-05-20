@@ -1,0 +1,14 @@
+import { CodeHighlighter, DescriptedCode } from '@smartb/g2-documentation'
+import RoleUpdateCommandDesc from './desc.md'
+import RoleUpdateCommandVisualJson from './visualJson.json'
+
+<DescriptedCode
+  leftElement={<RoleUpdateCommandDesc />}
+  rightElement={
+    <CodeHighlighter
+      object={RoleUpdateCommandVisualJson}
+      language={"json"}
+      title={"Example"}
+    />
+  }
+/>

@@ -1,0 +1,14 @@
+import AddressDesc from './desc.md'
+import AddressVisualJson from './visualJson.json'
+import { CodeHighlighter, DescriptedCode } from '@smartb/g2-documentation'
+
+<DescriptedCode
+  leftElement={<AddressDesc />}
+  rightElement={
+    <CodeHighlighter
+      object={AddressVisualJson}
+      language={"json"}
+      title={"Example"}
+    />
+  }
+/>

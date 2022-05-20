@@ -1,0 +1,5 @@
+{
+  "id" : "85171569-8970-45fb-b52a-85b59f06c292",
+  "name" : "SmartB",
+  "roles" : [ "write_user", "read_user", "write_organization", "read_organization" ]
+}

@@ -1,0 +1,4 @@
+{
+  "roleName" : "Carrier",
+  "composites" : [ "write_user", "read_user" ]
+}

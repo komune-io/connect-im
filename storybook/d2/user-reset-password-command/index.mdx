@@ -1,0 +1,14 @@
+import { CodeHighlighter, DescriptedCode } from '@smartb/g2-documentation'
+import UserResetPasswordCommandDesc from './desc.md'
+import UserResetPasswordCommandVisualJson from './visualJson.json'
+
+<DescriptedCode
+  leftElement={<UserResetPasswordCommandDesc />}
+  rightElement={
+    <CodeHighlighter
+      object={UserResetPasswordCommandVisualJson}
+      language={"json"}
+      title={"Example"}
+    />
+  }
+/>
