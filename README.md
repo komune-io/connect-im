@@ -1,34 +1,34 @@
-# I2 (gateway)
+# IM
 
 # Description
 
-I2 is a micro-service for Identity and Access Management. It is built upon a Keycloak instance.
+IM is a micro-service for Identity and Access Management. It is built upon a Keycloak instance.
 
 It allows you to create and manage: Users, Organizations and Roles. These Users and Organizations can then be used to authenticate to a Keycloak instance.
 
 # Architecture
 
-I2 interacts with Keycloak using [Keycloak’s Admin Client](https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client). I2 also exposes entrypoints to allow communications with any applications.
+IM interacts with Keycloak using [Keycloak’s Admin Client](https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client). IM also exposes entrypoints to allow communications with any applications.
 
 <img src="https://docs.smartb.city/s3/docs/im/diagrams/architecture.png" alt="drawing" width="300"/>
 
 # Getting started
 
-I2 works with a running Keycloak instance. It can easily be deployed as a docker container, within a docker-compose file: ([link to docker repo](https://hub.docker.com/r/smartbcity/i2-gateway))
+IM works with a running Keycloak instance. It can easily be deployed as a docker container, within a docker-compose file: ([link to docker repo](https://hub.docker.com/r/smartbcity/i2-gateway))
 
 ```yaml
 version: "3.7"
 services:
-  i2-gateway:
-    image: smartbcity/i2-gateway:${VERSION}
-    container_name: i2-gateway
+  im-gateway:
+    image: smartbcity/im-gateway:${VERSION}
+    container_name: im-gateway
     environment:
       server_port: 8004
       keycloak_auth-server-url: ${KEYCLOAK_URL}      
       keycloak_realm: ${KEYCLOAK_REALM}
-      keycloak_clients_admin_realm: ${I2_REALM}
-      keycloak_clients_admin_clientId: ${I2_CLIENT_ID}
-      keycloak_clients_admin_clientSecret: ${I2_CLIENT_SECRET}
+      keycloak_clients_admin_realm: ${IM_REALM}
+      keycloak_clients_admin_clientId: ${IM_CLIENT_ID}
+      keycloak_clients_admin_clientSecret: ${IM_CLIENT_SECRET}
     ports:
       - "8004:8004"
 ```
@@ -37,34 +37,46 @@ Functionalities are divided into 3 entities: User, Organization and Role.
 
 If you are in a java environment all the necessary models and commands for an entity can be found here:
 
-- [User SDK](https://mvnrepository.com/artifact/city.smartb.i2/i2-user-domain)
-- [Organization SDK](https://mvnrepository.com/artifact/city.smartb.i2/organization-domain)
-- [Role SDK](https://mvnrepository.com/artifact/city.smartb.i2/i2-role-domain)
+- [User SDK](https://mvnrepository.com/artifact/city.smartb.im/user-domain)
+- [Organization SDK](https://mvnrepository.com/artifact/city.smartb.im/organization-domain)
+- [Role SDK](https://mvnrepository.com/artifact/city.smartb.im/role-domain)
 
 ```kotlin
-implementation("city.smartb.i2:i2-user-domain:${Versions.i2}")
-implementation("city.smartb.i2:organization-domain:${Versions.i2}")
-implementation("city.smartb.i2:i2-role-domain:${Versions.i2}")
+implementation("city.smartb.im:user-domain:${Versions.im}")
+implementation("city.smartb.im:organization-domain:${Versions.im}")
+implementation("city.smartb.im:role-domain:${Versions.im}")
 ```
 
 An SDK that sugarcoats the http requests is also available [here](https://mvnrepository.com/artifact/city.smartb.i2/i2-client).
 
 ```kotlin
-implementation("city.smartb.i2:i2-client:${Versions.i2}")
+implementation("city.smartb.im:user-client:${Versions.im}")
+implementation("city.smartb.im:organization-client:${Versions.im}")
+implementation("city.smartb.im:role-client:${Versions.im}")
 ```
 
 The client provided in the SDK uses Ktor under the hood and should be a singleton in your application in order to prevent any memory leak. Ex:
 
 ```kotlin
 @Configuration
-class I2Config {
+class ImConfig {
 
-    @Value("\${platform.i2.url}")
-    lateinit var i2Url: String
+    @Value("\${platform.im.url}")
+    lateinit var imUrl: String
 
     @Bean
-    fun i2Client() = I2Client(
-        url = i2Url
+    fun userClient() = UserClient(
+        url = imUrl
+    )
+
+    @Bean
+    fun organizationClient() = OrganizationClient(
+        url = imUrl
+    )
+
+    @Bean
+    fun roleClient() = RoleClient(
+        url = imUrl
     )
 }
 ```
@@ -73,50 +85,50 @@ class I2Config {
 
 ## Organizations
 
-| Endpoint | Associated role |
-| --- | --- |
-| organizationCreate | admin |
-| organizationUpdate | admin, i2_write_organization |
-| organizationGet | admin, i2_read_organization |
-| organizationGetBySiret | admin, i2_read_organization |
-| organizationPage | admin, i2_read_organization |
-| organizationRefGetAll | admin, i2_read_organization |
+| Endpoint | Associated role       |
+| --- |-----------------------|
+| organizationCreate | super_admin           |
+| organizationUpdate | im_write_organization |
+| organizationGet | im_read_organization  |
+| organizationGetBySiret | im_read_organization  |
+| organizationPage | im_read_organization  |
+| organizationRefGetAll | im_read_organization  |
 
-| Roles | Endpoints |
-| --- | --- |
-| i2_write_organization | organizationUpdate |
-| i2_read_organization | organizationGet, organizationGetBySiret, organizationPage, organizationRefGetAll |
-| admin | * |
+| Roles                 | Endpoints |
+|-----------------------| --- |
+| im_write_organization | organizationUpdate |
+| im_read_organization  | organizationGet, organizationGetBySiret, organizationPage, organizationRefGetAll |
+| admin                 | * |
 
 ## Users
 
 | Endpoints | Associated role |
-| --- | --- |
-| userCreate | admin, i2_write_user |
-| userUpdate | admin, i2_write_user |
-| userResetPassword | admin, i2_write_user |
-| userGet | admin, i2_read_user |
-| userPage | admin, i2_read_user |
+| --- |--------------|
+| userCreate | im_write_user |
+| userUpdate | im_write_user |
+| userResetPassword | im_write_user |
+| userGet | im_read_user |
+| userPage | im_read_user |
 
-| Roles | Endpoints |
-| --- |---|
-| i2_write_user | userCreate, userUpdate, userResetPassword |
-| i2_read_user | userGet, userPage |
-| admin | * |
+| Roles         | Endpoints |
+|---------------|---|
+| im_write_user | userCreate, userUpdate, userResetPassword |
+| im_read_user  | userGet, userPage |
+| admin         | * |
 
 ## Roles
 
 | Endpoints | Associated role |
-| --- | --- |
-| roleAddComposites | admin |
-| roleCreate | admin |
-| roleUpdate | admin |
+| --- |-----------------|
+| roleAddComposites | super_admin     |
+| roleCreate | super_admin     |
+| roleUpdate | super_admin     |
 
-| Roles | Endpoints |
-| --- | --- |
-| admin | * |
+| Roles       | Endpoints |
+|-------------| --- |
+| super_admin | * |
 
-# Configuration (TODO update default value)
+# Configuration
 
 Properties prefix: `keycloak`
 

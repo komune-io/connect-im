@@ -1,6 +1,7 @@
 package city.smartb.im.user.api
 
 import city.smartb.i2.spring.boot.auth.PermissionEvaluator
+import city.smartb.im.api.config.Roles
 import city.smartb.im.user.api.service.UserAggregateService
 import city.smartb.im.user.api.service.UserFinderService
 import city.smartb.im.user.domain.features.command.UserCreateFunction
@@ -28,7 +29,7 @@ class UserEndpoint(
      * Fetches a User by its ID.
      */
     @Bean
-    @RolesAllowed("read_user")
+    @RolesAllowed(Roles.READ_USER)
     fun userGet(): UserGetFunction = f2Function { query ->
         userFinderService.userGet(query)
     }
@@ -37,7 +38,7 @@ class UserEndpoint(
      * Fetches a page of users.
      */
     @Bean
-    @RolesAllowed("read_user")
+    @RolesAllowed(Roles.READ_USER)
     fun userPage(): UserPageFunction = f2Function { query ->
         userFinderService.userPage(query)
     }
@@ -46,7 +47,7 @@ class UserEndpoint(
      * Creates a User.
      */
     @Bean
-    @RolesAllowed("write_user")
+    @RolesAllowed(Roles.WRITE_USER)
     fun userCreate(): UserCreateFunction = f2Function { cmd ->
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(cmd.memberOf)) {
             userAggregateService.userCreate(cmd)
@@ -59,7 +60,7 @@ class UserEndpoint(
      * Updates a User.
      */
     @Bean
-    @RolesAllowed("write_user")
+    @RolesAllowed(Roles.WRITE_USER)
     fun userUpdate(): UserUpdateFunction = f2Function { cmd ->
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(cmd.memberOf)) {
             userAggregateService.userUpdate(cmd)
@@ -72,7 +73,7 @@ class UserEndpoint(
      * Sets the given password for the given user ID.
      */
     @Bean
-    @RolesAllowed("write_user")
+    @RolesAllowed(Roles.WRITE_USER)
     fun userResetPassword(): UserResetPasswordFunction = f2Function { cmd ->
         val user = userFinderService.userGet(UserGetQuery(cmd.id)).item
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(user?.memberOf?.id)) {

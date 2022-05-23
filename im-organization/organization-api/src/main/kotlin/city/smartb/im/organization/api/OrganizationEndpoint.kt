@@ -2,12 +2,13 @@ package city.smartb.im.organization.api
 
 import city.smartb.i2.spring.boot.auth.PermissionEvaluator
 import city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE
+import city.smartb.im.api.config.Roles
 import city.smartb.im.organization.api.service.OrganizationAggregateService
 import city.smartb.im.organization.api.service.OrganizationFinderService
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateFunction
-import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeFunction
+import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
 import city.smartb.im.organization.domain.features.query.OrganizationPageFunction
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllFunction
 import f2.dsl.fnc.f2Function
@@ -32,7 +33,7 @@ class OrganizationEndpoint(
      * Fetches an Organization by its ID.
      */
     @Bean
-    @RolesAllowed("read_organization")
+    @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationGet(): OrganizationGetFunction = f2Function { query ->
         organizationFinderService.organizationGet(query)
     }
@@ -41,7 +42,7 @@ class OrganizationEndpoint(
      * Fetches an Organization by its siret number.
      */
     @Bean
-    @RolesAllowed("read_organization")
+    @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = f2Function { query ->
         organizationFinderService.organizationGetFromInsee(query)
     }
@@ -50,7 +51,7 @@ class OrganizationEndpoint(
      * Fetches a page of organizations.
      */
     @Bean
-    @RolesAllowed("read_organization")
+    @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationPage(): OrganizationPageFunction = f2Function { query ->
         organizationFinderService.organizationPage(query)
     }
@@ -59,7 +60,7 @@ class OrganizationEndpoint(
      * Fetches all OrganizationRef.
      */
     @Bean
-    @RolesAllowed("read_organization")
+    @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationRefGetAll(): OrganizationRefGetAllFunction = f2Function { query ->
         logger.info("organizationRefGetAll")
         organizationFinderService.organizationRefGetAll(query)
@@ -78,7 +79,7 @@ class OrganizationEndpoint(
      * Updates an Organization.
      */
     @Bean
-    @RolesAllowed("write_organization")
+    @RolesAllowed(Roles.WRITE_ORGANIZATION)
     fun organizationUpdate(): OrganizationUpdateFunction = f2Function { cmd ->
         organizationAggregateService.organizationUpdate(cmd)
     }
