@@ -47,7 +47,10 @@ implementation("city.smartb.im:organization-domain:${Versions.im}")
 implementation("city.smartb.im:role-domain:${Versions.im}")
 ```
 
-An SDK that sugarcoats the http requests is also available [here](https://mvnrepository.com/artifact/city.smartb.i2/i2-client).
+SDK that sugarcoats the http requests are also available:
+- [User Client](https://mvnrepository.com/artifact/city.smartb.im/user-client)
+- [OrganizationClient](https://mvnrepository.com/artifact/city.smartb.im/organization-client)
+- [Role Client](https://mvnrepository.com/artifact/city.smartb.im/role-client)
 
 ```kotlin
 implementation("city.smartb.im:user-client:${Versions.im}")
