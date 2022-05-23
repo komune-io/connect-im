@@ -1,6 +1,7 @@
 package city.smartb.im.organization.api.service
 
 import city.smartb.im.api.config.ImKeycloakConfig
+import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreateResult
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateCommand
@@ -8,7 +9,6 @@ import city.smartb.im.organization.domain.features.command.OrganizationUpdateRes
 import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
 import city.smartb.im.organization.domain.model.Organization
 import f2.dsl.fnc.invoke
-import i2.commons.utils.toJson
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupCreateFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateCommand

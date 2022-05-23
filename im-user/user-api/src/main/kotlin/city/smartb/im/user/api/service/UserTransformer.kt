@@ -1,15 +1,15 @@
 package city.smartb.im.user.api.service
 
 import city.smartb.im.api.config.ImKeycloakConfig
+import city.smartb.im.commons.model.AddressBase
+import city.smartb.im.commons.utils.parseJsonTo
 import city.smartb.im.organization.api.model.orEmpty
 import city.smartb.im.organization.domain.model.OrganizationRef
 import city.smartb.im.user.domain.model.UserBase
 import f2.dsl.fnc.invokeWith
-import i2.commons.utils.parseJsonTo
 import i2.keycloak.f2.user.domain.features.query.UserGetGroupsFunction
 import i2.keycloak.f2.user.domain.features.query.UserGetGroupsQuery
 import i2.keycloak.f2.user.domain.model.UserModel
-import city.smartb.im.commons.model.AddressBase
 
 class UserTransformer(
 	private val imKeycloakConfig: ImKeycloakConfig,

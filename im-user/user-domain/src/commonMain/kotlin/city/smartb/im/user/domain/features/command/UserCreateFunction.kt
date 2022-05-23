@@ -1,11 +1,11 @@
 package city.smartb.im.user.domain.features.command
 
+import city.smartb.im.commons.model.AddressBase
+import city.smartb.im.organization.domain.model.OrganizationId
+import city.smartb.im.user.domain.model.UserId
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
-import i2.commons.model.AddressBase
-import city.smartb.im.organization.domain.model.OrganizationId
-import city.smartb.im.user.domain.model.UserId
 
 /**
  * Creates a new user.
