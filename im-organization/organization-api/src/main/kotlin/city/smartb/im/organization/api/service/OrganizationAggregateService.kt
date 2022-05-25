@@ -1,6 +1,6 @@
 package city.smartb.im.organization.api.service
 
-import city.smartb.im.api.config.ImKeycloakConfig
+import city.smartb.im.commons.ImMessage
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreateResult
@@ -18,58 +18,59 @@ import org.springframework.stereotype.Service
 
 @Service
 class OrganizationAggregateService(
-    private val imKeycloakConfig: ImKeycloakConfig,
     private val groupCreateFunction: GroupCreateFunction,
     private val groupUpdateFunction: GroupUpdateFunction,
     private val organizationFinderService: OrganizationFinderService
 ) {
 
-    suspend fun organizationCreate(command: OrganizationCreateCommand): OrganizationCreateResult {
+    suspend fun organizationCreate(command: ImMessage<OrganizationCreateCommand>): OrganizationCreateResult {
         return groupCreateFunction.invoke(command.toGroupCreateCommand())
             .id
             .let{ groupId ->
                 OrganizationCreateResult(
-                    parentOrganization = command.parentOrganizationId,
+                    parentOrganization = command.payload.parentOrganizationId,
                     id = groupId
                 )
             }
     }
 
-    suspend fun organizationUpdate(command: OrganizationUpdateCommand): OrganizationUpdateResult {
-        val organization = organizationFinderService.organizationGet(
-            OrganizationGetQuery(id = command.id))
-            .item
-            ?: throw NotFoundException("Organization [${command.id}] not found")
+    suspend fun organizationUpdate(command: ImMessage<OrganizationUpdateCommand>): OrganizationUpdateResult {
+        val organization = organizationFinderService.organizationGet(ImMessage(
+                authRealm = command.authRealm,
+                realmId = command.realmId,
+                payload = OrganizationGetQuery(id = command.payload.id))
+            ).item
+            ?: throw NotFoundException("Organization [${command.payload.id}] not found")
 
         return groupUpdateFunction.invoke(command.toGroupUpdateCommand(organization))
             .let { result -> OrganizationUpdateResult(result.id) }
     }
 
-    private fun OrganizationCreateCommand.toGroupCreateCommand() = GroupCreateCommand(
-        name = name,
+    private fun ImMessage<OrganizationCreateCommand>.toGroupCreateCommand() = GroupCreateCommand(
+        name = payload.name,
         attributes = mapOf(
-            ::siret.name to siret,
-            ::address.name to address.toJson(),
-            ::description.name to description,
-            ::website.name to website
+            payload::siret.name to payload.siret,
+            payload::address.name to payload.address.toJson(),
+            payload::description.name to payload.description,
+            payload::website.name to payload.website
         ).mapValues { (_, value) -> listOfNotNull(value) },
-        roles = roles ?: emptyList(),
-        realmId = imKeycloakConfig.realm,
-        auth = imKeycloakConfig.authRealm(),
-        parentGroupId = parentOrganizationId
+        roles = payload.roles ?: emptyList(),
+        realmId = realmId,
+        auth = authRealm,
+        parentGroupId = payload.parentOrganizationId
     )
 
-    private fun OrganizationUpdateCommand.toGroupUpdateCommand(organization: Organization) = GroupUpdateCommand(
-        id = id,
-        name = name,
+    private fun ImMessage<OrganizationUpdateCommand>.toGroupUpdateCommand(organization: Organization) = GroupUpdateCommand(
+        id = payload.id,
+        name = payload.name,
         attributes = mapOf(
             organization::siret.name to organization.siret,
-            ::address.name to address.toJson(),
-            ::description.name to description,
-            ::website.name to website
+            payload::address.name to payload.address.toJson(),
+            payload::description.name to payload.description,
+            payload::website.name to payload.website
         ).mapValues { (_, value) -> listOfNotNull(value) },
-        roles = roles ?: emptyList(),
-        realmId = imKeycloakConfig.realm,
-        auth = imKeycloakConfig.authRealm()
+        roles = payload.roles ?: emptyList(),
+        realmId = realmId,
+        auth = authRealm
     )
 }

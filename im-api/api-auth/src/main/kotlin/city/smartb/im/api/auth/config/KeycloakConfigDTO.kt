@@ -1,4 +1,4 @@
-package city.smartb.im.api.config
+package city.smartb.im.api.auth.config
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
