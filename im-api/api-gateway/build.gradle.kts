@@ -10,6 +10,8 @@ dependencies {
 	implementation(project(":im-organization:organization-api"))
 	implementation(project(":im-role:role-api"))
 	implementation(project(":im-user:user-api"))
+
+	implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
