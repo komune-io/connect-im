@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     implementation(project(":im-api:api-config"))
+    implementation(project(":im-api:api-auth"))
     implementation(project(":im-role:role-domain"))
 
     implementation("city.smartb.i2:role-f2-add-composites:${Versions.i2}")

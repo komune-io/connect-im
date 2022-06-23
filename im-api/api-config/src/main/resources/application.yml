@@ -2,33 +2,24 @@ spring:
   main:
     web-application-type: reactive
 
-# Not needed anymore since this conf is defined in the application using IM
-#keycloak:
-#  auth-server-url: https://auth.tracabois.smart-b.io/auth
-#  realm: test
-#  clients:
-#    admin:
-#      realm: test
-#      clientId: i2-api
-#      clientSecret: ab7a340d-bffe-445a-a021-3ec10d380153
-
-
-
-# jwt-issuer-uri should be configurable in applications using IM
-# For safety issue, the IM needs to hold a list of valid issuer URIs
-# view: https://docs.spring.io/spring-security/reference/reactive/oauth2/resource-server/multitenancy.html
 i2:
-#  jwt-issuer-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}
-  #filter:
-    #organizationId: 919036e9-886a-4798-a3d8-d55b3a651540
-
-
-  # Insee config should be set here and not in applications
-  # Fix proposition: move InseeConfig file
   organization:
     insee:
       token: ${INSEE_TOKEN}
       sirene-api: https://api.insee.fr/entreprises/sirene/V3
+  issuers:
+    -
+      uri: http://localhost:8080/auth/realms/test
+      authUrl: http://localhost:8080/auth
+      realm: test
+      clientId: i2-api
+      clientSecret: cc7c636d-cfbc-4cf2-9a59-a4f759893966
+    -
+      uri: http://localhost:8080/auth/realms/test2
+      authUrl: http://localhost:8080/auth
+      realm: test2
+      clientId: i2-api
+      clientSecret: 5e471884-ab65-4b84-a20b-6d16a77aa553
 
 server:
   port : 8009

@@ -1,6 +1,5 @@
 package city.smartb.im.organization.domain.features.query
 
-import city.smartb.im.commons.ImMessage
 import city.smartb.im.organization.domain.model.OrganizationBase
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
@@ -12,7 +11,7 @@ import f2.dsl.fnc.F2Function
  * @parent [city.smartb.im.organization.domain.D2OrganizationQuerySection]
  */
 typealias OrganizationGetFromInseeFunction =
-        F2Function<ImMessage<OrganizationGetFromInseeQuery>, OrganizationGetFromInseeResult>
+        F2Function<OrganizationGetFromInseeQuery, OrganizationGetFromInseeResult>
 
 /**
  * @d2 query

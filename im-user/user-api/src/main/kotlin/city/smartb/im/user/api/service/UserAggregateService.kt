@@ -1,6 +1,6 @@
 package city.smartb.im.user.api.service
 
-import city.smartb.im.api.config.ImKeycloakConfig
+import city.smartb.im.api.auth.ImAuthenticationResolver
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateFunction
@@ -25,31 +25,31 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserAggregateService(
-    private val imKeycloakConfig: ImKeycloakConfig,
     private val keycloakUserCreateFunction: KeycloakUserCreateFunction,
     private val userJoinGroupFunction: UserJoinGroupFunction,
     private val userRolesGrantFunction: UserRolesGrantFunction,
     private val userEmailSendActionsFunction: UserEmailSendActionsFunction,
     private val keycloakUserResetPasswordFunction: KeycloakUserResetPasswordFunction,
-    private val keycloakUserUpdateFunction: KeycloakUserUpdateFunction
-
+    private val keycloakUserUpdateFunction: KeycloakUserUpdateFunction,
+    private val authenticationResolver: ImAuthenticationResolver
 ) {
     suspend fun userCreate(command: UserCreateCommand): UserCreateResult {
+        val auth = authenticationResolver.getAuth()
         val userId = command.toKeycloakUserCreateCommand().invokeWith(keycloakUserCreateFunction).id
         command.memberOf?.let {
             UserJoinGroupCommand(
                 id = userId,
                 groupId = it,
-                realmId = imKeycloakConfig.realm,
-                auth = imKeycloakConfig.authRealm()
+                realmId = auth.realmId,
+                auth = auth
             ).invokeWith(userJoinGroupFunction)
         }
 
         UserRolesGrantCommand(
             id = userId,
             roles = command.roles,
-            auth = imKeycloakConfig.authRealm(),
-            realmId = imKeycloakConfig.realm
+            auth = auth,
+            realmId = auth.realmId
         ).invokeWith(userRolesGrantFunction)
 
         if (command.sendEmailLink) {
@@ -58,8 +58,8 @@ class UserAggregateService(
                 clientId = null,
                 redirectUri = null,
                 actions = listOf("UPDATE_PASSWORD"),
-                realmId = imKeycloakConfig.realm,
-                auth = imKeycloakConfig.authRealm()
+                realmId = auth.realmId,
+                auth = auth
             ).invokeWith(userEmailSendActionsFunction)
         }
         return UserCreateResult(userId)
@@ -71,13 +71,14 @@ class UserAggregateService(
     }
 
     suspend fun userUpdate(command: UserUpdateCommand): UserUpdateResult {
+        val auth = authenticationResolver.getAuth()
         command.toKeycloakUserUpdateCommand().invokeWith(keycloakUserUpdateFunction)
         command.memberOf?.let {
             UserJoinGroupCommand(
                 id = command.id,
                 groupId = it,
-                realmId = imKeycloakConfig.realm,
-                auth = imKeycloakConfig.authRealm(),
+                realmId = auth.realmId,
+                auth = auth,
                 leaveOtherGroups = true
             ).invokeWith(userJoinGroupFunction)
         }
@@ -85,8 +86,8 @@ class UserAggregateService(
         UserRolesGrantCommand(
             id = command.id,
             roles = command.roles,
-            auth = imKeycloakConfig.authRealm(),
-            realmId = imKeycloakConfig.realm
+            auth = auth,
+            realmId = auth.realmId
         ).invokeWith(userRolesGrantFunction)
 
         if (command.sendEmailLink) {
@@ -95,47 +96,56 @@ class UserAggregateService(
                 clientId = null,
                 redirectUri = null,
                 actions = listOf("UPDATE_PASSWORD"),
-                realmId = imKeycloakConfig.realm,
-                auth = imKeycloakConfig.authRealm()
+                realmId = auth.realmId,
+                auth = auth
             ).invokeWith(userEmailSendActionsFunction)
         }
         return UserUpdateResult(command.id)
     }
 
-    private fun UserUpdateCommand.toKeycloakUserUpdateCommand() = KeycloakUserUpdateCommand(
-        userId = id,
-        email = email,
-        firstname = givenName,
-        lastname = familyName,
-        metadata = listOfNotNull(
-            address?.let { ::address.name to address.toJson() },
-            phone?.let { ::phone.name to it },
-            memberOf?.let { ::memberOf.name to it }
-        ).toMap(),
-        realmId = imKeycloakConfig.realm,
-        auth = imKeycloakConfig.authRealm()
-    )
+    private suspend fun UserUpdateCommand.toKeycloakUserUpdateCommand(): KeycloakUserUpdateCommand {
+        val auth = authenticationResolver.getAuth()
+        return KeycloakUserUpdateCommand(
+            userId = id,
+            email = email,
+            firstname = givenName,
+            lastname = familyName,
+            metadata = listOfNotNull(
+                address?.let { ::address.name to address.toJson() },
+                phone?.let { ::phone.name to it },
+                memberOf?.let { ::memberOf.name to it }
+            ).toMap(),
+            realmId = auth.realmId,
+            auth = auth
+        )
+    }
 
-    private fun UserResetPasswordCommand.toKeycloakUserResetPasswordCommand() = KeycloakUserResetPasswordCommand(
-        userId = id,
-        password = password,
-        realmId = imKeycloakConfig.realm,
-        auth = imKeycloakConfig.authRealm()
-    )
+    private suspend fun UserResetPasswordCommand.toKeycloakUserResetPasswordCommand(): KeycloakUserResetPasswordCommand {
+        val auth = authenticationResolver.getAuth()
+        return KeycloakUserResetPasswordCommand(
+            userId = id,
+            password = password,
+            realmId = auth.realmId,
+            auth = auth
+        )
+    }
 
-    private fun UserCreateCommand.toKeycloakUserCreateCommand() = KeycloakUserCreateCommand(
-        username = email,
-        firstname = givenName,
-        lastname = familyName,
-        email = email,
-        isEnable = true,
-        metadata = listOfNotNull(
-            address?.let { ::address.name to address.toJson() },
-            phone?.let { ::phone.name to it },
-            ::sendEmailLink.name to sendEmailLink.toJson(),
-            memberOf?.let { ::memberOf.name to it }
-        ).toMap(),
-        realmId = imKeycloakConfig.realm,
-        auth = imKeycloakConfig.authRealm()
-    )
+    private suspend fun UserCreateCommand.toKeycloakUserCreateCommand(): KeycloakUserCreateCommand {
+        val auth = authenticationResolver.getAuth()
+        return KeycloakUserCreateCommand(
+            username = email,
+            firstname = givenName,
+            lastname = familyName,
+            email = email,
+            isEnable = true,
+            metadata = listOfNotNull(
+                address?.let { ::address.name to address.toJson() },
+                phone?.let { ::phone.name to it },
+                ::sendEmailLink.name to sendEmailLink.toJson(),
+                memberOf?.let { ::memberOf.name to it }
+            ).toMap(),
+            realmId = auth.realmId,
+            auth = auth
+        )
+    }
 }

@@ -1,4 +1,4 @@
-package city.smartb.im.organization.api.config
+package city.smartb.im.api.config
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration

@@ -8,6 +8,7 @@ dependencies {
     implementation(project(":im-organization:organization-api"))
     implementation(project(":im-user:user-domain"))
     implementation(project(":im-api:api-config"))
+    implementation(project(":im-api:api-auth"))
 
     implementation("city.smartb.i2:user-f2-join-group:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-roles-grant:${Versions.i2}")

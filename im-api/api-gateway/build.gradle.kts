@@ -6,10 +6,11 @@ plugins {
 
 dependencies {
 	implementation(project(":im-api:api-config"))
+	implementation(project(":im-api:api-auth"))
 
 	implementation(project(":im-organization:organization-api"))
-//	implementation(project(":im-role:role-api"))
-//	implementation(project(":im-user:user-api"))
+	implementation(project(":im-role:role-api"))
+	implementation(project(":im-user:user-api"))
 
 	implementation("city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}")
 	implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")

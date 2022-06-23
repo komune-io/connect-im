@@ -1,6 +1,6 @@
 package city.smartb.im.organization.api.service
 
-import city.smartb.im.commons.ImMessage
+import city.smartb.im.api.auth.ImAuthenticationResolver
 import city.smartb.im.organization.api.model.toOrganization
 import city.smartb.im.organization.api.model.toOrganizationRef
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeQuery
@@ -18,29 +18,28 @@ import i2.keycloak.f2.group.domain.features.query.GroupGetQuery
 import i2.keycloak.f2.group.domain.features.query.GroupPageFunction
 import i2.keycloak.f2.group.domain.features.query.GroupPageQuery
 import i2.keycloak.f2.group.domain.model.GroupModel
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
 import org.springframework.stereotype.Service
 
 @Service
 class OrganizationFinderService(
     private val inseeHttpClient: InseeHttpClient,
     private val groupGetFunction: GroupGetFunction,
-    private val groupPageFunction: GroupPageFunction
+    private val groupPageFunction: GroupPageFunction,
+    private val authenticationResolver: ImAuthenticationResolver
 ) {
 
-    suspend fun organizationGet(query: ImMessage<OrganizationGetQuery>): OrganizationGetResult {
+    suspend fun organizationGet(query: OrganizationGetQuery): OrganizationGetResult {
         return groupGetFunction.invoke(query.toGroupGetByIdQuery())
             .item
             ?.toOrganization()
             .let(::OrganizationGetResult)
     }
 
-    suspend fun organizationGetFromInsee(query: ImMessage<OrganizationGetFromInseeQuery>)
+    suspend fun organizationGetFromInsee(query: OrganizationGetFromInseeQuery)
         : OrganizationGetFromInseeResult {
 
         val organizationDetails = try {
-            inseeHttpClient.getOrganizationBySiret(query.payload.siret)
+            inseeHttpClient.getOrganizationBySiret(query.siret)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -50,7 +49,7 @@ class OrganizationFinderService(
             .let(::OrganizationGetFromInseeResult)
     }
 
-    suspend fun organizationPage(query: ImMessage<OrganizationPageQuery>): OrganizationPageResult {
+    suspend fun organizationPage(query: OrganizationPageQuery): OrganizationPageResult {
         val result = groupPageFunction.invoke(query.toGroupGetAllQuery())
 
         return OrganizationPageResult(
@@ -59,40 +58,48 @@ class OrganizationFinderService(
         )
     }
 
-    suspend fun organizationRefGetAll(query: ImMessage<OrganizationRefGetAllQuery>): OrganizationRefGetAllResult {
-        println("into finder")
-        return groupPageFunction.invoke(query.payload.toGroupGetAllQuery(query.authRealm, query.realmId))
+    suspend fun organizationRefGetAll(query: OrganizationRefGetAllQuery): OrganizationRefGetAllResult {
+        return groupPageFunction.invoke(query.toGroupGetAllQuery())
             .page
             .items
             .map(GroupModel::toOrganizationRef)
             .let(::OrganizationRefGetAllResult)
     }
 
-    private fun OrganizationRefGetAllQuery.toGroupGetAllQuery(authRealm: AuthRealm, realmId: RealmId) = GroupPageQuery(
-        name = null,
-        role = null,
-        page = PagePagination(
-            page = null,
-            size = null
-        ),
-        realmId = realmId,
-        auth = authRealm
-    )
+    private suspend fun OrganizationRefGetAllQuery.toGroupGetAllQuery(): GroupPageQuery {
+        val auth = authenticationResolver.getAuth()
+        return GroupPageQuery(
+            name = null,
+            role = null,
+            page = PagePagination(
+                page = null,
+                size = null
+            ),
+            realmId = auth.realmId,
+            auth = auth
+        )
+    }
 
-    private fun ImMessage<OrganizationPageQuery>.toGroupGetAllQuery() = GroupPageQuery(
-        name = payload.name,
-        role = payload.role,
-        page = PagePagination(
-            page = payload.page,
-            size = payload.size
-        ),
-        realmId = realmId,
-        auth = authRealm
-    )
+    private suspend fun OrganizationPageQuery.toGroupGetAllQuery(): GroupPageQuery {
+        val auth = authenticationResolver.getAuth()
+        return GroupPageQuery(
+            name = name,
+            role = role,
+            page = PagePagination(
+                page = page,
+                size = size
+            ),
+            realmId = auth.realmId,
+            auth = auth
+        )
+    }
 
-    private fun ImMessage<OrganizationGetQuery>.toGroupGetByIdQuery() = GroupGetQuery(
-        id = payload.id,
-        realmId = realmId,
-        auth = authRealm
-    )
+    private suspend fun OrganizationGetQuery.toGroupGetByIdQuery(): GroupGetQuery {
+        val auth = authenticationResolver.getAuth()
+        return GroupGetQuery(
+            id = id,
+            realmId = auth.realmId,
+            auth = auth
+        )
+    }
 }

@@ -1,6 +1,6 @@
 package city.smartb.im.user.api.service
 
-import city.smartb.im.api.config.ImKeycloakConfig
+import city.smartb.im.api.auth.ImAuthenticationResolver
 import city.smartb.im.commons.model.AddressBase
 import city.smartb.im.commons.utils.parseJsonTo
 import city.smartb.im.organization.api.model.orEmpty
@@ -12,16 +12,15 @@ import i2.keycloak.f2.user.domain.features.query.UserGetGroupsQuery
 import i2.keycloak.f2.user.domain.model.UserModel
 
 class UserTransformer(
-	private val imKeycloakConfig: ImKeycloakConfig,
-	private val userGetGroupsQueryFunction: UserGetGroupsFunction,
-
-	) {
-
+    private val authenticationResolver: ImAuthenticationResolver,
+    private val userGetGroupsQueryFunction: UserGetGroupsFunction
+) {
 	suspend fun toUser(user: UserModel): UserBase {
+		val auth = authenticationResolver.getAuth()
 		val group = UserGetGroupsQuery(
 			userId = user.id,
-			realmId =  imKeycloakConfig.realm,
-			auth = imKeycloakConfig.authRealm()
+			realmId =  auth.realmId,
+			auth = auth
 		).invokeWith(userGetGroupsQueryFunction).items.firstOrNull()?.let { group ->
 			OrganizationRef(
 				id = group.id,

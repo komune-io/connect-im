@@ -1,6 +1,5 @@
 package city.smartb.im.organization.domain.features.command
 
-import city.smartb.im.commons.ImMessage
 import city.smartb.im.commons.model.AddressBase
 import city.smartb.im.organization.domain.model.OrganizationId
 import f2.dsl.cqrs.Command
@@ -12,7 +11,7 @@ import f2.dsl.fnc.F2Function
  * @d2 section
  * @parent [city.smartb.im.organization.domain.D2OrganizationCommandSection]
  */
-typealias OrganizationUpdateFunction = F2Function<ImMessage<OrganizationUpdateCommand>, OrganizationUpdateResult>
+typealias OrganizationUpdateFunction = F2Function<OrganizationUpdateCommand, OrganizationUpdateResult>
 
 /**
  * @d2 command

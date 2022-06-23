@@ -1,6 +1,6 @@
 package city.smartb.im.organization.api.service
 
-import city.smartb.im.commons.ImMessage
+import city.smartb.im.api.auth.ImAuthenticationResolver
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreateResult
@@ -20,57 +20,60 @@ import org.springframework.stereotype.Service
 class OrganizationAggregateService(
     private val groupCreateFunction: GroupCreateFunction,
     private val groupUpdateFunction: GroupUpdateFunction,
-    private val organizationFinderService: OrganizationFinderService
+    private val organizationFinderService: OrganizationFinderService,
+    private val authenticationResolver: ImAuthenticationResolver
 ) {
 
-    suspend fun organizationCreate(command: ImMessage<OrganizationCreateCommand>): OrganizationCreateResult {
+    suspend fun organizationCreate(command: OrganizationCreateCommand): OrganizationCreateResult {
         return groupCreateFunction.invoke(command.toGroupCreateCommand())
             .id
             .let{ groupId ->
                 OrganizationCreateResult(
-                    parentOrganization = command.payload.parentOrganizationId,
+                    parentOrganization = command.parentOrganizationId,
                     id = groupId
                 )
             }
     }
 
-    suspend fun organizationUpdate(command: ImMessage<OrganizationUpdateCommand>): OrganizationUpdateResult {
-        val organization = organizationFinderService.organizationGet(ImMessage(
-                authRealm = command.authRealm,
-                realmId = command.realmId,
-                payload = OrganizationGetQuery(id = command.payload.id))
-            ).item
-            ?: throw NotFoundException("Organization [${command.payload.id}] not found")
+    suspend fun organizationUpdate(command: OrganizationUpdateCommand): OrganizationUpdateResult {
+        val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id)).item
+            ?: throw NotFoundException("Organization [${command.id}] not found")
 
         return groupUpdateFunction.invoke(command.toGroupUpdateCommand(organization))
             .let { result -> OrganizationUpdateResult(result.id) }
     }
 
-    private fun ImMessage<OrganizationCreateCommand>.toGroupCreateCommand() = GroupCreateCommand(
-        name = payload.name,
-        attributes = mapOf(
-            payload::siret.name to payload.siret,
-            payload::address.name to payload.address.toJson(),
-            payload::description.name to payload.description,
-            payload::website.name to payload.website
-        ).mapValues { (_, value) -> listOfNotNull(value) },
-        roles = payload.roles ?: emptyList(),
-        realmId = realmId,
-        auth = authRealm,
-        parentGroupId = payload.parentOrganizationId
-    )
+    private suspend fun OrganizationCreateCommand.toGroupCreateCommand(): GroupCreateCommand {
+        val auth = authenticationResolver.getAuth()
+        return GroupCreateCommand(
+            name = name,
+            attributes = mapOf(
+                ::siret.name to siret,
+                ::address.name to address.toJson(),
+                ::description.name to description,
+                ::website.name to website
+            ).mapValues { (_, value) -> listOfNotNull(value) },
+            roles = roles ?: emptyList(),
+            realmId = auth.realmId,
+            auth = auth,
+            parentGroupId = parentOrganizationId
+        )
+    }
 
-    private fun ImMessage<OrganizationUpdateCommand>.toGroupUpdateCommand(organization: Organization) = GroupUpdateCommand(
-        id = payload.id,
-        name = payload.name,
-        attributes = mapOf(
-            organization::siret.name to organization.siret,
-            payload::address.name to payload.address.toJson(),
-            payload::description.name to payload.description,
-            payload::website.name to payload.website
-        ).mapValues { (_, value) -> listOfNotNull(value) },
-        roles = payload.roles ?: emptyList(),
-        realmId = realmId,
-        auth = authRealm
-    )
+    private suspend fun OrganizationUpdateCommand.toGroupUpdateCommand(organization: Organization): GroupUpdateCommand {
+        val auth = authenticationResolver.getAuth()
+        return GroupUpdateCommand(
+            id = id,
+            name = name,
+            attributes = mapOf(
+                organization::siret.name to organization.siret,
+                ::address.name to address.toJson(),
+                ::description.name to description,
+                ::website.name to website
+            ).mapValues { (_, value) -> listOfNotNull(value) },
+            roles = roles ?: emptyList(),
+            realmId = auth.realmId,
+            auth = auth
+        )
+    }
 }
