@@ -9,10 +9,6 @@ pluginManagement {
 rootProject.name = "im"
 
 include(
-    "test-app"
-)
-
-include(
     "im-api:api-config",
     "im-api:api-gateway",
     "im-api:api-auth"
