@@ -6,7 +6,8 @@ plugins {
 
 dependencies {
     implementation(project(":im-organization:organization-domain"))
-    api(project(":im-api:api-config"))
+    implementation(project(":im-api:api-config"))
+    implementation(project(":im-api:api-auth"))
 
     api("city.smartb.f2:f2-spring-boot-starter-function:${Versions.f2}")
 

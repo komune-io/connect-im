@@ -1,5 +1,6 @@
 package city.smartb.im.user.client
 
+import city.smartb.im.commons.http.ClientJvm
 import city.smartb.im.user.domain.features.command.UserCreateCommand
 import city.smartb.im.user.domain.features.command.UserCreateResult
 import city.smartb.im.user.domain.features.command.UserResetPasswordCommand
@@ -10,24 +11,24 @@ import city.smartb.im.user.domain.features.query.UserGetQuery
 import city.smartb.im.user.domain.features.query.UserGetResult
 import city.smartb.im.user.domain.features.query.UserPageQuery
 import city.smartb.im.user.domain.features.query.UserPageResult
-import city.smartb.im.commons.http.ClientJvm
 
 class UserClient(
-    url: String
-): ClientJvm(url) {
+    url: String,
+    generateBearerToken: suspend () -> String? = { null }
+): ClientJvm(url, generateBearerToken) {
 
-    suspend fun userGet(command: List<UserGetQuery>):
-            List<UserGetResult> = post("userGet", command)
+    suspend fun userGet(queries: List<UserGetQuery>):
+            List<UserGetResult> = post("userGet", queries)
 
-    suspend fun userPage(command: List<UserPageQuery>):
-            List<UserPageResult> = post("userPage", command)
+    suspend fun userPage(queries: List<UserPageQuery>):
+            List<UserPageResult> = post("userPage", queries)
 
-    suspend fun userCreate(command: List<UserCreateCommand>):
-            List<UserCreateResult> = post("userCreate", command)
+    suspend fun userCreate(commands: List<UserCreateCommand>):
+            List<UserCreateResult> = post("userCreate", commands)
 
-    suspend fun userUpdate(command: List<UserUpdateCommand>):
-            List<UserUpdateResult> = post("userUpdate", command)
+    suspend fun userUpdate(commands: List<UserUpdateCommand>):
+            List<UserUpdateResult> = post("userUpdate", commands)
 
-    suspend fun userResetPassword(command: List<UserResetPasswordCommand>):
-            List<UserResetPasswordResult> = post("userResetPassword", command)
+    suspend fun userResetPassword(commands: List<UserResetPasswordCommand>):
+            List<UserResetPasswordResult> = post("userResetPassword", commands)
 }

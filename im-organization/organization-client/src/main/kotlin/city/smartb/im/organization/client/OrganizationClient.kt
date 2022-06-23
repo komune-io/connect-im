@@ -1,5 +1,6 @@
 package city.smartb.im.organization.client
 
+import city.smartb.im.commons.http.ClientJvm
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreateResult
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateCommand
@@ -12,27 +13,27 @@ import city.smartb.im.organization.domain.features.query.OrganizationPageQuery
 import city.smartb.im.organization.domain.features.query.OrganizationPageResult
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllQuery
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllResult
-import city.smartb.im.commons.http.ClientJvm
 
 class OrganizationClient(
-    url: String
-): ClientJvm(url) {
+    url: String,
+    generateBearerToken: suspend () -> String? = { null }
+): ClientJvm(url, generateBearerToken) {
 
-    suspend fun organizationGet(command: List<OrganizationGetQuery>):
-            List<OrganizationGetResult> = post("organizationGet", command)
+    suspend fun organizationGet(queries: List<OrganizationGetQuery>):
+            List<OrganizationGetResult> = post("organizationGet",  queries)
 
-    suspend fun organizationGetFromInsee(command: List<OrganizationGetFromInseeQuery>):
-            List<OrganizationGetFromInseeResult> = post("organizationGetFromInsee", command)
+    suspend fun organizationGetFromInsee(queries: List<OrganizationGetFromInseeQuery>):
+            List<OrganizationGetFromInseeResult> = post("organizationGetFromInsee", queries)
 
-    suspend fun organizationPage(command: List<OrganizationPageQuery>):
-            List<OrganizationPageResult> = post("organizationPage", command)
+    suspend fun organizationPage(queries: List<OrganizationPageQuery>):
+            List<OrganizationPageResult> = post("organizationPage", queries)
 
-    suspend fun organizationRefGetAll(command: List<OrganizationRefGetAllQuery>):
-            List<OrganizationRefGetAllResult> = post("organizationRefGetAll", command)
+    suspend fun organizationRefGetAll(queries: List<OrganizationRefGetAllQuery>):
+            List<OrganizationRefGetAllResult> = post("organizationRefGetAll", queries)
 
-    suspend fun organizationCreate(command: List<OrganizationCreateCommand>):
-            List<OrganizationCreateResult> = post("organizationCreate", command)
+    suspend fun organizationCreate(commands: List<OrganizationCreateCommand>):
+            List<OrganizationCreateResult> = post("organizationCreate", commands)
 
-    suspend fun organizationUpdate(command: List<OrganizationUpdateCommand>):
-            List<OrganizationUpdateResult> = post("organizationUpdate", command)
+    suspend fun organizationUpdate(commands: List<OrganizationUpdateCommand>):
+            List<OrganizationUpdateResult> = post("organizationUpdate", commands)
 }

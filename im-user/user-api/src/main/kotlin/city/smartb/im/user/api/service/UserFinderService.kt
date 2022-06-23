@@ -1,6 +1,6 @@
 package city.smartb.im.user.api.service
 
-import city.smartb.im.api.config.ImKeycloakConfig
+import city.smartb.im.api.auth.ImAuthenticationResolver
 import city.smartb.im.user.domain.features.query.KeycloakUserGetFunction
 import city.smartb.im.user.domain.features.query.KeycloakUserGetQuery
 import city.smartb.im.user.domain.features.query.KeycloakUserPageFunction
@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service
 @Service
 class UserFinderService(
     private val userTransformer: UserTransformer,
-    private val imKeycloakConfig: ImKeycloakConfig,
     private val keycloakUserGetFunction: KeycloakUserGetFunction,
-    private val keycloakUserPageFunction: KeycloakUserPageFunction
+    private val keycloakUserPageFunction: KeycloakUserPageFunction,
+    private val authenticationResolver: ImAuthenticationResolver
 ) {
     suspend fun userGet(query: UserGetQuery): UserGetResult {
         return query.toUserGetQuery().invokeWith(keycloakUserGetFunction)
@@ -38,21 +38,27 @@ class UserFinderService(
         )
     }
 
-    private fun UserPageQuery.toUserGetAllQuery() = KeycloakUserPageQuery(
-        groupId = organizationId,
-        email = email,
-        role = role,
-        page = PagePagination(
-            page = page,
-            size = size
-        ),
-        realmId = imKeycloakConfig.realm,
-        auth = imKeycloakConfig.authRealm()
-    )
+    private suspend fun UserPageQuery.toUserGetAllQuery(): KeycloakUserPageQuery {
+        val auth = authenticationResolver.getAuth()
+        return KeycloakUserPageQuery(
+            groupId = organizationId,
+            email = email,
+            role = role,
+            page = PagePagination(
+                page = page,
+                size = size
+            ),
+            realmId = auth.realmId,
+            auth = auth
+        )
+    }
 
-    private fun UserGetQuery.toUserGetQuery() = KeycloakUserGetQuery(
-        id = id,
-        realmId = imKeycloakConfig.realm,
-        auth = imKeycloakConfig.authRealm()
-    )
+    private suspend fun UserGetQuery.toUserGetQuery(): KeycloakUserGetQuery {
+        val auth = authenticationResolver.getAuth()
+        return KeycloakUserGetQuery(
+            id = id,
+            realmId = auth.realmId,
+            auth = auth
+        )
+    }
 }

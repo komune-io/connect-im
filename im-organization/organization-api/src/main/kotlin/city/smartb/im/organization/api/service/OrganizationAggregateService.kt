@@ -1,6 +1,6 @@
 package city.smartb.im.organization.api.service
 
-import city.smartb.im.api.config.ImKeycloakConfig
+import city.smartb.im.api.auth.ImAuthenticationResolver
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreateResult
@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service
 
 @Service
 class OrganizationAggregateService(
-    private val imKeycloakConfig: ImKeycloakConfig,
     private val groupCreateFunction: GroupCreateFunction,
     private val groupUpdateFunction: GroupUpdateFunction,
-    private val organizationFinderService: OrganizationFinderService
+    private val organizationFinderService: OrganizationFinderService,
+    private val authenticationResolver: ImAuthenticationResolver
 ) {
 
     suspend fun organizationCreate(command: OrganizationCreateCommand): OrganizationCreateResult {
@@ -36,40 +36,44 @@ class OrganizationAggregateService(
     }
 
     suspend fun organizationUpdate(command: OrganizationUpdateCommand): OrganizationUpdateResult {
-        val organization = organizationFinderService.organizationGet(
-            OrganizationGetQuery(id = command.id))
-            .item
+        val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id)).item
             ?: throw NotFoundException("Organization [${command.id}] not found")
 
         return groupUpdateFunction.invoke(command.toGroupUpdateCommand(organization))
             .let { result -> OrganizationUpdateResult(result.id) }
     }
 
-    private fun OrganizationCreateCommand.toGroupCreateCommand() = GroupCreateCommand(
-        name = name,
-        attributes = mapOf(
-            ::siret.name to siret,
-            ::address.name to address.toJson(),
-            ::description.name to description,
-            ::website.name to website
-        ).mapValues { (_, value) -> listOfNotNull(value) },
-        roles = roles ?: emptyList(),
-        realmId = imKeycloakConfig.realm,
-        auth = imKeycloakConfig.authRealm(),
-        parentGroupId = parentOrganizationId
-    )
+    private suspend fun OrganizationCreateCommand.toGroupCreateCommand(): GroupCreateCommand {
+        val auth = authenticationResolver.getAuth()
+        return GroupCreateCommand(
+            name = name,
+            attributes = mapOf(
+                ::siret.name to siret,
+                ::address.name to address.toJson(),
+                ::description.name to description,
+                ::website.name to website
+            ).mapValues { (_, value) -> listOfNotNull(value) },
+            roles = roles ?: emptyList(),
+            realmId = auth.realmId,
+            auth = auth,
+            parentGroupId = parentOrganizationId
+        )
+    }
 
-    private fun OrganizationUpdateCommand.toGroupUpdateCommand(organization: Organization) = GroupUpdateCommand(
-        id = id,
-        name = name,
-        attributes = mapOf(
-            organization::siret.name to organization.siret,
-            ::address.name to address.toJson(),
-            ::description.name to description,
-            ::website.name to website
-        ).mapValues { (_, value) -> listOfNotNull(value) },
-        roles = roles ?: emptyList(),
-        realmId = imKeycloakConfig.realm,
-        auth = imKeycloakConfig.authRealm()
-    )
+    private suspend fun OrganizationUpdateCommand.toGroupUpdateCommand(organization: Organization): GroupUpdateCommand {
+        val auth = authenticationResolver.getAuth()
+        return GroupUpdateCommand(
+            id = id,
+            name = name,
+            attributes = mapOf(
+                organization::siret.name to organization.siret,
+                ::address.name to address.toJson(),
+                ::description.name to description,
+                ::website.name to website
+            ).mapValues { (_, value) -> listOfNotNull(value) },
+            roles = roles ?: emptyList(),
+            realmId = auth.realmId,
+            auth = auth
+        )
+    }
 }

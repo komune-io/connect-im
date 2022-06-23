@@ -68,7 +68,7 @@ data class UserUpdateCommand(
     val memberOf: OrganizationId?,
 
     /**
-     * Roles assigned to the user.
+     * Add roles to the user.
      * @example [["admin"]]
      */
     val roles: List<String>,

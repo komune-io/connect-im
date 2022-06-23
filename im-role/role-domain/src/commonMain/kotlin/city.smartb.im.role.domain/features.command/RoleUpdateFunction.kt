@@ -28,6 +28,7 @@ data class RoleUpdateCommand(
 
     /**
      * Roles to associate with the role. These roles must exist to be associated.
+     * It removes all the composite roles existing, and replaces it by the given composite roles.
      * @example [["write_user","read_user"]]
      */
     val composites: List<RoleName>,

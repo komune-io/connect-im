@@ -1,10 +1,10 @@
 package city.smartb.im.organization.domain.features.query
 
+import city.smartb.im.organization.domain.model.OrganizationBase
+import city.smartb.im.organization.domain.model.OrganizationId
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
-import city.smartb.im.organization.domain.model.OrganizationBase
-import city.smartb.im.organization.domain.model.OrganizationId
 
 /**
  * Gets an organization by ID.
