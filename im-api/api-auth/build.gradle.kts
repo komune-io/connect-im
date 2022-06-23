@@ -1,6 +1,5 @@
 plugins {
     id("city.smartb.fixers.gradle.kotlin.jvm")
-    id("org.springframework.boot")
     kotlin("plugin.spring")
 }
 

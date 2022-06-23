@@ -11,8 +11,9 @@ data class ImConfig (
     val issuers: List<ImProperties>
 ) {
     fun getIssuersMap(): Map<String, AuthRealm> {
-        if (issuers.isNullOrEmpty())
+        if (issuers.isNullOrEmpty()) {
             return emptyMap()
+        }
 
         return issuers.associate {
             it.uri to AuthRealmClientSecret(
