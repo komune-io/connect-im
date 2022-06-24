@@ -3,10 +3,6 @@ spring:
     web-application-type: reactive
 
 i2:
-  organization:
-    insee:
-      token: ${INSEE_TOKEN}
-      sirene-api: https://api.insee.fr/entreprises/sirene/V3
   issuers:
     -
       uri: http://localhost:8080/auth/realms/test
@@ -20,6 +16,10 @@ i2:
       realm: test2
       clientId: i2-api
       clientSecret: 5e471884-ab65-4b84-a20b-6d16a77aa553
+  organization:
+    insee:
+      token: ${INSEE_TOKEN}
+      sirene-api: https://api.insee.fr/entreprises/sirene/V3
 
 server:
   port : 8009

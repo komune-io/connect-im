@@ -1,9 +1,13 @@
 version: "3.3"
 
 services:
-  i2-gateway:
-    image: smartbcity/i2-gateway:experimental
+  im-gateway:
+    image: smartbcity/im-gateway:next
     environment:
-      - i2_jwt-issuer-uri=
+      - i2_issuers[0]_uri=https://auth.smart-b.io/auth/realms/test2
+      - i2_issuers[0]_authUrl=https://auth.smart-b.io/auth
+      - i2_issuers[0]_realm=test2
+      - i2_issuers[0]_clientId=i2-api
+      - i2_issuers[0]_clientSecret=ed9d4989-3ed4-4c97-9dc8-f097ec3280e4
     ports:
-      - 9090:9090
+      - 8009:8009

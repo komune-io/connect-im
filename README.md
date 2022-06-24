@@ -26,11 +26,11 @@ services:
     container_name: im-gateway
     environment:
       server_port: 8004
-      keycloak_auth-server-url: ${KEYCLOAK_URL}      
-      keycloak_realm: ${KEYCLOAK_REALM}
-      keycloak_clients_admin_realm: ${IM_REALM}
-      keycloak_clients_admin_clientId: ${IM_CLIENT_ID}
-      keycloak_clients_admin_clientSecret: ${IM_CLIENT_SECRET}
+      i2_issuers[0]_uri: ${ISSUER_URI}
+      i2_issuers[0]_authUrl: ${KEYCLOAK_URL}
+      i2_issuers[0]_realm: ${KEYCLOAK_REALM}
+      i2_issuers[0]_clientId: ${CLIENT_ID}
+      i2_issuers[0]_clientSecret: ${CLIENT_SECRET}
     ports:
       - "8004:8004"
 ```
@@ -64,24 +64,29 @@ The client provided in the SDK uses Ktor under the hood and should be a singleto
 
 ```kotlin
 @Configuration
-class ImConfig {
+class ImConfig(
+    private val tokenProvider: TokenProvider
+) {
 
-    @Value("\${platform.im.url}")
+    @Value("\${im.url}")
     lateinit var imUrl: String
 
     @Bean
     fun userClient() = UserClient(
-        url = imUrl
+        url = imUrl,
+        generateBearerToken = tokenProvider::getToken
     )
 
     @Bean
     fun organizationClient() = OrganizationClient(
-        url = imUrl
+        url = imUrl,
+        generateBearerToken = tokenProvider::getToken
     )
 
     @Bean
     fun roleClient() = RoleClient(
-        url = imUrl
+        url = imUrl,
+        generateBearerToken = tokenProvider::getToken
     )
 }
 ```
@@ -103,7 +108,7 @@ class ImConfig {
 |-----------------------| --- |
 | im_write_organization | organizationUpdate |
 | im_read_organization  | organizationGet, organizationGetBySiret, organizationPage, organizationRefGetAll |
-| admin                 | * |
+| super_admin           | * |
 
 ## Users
 
@@ -119,7 +124,7 @@ class ImConfig {
 |---------------|---|
 | im_write_user | userCreate, userUpdate, userResetPassword |
 | im_read_user  | userGet, userPage |
-| admin         | * |
+| super_admin   | * |
 
 ## Roles
 
@@ -135,14 +140,65 @@ class ImConfig {
 
 # Configuration
 
-Properties prefix: `keycloak`
+Properties prefix: `i2.issuers[]`
 
-| Property | Description | Example | Default |
-| --- | --- | --- | --- |
-| auth-server-url | URL to a keycloak server | https://auth.smart-b.io/auth | https://auth.tracabois.smart-b.io/auth |
-| realm | Realm to interact with | development | test |
-| clients.admin.realm | Realm to authenticate to | development | test |
-| clients.admin.clientId | Client ID used to authenticate | smartclient | i2-api |
-| clients.admin.clientSecret | Client Secret used to authenticate | smartsecret | xxxxx |
+| Property                   | Description                             | Example                                  | Default                                |
+|----------------------------|-----------------------------------------|------------------------------------------|----------------------------------------|
+| uri                        | Issuer URI accepted by IM               | https://auth.smart-b.io/auth/realms/development | http://localhost:8080/auth/realms/test |
+| authUrl                    | Keycloak server URL                     | https://auth.smart-b.io/auth             | http://localhost:8080/auth             |
+| realm                      | Keycloak realm to authenticate to       | development                              | test                                   |
+| clientId     | Client ID used to authenticate with     | smartclient                              | i2-api                                 |
+| clientSecret | Client Secret used to authenticate with | smartsecret                              | xxxxx                                  |
+
+`i2.issuers[]` should define a list of the above configuration.
+
+For instance:
+- In your ```application.yml``` file:
+```
+i2:
+  issuers:
+    -
+      uri: http://localhost:8080/auth/realms/test
+      authUrl: http://localhost:8080/auth
+      realm: test
+      clientId: i2-api
+      clientSecret: clientSecret
+    -
+      uri: http://localhost:8080/auth/realms/test2
+      authUrl: http://localhost:8080/auth
+      realm: test2
+      clientId: i2-api
+      clientSecret: clientSecret2
+```
+
+- By overriding in your docker-compose file:
+```
+version: "3.7"
+services:
+  im-gateway:
+    image: smartbcity/im-gateway:${VERSION}
+    container_name: im-gateway
+    environment:
+      server_port: 8004
+      i2_issuers[0]_uri: ${ISSUER_URI}
+      i2_issuers[0]_authUrl: ${KEYCLOAK_URL}
+      i2_issuers[0]_realm: ${KEYCLOAK_REALM}
+      i2_issuers[0]_clientId: ${CLIENT_ID}
+      i2_issuers[0]_clientSecret: ${CLIENT_SECRET}
+      i2_issuers[1]_uri: ${ISSUER_URI_1}
+      i2_issuers[1]_authUrl: ${KEYCLOAK_URL_1}
+      i2_issuers[1]_realm: ${KEYCLOAK_REALM_1}
+      i2_issuers[1]_clientId: ${CLIENT_ID_1}
+      i2_issuers[1]_clientSecret: ${CLIENT_SECRET_1}
+    ports:
+      - "8004:8004"
+```
+
+Properties prefix: `i2.organization.insee`
+
+| Property     | Description                | Example                                  | Default                                |
+|--------------|----------------------------|------------------------------------------|----------------------------------------|
+| token        | Token used to authenticate | c6ef3de5-3ef1-330a-8917-21f6750dcb09 | c6ef3de5-3ef1-330a-8917-21f6750dcb09 |
+| sirene-api   | Sirene-api URL             | https://api.insee.fr/entreprises/sirene/V3             | https://api.insee.fr/entreprises/sirene/V3             |
 
 # Errors
