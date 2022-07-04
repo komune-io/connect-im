@@ -38,7 +38,8 @@ class UserTransformer(
 			address = user.attributes[UserBase::address.name]?.first()?.parseJsonTo(AddressBase::class.java).orEmpty(),
 			phone = user.attributes[UserBase::phone.name]?.firstOrNull(),
 			roles = user.roles,
-			sendEmailLink = user.attributes[UserBase::sendEmailLink.name]?.firstOrNull().toBoolean()
+			sendEmailLink = user.attributes[UserBase::sendEmailLink.name]?.firstOrNull().toBoolean(),
+			creationDate = user.creationDate
 		)
 	}
 	

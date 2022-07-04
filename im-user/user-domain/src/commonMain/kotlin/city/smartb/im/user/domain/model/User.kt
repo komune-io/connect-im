@@ -1,10 +1,10 @@
 package city.smartb.im.user.domain.model
 
+import city.smartb.im.commons.model.Address
+import city.smartb.im.commons.model.AddressBase
 import city.smartb.im.organization.domain.model.OrganizationRef
 import city.smartb.im.organization.domain.model.OrganizationRefDTO
 import i2.keycloak.f2.user.domain.model.UserRoles
-import city.smartb.im.commons.model.Address
-import city.smartb.im.commons.model.AddressBase
 
 /**
  * Unique identifier of the user.
@@ -25,43 +25,57 @@ interface User {
      * Identifier of the user.
      */
     val id: UserId
+
     /**
      * Organization Ref to which the user belongs.
      */
     val memberOf: OrganizationRefDTO?
+
     /**
      * Email address.
      * @example "user@smartb.city"
      */
     val email: String
+
     /**
      * First name of the user.
      * @example "John"
      */
     val givenName: String
+
     /**
      * Family name of the user.
      * @example "Deuf"
      */
     val familyName: String
+
     /**
      * Address of the user.
      */
     val address: Address?
+
     /**
      * Telephone number of the user.
      * @example "06 12 34 56 78"
      */
     val phone: String?
+
     /**
      * Roles of the user.
      */
     val roles: UserRoles
+
     /**
      * Send a validation email to the user on subscription.
      * @example "true"
      */
     val sendEmailLink: Boolean?
+
+    /**
+     * Creation date of the user, as UNIX timestamp in milliseconds.
+     * @example 1656938975000
+     */
+    val creationDate: Long
 }
 
 data class UserBase(
@@ -73,5 +87,6 @@ data class UserBase(
     override val address: AddressBase?,
     override val phone: String?,
     override val roles: UserRoles,
-    override val sendEmailLink: Boolean? = true
+    override val sendEmailLink: Boolean? = true,
+    override val creationDate: Long
 ): User
