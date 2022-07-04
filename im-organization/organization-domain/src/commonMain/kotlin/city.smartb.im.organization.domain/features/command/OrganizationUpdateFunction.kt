@@ -11,7 +11,7 @@ import f2.dsl.fnc.F2Function
  * @d2 section
  * @parent [city.smartb.im.organization.domain.D2OrganizationCommandSection]
  */
-typealias OrganizationUpdateFunction = F2Function<OrganizationUpdateCommand, OrganizationUpdateResult>
+typealias OrganizationUpdateFunction = F2Function<OrganizationUpdateCommand, OrganizationUpdatedResult>
 
 /**
  * @d2 command
@@ -57,7 +57,7 @@ data class OrganizationUpdateCommand(
  * @d2 event
  * @parent [OrganizationUpdateFunction]
  */
-data class OrganizationUpdateResult(
+data class OrganizationUpdatedResult(
     /**
      * Identifier of the organization.
      */

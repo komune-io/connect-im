@@ -3,9 +3,9 @@ package city.smartb.im.organization.api.service
 import city.smartb.im.api.auth.ImAuthenticationResolver
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
-import city.smartb.im.organization.domain.features.command.OrganizationCreateResult
+import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateCommand
-import city.smartb.im.organization.domain.features.command.OrganizationUpdateResult
+import city.smartb.im.organization.domain.features.command.OrganizationUpdatedResult
 import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
 import city.smartb.im.organization.domain.model.Organization
 import f2.dsl.fnc.invoke
@@ -24,23 +24,23 @@ class OrganizationAggregateService(
     private val authenticationResolver: ImAuthenticationResolver
 ) {
 
-    suspend fun organizationCreate(command: OrganizationCreateCommand): OrganizationCreateResult {
+    suspend fun organizationCreate(command: OrganizationCreateCommand): OrganizationCreatedEvent {
         return groupCreateFunction.invoke(command.toGroupCreateCommand())
             .id
             .let{ groupId ->
-                OrganizationCreateResult(
+                OrganizationCreatedEvent(
                     parentOrganization = command.parentOrganizationId,
                     id = groupId
                 )
             }
     }
 
-    suspend fun organizationUpdate(command: OrganizationUpdateCommand): OrganizationUpdateResult {
+    suspend fun organizationUpdate(command: OrganizationUpdateCommand): OrganizationUpdatedResult {
         val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id)).item
             ?: throw NotFoundException("Organization [${command.id}] not found")
 
         return groupUpdateFunction.invoke(command.toGroupUpdateCommand(organization))
-            .let { result -> OrganizationUpdateResult(result.id) }
+            .let { result -> OrganizationUpdatedResult(result.id) }
     }
 
     private suspend fun OrganizationCreateCommand.toGroupCreateCommand(): GroupCreateCommand {

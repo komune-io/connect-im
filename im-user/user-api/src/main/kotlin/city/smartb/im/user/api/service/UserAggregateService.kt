@@ -9,11 +9,11 @@ import city.smartb.im.user.domain.features.command.KeycloakUserResetPasswordFunc
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdateFunction
 import city.smartb.im.user.domain.features.command.UserCreateCommand
-import city.smartb.im.user.domain.features.command.UserCreateResult
+import city.smartb.im.user.domain.features.command.UserCreatedEvent
 import city.smartb.im.user.domain.features.command.UserResetPasswordCommand
-import city.smartb.im.user.domain.features.command.UserResetPasswordResult
+import city.smartb.im.user.domain.features.command.UserResetPasswordEvent
 import city.smartb.im.user.domain.features.command.UserUpdateCommand
-import city.smartb.im.user.domain.features.command.UserUpdateResult
+import city.smartb.im.user.domain.features.command.UserUpdatedEvent
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsCommand
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsFunction
@@ -33,7 +33,7 @@ class UserAggregateService(
     private val keycloakUserUpdateFunction: KeycloakUserUpdateFunction,
     private val authenticationResolver: ImAuthenticationResolver
 ) {
-    suspend fun userCreate(command: UserCreateCommand): UserCreateResult {
+    suspend fun userCreate(command: UserCreateCommand): UserCreatedEvent {
         val auth = authenticationResolver.getAuth()
         val userId = command.toKeycloakUserCreateCommand().invokeWith(keycloakUserCreateFunction).id
         command.memberOf?.let {
@@ -62,15 +62,15 @@ class UserAggregateService(
                 auth = auth
             ).invokeWith(userEmailSendActionsFunction)
         }
-        return UserCreateResult(userId)
+        return UserCreatedEvent(userId)
     }
 
-    suspend fun userResetPassword(command: UserResetPasswordCommand): UserResetPasswordResult {
+    suspend fun userResetPassword(command: UserResetPasswordCommand): UserResetPasswordEvent {
         command.toKeycloakUserResetPasswordCommand().invokeWith(keycloakUserResetPasswordFunction)
-        return UserResetPasswordResult(command.id)
+        return UserResetPasswordEvent(command.id)
     }
 
-    suspend fun userUpdate(command: UserUpdateCommand): UserUpdateResult {
+    suspend fun userUpdate(command: UserUpdateCommand): UserUpdatedEvent {
         val auth = authenticationResolver.getAuth()
         command.toKeycloakUserUpdateCommand().invokeWith(keycloakUserUpdateFunction)
         command.memberOf?.let {
@@ -100,7 +100,7 @@ class UserAggregateService(
                 auth = auth
             ).invokeWith(userEmailSendActionsFunction)
         }
-        return UserUpdateResult(command.id)
+        return UserUpdatedEvent(command.id)
     }
 
     private suspend fun UserUpdateCommand.toKeycloakUserUpdateCommand(): KeycloakUserUpdateCommand {

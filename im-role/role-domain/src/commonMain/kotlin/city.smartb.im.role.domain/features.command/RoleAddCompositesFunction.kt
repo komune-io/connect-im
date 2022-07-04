@@ -10,7 +10,7 @@ import i2.keycloak.f2.role.domain.RoleName
  * @d2 section
  * @parent [city.smartb.im.role.domain.D2RoleCommandSection]
  */
-typealias RoleAddCompositesFunction = F2Function<RoleAddCompositesCommand, RoleAddCompositesResult>
+typealias RoleAddCompositesFunction = F2Function<RoleAddCompositesCommand, RoleAddedCompositesEvent>
 
 typealias KeycloakRoleAddCompositesCommand = i2.keycloak.f2.role.domain.features.command.RoleAddCompositesCommand
 typealias KeycloakRoleAddCompositesFunction = i2.keycloak.f2.role.domain.features.command.RoleAddCompositesFunction
@@ -37,7 +37,7 @@ data class RoleAddCompositesCommand(
  * @d2 event
  * @parent [RoleAddCompositesFunction]
  */
-data class RoleAddCompositesResult(
+data class RoleAddedCompositesEvent(
     /**
      * Name of the role that composites were added to.
      * @example [RoleAddCompositesCommand.roleName]

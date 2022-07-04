@@ -12,7 +12,7 @@ import f2.dsl.fnc.F2Function
  * @d2 section
  * @parent [city.smartb.im.user.domain.D2UserCommandSection]
  */
-typealias UserUpdateFunction = F2Function<UserUpdateCommand, UserUpdateResult>
+typealias UserUpdateFunction = F2Function<UserUpdateCommand, UserUpdatedEvent>
 
 typealias KeycloakUserUpdateCommand = i2.keycloak.f2.user.domain.features.command.UserUpdateCommand
 typealias KeycloakUserUpdateFunction = i2.keycloak.f2.user.domain.features.command.UserUpdateFunction
@@ -78,7 +78,7 @@ data class UserUpdateCommand(
  * @d2 event
  * @parent [UserUpdateFunction]
  */
-data class UserUpdateResult(
+data class UserUpdatedEvent(
     /**
      * Identifier of the user.
      */

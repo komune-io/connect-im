@@ -11,7 +11,7 @@ import i2.keycloak.f2.role.domain.RoleName
  * @d2 section
  * @parent [city.smartb.im.role.domain.D2RoleCommandSection]
  */
-typealias RoleCreateFunction = F2Function<RoleCreateCommand, RoleCreateResult>
+typealias RoleCreateFunction = F2Function<RoleCreateCommand, RoleCreatedEvent>
 
 typealias KeycloakRoleCreateCommand = i2.keycloak.f2.role.domain.features.command.RoleCreateCommand
 typealias KeycloakRoleCreateFunction = i2.keycloak.f2.role.domain.features.command.RoleCreateFunction
@@ -49,7 +49,7 @@ data class RoleCreateCommand(
  * @d2 event
  * @parent [RoleCreateFunction]
  */
-data class RoleCreateResult(
+data class RoleCreatedEvent(
     /**
      * Identifier of the role created.
      */

@@ -10,7 +10,7 @@ import city.smartb.im.user.domain.model.UserId
  * @d2 section
  * @parent [city.smartb.im.user.domain.D2UserCommandSection]
  */
-typealias UserResetPasswordFunction = F2Function<UserResetPasswordCommand, UserResetPasswordResult>
+typealias UserResetPasswordFunction = F2Function<UserResetPasswordCommand, UserResetPasswordEvent>
 
 typealias KeycloakUserResetPasswordCommand = i2.keycloak.f2.user.domain.features.command.UserResetPasswordCommand
 typealias KeycloakUserResetPasswordFunction = i2.keycloak.f2.user.domain.features.command.UserResetPasswordFunction
@@ -34,7 +34,7 @@ data class UserResetPasswordCommand(
  * @d2 event
  * @parent [UserResetPasswordFunction]
  */
-data class UserResetPasswordResult(
+data class UserResetPasswordEvent(
     /**
      * Identifier of the user.
      */
