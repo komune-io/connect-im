@@ -18,15 +18,20 @@ typealias OrganizationPageFunction = F2Function<OrganizationPageQuery, Organizat
  */
 data class OrganizationPageQuery(
 	/**
-	 * Name filter.
+	 * Search string filtering on the name of the organization.
 	 * @example "SmartB"
 	 */
-	val name: String?,
+	val search: String?,
 
 	/**
 	 * Role filter.
 	 */
 	val role: String?,
+
+	/**
+	 * Arbitrary attributes filter.
+	 */
+	val attributes: Map<String, String>?,
 
 	/**
 	 * Number of the page.

@@ -50,7 +50,7 @@ class OrganizationFinderService(
     }
 
     suspend fun organizationPage(query: OrganizationPageQuery): OrganizationPageResult {
-        val result = groupPageFunction.invoke(query.toGroupGetAllQuery())
+        val result = groupPageFunction.invoke(query.toGroupPageQuery())
 
         return OrganizationPageResult(
             items = result.page.items.map(GroupModel::toOrganization),
@@ -59,18 +59,19 @@ class OrganizationFinderService(
     }
 
     suspend fun organizationRefGetAll(query: OrganizationRefGetAllQuery): OrganizationRefGetAllResult {
-        return groupPageFunction.invoke(query.toGroupGetAllQuery())
+        return groupPageFunction.invoke(query.toGroupPageQuery())
             .page
             .items
             .map(GroupModel::toOrganizationRef)
             .let(::OrganizationRefGetAllResult)
     }
 
-    private suspend fun OrganizationRefGetAllQuery.toGroupGetAllQuery(): GroupPageQuery {
+    private suspend fun OrganizationRefGetAllQuery.toGroupPageQuery(): GroupPageQuery {
         val auth = authenticationResolver.getAuth()
         return GroupPageQuery(
-            name = null,
+            search = null,
             role = null,
+            attributes = emptyMap(),
             page = PagePagination(
                 page = null,
                 size = null
@@ -80,11 +81,12 @@ class OrganizationFinderService(
         )
     }
 
-    private suspend fun OrganizationPageQuery.toGroupGetAllQuery(): GroupPageQuery {
+    private suspend fun OrganizationPageQuery.toGroupPageQuery(): GroupPageQuery {
         val auth = authenticationResolver.getAuth()
         return GroupPageQuery(
-            name = name,
+            search = search,
             role = role,
+            attributes = attributes.orEmpty(),
             page = PagePagination(
                 page = page,
                 size = size
