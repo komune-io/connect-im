@@ -12,10 +12,10 @@ import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
 import city.smartb.im.organization.domain.features.query.OrganizationPageFunction
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllFunction
 import f2.dsl.fnc.f2Function
-import javax.annotation.security.RolesAllowed
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import s2.spring.utils.logger.Logger
+import javax.annotation.security.RolesAllowed
 
 /**
  * @d2 service
@@ -35,6 +35,7 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationGet(): OrganizationGetFunction = f2Function { query ->
+        logger.info("organizationGet: $query")
         organizationFinderService.organizationGet(query)
     }
 
@@ -44,6 +45,7 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = f2Function { query ->
+        logger.info("organizationGetFromInsee: $query")
         organizationFinderService.organizationGetFromInsee(query)
     }
 
@@ -53,6 +55,7 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationPage(): OrganizationPageFunction = f2Function { query ->
+        logger.info("organizationPage: $query")
         organizationFinderService.organizationPage(query)
     }
 
@@ -62,7 +65,7 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationRefGetAll(): OrganizationRefGetAllFunction = f2Function { query ->
-        logger.info("organizationRefGetAll")
+        logger.info("organizationRefGetAll: $query")
         organizationFinderService.organizationRefGetAll(query)
     }
 
@@ -72,6 +75,7 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
     fun organizationCreate(): OrganizationCreateFunction = f2Function { cmd ->
+        logger.info("organizationCreate: $cmd")
         organizationAggregateService.organizationCreate(cmd)
     }
 
@@ -81,6 +85,7 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(Roles.WRITE_ORGANIZATION)
     fun organizationUpdate(): OrganizationUpdateFunction = f2Function { cmd ->
+        logger.info("organizationUpdate: $cmd")
         organizationAggregateService.organizationUpdate(cmd)
     }
 }

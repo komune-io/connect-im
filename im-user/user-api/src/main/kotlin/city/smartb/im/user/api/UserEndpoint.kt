@@ -11,9 +11,10 @@ import city.smartb.im.user.domain.features.query.UserGetFunction
 import city.smartb.im.user.domain.features.query.UserGetQuery
 import city.smartb.im.user.domain.features.query.UserPageFunction
 import f2.dsl.fnc.f2Function
-import javax.annotation.security.RolesAllowed
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import s2.spring.utils.logger.Logger
+import javax.annotation.security.RolesAllowed
 
 /**
  * @d2 service
@@ -25,12 +26,15 @@ class UserEndpoint(
     private val userFinderService: UserFinderService,
     private val permissionEvaluator: PermissionEvaluator
 ) {
+    private val logger by Logger()
+
     /**
      * Fetches a User by its ID.
      */
     @Bean
     @RolesAllowed(Roles.READ_USER)
     fun userGet(): UserGetFunction = f2Function { query ->
+        logger.info("userGet: $query")
         userFinderService.userGet(query)
     }
 
@@ -40,6 +44,7 @@ class UserEndpoint(
     @Bean
     @RolesAllowed(Roles.READ_USER)
     fun userPage(): UserPageFunction = f2Function { query ->
+        logger.info("userPage: $query")
         userFinderService.userPage(query)
     }
 
@@ -49,6 +54,7 @@ class UserEndpoint(
     @Bean
     @RolesAllowed(Roles.WRITE_USER)
     fun userCreate(): UserCreateFunction = f2Function { cmd ->
+        logger.info("userCreate: $cmd")
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(cmd.memberOf)) {
             userAggregateService.userCreate(cmd)
         } else {
@@ -62,6 +68,7 @@ class UserEndpoint(
     @Bean
     @RolesAllowed(Roles.WRITE_USER)
     fun userUpdate(): UserUpdateFunction = f2Function { cmd ->
+        logger.info("userUpdate: $cmd")
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(cmd.memberOf)) {
             userAggregateService.userUpdate(cmd)
         } else {
@@ -75,6 +82,7 @@ class UserEndpoint(
     @Bean
     @RolesAllowed(Roles.WRITE_USER)
     fun userResetPassword(): UserResetPasswordFunction = f2Function { cmd ->
+        logger.info("userResetPassword: $cmd")
         val user = userFinderService.userGet(UserGetQuery(cmd.id)).item
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(user?.memberOf?.id)) {
             userAggregateService.userResetPassword(cmd)
