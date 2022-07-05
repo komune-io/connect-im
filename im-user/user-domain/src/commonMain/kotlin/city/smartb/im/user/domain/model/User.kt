@@ -66,6 +66,11 @@ interface User {
     val roles: UserRoles
 
     /**
+     * Platform-specific attributes assigned to the user
+     */
+    val attributes: Map<String, String>
+
+    /**
      * Send a validation email to the user on subscription.
      * @example "true"
      */
@@ -87,6 +92,7 @@ data class UserBase(
     override val address: AddressBase?,
     override val phone: String?,
     override val roles: UserRoles,
+    override val attributes: Map<String, String>,
     override val sendEmailLink: Boolean? = true,
     override val creationDate: Long
 ): User

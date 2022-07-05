@@ -29,16 +29,25 @@ class UserTransformer(
 			)
 		}
 
+		val imAttributes = listOf(
+			UserBase::address.name,
+			UserBase::phone.name,
+			UserBase::sendEmailLink.name
+		)
+
+		val attributes = user.attributes.filterKeys { key -> key !in imAttributes }
+
 		return UserBase(
 			id = user.id,
 			memberOf = group,
 			email = user.email ?: "",
 			givenName = user.firstName ?: "",
 			familyName = user.lastName ?: "",
-			address = user.attributes[UserBase::address.name]?.first()?.parseJsonTo(AddressBase::class.java).orEmpty(),
-			phone = user.attributes[UserBase::phone.name]?.firstOrNull(),
+			address = user.attributes[UserBase::address.name]?.parseJsonTo(AddressBase::class.java).orEmpty(),
+			phone = user.attributes[UserBase::phone.name],
 			roles = user.roles,
-			sendEmailLink = user.attributes[UserBase::sendEmailLink.name]?.firstOrNull().toBoolean(),
+			attributes = attributes,
+			sendEmailLink = user.attributes[UserBase::sendEmailLink.name].toBoolean(),
 			creationDate = user.creationDate
 		)
 	}

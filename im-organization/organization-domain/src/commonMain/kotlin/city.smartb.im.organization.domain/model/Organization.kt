@@ -1,8 +1,8 @@
 package city.smartb.im.organization.domain.model
 
-import i2.keycloak.f2.group.domain.model.GroupId
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.AddressBase
+import i2.keycloak.f2.group.domain.model.GroupId
 
 /**
  * Unique identifier of the organization.
@@ -54,10 +54,15 @@ interface Organization {
     val website: String?
 
     /**
+     * Platform-specific attributes assigned to the organization
+     */
+    val attributes: Map<String, String>
+
+    /**
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
      * @example [["admin", "write_user", "read_user", "write_organization", "read_organization"]]
      */
-    val roles: Array<String>?
+    val roles: List<String>?
 }
 
 data class OrganizationBase(
@@ -67,5 +72,6 @@ data class OrganizationBase(
     override val description: String?,
     override val address: AddressBase?,
     override val website: String?,
-    override val roles: Array<String>?
+    override val attributes: Map<String, String>,
+    override val roles: List<String>?
 ): Organization
