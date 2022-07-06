@@ -66,7 +66,7 @@ class UserEndpoint(
     fun userCreate(): UserCreateFunction = f2Function { cmd ->
         logger.info("userCreate: $cmd")
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(cmd.memberOf)) {
-            userAggregateService.userCreate(cmd)
+            userAggregateService.create(cmd)
         } else {
             throw IllegalAccessException("Access denied.")
         }
@@ -80,7 +80,7 @@ class UserEndpoint(
     fun userUpdate(): UserUpdateFunction = f2Function { cmd ->
         logger.info("userUpdate: $cmd")
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(cmd.memberOf)) {
-            userAggregateService.userUpdate(cmd)
+            userAggregateService.update(cmd)
         } else {
             throw IllegalAccessException("Access denied.")
         }
@@ -95,7 +95,7 @@ class UserEndpoint(
         logger.info("userResetPassword: $cmd")
         val user = userFinderService.userGet(UserGetQuery(cmd.id)).item
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(user?.memberOf?.id)) {
-            userAggregateService.userResetPassword(cmd)
+            userAggregateService.resetPassword(cmd)
         } else {
             throw IllegalAccessException("Access denied.")
         }

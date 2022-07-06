@@ -42,7 +42,7 @@ class UserAggregateService(
     private val userRolesGrantFunction: UserRolesGrantFunction,
     private val userSetAttributesFunction: UserSetAttributesFunction
 ) {
-    suspend fun userCreate(command: UserCreateCommand): UserCreatedEvent {
+    suspend fun create(command: UserCreateCommand): UserCreatedEvent {
         val auth = authenticationResolver.getAuth()
         val userId = command.toKeycloakUserCreateCommand().invokeWith(keycloakUserCreateFunction).id
         command.memberOf?.let {
@@ -74,12 +74,12 @@ class UserAggregateService(
         return UserCreatedEvent(userId)
     }
 
-    suspend fun userResetPassword(command: UserResetPasswordCommand): UserResetPasswordEvent {
+    suspend fun resetPassword(command: UserResetPasswordCommand): UserResetPasswordEvent {
         command.toKeycloakUserResetPasswordCommand().invokeWith(keycloakUserResetPasswordFunction)
         return UserResetPasswordEvent(command.id)
     }
 
-    suspend fun userUpdate(command: UserUpdateCommand): UserUpdatedEvent {
+    suspend fun update(command: UserUpdateCommand): UserUpdatedEvent {
         val auth = authenticationResolver.getAuth()
         command.toKeycloakUserUpdateCommand().invokeWith(keycloakUserUpdateFunction)
         command.memberOf?.let {
