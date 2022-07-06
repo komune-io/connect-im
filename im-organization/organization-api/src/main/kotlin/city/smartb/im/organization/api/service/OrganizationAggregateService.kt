@@ -34,7 +34,7 @@ class OrganizationAggregateService(
     private val organizationFinderService: OrganizationFinderService
 ) {
 
-    suspend fun organizationCreate(command: OrganizationCreateCommand): OrganizationCreatedEvent {
+    suspend fun create(command: OrganizationCreateCommand): OrganizationCreatedEvent {
         return groupCreateFunction.invoke(command.toGroupCreateCommand())
             .id
             .let{ groupId ->
@@ -45,7 +45,7 @@ class OrganizationAggregateService(
             }
     }
 
-    suspend fun organizationUpdate(command: OrganizationUpdateCommand): OrganizationUpdatedResult {
+    suspend fun update(command: OrganizationUpdateCommand): OrganizationUpdatedResult {
         val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id)).item
             ?: throw NotFoundException("Organization [${command.id}] not found")
 

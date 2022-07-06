@@ -86,7 +86,7 @@ class OrganizationEndpoint(
     @RolesAllowed(SUPER_ADMIN_ROLE)
     fun organizationCreate(): OrganizationCreateFunction = f2Function { cmd ->
         logger.info("organizationCreate: $cmd")
-        organizationAggregateService.organizationCreate(cmd)
+        organizationAggregateService.create(cmd)
     }
 
     /**
@@ -96,7 +96,7 @@ class OrganizationEndpoint(
     @RolesAllowed(Roles.WRITE_ORGANIZATION)
     fun organizationUpdate(): OrganizationUpdateFunction = f2Function { cmd ->
         logger.info("organizationUpdate: $cmd")
-        organizationAggregateService.organizationUpdate(cmd)
+        organizationAggregateService.update(cmd)
     }
 
     /**
