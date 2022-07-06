@@ -2,17 +2,25 @@ package city.smartb.im.user.api
 
 import city.smartb.i2.spring.boot.auth.PermissionEvaluator
 import city.smartb.im.api.config.Roles
+import city.smartb.im.commons.utils.contentByteArray
 import city.smartb.im.user.api.service.UserAggregateService
 import city.smartb.im.user.api.service.UserFinderService
 import city.smartb.im.user.domain.features.command.UserCreateFunction
 import city.smartb.im.user.domain.features.command.UserResetPasswordFunction
 import city.smartb.im.user.domain.features.command.UserUpdateFunction
+import city.smartb.im.user.domain.features.command.UserUploadLogoCommand
+import city.smartb.im.user.domain.features.command.UserUploadedLogoEvent
 import city.smartb.im.user.domain.features.query.UserGetFunction
 import city.smartb.im.user.domain.features.query.UserGetQuery
 import city.smartb.im.user.domain.features.query.UserPageFunction
 import f2.dsl.fnc.f2Function
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.codec.multipart.FilePart
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.bind.annotation.RestController
 import s2.spring.utils.logger.Logger
 import javax.annotation.security.RolesAllowed
 
@@ -20,6 +28,8 @@ import javax.annotation.security.RolesAllowed
  * @d2 service
  * @title User/Entrypoints
  */
+@RestController
+@RequestMapping
 @Configuration
 class UserEndpoint(
     private val userAggregateService: UserAggregateService,
@@ -89,5 +99,18 @@ class UserEndpoint(
         } else {
             throw IllegalAccessException("Access denied.")
         }
+    }
+
+    /**
+     * Upload a logo for a given user
+     */
+    @RolesAllowed(Roles.WRITE_USER)
+    @PostMapping("/userUploadLogo")
+    suspend fun userUploadLogo(
+        @RequestPart("command") cmd: UserUploadLogoCommand,
+        @RequestPart("file") file: FilePart
+    ): UserUploadedLogoEvent {
+        logger.info("userUploadLogo: $cmd")
+        return userAggregateService.uploadLogo(cmd, file.contentByteArray())
     }
 }
