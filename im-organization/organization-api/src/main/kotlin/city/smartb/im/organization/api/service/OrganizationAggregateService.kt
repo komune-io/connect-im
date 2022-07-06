@@ -1,27 +1,37 @@
 package city.smartb.im.organization.api.service
 
+import city.smartb.fs.s2.file.client.FileClient
+import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.im.api.auth.ImAuthenticationResolver
 import city.smartb.im.commons.utils.toJson
+import city.smartb.im.organization.api.config.OrganizationFsConfig
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationUpdatedResult
+import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
+import city.smartb.im.organization.domain.features.command.OrganizationUploadedLogoEvent
 import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
 import city.smartb.im.organization.domain.model.Organization
 import f2.dsl.fnc.invoke
+import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupCreateFunction
+import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesCommand
+import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
-import javax.ws.rs.NotFoundException
 import org.springframework.stereotype.Service
+import javax.ws.rs.NotFoundException
 
 @Service
 class OrganizationAggregateService(
+    private val authenticationResolver: ImAuthenticationResolver,
+    private val fileClient: FileClient,
     private val groupCreateFunction: GroupCreateFunction,
+    private val groupSetAttributesFunction: GroupSetAttributesFunction,
     private val groupUpdateFunction: GroupUpdateFunction,
-    private val organizationFinderService: OrganizationFinderService,
-    private val authenticationResolver: ImAuthenticationResolver
+    private val organizationFinderService: OrganizationFinderService
 ) {
 
     suspend fun organizationCreate(command: OrganizationCreateCommand): OrganizationCreatedEvent {
@@ -41,6 +51,28 @@ class OrganizationAggregateService(
 
         return groupUpdateFunction.invoke(command.toGroupUpdateCommand(organization))
             .let { result -> OrganizationUpdatedResult(result.id) }
+    }
+
+    suspend fun uploadLogo(command: OrganizationUploadLogoCommand, file: ByteArray): OrganizationUploadedLogoEvent {
+        val event = fileClient.fileUpload(
+            command = FileUploadCommand(
+                path = OrganizationFsConfig.pathForOrganization(command.id),
+            ),
+            file = file
+        )
+
+        val auth = authenticationResolver.getAuth()
+        GroupSetAttributesCommand(
+            id = command.id,
+            attributes = mapOf("logo" to event.url),
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(groupSetAttributesFunction)
+
+        return OrganizationUploadedLogoEvent(
+            id = command.id,
+            url = event.url
+        )
     }
 
     private suspend fun OrganizationCreateCommand.toGroupCreateCommand(): GroupCreateCommand {
