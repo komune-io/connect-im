@@ -37,7 +37,7 @@ class OrganizationAggregateService(
     suspend fun create(command: OrganizationCreateCommand): OrganizationCreatedEvent {
         return groupCreateFunction.invoke(command.toGroupCreateCommand())
             .id
-            .let{ groupId ->
+            .let { groupId ->
                 OrganizationCreatedEvent(
                     parentOrganization = command.parentOrganizationId,
                     id = groupId
@@ -79,12 +79,12 @@ class OrganizationAggregateService(
         val auth = authenticationResolver.getAuth()
         return GroupCreateCommand(
             name = name,
-            attributes = mapOf(
-                ::siret.name to siret,
-                ::address.name to address.toJson(),
-                ::description.name to description,
-                ::website.name to website
-            ).mapValues { (_, value) -> listOfNotNull(value) },
+            attributes = listOfNotNull(
+                siret?.let { ::siret.name to it },
+                address?.let { ::address.name to it.toJson() },
+                description?.let { ::description.name to it },
+                website?.let { ::website.name to it }
+            ).toMap().plus(attributes.orEmpty()),
             roles = roles ?: emptyList(),
             realmId = auth.realmId,
             auth = auth,
@@ -97,12 +97,12 @@ class OrganizationAggregateService(
         return GroupUpdateCommand(
             id = id,
             name = name,
-            attributes = mapOf(
+            attributes = listOfNotNull(
                 organization::siret.name to organization.siret,
-                ::address.name to address.toJson(),
-                ::description.name to description,
-                ::website.name to website
-            ).mapValues { (_, value) -> listOfNotNull(value) },
+                address?.let { ::address.name to it.toJson() },
+                description?.let { ::description.name to it },
+                website?.let { ::website.name to it }
+            ).toMap().plus(attributes.orEmpty()),
             roles = roles ?: emptyList(),
             realmId = auth.realmId,
             auth = auth

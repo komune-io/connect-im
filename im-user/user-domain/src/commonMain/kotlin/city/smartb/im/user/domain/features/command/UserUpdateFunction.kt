@@ -72,6 +72,12 @@ data class UserUpdateCommand(
      * @example [["admin"]]
      */
     val roles: List<String>,
+
+    /**
+     * Additional arbitrary attributes assigned to the user.
+     * @example [city.smartb.im.user.domain.model.User.attributes]
+     */
+    val attributes: Map<String, String>?
 ): Command
 
 /**

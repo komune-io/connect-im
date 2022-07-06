@@ -50,7 +50,13 @@ data class OrganizationUpdateCommand(
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
      * @example [city.smartb.im.organization.domain.model.Organization.roles]
      */
-    val roles: List<String>?
+    val roles: List<String>?,
+
+    /**
+     * Additional arbitrary attributes assigned to the organization.
+     * @example [city.smartb.im.organization.domain.model.Organization.attributes]
+     */
+    val attributes: Map<String, String>?
 ): Command
 
 /**

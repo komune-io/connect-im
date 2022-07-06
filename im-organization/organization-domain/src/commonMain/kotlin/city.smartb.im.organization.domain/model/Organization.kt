@@ -55,6 +55,7 @@ interface Organization {
 
     /**
      * Platform-specific attributes assigned to the organization
+     * @example { "otherWebsite": "https://smartb.network" }
      */
     val attributes: Map<String, String>
 

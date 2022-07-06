@@ -67,6 +67,7 @@ interface User {
 
     /**
      * Platform-specific attributes assigned to the user
+     * @example { "age": "42" }
      */
     val attributes: Map<String, String>
 

@@ -67,6 +67,12 @@ data class UserCreateCommand(
      * Organization to which the user belongs.
      */
     val memberOf: OrganizationId?,
+
+    /**
+     * Additional arbitrary attributes assigned to the user.
+     * @example [city.smartb.im.user.domain.model.User.attributes]
+     */
+    val attributes: Map<String, String>?
 ): Command
 
 /**

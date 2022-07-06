@@ -141,11 +141,11 @@ class UserAggregateService(
             email = email,
             firstname = givenName,
             lastname = familyName,
-            metadata = listOfNotNull(
-                address?.let { ::address.name to address.toJson() },
+            metadata = attributes.orEmpty().plus(listOfNotNull(
+                address?.let { ::address.name to it.toJson() },
                 phone?.let { ::phone.name to it },
                 memberOf?.let { ::memberOf.name to it }
-            ).toMap(),
+            )).toMap(),
             realmId = auth.realmId,
             auth = auth
         )
@@ -169,12 +169,12 @@ class UserAggregateService(
             lastname = familyName,
             email = email,
             isEnable = true,
-            metadata = listOfNotNull(
-                address?.let { ::address.name to address.toJson() },
+            metadata = attributes.orEmpty().plus(listOfNotNull(
+                address?.let { ::address.name to it.toJson() },
                 phone?.let { ::phone.name to it },
                 ::sendEmailLink.name to sendEmailLink.toJson(),
                 memberOf?.let { ::memberOf.name to it }
-            ).toMap(),
+            )).toMap(),
             realmId = auth.realmId,
             auth = auth
         )
