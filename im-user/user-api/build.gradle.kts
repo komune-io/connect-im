@@ -17,5 +17,6 @@ dependencies {
     implementation("city.smartb.i2:user-f2-roles-grant:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-set-attributes:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-update:${Versions.i2}")
+    implementation("city.smartb.i2:user-f2-update-email:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-update-password:${Versions.i2}")
 }

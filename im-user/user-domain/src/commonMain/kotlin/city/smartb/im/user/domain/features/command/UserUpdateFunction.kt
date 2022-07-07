@@ -28,12 +28,6 @@ data class UserUpdateCommand(
     val id: UserId,
 
     /**
-     * Email address.
-     * @example [city.smartb.im.user.domain.model.User.email]
-     */
-    val email: String,
-
-    /**
      * First name of the user.
      * @example [city.smartb.im.user.domain.model.User.givenName]
      */

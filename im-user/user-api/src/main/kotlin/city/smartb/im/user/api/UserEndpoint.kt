@@ -7,6 +7,7 @@ import city.smartb.im.user.api.service.UserAggregateService
 import city.smartb.im.user.api.service.UserFinderService
 import city.smartb.im.user.domain.features.command.UserCreateFunction
 import city.smartb.im.user.domain.features.command.UserResetPasswordFunction
+import city.smartb.im.user.domain.features.command.UserUpdateEmailFunction
 import city.smartb.im.user.domain.features.command.UserUpdateFunction
 import city.smartb.im.user.domain.features.command.UserUpdatePasswordFunction
 import city.smartb.im.user.domain.features.command.UserUploadLogoCommand
@@ -94,6 +95,21 @@ class UserEndpoint(
     fun userResetPassword(): UserResetPasswordFunction = f2Function { cmd ->
         logger.info("userResetPassword: $cmd")
         userAggregateService.resetPassword(cmd)
+    }
+
+    /**
+     * Sets the given email for the given user.
+     */
+    @Bean
+    @RolesAllowed(Roles.WRITE_USER)
+    fun userUpdateEmail(): UserUpdateEmailFunction = f2Function { cmd ->
+        logger.info("userUpdateEmail: $cmd")
+        val user = userFinderService.userGet(UserGetQuery(cmd.id)).item
+        if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(user?.memberOf?.id)) {
+            userAggregateService.updateEmail(cmd)
+        } else {
+            throw IllegalAccessException("Access denied.")
+        }
     }
 
     /**

@@ -8,6 +8,8 @@ import city.smartb.im.user.api.config.UserFsConfig
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateFunction
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdateCommand
+import city.smartb.im.user.domain.features.command.KeycloakUserUpdateEmailCommand
+import city.smartb.im.user.domain.features.command.KeycloakUserUpdateEmailFunction
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdateFunction
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdatePasswordCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdatePasswordFunction
@@ -16,7 +18,9 @@ import city.smartb.im.user.domain.features.command.UserCreatedEvent
 import city.smartb.im.user.domain.features.command.UserResetPasswordCommand
 import city.smartb.im.user.domain.features.command.UserResetPasswordEvent
 import city.smartb.im.user.domain.features.command.UserUpdateCommand
+import city.smartb.im.user.domain.features.command.UserUpdateEmailCommand
 import city.smartb.im.user.domain.features.command.UserUpdatePasswordCommand
+import city.smartb.im.user.domain.features.command.UserUpdatedEmailEvent
 import city.smartb.im.user.domain.features.command.UserUpdatedEvent
 import city.smartb.im.user.domain.features.command.UserUpdatedPasswordEvent
 import city.smartb.im.user.domain.features.command.UserUploadLogoCommand
@@ -37,8 +41,9 @@ class UserAggregateService(
     private val authenticationResolver: ImAuthenticationResolver,
     private val fileClient: FileClient,
     private val keycloakUserCreateFunction: KeycloakUserCreateFunction,
-    private val keycloakUserUpdatePasswordFunction: KeycloakUserUpdatePasswordFunction,
     private val keycloakUserUpdateFunction: KeycloakUserUpdateFunction,
+    private val keycloakUserUpdateEmailFunction: KeycloakUserUpdateEmailFunction,
+    private val keycloakUserUpdatePasswordFunction: KeycloakUserUpdatePasswordFunction,
     private val userEmailSendActionsFunction: UserEmailSendActionsFunction,
     private val userJoinGroupFunction: UserJoinGroupFunction,
     private val userRolesGrantFunction: UserRolesGrantFunction,
@@ -155,11 +160,24 @@ class UserAggregateService(
         )
     }
 
+    suspend fun updateEmail(command: UserUpdateEmailCommand): UserUpdatedEmailEvent {
+        val auth = authenticationResolver.getAuth()
+        KeycloakUserUpdateEmailCommand(
+            userId = command.id,
+            email = command.email,
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(keycloakUserUpdateEmailFunction)
+
+        return UserUpdatedEmailEvent(
+            id = command.id
+        )
+    }
+
     private suspend fun UserUpdateCommand.toKeycloakUserUpdateCommand(): KeycloakUserUpdateCommand {
         val auth = authenticationResolver.getAuth()
         return KeycloakUserUpdateCommand(
             userId = id,
-            email = email,
             firstname = givenName,
             lastname = familyName,
             attributes = attributes.orEmpty().plus(listOfNotNull(
