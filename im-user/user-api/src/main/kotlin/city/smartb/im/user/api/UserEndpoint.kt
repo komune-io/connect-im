@@ -8,6 +8,7 @@ import city.smartb.im.user.api.service.UserFinderService
 import city.smartb.im.user.domain.features.command.UserCreateFunction
 import city.smartb.im.user.domain.features.command.UserResetPasswordFunction
 import city.smartb.im.user.domain.features.command.UserUpdateFunction
+import city.smartb.im.user.domain.features.command.UserUpdatePasswordFunction
 import city.smartb.im.user.domain.features.command.UserUploadLogoCommand
 import city.smartb.im.user.domain.features.command.UserUploadedLogoEvent
 import city.smartb.im.user.domain.features.query.UserGetFunction
@@ -87,15 +88,24 @@ class UserEndpoint(
     }
 
     /**
+     * Send a reset password email to the given user.
+     */
+    @Bean
+    fun userResetPassword(): UserResetPasswordFunction = f2Function { cmd ->
+        logger.info("userResetPassword: $cmd")
+        userAggregateService.resetPassword(cmd)
+    }
+
+    /**
      * Sets the given password for the given user ID.
      */
     @Bean
     @RolesAllowed(Roles.WRITE_USER)
-    fun userResetPassword(): UserResetPasswordFunction = f2Function { cmd ->
-        logger.info("userResetPassword: $cmd")
+    fun userUpdatePassword(): UserUpdatePasswordFunction = f2Function { cmd ->
+        logger.info("userUpdatePassword: $cmd")
         val user = userFinderService.userGet(UserGetQuery(cmd.id)).item
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(user?.memberOf?.id)) {
-            userAggregateService.resetPassword(cmd)
+            userAggregateService.updatePassword(cmd)
         } else {
             throw IllegalAccessException("Access denied.")
         }

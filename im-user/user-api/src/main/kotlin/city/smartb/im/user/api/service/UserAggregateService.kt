@@ -7,16 +7,18 @@ import city.smartb.im.commons.utils.toJson
 import city.smartb.im.user.api.config.UserFsConfig
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateFunction
-import city.smartb.im.user.domain.features.command.KeycloakUserResetPasswordCommand
-import city.smartb.im.user.domain.features.command.KeycloakUserResetPasswordFunction
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdateFunction
+import city.smartb.im.user.domain.features.command.KeycloakUserUpdatePasswordCommand
+import city.smartb.im.user.domain.features.command.KeycloakUserUpdatePasswordFunction
 import city.smartb.im.user.domain.features.command.UserCreateCommand
 import city.smartb.im.user.domain.features.command.UserCreatedEvent
 import city.smartb.im.user.domain.features.command.UserResetPasswordCommand
 import city.smartb.im.user.domain.features.command.UserResetPasswordEvent
 import city.smartb.im.user.domain.features.command.UserUpdateCommand
+import city.smartb.im.user.domain.features.command.UserUpdatePasswordCommand
 import city.smartb.im.user.domain.features.command.UserUpdatedEvent
+import city.smartb.im.user.domain.features.command.UserUpdatedPasswordEvent
 import city.smartb.im.user.domain.features.command.UserUploadLogoCommand
 import city.smartb.im.user.domain.features.command.UserUploadedLogoEvent
 import f2.dsl.fnc.invokeWith
@@ -35,7 +37,7 @@ class UserAggregateService(
     private val authenticationResolver: ImAuthenticationResolver,
     private val fileClient: FileClient,
     private val keycloakUserCreateFunction: KeycloakUserCreateFunction,
-    private val keycloakUserResetPasswordFunction: KeycloakUserResetPasswordFunction,
+    private val keycloakUserUpdatePasswordFunction: KeycloakUserUpdatePasswordFunction,
     private val keycloakUserUpdateFunction: KeycloakUserUpdateFunction,
     private val userEmailSendActionsFunction: UserEmailSendActionsFunction,
     private val userJoinGroupFunction: UserJoinGroupFunction,
@@ -75,8 +77,27 @@ class UserAggregateService(
     }
 
     suspend fun resetPassword(command: UserResetPasswordCommand): UserResetPasswordEvent {
-        command.toKeycloakUserResetPasswordCommand().invokeWith(keycloakUserResetPasswordFunction)
+        val auth = authenticationResolver.getAuth()
+        UserEmailSendActionsCommand(
+            userId = command.id,
+            clientId = null,
+            redirectUri = null,
+            actions = listOf("UPDATE_PASSWORD"),
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(userEmailSendActionsFunction)
         return UserResetPasswordEvent(command.id)
+    }
+
+    suspend fun updatePassword(command: UserUpdatePasswordCommand): UserUpdatedPasswordEvent {
+        val auth = authenticationResolver.getAuth()
+        KeycloakUserUpdatePasswordCommand(
+            userId = command.id,
+            password = command.password,
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(keycloakUserUpdatePasswordFunction)
+        return UserUpdatedPasswordEvent(command.id)
     }
 
     suspend fun update(command: UserUpdateCommand): UserUpdatedEvent {
@@ -141,21 +162,11 @@ class UserAggregateService(
             email = email,
             firstname = givenName,
             lastname = familyName,
-            metadata = attributes.orEmpty().plus(listOfNotNull(
+            attributes = attributes.orEmpty().plus(listOfNotNull(
                 address?.let { ::address.name to it.toJson() },
                 phone?.let { ::phone.name to it },
                 memberOf?.let { ::memberOf.name to it }
             )).toMap(),
-            realmId = auth.realmId,
-            auth = auth
-        )
-    }
-
-    private suspend fun UserResetPasswordCommand.toKeycloakUserResetPasswordCommand(): KeycloakUserResetPasswordCommand {
-        val auth = authenticationResolver.getAuth()
-        return KeycloakUserResetPasswordCommand(
-            userId = id,
-            password = password,
             realmId = auth.realmId,
             auth = auth
         )
@@ -169,7 +180,7 @@ class UserAggregateService(
             lastname = familyName,
             email = email,
             isEnable = true,
-            metadata = attributes.orEmpty().plus(listOfNotNull(
+            attributes = attributes.orEmpty().plus(listOfNotNull(
                 address?.let { ::address.name to it.toJson() },
                 phone?.let { ::phone.name to it },
                 ::sendEmailLink.name to sendEmailLink.toJson(),

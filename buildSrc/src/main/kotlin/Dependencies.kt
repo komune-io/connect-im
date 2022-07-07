@@ -13,7 +13,7 @@ object PluginVersions {
 object Versions {
 	val i2 = "next-SNAPSHOT"
 	val f2 = PluginVersions.fixers
-	val fs = "next"
+	val fs = "next-SNAPSHOT"
 	val s2 = PluginVersions.fixers
 	const val ktor = "2.0.3"
 
