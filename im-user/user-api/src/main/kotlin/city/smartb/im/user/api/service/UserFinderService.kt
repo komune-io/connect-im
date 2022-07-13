@@ -28,7 +28,7 @@ class UserFinderService(
     }
 
     suspend fun userPage(query: UserPageQuery): UserPageResult {
-        val result = query.toUserGetAllQuery().invokeWith(keycloakUserPageFunction).items
+        val result = query.toUserPageQuery().invokeWith(keycloakUserPageFunction).items
         val users = result.items.map { user ->
             userTransformer.toUser(user)
         }
@@ -38,12 +38,13 @@ class UserFinderService(
         )
     }
 
-    private suspend fun UserPageQuery.toUserGetAllQuery(): KeycloakUserPageQuery {
+    private suspend fun UserPageQuery.toUserPageQuery(): KeycloakUserPageQuery {
         val auth = authenticationResolver.getAuth()
         return KeycloakUserPageQuery(
             groupId = organizationId,
-            email = email,
+            search = search,
             role = role,
+            attributes = attributes.orEmpty(),
             page = PagePagination(
                 page = page,
                 size = size

@@ -1,10 +1,10 @@
 package city.smartb.im.user.domain.features.query
 
 import city.smartb.im.organization.domain.model.OrganizationId
+import city.smartb.im.user.domain.model.UserBase
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
-import city.smartb.im.user.domain.model.UserBase
 
 /**
  * Gets a page of users.
@@ -27,14 +27,19 @@ data class UserPageQuery(
 	val organizationId: OrganizationId?,
 
 	/**
-	 * Email filter.
+	 * Search string filtering on the email, firstname and lastname of the user.
 	 */
-	val email: String?,
+	val search: String?,
 
 	/**
 	 * Role filter.
 	 */
 	val role: String?,
+
+	/**
+	 * Arbitrary attributes filter.
+	 */
+	val attributes: Map<String, String>?,
 
 	/**
 	 * Number of the page.

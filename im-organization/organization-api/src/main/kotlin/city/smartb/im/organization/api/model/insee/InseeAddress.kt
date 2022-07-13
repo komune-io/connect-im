@@ -16,3 +16,20 @@ data class InseeAddress(
     val codePaysEtrangerEtablissement: String?,
     val libellePaysEtrangerEtablissement: String?
 )
+
+data class InseeAddress2(
+    val complementAdresse2Etablissement: String?,
+    val numeroVoie2Etablissement: String?,
+    val indiceRepetition2Etablissement: String?,
+    val typeVoie2Etablissement: String?,
+    val libelleVoie2Etablissement: String?,
+    val codePostal2Etablissement: String?,
+    val libelleCommune2Etablissement: String?,
+    val libelleCommuneEtranger2Etablissement: String?,
+    val distributionSpeciale2Etablissement: String?,
+    val codeCommune2Etablissement: String?,
+    val codeCedex2Etablissement: String?,
+    val libelleCedex2Etablissement: String?,
+    val codePaysEtranger2Etablissement: String?,
+    val libellePaysEtranger2Etablissement: String?
+)

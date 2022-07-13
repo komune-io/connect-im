@@ -2,6 +2,9 @@ spring:
   main:
     web-application-type: reactive
 
+fs:
+  url: http://localhost:8090
+
 i2:
   issuers:
     -

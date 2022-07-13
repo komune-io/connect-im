@@ -11,7 +11,7 @@ import i2.keycloak.f2.role.domain.RoleName
  * @d2 section
  * @parent [city.smartb.im.role.domain.D2RoleCommandSection]
  */
-typealias RoleUpdateFunction = F2Function<RoleUpdateCommand, RoleUpdateResult>
+typealias RoleUpdateFunction = F2Function<RoleUpdateCommand, RoleUpdatedEvent>
 
 typealias KeycloakRoleUpdateCommand = i2.keycloak.f2.role.domain.features.command.RoleUpdateCommand
 typealias KeycloakRoleUpdateFunction = i2.keycloak.f2.role.domain.features.command.RoleUpdateFunction
@@ -50,7 +50,7 @@ data class RoleUpdateCommand(
  * @d2 event
  * @parent [RoleUpdateFunction]
  */
-data class RoleUpdateResult(
+data class RoleUpdatedEvent(
     /**
      * Identifier of the role.
      */

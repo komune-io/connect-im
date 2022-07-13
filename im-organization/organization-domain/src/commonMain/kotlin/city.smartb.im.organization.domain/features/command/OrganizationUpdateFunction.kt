@@ -11,7 +11,7 @@ import f2.dsl.fnc.F2Function
  * @d2 section
  * @parent [city.smartb.im.organization.domain.D2OrganizationCommandSection]
  */
-typealias OrganizationUpdateFunction = F2Function<OrganizationUpdateCommand, OrganizationUpdateResult>
+typealias OrganizationUpdateFunction = F2Function<OrganizationUpdateCommand, OrganizationUpdatedResult>
 
 /**
  * @d2 command
@@ -50,14 +50,20 @@ data class OrganizationUpdateCommand(
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
      * @example [city.smartb.im.organization.domain.model.Organization.roles]
      */
-    val roles: List<String>?
+    val roles: List<String>?,
+
+    /**
+     * Additional arbitrary attributes assigned to the organization.
+     * @example [city.smartb.im.organization.domain.model.Organization.attributes]
+     */
+    val attributes: Map<String, String>?
 ): Command
 
 /**
  * @d2 event
  * @parent [OrganizationUpdateFunction]
  */
-data class OrganizationUpdateResult(
+data class OrganizationUpdatedResult(
     /**
      * Identifier of the organization.
      */

@@ -11,10 +11,11 @@ object PluginVersions {
 }
 
 object Versions {
+	val i2 = "next-SNAPSHOT"
 	val f2 = PluginVersions.fixers
+	val fs = "next-SNAPSHOT"
 	val s2 = PluginVersions.fixers
-	val i2 = "experimental-1561-SNAPSHOT"
-	const val ktor = "2.0.0"
+	const val ktor = "2.0.3"
 
 	const val springBoot = PluginVersions.springBoot
 	const val springOauth2 = "5.6.0"

@@ -3,24 +3,34 @@ package city.smartb.im.organization.api
 import city.smartb.i2.spring.boot.auth.PermissionEvaluator
 import city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE
 import city.smartb.im.api.config.Roles
+import city.smartb.im.commons.utils.contentByteArray
 import city.smartb.im.organization.api.service.OrganizationAggregateService
 import city.smartb.im.organization.api.service.OrganizationFinderService
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateFunction
+import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
+import city.smartb.im.organization.domain.features.command.OrganizationUploadedLogoEvent
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeFunction
 import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
 import city.smartb.im.organization.domain.features.query.OrganizationPageFunction
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllFunction
 import f2.dsl.fnc.f2Function
-import javax.annotation.security.RolesAllowed
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.codec.multipart.FilePart
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.bind.annotation.RestController
 import s2.spring.utils.logger.Logger
+import javax.annotation.security.RolesAllowed
 
 /**
  * @d2 service
  * @title Organization/Entrypoints
  */
+@RestController
+@RequestMapping
 @Configuration
 class OrganizationEndpoint(
     private val organizationFinderService: OrganizationFinderService,
@@ -35,6 +45,7 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationGet(): OrganizationGetFunction = f2Function { query ->
+        logger.info("organizationGet: $query")
         organizationFinderService.organizationGet(query)
     }
 
@@ -44,6 +55,7 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = f2Function { query ->
+        logger.info("organizationGetFromInsee: $query")
         organizationFinderService.organizationGetFromInsee(query)
     }
 
@@ -53,6 +65,7 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationPage(): OrganizationPageFunction = f2Function { query ->
+        logger.info("organizationPage: $query")
         organizationFinderService.organizationPage(query)
     }
 
@@ -62,7 +75,7 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
     fun organizationRefGetAll(): OrganizationRefGetAllFunction = f2Function { query ->
-        logger.info("organizationRefGetAll")
+        logger.info("organizationRefGetAll: $query")
         organizationFinderService.organizationRefGetAll(query)
     }
 
@@ -72,7 +85,8 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
     fun organizationCreate(): OrganizationCreateFunction = f2Function { cmd ->
-        organizationAggregateService.organizationCreate(cmd)
+        logger.info("organizationCreate: $cmd")
+        organizationAggregateService.create(cmd)
     }
 
     /**
@@ -81,6 +95,20 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(Roles.WRITE_ORGANIZATION)
     fun organizationUpdate(): OrganizationUpdateFunction = f2Function { cmd ->
-        organizationAggregateService.organizationUpdate(cmd)
+        logger.info("organizationUpdate: $cmd")
+        organizationAggregateService.update(cmd)
+    }
+
+    /**
+     * Upload a logo for a given organization
+     */
+    @RolesAllowed(Roles.WRITE_USER)
+    @PostMapping("/organizationUploadLogo")
+    suspend fun organizationUploadLogo(
+        @RequestPart("command") cmd: OrganizationUploadLogoCommand,
+        @RequestPart("file") file: FilePart
+    ): OrganizationUploadedLogoEvent {
+        logger.info("organizationUploadLogo: $cmd")
+        return organizationAggregateService.uploadLogo(cmd, file.contentByteArray())
     }
 }

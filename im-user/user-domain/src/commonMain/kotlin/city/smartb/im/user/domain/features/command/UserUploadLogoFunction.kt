@@ -6,17 +6,17 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Send an email to a user for them to reset their password
+ * Updates the logo of the user.
  * @d2 section
  * @parent [city.smartb.im.user.domain.D2UserCommandSection]
  */
-typealias UserResetPasswordFunction = F2Function<UserResetPasswordCommand, UserResetPasswordEvent>
+typealias UserUploadLogoFunction = F2Function<UserUploadLogoCommand, UserUploadedLogoEvent>
 
 /**
  * @d2 command
- * @parent [UserResetPasswordFunction]
+ * @parent [UserUploadLogoFunction]
  */
-data class UserResetPasswordCommand(
+data class UserUploadLogoCommand(
     /**
      * Identifier of the user.
      */
@@ -25,11 +25,16 @@ data class UserResetPasswordCommand(
 
 /**
  * @d2 event
- * @parent [UserResetPasswordFunction]
+ * @parent [UserUploadLogoFunction]
  */
-data class UserResetPasswordEvent(
+data class UserUploadedLogoEvent(
     /**
      * Identifier of the user.
      */
-    val id: UserId
+    val id: UserId,
+
+    /**
+     * Public URL of the newly uploaded logo
+     */
+    val url: String
 ): Event

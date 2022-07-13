@@ -2,11 +2,11 @@ package city.smartb.im.role.client
 
 import city.smartb.im.commons.http.ClientJvm
 import city.smartb.im.role.domain.features.command.RoleAddCompositesCommand
-import city.smartb.im.role.domain.features.command.RoleAddCompositesResult
+import city.smartb.im.role.domain.features.command.RoleAddedCompositesEvent
 import city.smartb.im.role.domain.features.command.RoleCreateCommand
-import city.smartb.im.role.domain.features.command.RoleCreateResult
+import city.smartb.im.role.domain.features.command.RoleCreatedEvent
 import city.smartb.im.role.domain.features.command.RoleUpdateCommand
-import city.smartb.im.role.domain.features.command.RoleUpdateResult
+import city.smartb.im.role.domain.features.command.RoleUpdatedEvent
 
 class RoleClient(
     url: String,
@@ -14,11 +14,11 @@ class RoleClient(
 ): ClientJvm(url, generateBearerToken) {
 
     suspend fun roleAddComposites(commands: List<RoleAddCompositesCommand>):
-            List<RoleAddCompositesResult> = post("roleAddComposites", commands)
+            List<RoleAddedCompositesEvent> = post("roleAddComposites", commands)
 
     suspend fun roleCreate(commands: List<RoleCreateCommand>):
-            List<RoleCreateResult> = post("roleCreate", commands)
+            List<RoleCreatedEvent> = post("roleCreate", commands)
 
     suspend fun roleUpdate(commands: List<RoleUpdateCommand>):
-            List<RoleUpdateResult> = post("roleUpdate", commands)
+            List<RoleUpdatedEvent> = post("roleUpdate", commands)
 }

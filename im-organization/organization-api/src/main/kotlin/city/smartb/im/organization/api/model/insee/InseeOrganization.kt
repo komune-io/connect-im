@@ -14,7 +14,7 @@ data class InseeOrganization(
     val nombrePeriodesEtablissement: Int,
     val uniteLegale: InseeLegalUnit,
     val adresseEtablissement: InseeAddress,
-    val adresse2Etablissement: InseeAddress,
+    val adresse2Etablissement: InseeAddress2,
     val periodesEtablissement: List<InseePeriod>
 )
 

@@ -12,7 +12,7 @@ import f2.dsl.fnc.F2Function
  * @d2 section
  * @parent [city.smartb.im.user.domain.D2UserCommandSection]
  */
-typealias UserCreateFunction = F2Function<UserCreateCommand, UserCreateResult>
+typealias UserCreateFunction = F2Function<UserCreateCommand, UserCreatedEvent>
 
 typealias KeycloakUserCreateCommand = i2.keycloak.f2.user.domain.features.command.UserCreateCommand
 typealias KeycloakUserCreateFunction = i2.keycloak.f2.user.domain.features.command.UserCreateFunction
@@ -67,13 +67,19 @@ data class UserCreateCommand(
      * Organization to which the user belongs.
      */
     val memberOf: OrganizationId?,
+
+    /**
+     * Additional arbitrary attributes assigned to the user.
+     * @example [city.smartb.im.user.domain.model.User.attributes]
+     */
+    val attributes: Map<String, String>?
 ): Command
 
 /**
  * @d2 event
  * @parent [UserCreateFunction]
  */
-data class UserCreateResult(
+data class UserCreatedEvent(
     /**
      * Identifier of the user.
      */

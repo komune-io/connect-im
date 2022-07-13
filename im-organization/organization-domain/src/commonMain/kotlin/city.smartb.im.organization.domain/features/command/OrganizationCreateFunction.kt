@@ -11,7 +11,7 @@ import f2.dsl.fnc.F2Function
  * @d2 section
  * @parent [city.smartb.im.organization.domain.D2OrganizationCommandSection]
  */
-typealias OrganizationCreateFunction = F2Function<OrganizationCreateCommand, OrganizationCreateResult>
+typealias OrganizationCreateFunction = F2Function<OrganizationCreateCommand, OrganizationCreatedEvent>
 
 /**
  * @d2 command
@@ -56,14 +56,20 @@ data class OrganizationCreateCommand(
     /**
      * The identifier of a larger organization that this organization is a subOrganization of, if any.
      */
-    val parentOrganizationId: OrganizationId? = null
+    val parentOrganizationId: OrganizationId? = null,
+
+    /**
+     * Additional arbitrary attributes assigned to the organization.
+     * @example [city.smartb.im.organization.domain.model.Organization.attributes]
+     */
+    val attributes: Map<String, String>?
 ): Command
 
 /**
  * @d2 event
  * @parent [OrganizationCreateFunction]
  */
-data class OrganizationCreateResult(
+data class OrganizationCreatedEvent(
     /**
      * Identifier of the organization.
      */

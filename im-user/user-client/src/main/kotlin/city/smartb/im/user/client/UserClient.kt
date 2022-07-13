@@ -2,11 +2,11 @@ package city.smartb.im.user.client
 
 import city.smartb.im.commons.http.ClientJvm
 import city.smartb.im.user.domain.features.command.UserCreateCommand
-import city.smartb.im.user.domain.features.command.UserCreateResult
-import city.smartb.im.user.domain.features.command.UserResetPasswordCommand
-import city.smartb.im.user.domain.features.command.UserResetPasswordResult
+import city.smartb.im.user.domain.features.command.UserCreatedEvent
 import city.smartb.im.user.domain.features.command.UserUpdateCommand
-import city.smartb.im.user.domain.features.command.UserUpdateResult
+import city.smartb.im.user.domain.features.command.UserUpdatePasswordCommand
+import city.smartb.im.user.domain.features.command.UserUpdatedEvent
+import city.smartb.im.user.domain.features.command.UserUpdatedPasswordEvent
 import city.smartb.im.user.domain.features.query.UserGetQuery
 import city.smartb.im.user.domain.features.query.UserGetResult
 import city.smartb.im.user.domain.features.query.UserPageQuery
@@ -24,11 +24,11 @@ class UserClient(
             List<UserPageResult> = post("userPage", queries)
 
     suspend fun userCreate(commands: List<UserCreateCommand>):
-            List<UserCreateResult> = post("userCreate", commands)
+            List<UserCreatedEvent> = post("userCreate", commands)
 
     suspend fun userUpdate(commands: List<UserUpdateCommand>):
-            List<UserUpdateResult> = post("userUpdate", commands)
+            List<UserUpdatedEvent> = post("userUpdate", commands)
 
-    suspend fun userResetPassword(commands: List<UserResetPasswordCommand>):
-            List<UserResetPasswordResult> = post("userResetPassword", commands)
+    suspend fun userResetPassword(commands: List<UserUpdatePasswordCommand>):
+            List<UserUpdatedPasswordEvent> = post("userResetPassword", commands)
 }

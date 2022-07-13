@@ -12,7 +12,7 @@ import f2.dsl.fnc.F2Function
  * @d2 section
  * @parent [city.smartb.im.user.domain.D2UserCommandSection]
  */
-typealias UserUpdateFunction = F2Function<UserUpdateCommand, UserUpdateResult>
+typealias UserUpdateFunction = F2Function<UserUpdateCommand, UserUpdatedEvent>
 
 typealias KeycloakUserUpdateCommand = i2.keycloak.f2.user.domain.features.command.UserUpdateCommand
 typealias KeycloakUserUpdateFunction = i2.keycloak.f2.user.domain.features.command.UserUpdateFunction
@@ -26,12 +26,6 @@ data class UserUpdateCommand(
      * Identifier of the user.
      */
     val id: UserId,
-
-    /**
-     * Email address.
-     * @example [city.smartb.im.user.domain.model.User.email]
-     */
-    val email: String,
 
     /**
      * First name of the user.
@@ -72,13 +66,19 @@ data class UserUpdateCommand(
      * @example [["admin"]]
      */
     val roles: List<String>,
+
+    /**
+     * Additional arbitrary attributes assigned to the user.
+     * @example [city.smartb.im.user.domain.model.User.attributes]
+     */
+    val attributes: Map<String, String>?
 ): Command
 
 /**
  * @d2 event
  * @parent [UserUpdateFunction]
  */
-data class UserUpdateResult(
+data class UserUpdatedEvent(
     /**
      * Identifier of the user.
      */
