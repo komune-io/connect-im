@@ -64,6 +64,12 @@ interface Organization {
      * @example [["admin", "write_user", "read_user", "write_organization", "read_organization"]]
      */
     val roles: List<String>?
+
+    /**
+     * Creation date of the organization, as UNIX timestamp in milliseconds.
+     * @example 1656938975000
+     */
+    val creationDate: Long
 }
 
 data class OrganizationBase(
@@ -74,5 +80,6 @@ data class OrganizationBase(
     override val address: AddressBase?,
     override val website: String?,
     override val attributes: Map<String, String>,
-    override val roles: List<String>?
+    override val roles: List<String>?,
+    override val creationDate: Long
 ): Organization

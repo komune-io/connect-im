@@ -13,7 +13,8 @@ fun InseeOrganization.toOrganization() = OrganizationBase(
     address = adresseEtablissement.toAddress(),
     website = null,
     roles = null,
-    attributes = emptyMap()
+    attributes = emptyMap(),
+    creationDate = System.currentTimeMillis()
 )
 
 fun InseeAddress.toAddress() = AddressBase(

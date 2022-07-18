@@ -8,9 +8,10 @@ import city.smartb.im.organization.domain.model.OrganizationRef
 import i2.keycloak.f2.group.domain.model.GroupModel
 
 private val imGroupAttributes = listOf(
-    Organization::siret.name,
     Organization::address.name,
+    Organization::creationDate.name,
     Organization::description.name,
+    Organization::siret.name,
     Organization::website.name
 )
 
@@ -22,7 +23,8 @@ fun GroupModel.toOrganization() = OrganizationBase(
     description = attributes[Organization::description.name],
     website = attributes[Organization::website.name],
     attributes = attributes.filterKeys { key -> key !in imGroupAttributes },
-    roles = roles
+    roles = roles,
+    creationDate = attributes[Organization::creationDate.name]?.toLong() ?: 0
 )
 
 fun GroupModel.toOrganizationRef() = OrganizationRef(

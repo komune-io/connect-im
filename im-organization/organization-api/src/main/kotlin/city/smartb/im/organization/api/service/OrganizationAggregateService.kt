@@ -80,10 +80,11 @@ class OrganizationAggregateService(
         return GroupCreateCommand(
             name = name,
             attributes = listOfNotNull(
-                siret?.let { ::siret.name to it },
-                address?.let { ::address.name to it.toJson() },
-                description?.let { ::description.name to it },
-                website?.let { ::website.name to it }
+                siret?.let { Organization::siret.name to it },
+                address?.let { Organization::address.name to it.toJson() },
+                description?.let { Organization::description.name to it },
+                website?.let { Organization::website.name to it },
+                Organization::creationDate.name to System.currentTimeMillis().toString()
             ).toMap().plus(attributes.orEmpty()),
             roles = roles ?: emptyList(),
             realmId = auth.realmId,
@@ -98,10 +99,11 @@ class OrganizationAggregateService(
             id = id,
             name = name,
             attributes = listOfNotNull(
-                organization::siret.name to organization.siret,
-                address?.let { ::address.name to it.toJson() },
-                description?.let { ::description.name to it },
-                website?.let { ::website.name to it }
+                Organization::siret.name to organization.siret,
+                address?.let { Organization::address.name to it.toJson() },
+                description?.let { Organization::description.name to it },
+                website?.let { Organization::website.name to it },
+                Organization::creationDate.name to organization.creationDate.toString()
             ).toMap().plus(attributes.orEmpty()),
             roles = roles ?: emptyList(),
             realmId = auth.realmId,
