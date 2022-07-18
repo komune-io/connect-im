@@ -4,6 +4,7 @@ import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.im.api.auth.ImAuthenticationResolver
 import city.smartb.im.commons.utils.toJson
+import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.api.config.UserFsConfig
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateFunction
@@ -26,6 +27,7 @@ import city.smartb.im.user.domain.features.command.UserUpdatedPasswordEvent
 import city.smartb.im.user.domain.features.command.UserUploadLogoCommand
 import city.smartb.im.user.domain.features.command.UserUploadedLogoEvent
 import city.smartb.im.user.domain.features.query.UserGetQuery
+import city.smartb.im.user.domain.model.UserId
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsCommand
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsFunction
@@ -51,50 +53,22 @@ class UserAggregateService(
     private val userSetAttributesFunction: UserSetAttributesFunction
 ) {
     suspend fun create(command: UserCreateCommand): UserCreatedEvent {
-        val auth = authenticationResolver.getAuth()
         val userId = command.toKeycloakUserCreateCommand().invokeWith(keycloakUserCreateFunction).id
 
-        if (!command.memberOf.isNullOrBlank()) {
-            UserJoinGroupCommand(
-                id = userId,
-                groupId = command.memberOf!!,
-                realmId = auth.realmId,
-                auth = auth
-            ).invokeWith(userJoinGroupFunction)
-        }
+        command.memberOf?.let { joinOrganization(userId, it) }
 
         if (command.roles.isNotEmpty()) {
-            UserRolesSetCommand(
-                id = userId,
-                roles = command.roles,
-                auth = auth,
-                realmId = auth.realmId
-            ).invokeWith(userRolesSetFunction)
+            setRoles(userId, command.roles)
         }
 
         if (command.sendEmailLink) {
-            UserEmailSendActionsCommand(
-                userId = userId,
-                clientId = null,
-                redirectUri = null,
-                actions = listOf("UPDATE_PASSWORD"),
-                realmId = auth.realmId,
-                auth = auth
-            ).invokeWith(userEmailSendActionsFunction)
+            sendUpdatePassword(userId)
         }
         return UserCreatedEvent(userId)
     }
 
     suspend fun resetPassword(command: UserResetPasswordCommand): UserResetPasswordEvent {
-        val auth = authenticationResolver.getAuth()
-        UserEmailSendActionsCommand(
-            userId = command.id,
-            clientId = null,
-            redirectUri = null,
-            actions = listOf("UPDATE_PASSWORD"),
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(userEmailSendActionsFunction)
+        sendUpdatePassword(command.id)
         return UserResetPasswordEvent(command.id)
     }
 
@@ -122,22 +96,11 @@ class UserAggregateService(
             ).invokeWith(userJoinGroupFunction)
         }
 
-        UserRolesSetCommand(
-            id = command.id,
-            roles = command.roles,
-            auth = auth,
-            realmId = auth.realmId
-        ).invokeWith(userRolesSetFunction)
+        command.memberOf?.let { joinOrganization(command.id, it) }
+        setRoles(command.id, command.roles)
 
         if (command.sendEmailLink) {
-            UserEmailSendActionsCommand(
-                userId = command.id,
-                clientId = null,
-                redirectUri = null,
-                actions = listOf("UPDATE_PASSWORD"),
-                realmId = auth.realmId,
-                auth = auth
-            ).invokeWith(userEmailSendActionsFunction)
+            sendUpdatePassword(command.id)
         }
         return UserUpdatedEvent(command.id)
     }
@@ -176,6 +139,41 @@ class UserAggregateService(
         return UserUpdatedEmailEvent(
             id = command.id
         )
+    }
+
+    private suspend fun joinOrganization(userId: UserId, organizationId: OrganizationId) {
+        val auth = authenticationResolver.getAuth()
+        if (organizationId.isNotBlank()) {
+            UserJoinGroupCommand(
+                id = userId,
+                groupId = organizationId,
+                realmId = auth.realmId,
+                auth = auth,
+                leaveOtherGroups = true
+            ).invokeWith(userJoinGroupFunction)
+        }
+    }
+
+    private suspend fun setRoles(userId: UserId, roles: List<String>) {
+        val auth = authenticationResolver.getAuth()
+        UserRolesSetCommand(
+            id = userId,
+            roles = roles,
+            auth = auth,
+            realmId = auth.realmId
+        ).invokeWith(userRolesSetFunction)
+    }
+
+    private suspend fun sendUpdatePassword(userId: UserId) {
+        val auth = authenticationResolver.getAuth()
+        UserEmailSendActionsCommand(
+            userId = userId,
+            clientId = null,
+            redirectUri = null,
+            actions = listOf("UPDATE_PASSWORD"),
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(userEmailSendActionsFunction)
     }
 
     private suspend fun UserUpdateCommand.toKeycloakUserUpdateCommand(): KeycloakUserUpdateCommand {
