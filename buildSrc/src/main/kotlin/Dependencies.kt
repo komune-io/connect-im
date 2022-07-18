@@ -5,7 +5,7 @@ import city.smartb.gradle.dependencies.add
 
 object PluginVersions {
 	val fixers = FixersPluginVersions.fixers
-	const val d2 = "0.8.2"
+	const val d2 = "0.9.0"
 	const val springBoot = FixersPluginVersions.springBoot
 	const val kotlin = FixersPluginVersions.kotlin
 }
@@ -13,7 +13,7 @@ object PluginVersions {
 object Versions {
 	val i2 = "0.9.0"
 	val f2 = PluginVersions.fixers
-	val fs = "next-SNAPSHOT"
+	val fs = "0.9.1"
 	val s2 = PluginVersions.fixers
 	const val ktor = "2.0.3"
 
