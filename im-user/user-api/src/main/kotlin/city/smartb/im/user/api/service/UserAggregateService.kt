@@ -25,6 +25,7 @@ import city.smartb.im.user.domain.features.command.UserUpdatedEvent
 import city.smartb.im.user.domain.features.command.UserUpdatedPasswordEvent
 import city.smartb.im.user.domain.features.command.UserUploadLogoCommand
 import city.smartb.im.user.domain.features.command.UserUploadedLogoEvent
+import city.smartb.im.user.domain.features.query.UserGetQuery
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsCommand
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsFunction
@@ -52,21 +53,24 @@ class UserAggregateService(
     suspend fun create(command: UserCreateCommand): UserCreatedEvent {
         val auth = authenticationResolver.getAuth()
         val userId = command.toKeycloakUserCreateCommand().invokeWith(keycloakUserCreateFunction).id
-        command.memberOf?.let {
+
+        if (!command.memberOf.isNullOrBlank()) {
             UserJoinGroupCommand(
                 id = userId,
-                groupId = it,
+                groupId = command.memberOf!!,
                 realmId = auth.realmId,
                 auth = auth
             ).invokeWith(userJoinGroupFunction)
         }
 
-        UserRolesSetCommand(
-            id = userId,
-            roles = command.roles,
-            auth = auth,
-            realmId = auth.realmId
-        ).invokeWith(userRolesSetFunction)
+        if (command.roles.isNotEmpty()) {
+            UserRolesSetCommand(
+                id = userId,
+                roles = command.roles,
+                auth = auth,
+                realmId = auth.realmId
+            ).invokeWith(userRolesSetFunction)
+        }
 
         if (command.sendEmailLink) {
             UserEmailSendActionsCommand(
@@ -111,7 +115,7 @@ class UserAggregateService(
         command.memberOf?.let {
             UserJoinGroupCommand(
                 id = command.id,
-                groupId = it,
+                groupId = command.memberOf!!,
                 realmId = auth.realmId,
                 auth = auth,
                 leaveOtherGroups = true
