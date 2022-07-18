@@ -11,7 +11,7 @@ object PluginVersions {
 }
 
 object Versions {
-	val i2 = "0.9.0"
+	val i2 = "next-SNAPSHOT"
 	val f2 = PluginVersions.fixers
 	val fs = "0.9.1"
 	val s2 = PluginVersions.fixers

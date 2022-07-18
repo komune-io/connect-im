@@ -30,8 +30,8 @@ import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsCommand
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsFunction
 import i2.keycloak.f2.user.domain.features.command.UserJoinGroupCommand
 import i2.keycloak.f2.user.domain.features.command.UserJoinGroupFunction
-import i2.keycloak.f2.user.domain.features.command.UserRolesGrantCommand
-import i2.keycloak.f2.user.domain.features.command.UserRolesGrantFunction
+import i2.keycloak.f2.user.domain.features.command.UserRolesSetCommand
+import i2.keycloak.f2.user.domain.features.command.UserRolesSetFunction
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
 import org.springframework.stereotype.Service
@@ -46,7 +46,7 @@ class UserAggregateService(
     private val keycloakUserUpdatePasswordFunction: KeycloakUserUpdatePasswordFunction,
     private val userEmailSendActionsFunction: UserEmailSendActionsFunction,
     private val userJoinGroupFunction: UserJoinGroupFunction,
-    private val userRolesGrantFunction: UserRolesGrantFunction,
+    private val userRolesSetFunction: UserRolesSetFunction,
     private val userSetAttributesFunction: UserSetAttributesFunction
 ) {
     suspend fun create(command: UserCreateCommand): UserCreatedEvent {
@@ -61,12 +61,12 @@ class UserAggregateService(
             ).invokeWith(userJoinGroupFunction)
         }
 
-        UserRolesGrantCommand(
+        UserRolesSetCommand(
             id = userId,
             roles = command.roles,
             auth = auth,
             realmId = auth.realmId
-        ).invokeWith(userRolesGrantFunction)
+        ).invokeWith(userRolesSetFunction)
 
         if (command.sendEmailLink) {
             UserEmailSendActionsCommand(
@@ -118,12 +118,12 @@ class UserAggregateService(
             ).invokeWith(userJoinGroupFunction)
         }
 
-        UserRolesGrantCommand(
+        UserRolesSetCommand(
             id = command.id,
             roles = command.roles,
             auth = auth,
             realmId = auth.realmId
-        ).invokeWith(userRolesGrantFunction)
+        ).invokeWith(userRolesSetFunction)
 
         if (command.sendEmailLink) {
             UserEmailSendActionsCommand(

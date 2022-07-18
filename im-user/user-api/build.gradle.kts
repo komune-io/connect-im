@@ -14,7 +14,7 @@ dependencies {
     implementation("city.smartb.i2:user-f2-email-actions:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-join-group:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-query:${Versions.i2}")
-    implementation("city.smartb.i2:user-f2-roles-grant:${Versions.i2}")
+    implementation("city.smartb.i2:user-f2-roles-set:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-set-attributes:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-update:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-update-email:${Versions.i2}")
