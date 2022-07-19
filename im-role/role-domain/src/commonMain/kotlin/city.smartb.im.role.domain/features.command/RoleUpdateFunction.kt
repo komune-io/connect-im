@@ -7,9 +7,10 @@ import i2.keycloak.f2.role.domain.RoleId
 import i2.keycloak.f2.role.domain.RoleName
 
 /**
- * Updates a role.
+ * Update a role.
  * @d2 function
- * @parent [city.smartb.im.role.domain.D2RoleCommandSection]
+ * @parent [city.smartb.im.role.domain.D2RolePage]
+ * @order 20
  */
 typealias RoleUpdateFunction = F2Function<RoleUpdateCommand, RoleUpdatedEvent>
 

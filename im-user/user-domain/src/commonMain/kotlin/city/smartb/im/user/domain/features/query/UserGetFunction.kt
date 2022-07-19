@@ -29,7 +29,7 @@ data class UserGetQuery(
 ): Command
 
 /**
- * @d2 event
+ * @d2 result
  * @parent [UserGetFunction]
  */
 data class UserGetResult(

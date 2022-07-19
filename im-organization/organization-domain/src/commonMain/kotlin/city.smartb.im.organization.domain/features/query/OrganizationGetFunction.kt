@@ -26,7 +26,7 @@ data class OrganizationGetQuery(
 ): Command
 
 /**
- * @d2 event
+ * @d2 result
  * @parent [OrganizationGetFunction]
  */
 data class OrganizationGetResult(

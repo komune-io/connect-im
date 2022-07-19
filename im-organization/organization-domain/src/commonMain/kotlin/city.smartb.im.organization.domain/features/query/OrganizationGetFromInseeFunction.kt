@@ -27,7 +27,7 @@ data class OrganizationGetFromInseeQuery(
 ): Command
 
 /**
- * @d2 event
+ * @d2 result
  * @parent [OrganizationGetFromInseeFunction]
  */
 data class OrganizationGetFromInseeResult(

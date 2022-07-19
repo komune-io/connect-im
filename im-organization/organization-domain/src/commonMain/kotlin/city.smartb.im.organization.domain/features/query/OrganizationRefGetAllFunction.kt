@@ -20,7 +20,7 @@ typealias OrganizationRefGetAllFunction = F2Function<OrganizationRefGetAllQuery,
 class OrganizationRefGetAllQuery: Command
 
 /**
- * @d2 event
+ * @d2 result
  * @parent [OrganizationRefGetAllFunction]
  */
 data class OrganizationRefGetAllResult(

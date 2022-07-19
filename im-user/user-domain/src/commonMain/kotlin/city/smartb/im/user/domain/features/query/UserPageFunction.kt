@@ -56,7 +56,7 @@ data class UserPageQuery(
 ): Command
 
 /**
- * @d2 event
+ * @d2 result
  * @parent [UserPageFunction]
  */
 data class UserPageResult(

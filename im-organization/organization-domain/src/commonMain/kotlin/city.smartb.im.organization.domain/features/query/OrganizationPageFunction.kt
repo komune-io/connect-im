@@ -48,7 +48,7 @@ data class OrganizationPageQuery(
 ): Command
 
 /**
- * @d2 event
+ * @d2 result
  * @parent [OrganizationPageFunction]
  */
 data class OrganizationPageResult(

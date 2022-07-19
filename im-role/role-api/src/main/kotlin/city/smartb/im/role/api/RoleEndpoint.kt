@@ -6,20 +6,19 @@ import city.smartb.im.role.domain.features.command.RoleAddCompositesFunction
 import city.smartb.im.role.domain.features.command.RoleCreateFunction
 import city.smartb.im.role.domain.features.command.RoleUpdateFunction
 import f2.dsl.fnc.f2Function
-import javax.annotation.security.RolesAllowed
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import javax.annotation.security.RolesAllowed
 
 /**
  * @d2 service
- * @title Role/Entrypoints
  */
 @Configuration
 class RoleEndpoint(
     private val roleAggregateService: RoleAggregateService
 ) {
     /**
-     * Associates roles to another role. Associated roles must exist.
+     * Associate roles to another role. Associated roles must exist.
      */
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
@@ -28,7 +27,7 @@ class RoleEndpoint(
     }
 
     /**
-     * Creates a Role.
+     * Create a Role.
      */
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
@@ -37,7 +36,7 @@ class RoleEndpoint(
     }
 
     /**
-     * Updates a Role.
+     * Update a Role.
      */
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
