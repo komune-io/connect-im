@@ -4,7 +4,7 @@
 
 Type: `RoleAddCompositesFunction`
 
-Adds composites roles to a role.
+Add composites roles to a role.
 
 
 

@@ -4,7 +4,7 @@
 
 Type: `RoleUpdateFunction`
 
-Updates a role.
+Update a role.
 
 
 

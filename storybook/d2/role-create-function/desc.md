@@ -4,7 +4,7 @@
 
 Type: `RoleCreateFunction`
 
-Creates a new role.
+Create a new role.
 
 
 

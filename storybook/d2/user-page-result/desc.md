@@ -1,6 +1,6 @@
 
 
-### Event
+### Result
 
 Type: `UserPageResult`
 

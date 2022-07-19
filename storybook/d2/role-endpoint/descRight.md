@@ -9,23 +9,23 @@
   
 <article>
 
-**roleAddComposites** ( cmd: [`RoleAddCompositesCommand`](/docs/role-commands--page#command) ) : [`RoleAddedCompositesEvent`](/docs/role-commands--page#event) <br/> *Access: super_admin* 
+**roleAddComposites** ( cmd: [`RoleAddCompositesCommand`](/docs/role-model--page#command) ) : [`RoleAddedCompositesEvent`](/docs/role-model--page#event) <br/> *Access: super_admin* 
 
-Associates roles to another role. Associated roles must exist.
-
-</article>
-<article>
-
-**roleCreate** ( cmd: [`RoleCreateCommand`](/docs/role-commands--page#command) ) : [`RoleCreatedEvent`](/docs/role-commands--page#event) <br/> *Access: super_admin* 
-
-Creates a Role.
+Associate roles to another role. Associated roles must exist.
 
 </article>
 <article>
 
-**roleUpdate** ( cmd: [`RoleUpdateCommand`](/docs/role-commands--page#command) ) : [`RoleUpdatedEvent`](/docs/role-commands--page#event) <br/> *Access: super_admin* 
+**roleCreate** ( cmd: [`RoleCreateCommand`](/docs/role-model--page#command) ) : [`RoleCreatedEvent`](/docs/role-model--page#event) <br/> *Access: super_admin* 
 
-Updates a Role.
+Create a Role.
+
+</article>
+<article>
+
+**roleUpdate** ( cmd: [`RoleUpdateCommand`](/docs/role-model--page#command) ) : [`RoleUpdatedEvent`](/docs/role-model--page#event) <br/> *Access: super_admin* 
+
+Update a Role.
 
 </article>
 
