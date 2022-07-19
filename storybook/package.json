@@ -8,8 +8,8 @@
   "types": "src/index.ts",
   "devDependencies": {
     "@babel/core": "^7.16.0",
-    "@smartb/g2-documentation": "^1.0.0-alpha.32",
-    "@smartb/g2-storybook-documentation": "^1.0.0-alpha.35",
+    "@smartb/g2-documentation": "^1.0.0-alpha.52",
+    "@smartb/g2-storybook-documentation": "^1.0.0-alpha.52",
     "@storybook/addon-actions": "^6.5.3",
     "@storybook/addon-docs": "^6.5.3",
     "@storybook/addon-essentials": "^6.5.3",
@@ -19,7 +19,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-i18next": "^11.8.13",
-    "@smartb/g2-themes": "^1.0.0-alpha.32",
+    "@smartb/g2-themes": "^1.0.0-alpha.52",
     "@mui/material": "^5.2.7",
     "@emotion/react": "^11.7.1"
   },
