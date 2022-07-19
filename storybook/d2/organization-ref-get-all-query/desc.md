@@ -1,8 +1,8 @@
 
 
-### OrganizationRefGetAllQuery
+### Query
 
-
+Type: `OrganizationRefGetAllQuery`
 
 
 

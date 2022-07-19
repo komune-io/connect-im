@@ -1,22 +1,22 @@
 
 
-### UserPageQuery
+### Query
 
-
+Type: `UserPageQuery`
 
 
 
   
 <article>
 
-***email*** `String?` 
+***attributes*** `Map<String, String>?` 
 
-Email filter.
+Arbitrary attributes filter.
 
 </article>
 <article>
 
-***organizationId*** [`OrganizationId?`](/docs/organization-model--page#organizationid) 
+***organizationId*** [`OrganizationId?`](/docs/organization--page#organizationid) 
 
 Organization ID filter.
 
@@ -33,6 +33,13 @@ Number of the page.
 ***role*** `String?` 
 
 Role filter.
+
+</article>
+<article>
+
+***search*** `String?` 
+
+Search string filtering on the email, firstname and lastname of the user.
 
 </article>
 <article>

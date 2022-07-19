@@ -1,3 +1,22 @@
-import OrganizationEndpointDesc from './desc.md'
+import { DescriptedCode } from '@smartb/g2-documentation'
+import OrganizationEndpointDescLeft from './descLeft.md'
+import OrganizationEndpointDescRight from './descRight.md'
 
-<OrganizationEndpointDesc />
+<DescriptedCode
+  leftElement={<OrganizationEndpointDescLeft />}
+  leftContainerProps={
+    {
+      width: "50%"
+    }
+  }
+  rightElement={<OrganizationEndpointDescRight />}
+  rightContainerProps={
+    {
+      width: "50%",
+      position: "relative",
+      paddingTop: "0"
+    }
+  }
+/>
+
+---

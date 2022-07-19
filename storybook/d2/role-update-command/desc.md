@@ -1,8 +1,8 @@
 
 
-### RoleUpdateCommand
+### Command
 
-
+Type: `RoleUpdateCommand`
 
 
 
@@ -11,7 +11,7 @@
 
 ***composites*** `List<RoleName>` 
 
-Roles to associate with the role. These roles must exist to be associated.
+Roles to associate with the role. These roles must exist to be associated. It removes all the composite roles existing, and replaces it by the given composite roles.
 
 </article>
 <article>

@@ -1,17 +1,17 @@
 
 
-### OrganizationPageQuery
+### Query
 
-
+Type: `OrganizationPageQuery`
 
 
 
   
 <article>
 
-***name*** `String?` 
+***attributes*** `Map<String, String>?` 
 
-Name filter.
+Arbitrary attributes filter.
 
 </article>
 <article>
@@ -26,6 +26,13 @@ Number of the page.
 ***role*** `String?` 
 
 Role filter.
+
+</article>
+<article>
+
+***search*** `String?` 
+
+Search string filtering on the name of the organization.
 
 </article>
 <article>

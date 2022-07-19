@@ -1,10 +1,10 @@
 
 
-## UserPageFunction
+##  User Page 
 
+Type: `UserPageFunction`
 
-
-Gets a page of users.
+Get a page of users.
 
 
 

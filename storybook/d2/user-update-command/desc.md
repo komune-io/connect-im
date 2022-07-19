@@ -1,8 +1,8 @@
 
 
-### UserUpdateCommand
+### Command
 
-
+Type: `UserUpdateCommand`
 
 
 
@@ -16,9 +16,14 @@ Address of the user.
 </article>
 <article>
 
-***email*** `String` 
+***attributes*** `Map<String, String>?` 
 
-Email address.
+Additional arbitrary attributes assigned to the user.
+
+</article>
+<article>
+
+***email*** `String` 
 
 </article>
 <article>
@@ -37,14 +42,14 @@ First name of the user.
 </article>
 <article>
 
-***id*** [`UserId`](/docs/user-model--page#userid) 
+***id*** [`UserId`](#userid) 
 
 Identifier of the user.
 
 </article>
 <article>
 
-***memberOf*** [`OrganizationId?`](/docs/organization-model--page#organizationid) 
+***memberOf*** [`OrganizationId?`](/docs/organization--page#organizationid) 
 
 Organization to which the user belongs.
 
@@ -60,7 +65,7 @@ Telephone number of the user.
 
 ***roles*** `List<String>` 
 
-Roles assigned to the user.
+Add roles to the user.
 
 </article>
 <article>

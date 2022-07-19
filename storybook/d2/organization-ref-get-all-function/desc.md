@@ -1,10 +1,10 @@
 
 
-## OrganizationRefGetAllFunction
+##  Organization Ref Get All 
 
+Type: `OrganizationRefGetAllFunction`
 
-
-Gets all organization refs.
+Get all organization refs.
 
 
 

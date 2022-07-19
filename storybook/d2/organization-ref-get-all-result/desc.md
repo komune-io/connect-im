@@ -1,15 +1,15 @@
 
 
-### OrganizationRefGetAllResult
+### Event
 
-
+Type: `OrganizationRefGetAllResult`
 
 
 
   
 <article>
 
-***items*** `List<OrganizationRef>` 
+***items*** [`List<OrganizationRef>`](#organizationref) 
 
 All Organization Refs.
 

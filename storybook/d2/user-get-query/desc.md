@@ -1,15 +1,15 @@
 
 
-### UserGetQuery
+### Query
 
-
+Type: `UserGetQuery`
 
 
 
   
 <article>
 
-***id*** [`UserId`](/docs/user-model--page#userid) 
+***id*** [`UserId`](#userid) 
 
 Identifier of the user.
 

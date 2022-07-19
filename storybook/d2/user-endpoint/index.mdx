@@ -1,3 +1,22 @@
-import UserEndpointDesc from './desc.md'
+import { DescriptedCode } from '@smartb/g2-documentation'
+import UserEndpointDescLeft from './descLeft.md'
+import UserEndpointDescRight from './descRight.md'
 
-<UserEndpointDesc />
+<DescriptedCode
+  leftElement={<UserEndpointDescLeft />}
+  leftContainerProps={
+    {
+      width: "50%"
+    }
+  }
+  rightElement={<UserEndpointDescRight />}
+  rightContainerProps={
+    {
+      width: "50%",
+      position: "relative",
+      paddingTop: "0"
+    }
+  }
+/>
+
+---

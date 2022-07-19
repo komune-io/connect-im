@@ -1,15 +1,15 @@
 
 
-### OrganizationGetQuery
+### Query
 
-
+Type: `OrganizationGetQuery`
 
 
 
   
 <article>
 
-***id*** [`OrganizationId`](/docs/organization-model--page#organizationid) 
+***id*** [`OrganizationId`](#organizationid) 
 
 Identifier of the organization.
 

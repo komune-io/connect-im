@@ -1,10 +1,10 @@
 
 
-## OrganizationGetFromInseeFunction
+##  Organization Get From Insee 
 
+Type: `OrganizationGetFromInseeFunction`
 
-
-Gets an organization by Siret.
+Get an organization by Siret from the Insee Sirene API.
 
 
 

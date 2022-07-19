@@ -1,8 +1,8 @@
 
 
-### OrganizationGetFromInseeQuery
+### Query
 
-
+Type: `OrganizationGetFromInseeQuery`
 
 
 

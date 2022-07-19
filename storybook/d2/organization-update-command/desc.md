@@ -1,8 +1,8 @@
 
 
-### OrganizationUpdateCommand
+### Command
 
-
+Type: `OrganizationUpdateCommand`
 
 
 
@@ -16,6 +16,13 @@ Address of the organization.
 </article>
 <article>
 
+***attributes*** `Map<String, String>?` 
+
+Additional arbitrary attributes assigned to the organization.
+
+</article>
+<article>
+
 ***description*** `String?` 
 
 Description of the organization.
@@ -23,7 +30,7 @@ Description of the organization.
 </article>
 <article>
 
-***id*** [`OrganizationId`](/docs/organization-model--page#organizationid) 
+***id*** [`OrganizationId`](#organizationid) 
 
 Identifier of the organization.
 

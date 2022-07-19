@@ -1,3 +1,22 @@
-import RoleEndpointDesc from './desc.md'
+import { DescriptedCode } from '@smartb/g2-documentation'
+import RoleEndpointDescLeft from './descLeft.md'
+import RoleEndpointDescRight from './descRight.md'
 
-<RoleEndpointDesc />
+<DescriptedCode
+  leftElement={<RoleEndpointDescLeft />}
+  leftContainerProps={
+    {
+      width: "50%"
+    }
+  }
+  rightElement={<RoleEndpointDescRight />}
+  rightContainerProps={
+    {
+      width: "50%",
+      position: "relative",
+      paddingTop: "0"
+    }
+  }
+/>
+
+---

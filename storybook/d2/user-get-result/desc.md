@@ -1,15 +1,15 @@
 
 
-### UserGetResult
+### Event
 
-
+Type: `UserGetResult`
 
 
 
   
 <article>
 
-***item*** `UserBase?` 
+***item*** [`User?`](#user) 
 
 The user.
 

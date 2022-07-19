@@ -2,7 +2,7 @@
 
 ## Model
 
-
+Type: `Address`
 
 Representation of the address.
 

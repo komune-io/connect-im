@@ -1,10 +1,10 @@
 
 
-## UserResetPasswordFunction
+##  User Reset Password 
 
+Type: `UserResetPasswordFunction`
 
-
-Sets a new password for the user.
+Send an email to a user for them to reset their password.
 
 
 

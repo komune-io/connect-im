@@ -3,7 +3,7 @@
   "memberOf" : {
     "id" : "85171569-8970-45fb-b52a-85b59f06c292",
     "name" : "SmartB",
-    "roles" : [ "write_user", "read_user", "write_organization", "read_organization" ]
+    "roles" : [ "admin", "write_user", "read_user", "write_organization", "read_organization" ]
   },
   "email" : "user@smartb.city",
   "givenName" : "John",
@@ -14,5 +14,9 @@
     "city" : "Montpellier"
   },
   "phone" : "06 12 34 56 78",
-  "sendEmailLink" : "true"
+  "attributes" : {
+    "age" : "42"
+  },
+  "sendEmailLink" : "true",
+  "creationDate" : 1656938975000
 }

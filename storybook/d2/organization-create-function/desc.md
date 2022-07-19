@@ -1,10 +1,10 @@
 
 
-## OrganizationCreateFunction
+##  Organization Create 
 
+Type: `OrganizationCreateFunction`
 
-
-Creates a new organization.
+Create a new organization.
 
 
 

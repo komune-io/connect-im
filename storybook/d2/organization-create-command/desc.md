@@ -1,8 +1,8 @@
 
 
-### OrganizationCreateCommand
+### Command
 
-
+Type: `OrganizationCreateCommand`
 
 
 
@@ -12,6 +12,13 @@
 ***address*** `AddressBase?` 
 
 Address of the organization.
+
+</article>
+<article>
+
+***attributes*** `Map<String, String>?` 
+
+Additional arbitrary attributes assigned to the organization.
 
 </article>
 <article>
@@ -30,7 +37,7 @@ Official name of the organization.
 </article>
 <article>
 
-***parentOrganizationId*** [`OrganizationId?`](/docs/organization-model--page#organizationid) 
+***parentOrganizationId*** [`OrganizationId?`](#organizationid) 
 
 The identifier of a larger organization that this organization is a subOrganization of, if any.
 

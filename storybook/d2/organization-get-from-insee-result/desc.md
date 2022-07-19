@@ -1,15 +1,15 @@
 
 
-### OrganizationGetFromInseeResult
+### Event
 
-
+Type: `OrganizationGetFromInseeResult`
 
 
 
   
 <article>
 
-***item*** `OrganizationBase?` 
+***item*** [`Organization?`](#organization) 
 
 The organization.
 

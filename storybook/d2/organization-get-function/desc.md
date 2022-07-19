@@ -1,10 +1,10 @@
 
 
-## OrganizationGetFunction
+##  Organization Get 
 
+Type: `OrganizationGetFunction`
 
-
-Gets an organization by ID.
+Get an organization by ID.
 
 
 

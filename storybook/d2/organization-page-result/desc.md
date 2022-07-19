@@ -1,15 +1,15 @@
 
 
-### OrganizationPageResult
+### Event
 
-
+Type: `OrganizationPageResult`
 
 
 
   
 <article>
 
-***items*** `List<OrganizationBase>` 
+***items*** [`List<Organization>`](#organization) 
 
 List of organizations satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
 

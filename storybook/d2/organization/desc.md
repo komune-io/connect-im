@@ -4,7 +4,7 @@
 
 
 
-Representation of the organization.
+Representation of an organization.
 
 
 
@@ -16,6 +16,20 @@ Representation of the organization.
 ***address*** [`Address?`](/docs/commons-address--page#model) 
 
 Address of the organization.
+
+</article>
+<article>
+
+***attributes*** `Map<String, String>` 
+
+Platform-specific attributes assigned to the organization
+
+</article>
+<article>
+
+***creationDate*** `Long` 
+
+Creation date of the organization, as UNIX timestamp in milliseconds.
 
 </article>
 <article>
@@ -41,7 +55,7 @@ Official name of the organization.
 </article>
 <article>
 
-***roles*** `Array<String>?` 
+***roles*** `List<String>?` 
 
 Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
 

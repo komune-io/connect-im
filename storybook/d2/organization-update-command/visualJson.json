@@ -3,5 +3,8 @@
   "name" : "SmartB",
   "description" : "We use technology, design and systems thinking to tackle global sustainability & financing challenges.",
   "website" : "https://smartb.city/",
-  "roles" : [ "admin", "write_user", "read_user", "write_organization", "read_organization" ]
+  "roles" : [ "admin", "write_user", "read_user", "write_organization", "read_organization" ],
+  "attributes" : {
+    "otherWebsite" : "https://smartb.network"
+  }
 }

@@ -4,7 +4,7 @@
 
 
 
-Unique identifier of the user.
+Unique identifier of a user.
 
 
 

@@ -1,15 +1,15 @@
 
 
-### OrganizationGetResult
+### Event
 
-
+Type: `OrganizationGetResult`
 
 
 
   
 <article>
 
-***item*** `OrganizationBase?` 
+***item*** [`Organization?`](#organization) 
 
 The organization.
 

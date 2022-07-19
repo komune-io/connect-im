@@ -4,7 +4,7 @@
 
 
 
-Unique identifier of the organization.
+Unique identifier of an organization.
 
 
 

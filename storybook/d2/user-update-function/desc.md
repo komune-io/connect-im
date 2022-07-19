@@ -1,10 +1,10 @@
 
 
-## UserUpdateFunction
+##  User Update 
 
+Type: `UserUpdateFunction`
 
-
-Updates the user.
+Update a user.
 
 
 

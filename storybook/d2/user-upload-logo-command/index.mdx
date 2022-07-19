@@ -1,0 +1,16 @@
+import { CodeHighlighter, DescriptedCode } from '@smartb/g2-documentation'
+import UserUploadLogoCommandDesc from './desc.md'
+import UserUploadLogoCommandVisualJson from './visualJson.json'
+
+<DescriptedCode
+  leftElement={<UserUploadLogoCommandDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={UserUploadLogoCommandVisualJson}
+      language={"json"}
+      title={"Command"}
+    />
+  }
+  rightContainerProps={{}}
+/>

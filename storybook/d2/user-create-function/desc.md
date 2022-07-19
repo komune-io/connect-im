@@ -1,10 +1,10 @@
 
 
-## UserCreateFunction
+##  User Create 
 
+Type: `UserCreateFunction`
 
-
-Creates a new user.
+Create a new user.
 
 
 

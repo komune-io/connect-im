@@ -1,10 +1,10 @@
 
 
-## UserGetFunction
+##  User Get 
 
+Type: `UserGetFunction`
 
-
-Gets a user by ID.
+Get a user by ID.
 
 
 

@@ -1,10 +1,10 @@
 
 
-## OrganizationPageFunction
+##  Organization Page 
 
+Type: `OrganizationPageFunction`
 
-
-Gets a page of organizations.
+Get a page of organizations.
 
 
 

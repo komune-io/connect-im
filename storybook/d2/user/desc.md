@@ -4,7 +4,7 @@
 
 
 
-Representation of the user.
+Representation of a user.
 
 
 
@@ -16,6 +16,20 @@ Representation of the user.
 ***address*** [`Address?`](/docs/commons-address--page#model) 
 
 Address of the user.
+
+</article>
+<article>
+
+***attributes*** `Map<String, String>` 
+
+Platform-specific attributes assigned to the user
+
+</article>
+<article>
+
+***creationDate*** `Long` 
+
+Creation date of the user, as UNIX timestamp in milliseconds.
 
 </article>
 <article>
@@ -48,7 +62,7 @@ Identifier of the user.
 </article>
 <article>
 
-***memberOf*** [`OrganizationRefDTO?`](/docs/organizationref-model--page#organizationrefdto) 
+***memberOf*** [`OrganizationRef?`](/docs/organization--page#organizationref) 
 
 Organization Ref to which the user belongs.
 

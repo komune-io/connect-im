@@ -5,5 +5,8 @@
   "phone" : "06 12 34 56 78",
   "roles" : [ "admin" ],
   "sendEmailLink" : "true",
-  "memberOf" : "85171569-8970-45fb-b52a-85b59f06c292"
+  "memberOf" : "85171569-8970-45fb-b52a-85b59f06c292",
+  "attributes" : {
+    "age" : "42"
+  }
 }

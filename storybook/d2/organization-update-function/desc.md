@@ -1,10 +1,10 @@
 
 
-## OrganizationUpdateFunction
+##  Organization Update 
 
+Type: `OrganizationUpdateFunction`
 
-
-Updates an organization.
+Update an organization.
 
 
 

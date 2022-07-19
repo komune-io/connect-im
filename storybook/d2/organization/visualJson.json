@@ -9,5 +9,9 @@
     "city" : "Montpellier"
   },
   "website" : "https://smartb.city/",
-  "roles" : [ "admin", "write_user", "read_user", "write_organization", "read_organization" ]
+  "attributes" : {
+    "otherWebsite" : "https://smartb.network"
+  },
+  "roles" : [ "admin", "write_user", "read_user", "write_organization", "read_organization" ],
+  "creationDate" : 1656938975000
 }

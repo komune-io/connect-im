@@ -1,8 +1,8 @@
 
 
-### UserCreateCommand
+### Command
 
-
+Type: `UserCreateCommand`
 
 
 
@@ -12,6 +12,13 @@
 ***address*** `AddressBase?` 
 
 Address of the user.
+
+</article>
+<article>
+
+***attributes*** `Map<String, String>?` 
+
+Additional arbitrary attributes assigned to the user.
 
 </article>
 <article>
@@ -37,7 +44,7 @@ First name of the user.
 </article>
 <article>
 
-***memberOf*** [`OrganizationId?`](/docs/organization-model--page#organizationid) 
+***memberOf*** [`OrganizationId?`](/docs/organization--page#organizationid) 
 
 Organization to which the user belongs.
 

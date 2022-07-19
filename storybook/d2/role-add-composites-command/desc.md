@@ -1,8 +1,8 @@
 
 
-### RoleAddCompositesCommand
+### Command
 
-
+Type: `RoleAddCompositesCommand`
 
 
 
