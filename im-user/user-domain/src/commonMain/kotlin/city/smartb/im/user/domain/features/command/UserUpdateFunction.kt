@@ -8,9 +8,10 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Updates the user.
- * @d2 section
- * @parent [city.smartb.im.user.domain.D2UserCommandSection]
+ * Update a user.
+ * @d2 function
+ * @parent [city.smartb.im.user.domain.D2UserPage]
+ * @order 20
  */
 typealias UserUpdateFunction = F2Function<UserUpdateCommand, UserUpdatedEvent>
 

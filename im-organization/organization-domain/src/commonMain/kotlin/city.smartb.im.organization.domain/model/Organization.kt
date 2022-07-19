@@ -1,85 +1,73 @@
 package city.smartb.im.organization.domain.model
 
 import city.smartb.im.commons.model.Address
-import city.smartb.im.commons.model.AddressBase
 import i2.keycloak.f2.group.domain.model.GroupId
 
 /**
- * Unique identifier of the organization.
+ * Unique identifier of an organization.
  * @d2 model
- * @parent [city.smartb.im.organization.domain.D2OrganizationModelSection]
+ * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
  * @order 20
  * @visual json "85171569-8970-45fb-b52a-85b59f06c292"
  */
 typealias OrganizationId = GroupId
 
 /**
- * Representation of the organization.
+ * Representation of an organization.
  * @D2 model
- * @parent [city.smartb.im.organization.domain.D2OrganizationModelSection]
+ * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @order 10
  */
-interface Organization {
+data class Organization(
     /**
      * Identifier of the organization.
      */
-    val id: OrganizationId
+    val id: OrganizationId,
 
     /**
      * Siret number of the organization.
      * @example "84488096300013"
      */
-    val siret: String
+    val siret: String,
 
     /**
      * Official name of the organization.
      * @example "SmartB"
      */
-    val name: String
+    val name: String,
 
     /**
      * Description of the organization.
      * @example "We use technology, design and systems thinking to tackle global sustainability & financing challenges."
      */
-    val description: String?
+    val description: String?,
 
     /**
      * Address of the organization.
      */
-    val address: Address?
+    val address: Address?,
 
     /**
      * Website of the organization.
      * @example "https://smartb.city/"
      */
-    val website: String?
+    val website: String?,
 
     /**
      * Platform-specific attributes assigned to the organization
      * @example { "otherWebsite": "https://smartb.network" }
      */
-    val attributes: Map<String, String>
+    val attributes: Map<String, String>,
 
     /**
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
      * @example [["admin", "write_user", "read_user", "write_organization", "read_organization"]]
      */
-    val roles: List<String>?
+    val roles: List<String>?,
 
     /**
      * Creation date of the organization, as UNIX timestamp in milliseconds.
      * @example 1656938975000
      */
     val creationDate: Long
-}
-
-data class OrganizationBase(
-    override val id: OrganizationId,
-    override val siret: String,
-    override val name: String,
-    override val description: String?,
-    override val address: AddressBase?,
-    override val website: String?,
-    override val attributes: Map<String, String>,
-    override val roles: List<String>?,
-    override val creationDate: Long
-): Organization
+)

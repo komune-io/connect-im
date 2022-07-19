@@ -28,7 +28,7 @@ import javax.annotation.security.RolesAllowed
 
 /**
  * @d2 service
- * @title User/Entrypoints
+ * @parent [city.smartb.im.user.domain.D2UserPage]
  */
 @RestController
 @RequestMapping
@@ -41,7 +41,7 @@ class UserEndpoint(
     private val logger by Logger()
 
     /**
-     * Fetches a User by its ID.
+     * Fetch a User by its ID.
      */
     @Bean
     @RolesAllowed(Roles.READ_USER)
@@ -51,7 +51,7 @@ class UserEndpoint(
     }
 
     /**
-     * Fetches a page of users.
+     * Fetch a page of users.
      */
     @Bean
     @RolesAllowed(Roles.READ_USER)
@@ -61,7 +61,7 @@ class UserEndpoint(
     }
 
     /**
-     * Creates a User.
+     * Create a User.
      */
     @Bean
     @RolesAllowed(Roles.WRITE_USER)
@@ -75,7 +75,7 @@ class UserEndpoint(
     }
 
     /**
-     * Updates a User.
+     * Update a User.
      */
     @Bean
     @RolesAllowed(Roles.WRITE_USER)
@@ -89,7 +89,7 @@ class UserEndpoint(
     }
 
     /**
-     * Send a reset password email to the given user.
+     * Send a reset password email to a given user.
      */
     @Bean
     fun userResetPassword(): UserResetPasswordFunction = f2Function { cmd ->
@@ -98,7 +98,7 @@ class UserEndpoint(
     }
 
     /**
-     * Sets the given email for the given user.
+     * Set the given email for a given user.
      */
     @Bean
     @RolesAllowed(Roles.WRITE_USER)
@@ -113,7 +113,7 @@ class UserEndpoint(
     }
 
     /**
-     * Sets the given password for the given user ID.
+     * Set the given password for a given user ID.
      */
     @Bean
     @RolesAllowed(Roles.WRITE_USER)

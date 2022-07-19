@@ -3,7 +3,6 @@ package city.smartb.im.organization.api.model
 import city.smartb.im.commons.model.AddressBase
 import city.smartb.im.commons.utils.parseJsonTo
 import city.smartb.im.organization.domain.model.Organization
-import city.smartb.im.organization.domain.model.OrganizationBase
 import city.smartb.im.organization.domain.model.OrganizationRef
 import i2.keycloak.f2.group.domain.model.GroupModel
 
@@ -15,7 +14,7 @@ private val imGroupAttributes = listOf(
     Organization::website.name
 )
 
-fun GroupModel.toOrganization() = OrganizationBase(
+fun GroupModel.toOrganization() = Organization(
     id = id,
     name = name,
     siret = attributes[Organization::siret.name].orEmpty(),

@@ -6,9 +6,10 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Sets a new email for the user.
+ * Set a new email for a user.
  * @d2 section
- * @parent [city.smartb.im.user.domain.D2UserCommandSection]
+ * @parent [city.smartb.im.user.domain.D2UserPage]
+ * @order 30
  */
 typealias UserUpdateEmailFunction = F2Function<UserUpdateEmailCommand, UserUpdatedEmailEvent>
 

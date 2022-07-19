@@ -6,9 +6,10 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Gets all organization refs.
- * @d2 section
- * @parent [city.smartb.im.organization.domain.D2OrganizationRefQuerySection]
+ * Get all organization refs.
+ * @d2 function
+ * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @order 40
  */
 typealias OrganizationRefGetAllFunction = F2Function<OrganizationRefGetAllQuery, OrganizationRefGetAllResult>
 

@@ -1,14 +1,15 @@
 package city.smartb.im.organization.domain.features.query
 
-import city.smartb.im.organization.domain.model.OrganizationBase
+import city.smartb.im.organization.domain.model.Organization
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Gets a page of organizations.
- * @d2 section
- * @parent [city.smartb.im.organization.domain.D2OrganizationQuerySection]
+ * Get a page of organizations.
+ * @d2 function
+ * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @order 30
  */
 typealias OrganizationPageFunction = F2Function<OrganizationPageQuery, OrganizationPageResult>
 
@@ -51,12 +52,12 @@ data class OrganizationPageQuery(
  * @parent [OrganizationPageFunction]
  */
 data class OrganizationPageResult(
-    /**
+	/**
 	 * List of organizations satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
 	 */
-	val items: List<OrganizationBase>,
+	val items: List<Organization>,
 
-    /**
+	/**
 	 * The total amount of users satisfying the requesting filters.
 	 * @example 38
 	 */

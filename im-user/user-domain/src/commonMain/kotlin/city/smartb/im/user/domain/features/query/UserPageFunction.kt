@@ -1,15 +1,16 @@
 package city.smartb.im.user.domain.features.query
 
 import city.smartb.im.organization.domain.model.OrganizationId
-import city.smartb.im.user.domain.model.UserBase
+import city.smartb.im.user.domain.model.User
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Gets a page of users.
- * @d2 section
- * @parent [city.smartb.im.user.domain.D2UserQuerySection]
+ * Get a page of users.
+ * @d2 function
+ * @parent [city.smartb.im.user.domain.D2UserPage]
+ * @order 30
  */
 typealias UserPageFunction = F2Function<UserPageQuery, UserPageResult>
 
@@ -62,7 +63,7 @@ data class UserPageResult(
 	/**
 	 * List of users satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
 	 */
-	val items: List<UserBase>,
+	val items: List<User>,
 
 	/**
 	 * The total amount of users satisfying the requesting filters.

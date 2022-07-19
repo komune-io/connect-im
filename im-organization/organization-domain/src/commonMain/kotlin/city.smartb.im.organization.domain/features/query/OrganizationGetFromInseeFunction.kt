@@ -1,14 +1,15 @@
 package city.smartb.im.organization.domain.features.query
 
-import city.smartb.im.organization.domain.model.OrganizationBase
+import city.smartb.im.organization.domain.model.Organization
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Gets an organization by Siret.
- * @d2 section
- * @parent [city.smartb.im.organization.domain.D2OrganizationQuerySection]
+ * Get an organization by Siret from the Insee Sirene API.
+ * @d2 function
+ * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @order 20
  */
 typealias OrganizationGetFromInseeFunction =
         F2Function<OrganizationGetFromInseeQuery, OrganizationGetFromInseeResult>
@@ -33,5 +34,5 @@ data class OrganizationGetFromInseeResult(
     /**
      * The organization.
      */
-    val item: OrganizationBase?
+    val item: Organization?
 ): Event

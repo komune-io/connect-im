@@ -7,9 +7,10 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Creates a new organization.
- * @d2 section
- * @parent [city.smartb.im.organization.domain.D2OrganizationCommandSection]
+ * Create a new organization.
+ * @d2 function
+ * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @order 10
  */
 typealias OrganizationCreateFunction = F2Function<OrganizationCreateCommand, OrganizationCreatedEvent>
 

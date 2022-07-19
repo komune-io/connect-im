@@ -5,7 +5,7 @@ import city.smartb.im.commons.model.AddressBase
 import city.smartb.im.commons.utils.parseJsonTo
 import city.smartb.im.organization.api.model.orEmpty
 import city.smartb.im.organization.domain.model.OrganizationRef
-import city.smartb.im.user.domain.model.UserBase
+import city.smartb.im.user.domain.model.User
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.query.UserGetGroupsFunction
 import i2.keycloak.f2.user.domain.features.query.UserGetGroupsQuery
@@ -15,7 +15,7 @@ class UserTransformer(
     private val authenticationResolver: ImAuthenticationResolver,
     private val userGetGroupsQueryFunction: UserGetGroupsFunction
 ) {
-	suspend fun toUser(user: UserModel): UserBase {
+	suspend fun toUser(user: UserModel): User {
 		val auth = authenticationResolver.getAuth()
 		val group = UserGetGroupsQuery(
 			userId = user.id,
@@ -30,24 +30,24 @@ class UserTransformer(
 		}
 
 		val imAttributes = listOf(
-			UserBase::address.name,
-			UserBase::phone.name,
-			UserBase::sendEmailLink.name
+			User::address.name,
+			User::phone.name,
+			User::sendEmailLink.name
 		)
 
 		val attributes = user.attributes.filterKeys { key -> key !in imAttributes }
 
-		return UserBase(
+		return User(
 			id = user.id,
 			memberOf = group,
 			email = user.email ?: "",
 			givenName = user.firstName ?: "",
 			familyName = user.lastName ?: "",
-			address = user.attributes[UserBase::address.name]?.parseJsonTo(AddressBase::class.java).orEmpty(),
-			phone = user.attributes[UserBase::phone.name],
+			address = user.attributes[User::address.name]?.parseJsonTo(AddressBase::class.java).orEmpty(),
+			phone = user.attributes[User::phone.name],
 			roles = user.roles,
 			attributes = attributes,
-			sendEmailLink = user.attributes[UserBase::sendEmailLink.name].toBoolean(),
+			sendEmailLink = user.attributes[User::sendEmailLink.name].toBoolean(),
 			creationDate = user.creationDate
 		)
 	}

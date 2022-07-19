@@ -8,7 +8,7 @@ import i2.keycloak.f2.role.domain.RoleName
 
 /**
  * Creates a new role.
- * @d2 section
+ * @d2 function
  * @parent [city.smartb.im.role.domain.D2RoleCommandSection]
  */
 typealias RoleCreateFunction = F2Function<RoleCreateCommand, RoleCreatedEvent>

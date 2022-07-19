@@ -3,9 +3,9 @@ package city.smartb.im.organization.api.model
 import city.smartb.im.commons.model.AddressBase
 import city.smartb.im.organization.api.model.insee.InseeAddress
 import city.smartb.im.organization.api.model.insee.InseeOrganization
-import city.smartb.im.organization.domain.model.OrganizationBase
+import city.smartb.im.organization.domain.model.Organization
 
-fun InseeOrganization.toOrganization() = OrganizationBase(
+fun InseeOrganization.toOrganization() = Organization(
     id = "",
     siret = siret,
     name = uniteLegale.denominationUniteLegale.orEmpty(),

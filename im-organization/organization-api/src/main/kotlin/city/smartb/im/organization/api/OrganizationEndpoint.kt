@@ -1,6 +1,5 @@
 package city.smartb.im.organization.api
 
-import city.smartb.i2.spring.boot.auth.PermissionEvaluator
 import city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE
 import city.smartb.im.api.config.Roles
 import city.smartb.im.commons.utils.contentByteArray
@@ -27,20 +26,19 @@ import javax.annotation.security.RolesAllowed
 
 /**
  * @d2 service
- * @title Organization/Entrypoints
+ * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
  */
 @RestController
 @RequestMapping
 @Configuration
 class OrganizationEndpoint(
     private val organizationFinderService: OrganizationFinderService,
-    private val organizationAggregateService: OrganizationAggregateService,
-    private val permissionEvaluator: PermissionEvaluator
+    private val organizationAggregateService: OrganizationAggregateService
 ) {
     private val logger by Logger()
 
     /**
-     * Fetches an Organization by its ID.
+     * Fetch an Organization by its ID.
      */
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
@@ -50,7 +48,7 @@ class OrganizationEndpoint(
     }
 
     /**
-     * Fetches an Organization by its siret number.
+     * Fetch an Organization by its siret number from the Insee Sirene API.
      */
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
@@ -60,7 +58,7 @@ class OrganizationEndpoint(
     }
 
     /**
-     * Fetches a page of organizations.
+     * Fetch a page of organizations.
      */
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
@@ -70,7 +68,7 @@ class OrganizationEndpoint(
     }
 
     /**
-     * Fetches all OrganizationRef.
+     * Fetch all OrganizationRef.
      */
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
@@ -80,7 +78,7 @@ class OrganizationEndpoint(
     }
 
     /**
-     * Creates an Organization.
+     * Create an organization.
      */
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
@@ -90,7 +88,7 @@ class OrganizationEndpoint(
     }
 
     /**
-     * Updates an Organization.
+     * Update an organization.
      */
     @Bean
     @RolesAllowed(Roles.WRITE_ORGANIZATION)

@@ -6,9 +6,10 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Updates the logo of the user.
- * @d2 section
- * @parent [city.smartb.im.user.domain.D2UserCommandSection]
+ * Update the logo of a user.
+ * @d2 function
+ * @parent [city.smartb.im.user.domain.D2UserPage]
+ * @order 60
  */
 typealias UserUploadLogoFunction = F2Function<UserUploadLogoCommand, UserUploadedLogoEvent>
 

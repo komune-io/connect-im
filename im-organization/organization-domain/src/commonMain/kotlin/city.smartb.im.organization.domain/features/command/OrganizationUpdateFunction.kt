@@ -7,9 +7,10 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Updates an organization.
- * @d2 section
- * @parent [city.smartb.im.organization.domain.D2OrganizationCommandSection]
+ * Update an organization.
+ * @d2 function
+ * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @order 20
  */
 typealias OrganizationUpdateFunction = F2Function<OrganizationUpdateCommand, OrganizationUpdatedResult>
 

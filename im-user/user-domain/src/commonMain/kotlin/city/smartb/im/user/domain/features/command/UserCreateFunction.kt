@@ -8,9 +8,10 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Creates a new user.
- * @d2 section
- * @parent [city.smartb.im.user.domain.D2UserCommandSection]
+ * Create a new user.
+ * @d2 function
+ * @parent [city.smartb.im.user.domain.D2UserPage]
+ * @order 10
  */
 typealias UserCreateFunction = F2Function<UserCreateCommand, UserCreatedEvent>
 

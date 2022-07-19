@@ -6,9 +6,10 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 
 /**
- * Sets a new password for the user.
- * @d2 section
- * @parent [city.smartb.im.user.domain.D2UserCommandSection]
+ * Set a new password for a user.
+ * @d2 function
+ * @parent [city.smartb.im.user.domain.D2UserPage]
+ * @order 40
  */
 typealias UserUpdatePasswordFunction = F2Function<UserUpdatePasswordCommand, UserUpdatedPasswordEvent>
 
