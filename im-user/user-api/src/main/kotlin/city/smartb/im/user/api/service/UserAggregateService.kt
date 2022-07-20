@@ -26,7 +26,6 @@ import city.smartb.im.user.domain.features.command.UserUpdatedEvent
 import city.smartb.im.user.domain.features.command.UserUpdatedPasswordEvent
 import city.smartb.im.user.domain.features.command.UserUploadLogoCommand
 import city.smartb.im.user.domain.features.command.UserUploadedLogoEvent
-import city.smartb.im.user.domain.features.query.UserGetQuery
 import city.smartb.im.user.domain.model.UserId
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsCommand

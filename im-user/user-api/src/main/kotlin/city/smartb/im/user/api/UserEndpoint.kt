@@ -12,8 +12,13 @@ import city.smartb.im.user.domain.features.command.UserUpdateFunction
 import city.smartb.im.user.domain.features.command.UserUpdatePasswordFunction
 import city.smartb.im.user.domain.features.command.UserUploadLogoCommand
 import city.smartb.im.user.domain.features.command.UserUploadedLogoEvent
+import city.smartb.im.user.domain.features.query.UserExistsByEmailFunction
+import city.smartb.im.user.domain.features.query.UserExistsByEmailResult
+import city.smartb.im.user.domain.features.query.UserGetByEmailFunction
+import city.smartb.im.user.domain.features.query.UserGetByEmailResult
 import city.smartb.im.user.domain.features.query.UserGetFunction
 import city.smartb.im.user.domain.features.query.UserGetQuery
+import city.smartb.im.user.domain.features.query.UserGetResult
 import city.smartb.im.user.domain.features.query.UserPageFunction
 import f2.dsl.fnc.f2Function
 import org.springframework.context.annotation.Bean
@@ -47,7 +52,29 @@ class UserEndpoint(
     @RolesAllowed(Roles.READ_USER)
     fun userGet(): UserGetFunction = f2Function { query ->
         logger.info("userGet: $query")
-        userFinderService.userGet(query)
+        userFinderService.userGet(query).let(::UserGetResult)
+    }
+
+    /**
+     * Fetch a User by its email address.
+     */
+    @Bean
+    @RolesAllowed(Roles.READ_USER)
+    fun userGetByEmail(): UserGetByEmailFunction = f2Function { query ->
+        logger.info("userGetByEmail: $query")
+        userFinderService.userGetByEmail(query.email).let(::UserGetByEmailResult)
+    }
+
+    /**
+     * Check if a User exists by its email address.
+     */
+    @Bean
+    @RolesAllowed(Roles.READ_USER)
+    fun userExistsByEmail(): UserExistsByEmailFunction = f2Function { query ->
+        logger.info("userExistsByEmail: $query")
+        UserExistsByEmailResult(
+            item = userFinderService.userGetByEmail(query.email) != null
+        )
     }
 
     /**
@@ -104,7 +131,7 @@ class UserEndpoint(
     @RolesAllowed(Roles.WRITE_USER)
     fun userUpdateEmail(): UserUpdateEmailFunction = f2Function { cmd ->
         logger.info("userUpdateEmail: $cmd")
-        val user = userFinderService.userGet(UserGetQuery(cmd.id)).item
+        val user = userFinderService.userGet(UserGetQuery(cmd.id))
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(user?.memberOf?.id)) {
             userAggregateService.updateEmail(cmd)
         } else {
@@ -119,7 +146,7 @@ class UserEndpoint(
     @RolesAllowed(Roles.WRITE_USER)
     fun userUpdatePassword(): UserUpdatePasswordFunction = f2Function { cmd ->
         logger.info("userUpdatePassword: $cmd")
-        val user = userFinderService.userGet(UserGetQuery(cmd.id)).item
+        val user = userFinderService.userGet(UserGetQuery(cmd.id))
         if (permissionEvaluator.isSuperAdmin() || permissionEvaluator.checkOrganizationId(user?.memberOf?.id)) {
             userAggregateService.updatePassword(cmd)
         } else {
