@@ -3,11 +3,14 @@ package city.smartb.im.organization.api.config
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileInitPublicDirectoryCommand
 import city.smartb.fs.s2.file.domain.model.FilePath
+import city.smartb.im.api.config.FsConfig
 import city.smartb.im.organization.domain.model.OrganizationId
 import kotlinx.coroutines.runBlocking
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
+@ConditionalOnBean(FsConfig::class)
 class OrganizationFsConfig(
     private val fileClient: FileClient
 ) {

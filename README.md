@@ -91,53 +91,6 @@ class ImConfig(
 }
 ```
 
-# Endpoints & Role
-
-## Organizations
-
-| Endpoint | Associated role       |
-| --- |-----------------------|
-| organizationCreate | super_admin           |
-| organizationUpdate | im_write_organization |
-| organizationGet | im_read_organization  |
-| organizationGetBySiret | im_read_organization  |
-| organizationPage | im_read_organization  |
-| organizationRefGetAll | im_read_organization  |
-
-| Roles                 | Endpoints |
-|-----------------------| --- |
-| im_write_organization | organizationUpdate |
-| im_read_organization  | organizationGet, organizationGetBySiret, organizationPage, organizationRefGetAll |
-| super_admin           | * |
-
-## Users
-
-| Endpoints | Associated role |
-| --- |--------------|
-| userCreate | im_write_user |
-| userUpdate | im_write_user |
-| userResetPassword | im_write_user |
-| userGet | im_read_user |
-| userPage | im_read_user |
-
-| Roles         | Endpoints |
-|---------------|---|
-| im_write_user | userCreate, userUpdate, userResetPassword |
-| im_read_user  | userGet, userPage |
-| super_admin   | * |
-
-## Roles
-
-| Endpoints | Associated role |
-| --- |-----------------|
-| roleAddComposites | super_admin     |
-| roleCreate | super_admin     |
-| roleUpdate | super_admin     |
-
-| Roles       | Endpoints |
-|-------------| --- |
-| super_admin | * |
-
 # Configuration
 
 Properties prefix: `i2.issuers[]`
@@ -201,4 +154,24 @@ Properties prefix: `i2.organization.insee`
 | token        | Token used to authenticate | c6ef3de5-3ef1-330a-8917-21f6750dcb09 | c6ef3de5-3ef1-330a-8917-21f6750dcb09 |
 | sirene-api   | Sirene-api URL             | https://api.insee.fr/entreprises/sirene/V3             | https://api.insee.fr/entreprises/sirene/V3             |
 
+Properties prefix: `fs`
+
+| Property     | Description                | Example                                  | Default                                |
+|--------------|----------------------------|------------------------------------------|----------------------------------------|
+| url          | Points to an FS instance. This property is optional but will disable associated features if not set (ex: upload logo) | http://localhost:8090 | null
+
 # Errors
+
+## FileClient not initialized  
+
+### Message
+
+`java.lang.IllegalStateException: FileClient not initialized.`
+
+### Cause
+
+Appears when trying to use a feature that calls FS but no FS configuration was provided.
+
+### Solution
+
+Define a [configuration](#configuration) pointing to a valid FS instance or do not use any feature that needs it.

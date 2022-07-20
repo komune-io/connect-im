@@ -36,12 +36,12 @@ import i2.keycloak.f2.user.domain.features.command.UserRolesSetCommand
 import i2.keycloak.f2.user.domain.features.command.UserRolesSetFunction
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class UserAggregateService(
     private val authenticationResolver: ImAuthenticationResolver,
-    private val fileClient: FileClient,
     private val keycloakUserCreateFunction: KeycloakUserCreateFunction,
     private val keycloakUserUpdateFunction: KeycloakUserUpdateFunction,
     private val keycloakUserUpdateEmailFunction: KeycloakUserUpdateEmailFunction,
@@ -51,6 +51,10 @@ class UserAggregateService(
     private val userRolesSetFunction: UserRolesSetFunction,
     private val userSetAttributesFunction: UserSetAttributesFunction
 ) {
+
+    @Autowired(required = false)
+    private lateinit var fileClient: FileClient
+
     suspend fun create(command: UserCreateCommand): UserCreatedEvent {
         val userId = command.toKeycloakUserCreateCommand().invokeWith(keycloakUserCreateFunction).id
 
@@ -105,6 +109,10 @@ class UserAggregateService(
     }
 
     suspend fun uploadLogo(command: UserUploadLogoCommand, file: ByteArray): UserUploadedLogoEvent {
+        if (!::fileClient.isInitialized) {
+            throw IllegalStateException("FileClient not initialized.")
+        }
+
         val event = fileClient.fileUpload(
             command = FileUploadCommand(
                 path = UserFsConfig.pathForUser(command.id),

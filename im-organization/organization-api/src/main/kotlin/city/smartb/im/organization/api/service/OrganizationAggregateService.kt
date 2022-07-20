@@ -21,18 +21,21 @@ import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesCommand
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.ws.rs.NotFoundException
 
 @Service
 class OrganizationAggregateService(
     private val authenticationResolver: ImAuthenticationResolver,
-    private val fileClient: FileClient,
     private val groupCreateFunction: GroupCreateFunction,
     private val groupSetAttributesFunction: GroupSetAttributesFunction,
     private val groupUpdateFunction: GroupUpdateFunction,
     private val organizationFinderService: OrganizationFinderService
 ) {
+
+    @Autowired(required = false)
+    private lateinit var fileClient: FileClient
 
     suspend fun create(command: OrganizationCreateCommand): OrganizationCreatedEvent {
         return groupCreateFunction.invoke(command.toGroupCreateCommand())
@@ -54,6 +57,10 @@ class OrganizationAggregateService(
     }
 
     suspend fun uploadLogo(command: OrganizationUploadLogoCommand, file: ByteArray): OrganizationUploadedLogoEvent {
+        if (!::fileClient.isInitialized) {
+            throw IllegalStateException("FileClient not initialized.")
+        }
+
         val event = fileClient.fileUpload(
             command = FileUploadCommand(
                 path = OrganizationFsConfig.pathForOrganization(command.id),
