@@ -1,9 +1,9 @@
 package city.smartb.im.api.gateway
 
 import city.smartb.im.api.auth.ImConfig
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Configuration
 
 @EnableConfigurationProperties(ImConfig::class)
@@ -12,5 +12,8 @@ import org.springframework.context.annotation.Configuration
 class ImApplication
 
 fun main(args: Array<String>) {
-	runApplication<ImApplication>(*args)
+	SpringApplication(ImApplication::class.java).run {
+//		setAdditionalProfiles("local")
+		run(*args)
+	}
 }

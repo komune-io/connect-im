@@ -1,3 +1,6 @@
+server:
+  port: 8009
+
 spring:
   main:
     web-application-type: reactive
@@ -24,5 +27,20 @@ i2:
       token: ${INSEE_TOKEN}
       sirene-api: https://api.insee.fr/entreprises/sirene/V3
 
-server:
-  port : 8009
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+fs:
+  url: http://localhost:8090
+
+i2:
+  issuers:
+    -
+      uri: https://auth.smart-b.io/auth/realms/test
+      authUrl: https://auth.smart-b.io/auth
+      realm: test
+      clientId: i2-api
+      clientSecret: e44dbaf6-d9af-4234-9a30-3a481c96e157
