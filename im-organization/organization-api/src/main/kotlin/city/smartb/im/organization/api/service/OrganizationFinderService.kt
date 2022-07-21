@@ -35,9 +35,7 @@ class OrganizationFinderService(
             .let(::OrganizationGetResult)
     }
 
-    suspend fun organizationGetFromInsee(query: OrganizationGetFromInseeQuery)
-        : OrganizationGetFromInseeResult {
-
+    suspend fun organizationGetFromInsee(query: OrganizationGetFromInseeQuery): OrganizationGetFromInseeResult {
         val organizationDetails = try {
             inseeHttpClient.getOrganizationBySiret(query.siret)
         } catch (e: Exception) {
@@ -72,6 +70,7 @@ class OrganizationFinderService(
             search = null,
             role = null,
             attributes = emptyMap(),
+            withDisabled = withDisabled,
             page = PagePagination(
                 page = null,
                 size = null
@@ -87,6 +86,7 @@ class OrganizationFinderService(
             search = search,
             role = role,
             attributes = attributes.orEmpty(),
+            withDisabled = withDisabled,
             page = PagePagination(
                 page = page,
                 size = size

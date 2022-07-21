@@ -5,8 +5,9 @@ plugins {
 }
 
 dependencies {
+    api(project(":im-user:user-domain"))
+
     implementation(project(":im-organization:organization-api"))
-    implementation(project(":im-user:user-domain"))
     implementation(project(":im-api:api-config"))
     implementation(project(":im-api:api-auth"))
 

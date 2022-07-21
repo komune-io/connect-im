@@ -42,6 +42,10 @@ data class UserPageQuery(
 	 */
 	val attributes: Map<String, String>?,
 
+	/**
+	 * If false, filter out the disabled users. (default: false)
+	 * @example false
+	 */
 	val withDisabled: Boolean = false,
 
 	/**

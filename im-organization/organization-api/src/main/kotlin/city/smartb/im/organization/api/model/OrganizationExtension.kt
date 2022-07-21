@@ -10,6 +10,7 @@ private val imGroupAttributes = listOf(
     Organization::address.name,
     Organization::creationDate.name,
     Organization::description.name,
+    Organization::enabled.name,
     Organization::siret.name,
     Organization::website.name
 )
@@ -23,6 +24,7 @@ fun GroupModel.toOrganization() = Organization(
     website = attributes[Organization::website.name],
     attributes = attributes.filterKeys { key -> key !in imGroupAttributes },
     roles = roles,
+    enabled = attributes[Organization::enabled.name]?.toBoolean() ?: true,
     creationDate = attributes[Organization::creationDate.name]?.toLong() ?: 0
 )
 

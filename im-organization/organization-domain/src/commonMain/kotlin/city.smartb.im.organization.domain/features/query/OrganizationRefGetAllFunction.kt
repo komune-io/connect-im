@@ -17,7 +17,13 @@ typealias OrganizationRefGetAllFunction = F2Function<OrganizationRefGetAllQuery,
  * @d2 query
  * @parent [OrganizationRefGetAllFunction]
  */
-class OrganizationRefGetAllQuery: Command
+data class OrganizationRefGetAllQuery(
+	/**
+	 * If false, filter out the disabled organizations. (default: false)
+	 * @example false
+	 */
+	val withDisabled: Boolean = false,
+): Command
 
 /**
  * @d2 result

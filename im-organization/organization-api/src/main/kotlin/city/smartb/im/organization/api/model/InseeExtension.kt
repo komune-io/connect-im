@@ -14,6 +14,7 @@ fun InseeOrganization.toOrganization() = Organization(
     website = null,
     roles = null,
     attributes = emptyMap(),
+    enabled = true,
     creationDate = System.currentTimeMillis()
 )
 

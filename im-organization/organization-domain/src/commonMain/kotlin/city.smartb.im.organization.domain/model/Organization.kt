@@ -66,6 +66,12 @@ data class Organization(
     val roles: List<String>?,
 
     /**
+     * Specifies if the organization is enabled or not
+     * @example true
+     */
+    val enabled: Boolean,
+
+    /**
      * Creation date of the organization, as UNIX timestamp in milliseconds.
      * @example 1656938975000
      */

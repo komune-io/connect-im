@@ -7,16 +7,21 @@ import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.api.config.OrganizationFsConfig
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
+import city.smartb.im.organization.domain.features.command.OrganizationDisableCommand
+import city.smartb.im.organization.domain.features.command.OrganizationDisabledEvent
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationUpdatedResult
 import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
 import city.smartb.im.organization.domain.features.command.OrganizationUploadedLogoEvent
 import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
 import city.smartb.im.organization.domain.model.Organization
+import city.smartb.im.organization.domain.model.OrganizationId
 import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupCreateFunction
+import i2.keycloak.f2.group.domain.features.command.GroupDisableCommand
+import i2.keycloak.f2.group.domain.features.command.GroupDisableFunction
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesCommand
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateCommand
@@ -29,6 +34,7 @@ import javax.ws.rs.NotFoundException
 class OrganizationAggregateService(
     private val authenticationResolver: ImAuthenticationResolver,
     private val groupCreateFunction: GroupCreateFunction,
+    private val groupDisableFunction: GroupDisableFunction,
     private val groupSetAttributesFunction: GroupSetAttributesFunction,
     private val groupUpdateFunction: GroupUpdateFunction,
     private val organizationFinderService: OrganizationFinderService
@@ -68,18 +74,37 @@ class OrganizationAggregateService(
             file = file
         )
 
-        val auth = authenticationResolver.getAuth()
-        GroupSetAttributesCommand(
-            id = command.id,
-            attributes = mapOf("logo" to event.url),
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(groupSetAttributesFunction)
+        setAttributes(command.id, mapOf("logo" to event.url))
 
         return OrganizationUploadedLogoEvent(
             id = command.id,
             url = event.url
         )
+    }
+
+    suspend fun disable(command: OrganizationDisableCommand): OrganizationDisabledEvent {
+        val auth = authenticationResolver.getAuth()
+
+        val event = GroupDisableCommand(
+            id = command.id,
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(groupDisableFunction)
+
+        return OrganizationDisabledEvent(
+            id = event.id,
+            userIds = event.userIds
+        )
+    }
+
+    private suspend fun setAttributes(id: OrganizationId, attributes: Map<String, String>) {
+        val auth = authenticationResolver.getAuth()
+        GroupSetAttributesCommand(
+            id = id,
+            attributes = attributes,
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(groupSetAttributesFunction)
     }
 
     private suspend fun OrganizationCreateCommand.toGroupCreateCommand(): GroupCreateCommand {

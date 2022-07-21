@@ -35,6 +35,12 @@ data class OrganizationPageQuery(
 	val attributes: Map<String, String>?,
 
 	/**
+	 * If false, filter out the disabled organizations. (default: false)
+	 * @example false
+	 */
+	val withDisabled: Boolean = false,
+
+	/**
 	 * Number of the page.
 	 * @example 0
 	 */

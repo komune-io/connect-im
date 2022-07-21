@@ -6,6 +6,7 @@ import city.smartb.im.commons.utils.contentByteArray
 import city.smartb.im.organization.api.service.OrganizationAggregateService
 import city.smartb.im.organization.api.service.OrganizationFinderService
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
+import city.smartb.im.organization.domain.features.command.OrganizationDisableFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
 import city.smartb.im.organization.domain.features.command.OrganizationUploadedLogoEvent
@@ -100,7 +101,7 @@ class OrganizationEndpoint(
     /**
      * Upload a logo for a given organization
      */
-    @RolesAllowed(Roles.WRITE_USER)
+    @RolesAllowed(Roles.WRITE_ORGANIZATION)
     @PostMapping("/organizationUploadLogo")
     suspend fun organizationUploadLogo(
         @RequestPart("command") cmd: OrganizationUploadLogoCommand,
@@ -108,5 +109,15 @@ class OrganizationEndpoint(
     ): OrganizationUploadedLogoEvent {
         logger.info("organizationUploadLogo: $cmd")
         return organizationAggregateService.uploadLogo(cmd, file.contentByteArray())
+    }
+
+    /**
+     * Disable an organization and its users.
+     */
+    @Bean
+    @RolesAllowed(Roles.WRITE_ORGANIZATION)
+    fun organizationDisable(): OrganizationDisableFunction = f2Function { cmd ->
+        logger.info("organizationDisable: $cmd")
+        organizationAggregateService.disable(cmd)
     }
 }
