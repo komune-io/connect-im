@@ -48,6 +48,7 @@ class UserTransformer(
 			roles = user.roles,
 			attributes = attributes,
 			sendEmailLink = user.attributes[User::sendEmailLink.name].toBoolean(),
+			enabled = user.enabled,
 			creationDate = user.creationDate
 		)
 	}

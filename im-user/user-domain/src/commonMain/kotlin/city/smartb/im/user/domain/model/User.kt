@@ -72,9 +72,15 @@ data class User(
 
     /**
      * Send a validation email to the user on subscription.
-     * @example "true"
+     * @example true
      */
     val sendEmailLink: Boolean?,
+
+    /**
+     * Specifies if the user is enabled or not/
+     * @example true
+     */
+    val enabled: Boolean,
 
     /**
      * Creation date of the user, as UNIX timestamp in milliseconds.

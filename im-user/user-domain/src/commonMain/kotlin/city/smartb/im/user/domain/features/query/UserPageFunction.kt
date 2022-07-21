@@ -42,6 +42,8 @@ data class UserPageQuery(
 	 */
 	val attributes: Map<String, String>?,
 
+	val withDisabled: Boolean = false,
+
 	/**
 	 * Number of the page.
 	 * @example 0

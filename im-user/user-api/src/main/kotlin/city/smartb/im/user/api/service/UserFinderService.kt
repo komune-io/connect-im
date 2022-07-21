@@ -63,6 +63,7 @@ class UserFinderService(
             search = search,
             role = role,
             attributes = attributes.orEmpty(),
+            withDisabled = withDisabled,
             page = PagePagination(
                 page = page,
                 size = size
