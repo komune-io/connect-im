@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":im-api:api-auth"))
 
     implementation("city.smartb.i2:user-f2-create:${Versions.i2}")
+    implementation("city.smartb.i2:user-f2-disable:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-email-actions:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-join-group:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-query:${Versions.i2}")

@@ -6,6 +6,7 @@ import city.smartb.im.commons.utils.contentByteArray
 import city.smartb.im.user.api.service.UserAggregateService
 import city.smartb.im.user.api.service.UserFinderService
 import city.smartb.im.user.domain.features.command.UserCreateFunction
+import city.smartb.im.user.domain.features.command.UserDisableFunction
 import city.smartb.im.user.domain.features.command.UserResetPasswordFunction
 import city.smartb.im.user.domain.features.command.UserUpdateEmailFunction
 import city.smartb.im.user.domain.features.command.UserUpdateFunction
@@ -155,7 +156,7 @@ class UserEndpoint(
     }
 
     /**
-     * Upload a logo for a given user
+     * Upload a logo for a given user.
      */
     @RolesAllowed(Roles.WRITE_USER)
     @PostMapping("/userUploadLogo")
@@ -165,5 +166,15 @@ class UserEndpoint(
     ): UserUploadedLogoEvent {
         logger.info("userUploadLogo: $cmd")
         return userAggregateService.uploadLogo(cmd, file.contentByteArray())
+    }
+
+    /**
+     * Disable a user.
+     */
+    @Bean
+    @RolesAllowed(Roles.WRITE_USER)
+    fun userDisable(): UserDisableFunction = f2Function { cmd ->
+        logger.info("userDisable: $cmd")
+        userAggregateService.disable(cmd)
     }
 }

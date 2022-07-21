@@ -8,6 +8,8 @@ import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.api.config.UserFsConfig
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateFunction
+import city.smartb.im.user.domain.features.command.KeycloakUserDisableCommand
+import city.smartb.im.user.domain.features.command.KeycloakUserDisableFunction
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdateEmailCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdateEmailFunction
@@ -16,6 +18,8 @@ import city.smartb.im.user.domain.features.command.KeycloakUserUpdatePasswordCom
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdatePasswordFunction
 import city.smartb.im.user.domain.features.command.UserCreateCommand
 import city.smartb.im.user.domain.features.command.UserCreatedEvent
+import city.smartb.im.user.domain.features.command.UserDisableCommand
+import city.smartb.im.user.domain.features.command.UserDisabledEvent
 import city.smartb.im.user.domain.features.command.UserResetPasswordCommand
 import city.smartb.im.user.domain.features.command.UserResetPasswordEvent
 import city.smartb.im.user.domain.features.command.UserUpdateCommand
@@ -43,6 +47,7 @@ import org.springframework.stereotype.Service
 class UserAggregateService(
     private val authenticationResolver: ImAuthenticationResolver,
     private val keycloakUserCreateFunction: KeycloakUserCreateFunction,
+    private val keycloakUserDisableFunction: KeycloakUserDisableFunction,
     private val keycloakUserUpdateFunction: KeycloakUserUpdateFunction,
     private val keycloakUserUpdateEmailFunction: KeycloakUserUpdateEmailFunction,
     private val keycloakUserUpdatePasswordFunction: KeycloakUserUpdatePasswordFunction,
@@ -145,6 +150,20 @@ class UserAggregateService(
 
         return UserUpdatedEmailEvent(
             id = command.id
+        )
+    }
+
+    suspend fun disable(command: UserDisableCommand): UserDisabledEvent {
+        val auth = authenticationResolver.getAuth()
+
+        val event = KeycloakUserDisableCommand(
+            id = command.id,
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(keycloakUserDisableFunction)
+
+        return UserDisabledEvent(
+            id = event.id
         )
     }
 
