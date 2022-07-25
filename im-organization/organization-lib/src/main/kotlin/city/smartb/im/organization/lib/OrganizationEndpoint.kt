@@ -1,10 +1,10 @@
-package city.smartb.im.organization.api
+package city.smartb.im.organization.lib
 
 import city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE
 import city.smartb.im.api.config.Roles
 import city.smartb.im.commons.utils.contentByteArray
-import city.smartb.im.organization.api.service.OrganizationAggregateService
-import city.smartb.im.organization.api.service.OrganizationFinderService
+import city.smartb.im.organization.lib.service.OrganizationAggregateService
+import city.smartb.im.organization.lib.service.OrganizationFinderService
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDisableFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateFunction

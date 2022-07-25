@@ -1,4 +1,4 @@
-package city.smartb.im.organization.api.model.insee
+package city.smartb.im.organization.lib.model.insee
 
 data class InseeAddress(
     val complementAdresseEtablissement: String?,

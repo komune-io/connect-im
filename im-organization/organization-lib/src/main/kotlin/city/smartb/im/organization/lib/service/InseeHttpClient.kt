@@ -1,8 +1,8 @@
-package city.smartb.im.organization.api.service
+package city.smartb.im.organization.lib.service
 
 import city.smartb.im.api.config.InseeConfig
 import city.smartb.im.commons.http.ClientJvm
-import city.smartb.im.organization.api.model.insee.InseeResponse
+import city.smartb.im.organization.lib.model.insee.InseeResponse
 import org.springframework.stereotype.Service
 
 @Service

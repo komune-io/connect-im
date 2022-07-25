@@ -1,8 +1,8 @@
-package city.smartb.im.organization.api.service
+package city.smartb.im.organization.lib.service
 
 import city.smartb.im.api.auth.ImAuthenticationResolver
-import city.smartb.im.organization.api.model.toOrganization
-import city.smartb.im.organization.api.model.toOrganizationRef
+import city.smartb.im.organization.lib.model.toOrganization
+import city.smartb.im.organization.lib.model.toOrganizationRef
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeQuery
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeResult
 import city.smartb.im.organization.domain.features.query.OrganizationGetQuery

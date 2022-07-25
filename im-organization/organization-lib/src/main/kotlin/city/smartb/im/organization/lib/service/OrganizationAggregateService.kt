@@ -1,10 +1,10 @@
-package city.smartb.im.organization.api.service
+package city.smartb.im.organization.lib.service
 
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.im.api.auth.ImAuthenticationResolver
 import city.smartb.im.commons.utils.toJson
-import city.smartb.im.organization.api.config.OrganizationFsConfig
+import city.smartb.im.organization.lib.config.OrganizationFsConfig
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
 import city.smartb.im.organization.domain.features.command.OrganizationDisableCommand

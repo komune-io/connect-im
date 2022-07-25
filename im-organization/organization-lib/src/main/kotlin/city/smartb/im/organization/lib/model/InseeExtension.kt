@@ -1,8 +1,8 @@
-package city.smartb.im.organization.api.model
+package city.smartb.im.organization.lib.model
 
 import city.smartb.im.commons.model.AddressBase
-import city.smartb.im.organization.api.model.insee.InseeAddress
-import city.smartb.im.organization.api.model.insee.InseeOrganization
+import city.smartb.im.organization.lib.model.insee.InseeAddress
+import city.smartb.im.organization.lib.model.insee.InseeOrganization
 import city.smartb.im.organization.domain.model.Organization
 
 fun InseeOrganization.toOrganization() = Organization(

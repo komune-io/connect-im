@@ -20,6 +20,7 @@ include(
 )
 
 include(
+    "im-organization:organization-lib",
     "im-organization:organization-api",
     "im-organization:organization-domain",
     "im-organization:organization-client"

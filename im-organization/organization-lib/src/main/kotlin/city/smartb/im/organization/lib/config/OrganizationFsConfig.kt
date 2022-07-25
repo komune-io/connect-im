@@ -1,4 +1,4 @@
-package city.smartb.im.organization.api.config
+package city.smartb.im.organization.lib.config
 
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileInitPublicDirectoryCommand
