@@ -12,6 +12,19 @@ import i2.keycloak.f2.group.domain.model.GroupId
  */
 typealias OrganizationId = GroupId
 
+interface OrganizationDTO {
+    val id: OrganizationId
+    val siret: String
+    val name: String
+    val description: String?
+    val address: Address?
+    val website: String?
+    val attributes: Map<String, String>
+    val roles: List<String>?
+    val enabled: Boolean
+    val creationDate: Long
+}
+
 /**
  * Representation of an organization.
  * @D2 model
@@ -22,58 +35,58 @@ data class Organization(
     /**
      * Identifier of the organization.
      */
-    val id: OrganizationId,
+    override val id: OrganizationId,
 
     /**
      * Siret number of the organization.
      * @example "84488096300013"
      */
-    val siret: String,
+    override val siret: String,
 
     /**
      * Official name of the organization.
      * @example "SmartB"
      */
-    val name: String,
+    override val name: String,
 
     /**
      * Description of the organization.
      * @example "We use technology, design and systems thinking to tackle global sustainability & financing challenges."
      */
-    val description: String?,
+    override val description: String?,
 
     /**
      * Address of the organization.
      */
-    val address: Address?,
+    override val address: Address?,
 
     /**
      * Website of the organization.
      * @example "https://smartb.city/"
      */
-    val website: String?,
+    override val website: String?,
 
     /**
      * Platform-specific attributes assigned to the organization
      * @example { "otherWebsite": "https://smartb.network" }
      */
-    val attributes: Map<String, String>,
+    override val attributes: Map<String, String>,
 
     /**
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
      * @example [["admin", "write_user", "read_user", "write_organization", "read_organization"]]
      */
-    val roles: List<String>?,
+    override val roles: List<String>?,
 
     /**
      * Specifies if the organization is enabled or not
      * @example true
      */
-    val enabled: Boolean,
+    override val enabled: Boolean,
 
     /**
      * Creation date of the organization, as UNIX timestamp in milliseconds.
      * @example 1656938975000
      */
-    val creationDate: Long
-)
+    override val creationDate: Long
+): OrganizationDTO

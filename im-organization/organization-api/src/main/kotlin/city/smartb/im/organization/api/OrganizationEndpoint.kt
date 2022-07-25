@@ -10,6 +10,7 @@ import city.smartb.im.organization.domain.features.query.OrganizationGetFromInse
 import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
 import city.smartb.im.organization.domain.features.query.OrganizationPageFunction
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllFunction
+import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.lib.OrganizationFeaturesImpl
 import city.smartb.im.organization.lib.service.OrganizationAggregateService
 import city.smartb.im.organization.lib.service.OrganizationFinderService
@@ -29,19 +30,22 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping
 @Configuration
 class OrganizationEndpoint(
-    organizationFinderService: OrganizationFinderService,
-    organizationAggregateService: OrganizationAggregateService,
+    organizationFinderService: OrganizationFinderService<Organization>,
+    organizationAggregateService: OrganizationAggregateService<Organization>,
 ) {
 
-    private val organizationFeatures: OrganizationFeaturesImpl
-        = OrganizationFeaturesImpl(organizationFinderService, organizationAggregateService)
+    private val organizationFeatures = OrganizationFeaturesImpl(
+        organizationFinderService,
+        organizationAggregateService,
+        OrganizationMapperImpl()
+    )
 
     /**
      * Fetch an Organization by its ID.
      */
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
-    fun organizationGet(): OrganizationGetFunction = organizationFeatures.organizationGet()
+    fun organizationGet(): OrganizationGetFunction<Organization> = organizationFeatures.organizationGet()
 
     /**
      * Fetch an Organization by its siret number from the Insee Sirene API.
@@ -55,7 +59,7 @@ class OrganizationEndpoint(
      */
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
-    fun organizationPage(): OrganizationPageFunction = organizationFeatures.organizationPage()
+    fun organizationPage(): OrganizationPageFunction<Organization> = organizationFeatures.organizationPage()
 
     /**
      * Fetch all OrganizationRef.

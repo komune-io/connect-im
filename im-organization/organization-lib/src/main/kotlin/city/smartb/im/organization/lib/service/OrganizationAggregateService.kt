@@ -15,6 +15,7 @@ import city.smartb.im.organization.domain.features.command.OrganizationUploadLog
 import city.smartb.im.organization.domain.features.command.OrganizationUploadedLogoEvent
 import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
 import city.smartb.im.organization.domain.model.Organization
+import city.smartb.im.organization.domain.model.OrganizationDTO
 import city.smartb.im.organization.domain.model.OrganizationId
 import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
@@ -31,13 +32,13 @@ import org.springframework.stereotype.Service
 import javax.ws.rs.NotFoundException
 
 @Service
-class OrganizationAggregateService(
+class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val authenticationResolver: ImAuthenticationResolver,
     private val groupCreateFunction: GroupCreateFunction,
     private val groupDisableFunction: GroupDisableFunction,
     private val groupSetAttributesFunction: GroupSetAttributesFunction,
     private val groupUpdateFunction: GroupUpdateFunction,
-    private val organizationFinderService: OrganizationFinderService
+    private val organizationFinderService: OrganizationFinderService<MODEL>
 ) {
 
     @Autowired(required = false)
@@ -54,8 +55,8 @@ class OrganizationAggregateService(
             }
     }
 
-    suspend fun update(command: OrganizationUpdateCommand): OrganizationUpdatedResult {
-        val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id)).item
+    suspend fun update(command: OrganizationUpdateCommand, mapper: OrganizationMapper<MODEL>): OrganizationUpdatedResult {
+        val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id), mapper).item
             ?: throw NotFoundException("Organization [${command.id}] not found")
 
         return groupUpdateFunction.invoke(command.toGroupUpdateCommand(organization))
@@ -125,7 +126,7 @@ class OrganizationAggregateService(
         )
     }
 
-    private suspend fun OrganizationUpdateCommand.toGroupUpdateCommand(organization: Organization): GroupUpdateCommand {
+    private suspend fun OrganizationUpdateCommand.toGroupUpdateCommand(organization: MODEL): GroupUpdateCommand {
         val auth = authenticationResolver.getAuth()
         return GroupUpdateCommand(
             id = id,

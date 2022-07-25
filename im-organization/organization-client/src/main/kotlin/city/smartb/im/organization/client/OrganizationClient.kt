@@ -13,20 +13,22 @@ import city.smartb.im.organization.domain.features.query.OrganizationPageQuery
 import city.smartb.im.organization.domain.features.query.OrganizationPageResult
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllQuery
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllResult
+import city.smartb.im.organization.domain.model.Organization
+import city.smartb.im.organization.domain.model.OrganizationDTO
 
-class OrganizationClient(
+class OrganizationClient<MODEL: OrganizationDTO>(
     url: String,
     generateBearerToken: suspend () -> String? = { null }
 ): ClientJvm(url, generateBearerToken) {
 
     suspend fun organizationGet(queries: List<OrganizationGetQuery>):
-            List<OrganizationGetResult> = post("organizationGet",  queries)
+            List<OrganizationGetResult<MODEL>> = post("organizationGet",  queries)
 
     suspend fun organizationGetFromInsee(queries: List<OrganizationGetFromInseeQuery>):
             List<OrganizationGetFromInseeResult> = post("organizationGetFromInsee", queries)
 
     suspend fun organizationPage(queries: List<OrganizationPageQuery>):
-            List<OrganizationPageResult> = post("organizationPage", queries)
+            List<OrganizationPageResult<MODEL>> = post("organizationPage", queries)
 
     suspend fun organizationRefGetAll(queries: List<OrganizationRefGetAllQuery>):
             List<OrganizationRefGetAllResult> = post("organizationRefGetAll", queries)

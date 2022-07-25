@@ -11,6 +11,7 @@ import city.smartb.im.organization.domain.features.query.OrganizationPageQuery
 import city.smartb.im.organization.domain.features.query.OrganizationPageResult
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllQuery
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllResult
+import city.smartb.im.organization.domain.model.OrganizationDTO
 import f2.dsl.cqrs.page.PagePagination
 import f2.dsl.fnc.invoke
 import i2.keycloak.f2.group.domain.features.query.GroupGetFunction
@@ -21,19 +22,22 @@ import i2.keycloak.f2.group.domain.model.GroupModel
 import org.springframework.stereotype.Service
 
 @Service
-class OrganizationFinderService(
+class OrganizationFinderService<MODEL: OrganizationDTO>(
     private val inseeHttpClient: InseeHttpClient,
     private val groupGetFunction: GroupGetFunction,
     private val groupPageFunction: GroupPageFunction,
-    private val authenticationResolver: ImAuthenticationResolver
+    private val authenticationResolver: ImAuthenticationResolver,
 ) {
 
-    suspend fun organizationGet(query: OrganizationGetQuery): OrganizationGetResult {
+    suspend fun organizationGet(query: OrganizationGetQuery, organizationMapper: OrganizationMapper<MODEL>): OrganizationGetResult<MODEL> {
         return groupGetFunction.invoke(query.toGroupGetByIdQuery())
             .item
-            ?.toOrganization()
-            .let(::OrganizationGetResult)
+            ?.let { group -> organizationMapper.toOrganization(group) }
+            .let { dto ->
+                OrganizationGetResult(dto)
+            }
     }
+
 
     suspend fun organizationGetFromInsee(query: OrganizationGetFromInseeQuery): OrganizationGetFromInseeResult {
         val organizationDetails = try {
@@ -47,11 +51,14 @@ class OrganizationFinderService(
             .let(::OrganizationGetFromInseeResult)
     }
 
-    suspend fun organizationPage(query: OrganizationPageQuery): OrganizationPageResult {
+    suspend fun organizationPage(
+        query: OrganizationPageQuery,
+        organizationMapper: OrganizationMapper<MODEL>
+    ): OrganizationPageResult<MODEL> {
         val result = groupPageFunction.invoke(query.toGroupPageQuery())
 
         return OrganizationPageResult(
-            items = result.page.items.map(GroupModel::toOrganization),
+            items = result.page.items.map { organizationMapper.toOrganization(it)},
             total = result.page.total
         )
     }

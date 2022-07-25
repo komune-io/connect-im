@@ -4,13 +4,14 @@ import city.smartb.im.organization.domain.features.query.OrganizationGetFromInse
 import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
 import city.smartb.im.organization.domain.features.query.OrganizationPageFunction
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllFunction
+import city.smartb.im.organization.domain.model.OrganizationDTO
 
-interface OrganizationQueryFeatures {
+interface OrganizationQueryFeatures<MODEL: OrganizationDTO> {
 
     /**
      * Fetch an Organization by its ID.
      */
-    fun organizationGet(): OrganizationGetFunction
+    fun organizationGet(): OrganizationGetFunction<MODEL>
 
     /**
      * Fetch an Organization by its siret number from the Insee Sirene API.
@@ -20,7 +21,7 @@ interface OrganizationQueryFeatures {
     /**
      * Fetch a page of organizations.
      */
-    fun organizationPage(): OrganizationPageFunction
+    fun organizationPage(): OrganizationPageFunction<MODEL>
 
     /**
      * Fetch all OrganizationRef.

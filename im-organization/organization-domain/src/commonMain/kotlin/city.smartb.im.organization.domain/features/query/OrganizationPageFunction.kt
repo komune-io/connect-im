@@ -1,8 +1,8 @@
 package city.smartb.im.organization.domain.features.query
 
-import city.smartb.im.organization.domain.model.Organization
-import f2.dsl.cqrs.Command
-import f2.dsl.cqrs.Event
+import city.smartb.im.organization.domain.model.OrganizationDTO
+import f2.dsl.cqrs.Query
+import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.fnc.F2Function
 
 /**
@@ -11,7 +11,19 @@ import f2.dsl.fnc.F2Function
  * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
  * @order 30
  */
-typealias OrganizationPageFunction = F2Function<OrganizationPageQuery, OrganizationPageResult>
+typealias OrganizationPageFunction<MODEL> = F2Function<OrganizationPageQuery, OrganizationPageResult<MODEL>>
+
+/**
+ * TODO Use PageQueryDTO and sub filter object
+ */
+interface OrganizationPageQueryDTO: Query {
+	val search: String?
+	val role: String?
+	val attributes: Map<String, String>?
+	val withDisabled: Boolean
+	val page: Int?
+	val size: Int?
+}
 
 /**
  * @d2 query
@@ -22,50 +34,52 @@ data class OrganizationPageQuery(
 	 * Search string filtering on the name of the organization.
 	 * @example "SmartB"
 	 */
-	val search: String?,
+	override val search: String?,
 
 	/**
 	 * Role filter.
 	 */
-	val role: String?,
+	override val role: String?,
 
 	/**
 	 * Arbitrary attributes filter.
 	 */
-	val attributes: Map<String, String>?,
+	override val attributes: Map<String, String>?,
 
 	/**
 	 * If false, filter out the disabled organizations. (default: false)
 	 * @example false
 	 */
-	val withDisabled: Boolean = false,
+	override val withDisabled: Boolean = false,
 
 	/**
 	 * Number of the page.
 	 * @example 0
 	 */
-	val page: Int?,
+	override val page: Int?,
 
 	/**
 	 * Size of the page.
 	 * @example 10
 	 */
-	val size: Int?
-): Command
+	override val size: Int?
+): OrganizationPageQueryDTO
+
+interface OrganizationPageResultDTO<MODEL: OrganizationDTO>: PageDTO<MODEL>
 
 /**
  * @d2 result
  * @parent [OrganizationPageFunction]
  */
-data class OrganizationPageResult(
+data class OrganizationPageResult<MODEL: OrganizationDTO>(
 	/**
 	 * List of organizations satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
 	 */
-	val items: List<Organization>,
+	override val items: List<MODEL>,
 
 	/**
 	 * The total amount of users satisfying the requesting filters.
 	 * @example 38
 	 */
-	val total: Int
-): Event
+	override val total: Int
+): OrganizationPageResultDTO<MODEL>

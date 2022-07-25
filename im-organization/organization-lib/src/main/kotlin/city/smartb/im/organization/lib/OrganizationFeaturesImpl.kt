@@ -12,19 +12,22 @@ import city.smartb.im.organization.domain.features.query.OrganizationGetFromInse
 import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
 import city.smartb.im.organization.domain.features.query.OrganizationPageFunction
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllFunction
+import city.smartb.im.organization.domain.model.OrganizationDTO
 import city.smartb.im.organization.lib.service.OrganizationAggregateService
 import city.smartb.im.organization.lib.service.OrganizationFinderService
+import city.smartb.im.organization.lib.service.OrganizationMapper
 import f2.dsl.fnc.f2Function
 
-class OrganizationFeaturesImpl(
-    private val organizationFinderService: OrganizationFinderService,
-    private val organizationAggregateService: OrganizationAggregateService
-): OrganizationQueryFeatures, OrganizationCommandFeatures {
+class OrganizationFeaturesImpl<MODEL: OrganizationDTO>(
+    private val organizationFinderService: OrganizationFinderService<MODEL>,
+    private val organizationAggregateService: OrganizationAggregateService<MODEL>,
+    private val organizationMapper: OrganizationMapper<MODEL>,
+): OrganizationQueryFeatures<MODEL>, OrganizationCommandFeatures {
     private val logger by s2.spring.utils.logger.Logger()
 
-    override fun organizationGet(): OrganizationGetFunction = f2Function { query ->
+    override fun organizationGet(): OrganizationGetFunction<MODEL> = f2Function { query ->
         logger.info("organizationGet: $query")
-        organizationFinderService.organizationGet(query)
+        organizationFinderService.organizationGet(query, organizationMapper)
     }
 
     override fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = f2Function { query ->
@@ -32,9 +35,9 @@ class OrganizationFeaturesImpl(
         organizationFinderService.organizationGetFromInsee(query)
     }
 
-    override fun organizationPage(): OrganizationPageFunction = f2Function { query ->
+    override fun organizationPage(): OrganizationPageFunction<MODEL> = f2Function { query ->
         logger.info("organizationPage: $query")
-        organizationFinderService.organizationPage(query)
+        organizationFinderService.organizationPage(query, organizationMapper)
     }
 
     override fun organizationRefGetAll(): OrganizationRefGetAllFunction = f2Function { query ->
@@ -49,7 +52,7 @@ class OrganizationFeaturesImpl(
 
     override fun organizationUpdate(): OrganizationUpdateFunction = f2Function { cmd ->
         logger.info("organizationUpdate: $cmd")
-        organizationAggregateService.update(cmd)
+        organizationAggregateService.update(cmd, organizationMapper)
     }
 
     suspend fun organizationUploadLogo(
