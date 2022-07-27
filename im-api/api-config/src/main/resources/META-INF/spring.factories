@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    city.smartb.im.api.config.AuthRealmDeserializer,\
+    city.smartb.im.api.config.FsConfig,\
+    city.smartb.im.api.config.InseeConfig

@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    city.smartb.im.api.auth.ImAuthenticationResolver,\
+    city.smartb.im.api.auth.ImConfig
