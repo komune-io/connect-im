@@ -3,6 +3,7 @@ package city.smartb.im.organization.api
 import city.smartb.im.commons.model.AddressBase
 import city.smartb.im.commons.utils.parseJsonTo
 import city.smartb.im.organization.domain.model.Organization
+import city.smartb.im.organization.lib.model.imGroupAttributes
 import city.smartb.im.organization.lib.model.orEmpty
 import city.smartb.im.organization.lib.service.OrganizationMapper
 import i2.keycloak.f2.group.domain.model.GroupModel
@@ -23,13 +24,4 @@ class OrganizationMapperImpl: OrganizationMapper<Organization> {
             creationDate = group.attributes[Organization::creationDate.name]?.toLong() ?: 0
         )
     }
-
-    private val imGroupAttributes = listOf(
-        Organization::address.name,
-        Organization::creationDate.name,
-        Organization::description.name,
-        Organization::enabled.name,
-        Organization::siret.name,
-        Organization::website.name
-    )
 }
