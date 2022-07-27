@@ -4,7 +4,6 @@ import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.im.api.auth.ImAuthenticationResolver
 import city.smartb.im.commons.utils.toJson
-import city.smartb.im.organization.lib.config.OrganizationFsConfig
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
 import city.smartb.im.organization.domain.features.command.OrganizationDisableCommand
@@ -17,6 +16,7 @@ import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationDTO
 import city.smartb.im.organization.domain.model.OrganizationId
+import city.smartb.im.organization.lib.config.OrganizationFsConfig
 import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
@@ -132,7 +132,7 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
             id = id,
             name = name,
             attributes = listOfNotNull(
-                Organization::siret.name to organization.siret,
+                organization.siret?.let { Organization::siret.name to it },
                 address?.let { Organization::address.name to it.toJson() },
                 description?.let { Organization::description.name to it },
                 website?.let { Organization::website.name to it },

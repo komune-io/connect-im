@@ -14,7 +14,7 @@ class OrganizationMapperImpl: OrganizationMapper<Organization> {
         return Organization(
             id = group.id,
             name = group.name,
-            siret = group.attributes[Organization::siret.name].orEmpty(),
+            siret = group.attributes[Organization::siret.name],
             address = group.attributes[Organization::address.name]?.parseJsonTo(AddressBase::class.java).orEmpty(),
             description = group.attributes[Organization::description.name],
             website = group.attributes[Organization::website.name],

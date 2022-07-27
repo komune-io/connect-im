@@ -14,7 +14,7 @@ typealias OrganizationId = GroupId
 
 interface OrganizationDTO {
     val id: OrganizationId
-    val siret: String
+    val siret: String?
     val name: String
     val description: String?
     val address: Address?
@@ -41,7 +41,7 @@ data class Organization(
      * Siret number of the organization.
      * @example "84488096300013"
      */
-    override val siret: String,
+    override val siret: String?,
 
     /**
      * Official name of the organization.
