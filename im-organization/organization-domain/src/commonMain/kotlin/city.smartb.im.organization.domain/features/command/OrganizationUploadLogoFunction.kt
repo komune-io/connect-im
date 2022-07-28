@@ -4,6 +4,8 @@ import city.smartb.im.organization.domain.model.OrganizationId
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
+import kotlin.js.JsExport
+import kotlin.js.JsName
 
 /**
  * Update the logo of an organization.
@@ -13,6 +15,12 @@ import f2.dsl.fnc.F2Function
  */
 typealias OrganizationUploadLogoFunction = F2Function<OrganizationUploadLogoCommand, OrganizationUploadedLogoEvent>
 
+@JsExport
+@JsName("OrganizationUploadLogoCommandDTO")
+interface OrganizationUploadLogoCommandDTO: Command {
+    val id: OrganizationId
+}
+
 /**
  * @d2 command
  * @parent [OrganizationUploadLogoFunction]
@@ -21,8 +29,15 @@ data class OrganizationUploadLogoCommand(
     /**
      * Identifier of the organization.
      */
+    override val id: OrganizationId
+): OrganizationUploadLogoCommandDTO
+
+@JsExport
+@JsName("OrganizationUploadedLogoEventDTO")
+interface OrganizationUploadedLogoEventDTO: Event {
     val id: OrganizationId
-): Command
+    val url: String
+}
 
 /**
  * @d2 event
@@ -32,10 +47,10 @@ data class OrganizationUploadedLogoEvent(
     /**
      * Identifier of the organization.
      */
-    val id: OrganizationId,
+    override val id: OrganizationId,
 
     /**
      * Public URL of the newly uploaded logo
      */
-    val url: String
-): Event
+    override val url: String
+): OrganizationUploadedLogoEventDTO

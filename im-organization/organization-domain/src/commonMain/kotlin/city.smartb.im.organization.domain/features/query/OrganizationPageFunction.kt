@@ -4,6 +4,8 @@ import city.smartb.im.organization.domain.model.OrganizationDTO
 import f2.dsl.cqrs.Query
 import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.fnc.F2Function
+import kotlin.js.JsExport
+import kotlin.js.JsName
 
 /**
  * Get a page of organizations.
@@ -16,6 +18,8 @@ typealias OrganizationPageFunction<MODEL> = F2Function<OrganizationPageQuery, Or
 /**
  * TODO Use PageQueryDTO and sub filter object
  */
+@JsExport
+@JsName("OrganizationPageQueryDTO")
 interface OrganizationPageQueryDTO: Query {
 	val search: String?
 	val role: String?
@@ -65,6 +69,8 @@ data class OrganizationPageQuery(
 	override val size: Int?
 ): OrganizationPageQueryDTO
 
+@JsExport
+@JsName("OrganizationPageResultDTO")
 interface OrganizationPageResultDTO<MODEL: OrganizationDTO>: PageDTO<MODEL>
 
 /**

@@ -1,9 +1,12 @@
 package city.smartb.im.organization.domain.features.query
 
 import city.smartb.im.organization.domain.model.Organization
-import f2.dsl.cqrs.Command
+import city.smartb.im.organization.domain.model.OrganizationDTO
 import f2.dsl.cqrs.Event
+import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
+import kotlin.js.JsExport
+import kotlin.js.JsName
 
 /**
  * Get an organization by Siret from the Insee Sirene API.
@@ -14,6 +17,12 @@ import f2.dsl.fnc.F2Function
 typealias OrganizationGetFromInseeFunction =
         F2Function<OrganizationGetFromInseeQuery, OrganizationGetFromInseeResult>
 
+@JsExport
+@JsName("OrganizationGetFromInseeQueryDTO")
+interface OrganizationGetFromInseeQueryDTO: Query {
+    val siret: String
+}
+
 /**
  * @d2 query
  * @parent [OrganizationGetFromInseeFunction]
@@ -23,8 +32,14 @@ data class OrganizationGetFromInseeQuery(
      * Siret number of the organization.
      * @example [city.smartb.im.organization.domain.model.Organization.siret]
      */
-    val siret: String
-): Command
+    override val siret: String
+): OrganizationGetFromInseeQueryDTO
+
+@JsExport
+@JsName("OrganizationGetFromInseeResultDTO")
+interface OrganizationGetFromInseeResultDTO: Event {
+    val item: OrganizationDTO?
+}
 
 /**
  * @d2 result
@@ -34,5 +49,5 @@ data class OrganizationGetFromInseeResult(
     /**
      * The organization.
      */
-    val item: Organization?
-): Event
+    override val item: Organization?
+): OrganizationGetFromInseeResultDTO

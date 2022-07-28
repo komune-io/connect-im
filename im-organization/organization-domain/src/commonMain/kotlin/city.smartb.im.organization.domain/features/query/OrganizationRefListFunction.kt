@@ -1,9 +1,12 @@
 package city.smartb.im.organization.domain.features.query
 
 import city.smartb.im.organization.domain.model.OrganizationRef
-import f2.dsl.cqrs.Command
+import city.smartb.im.organization.domain.model.OrganizationRefDTO
 import f2.dsl.cqrs.Event
+import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
+import kotlin.js.JsExport
+import kotlin.js.JsName
 
 /**
  * Get all organization refs.
@@ -12,6 +15,12 @@ import f2.dsl.fnc.F2Function
  * @order 40
  */
 typealias OrganizationRefListFunction = F2Function<OrganizationRefListQuery, OrganizationRefListResult>
+
+@JsExport
+@JsName("OrganizationRefListQueryDTO")
+interface OrganizationRefListQueryDTO: Query {
+	val withDisabled: Boolean
+}
 
 /**
  * @d2 query
@@ -22,8 +31,14 @@ data class OrganizationRefListQuery(
 	 * If false, filter out the disabled organizations. (default: false)
 	 * @example false
 	 */
-	val withDisabled: Boolean = false,
-): Command
+	override val withDisabled: Boolean = false,
+): OrganizationRefListQueryDTO
+
+@JsExport
+@JsName("OrganizationRefListResultDTO")
+interface OrganizationRefListResultDTO: Event {
+	val items: List<OrganizationRefDTO>
+}
 
 /**
  * @d2 result
@@ -33,5 +48,5 @@ data class OrganizationRefListResult(
 	/**
 	 * All Organization Refs.
 	 */
-	val items: List<OrganizationRef>
-): Event
+	override val items: List<OrganizationRef>
+): OrganizationRefListResultDTO
