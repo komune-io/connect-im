@@ -5,9 +5,9 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class InseeConfig {
-    @Value("\${i2.organization.insee.sirene-api}")
+    @Value("\${im.organization.insee.sirene-api}")
     lateinit var sireneApi: String
 
-    @Value("\${i2.organization.insee.token}")
+    @Value("\${im.organization.insee.token}")
     lateinit var token: String
 }

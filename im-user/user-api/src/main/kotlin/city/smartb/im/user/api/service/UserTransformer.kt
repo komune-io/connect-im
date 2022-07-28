@@ -1,7 +1,7 @@
 package city.smartb.im.user.api.service
 
-import city.smartb.im.api.auth.ImAuthenticationResolver
-import city.smartb.im.commons.model.Address
+import city.smartb.im.api.config.bean.ImAuthenticationResolver
+import city.smartb.im.commons.model.AddressBase
 import city.smartb.im.commons.utils.parseJsonTo
 import city.smartb.im.organization.domain.model.OrganizationRef
 import city.smartb.im.organization.lib.model.orEmpty

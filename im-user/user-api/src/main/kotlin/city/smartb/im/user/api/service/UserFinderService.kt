@@ -1,6 +1,6 @@
 package city.smartb.im.user.api.service
 
-import city.smartb.im.api.auth.ImAuthenticationResolver
+import city.smartb.im.api.config.bean.ImAuthenticationResolver
 import city.smartb.im.user.domain.features.query.KeycloakUserGetByEmailFunction
 import city.smartb.im.user.domain.features.query.KeycloakUserGetByEmailQuery
 import city.smartb.im.user.domain.features.query.KeycloakUserGetFunction

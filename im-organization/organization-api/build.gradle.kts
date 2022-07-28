@@ -5,8 +5,6 @@ plugins {
 }
 
 dependencies {
-
-    implementation(project(":im-api:api-auth"))
     implementation(project(":im-api:api-config"))
 
     implementation("city.smartb.f2:f2-spring-boot-starter-function:${Versions.f2}")

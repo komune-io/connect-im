@@ -1,4 +1,4 @@
-package city.smartb.im.api.config
+package city.smartb.im.api.config.bean
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonProcessingException

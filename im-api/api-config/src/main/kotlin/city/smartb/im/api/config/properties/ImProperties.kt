@@ -1,4 +1,4 @@
-package city.smartb.im.api.auth
+package city.smartb.im.api.config.properties
 
 class ImProperties(
     val uri: String,

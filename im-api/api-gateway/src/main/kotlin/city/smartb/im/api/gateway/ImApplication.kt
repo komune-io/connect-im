@@ -1,6 +1,6 @@
 package city.smartb.im.api.gateway
 
-import city.smartb.im.api.auth.ImConfig
+import city.smartb.im.api.config.ImConfig
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties

@@ -1,6 +1,6 @@
 package city.smartb.im.organization.lib.service
 
-import city.smartb.im.api.auth.ImAuthenticationResolver
+import city.smartb.im.api.config.bean.ImAuthenticationResolver
 import city.smartb.im.organization.lib.model.toOrganization
 import city.smartb.im.organization.lib.model.toOrganizationRef
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeQuery
