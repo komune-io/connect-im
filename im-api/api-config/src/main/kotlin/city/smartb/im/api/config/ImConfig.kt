@@ -1,5 +1,6 @@
-package city.smartb.im.api.auth
+package city.smartb.im.api.config
 
+import city.smartb.im.api.config.properties.ImProperties
 import i2.keycloak.master.domain.AuthRealm
 import i2.keycloak.master.domain.AuthRealmClientSecret
 import org.springframework.boot.context.properties.ConfigurationProperties
