@@ -5,11 +5,11 @@ import city.smartb.im.organization.lib.service.OrganizationMapper
 
 class OrganizationMapperImpl : OrganizationMapper<Organization, Organization> {
 
-    override fun from(organization: Organization): Organization {
+    override fun mapModel(organization: Organization): Organization {
         return organization
     }
 
-    override fun to(model: Organization): Organization {
+    override fun mapOrganization(model: Organization): Organization {
         return model
     }
 }

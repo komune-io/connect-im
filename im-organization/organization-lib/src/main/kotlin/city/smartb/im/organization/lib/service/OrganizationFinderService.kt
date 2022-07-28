@@ -38,7 +38,7 @@ class OrganizationFinderService<MODEL: OrganizationDTO>(
         return groupGetFunction.invoke(query.toGroupGetByIdQuery())
             .item
             ?.let { group -> groupMapper.toOrganization(group) }
-            ?.let { org -> organizationMapper.from(org) }
+            ?.let { org -> organizationMapper.mapModel(org) }
             .let { dto ->
                 OrganizationGetResult(dto)
             }
@@ -62,7 +62,7 @@ class OrganizationFinderService<MODEL: OrganizationDTO>(
         organizationMapper: OrganizationMapper<Organization, MODEL>
     ): OrganizationPageResult<MODEL> {
         val result = groupPageFunction.invoke(query.toGroupPageQuery())
-        val items = result.page.items.map { groupMapper.toOrganization(it)}.map { organizationMapper.from(it)}
+        val items = result.page.items.map { groupMapper.toOrganization(it)}.map { organizationMapper.mapModel(it)}
         return OrganizationPageResult(
             items = items,
             total = result.page.total

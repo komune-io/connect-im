@@ -27,7 +27,6 @@ import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesCommand
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
-import i2.keycloak.f2.group.domain.model.GroupModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.ws.rs.NotFoundException
@@ -61,7 +60,7 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
         val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id), mapper).item
             ?: throw NotFoundException("Organization [${command.id}] not found")
 
-        return groupUpdateFunction.invoke(command.toGroupUpdateCommand(  mapper.to(organization)))
+        return groupUpdateFunction.invoke(command.toGroupUpdateCommand(  mapper.mapOrganization(organization)))
             .let { result -> OrganizationUpdatedResult(result.id) }
     }
 

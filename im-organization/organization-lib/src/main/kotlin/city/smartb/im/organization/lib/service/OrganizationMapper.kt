@@ -1,7 +1,7 @@
 package city.smartb.im.organization.lib.service
 
-interface OrganizationMapper<FROM, TO> {
+interface OrganizationMapper<FROM, Organization> {
 
-    fun from(model: FROM): TO
-    fun to(model: TO): FROM
+    fun mapModel(model: FROM): Organization
+    fun mapOrganization(model: Organization): FROM
 }
