@@ -1,3 +1,4 @@
+import city.smartb.gradle.dependencies.FixersDependencies
 import city.smartb.gradle.dependencies.FixersPluginVersions
 import city.smartb.gradle.dependencies.FixersVersions
 import city.smartb.gradle.dependencies.Scope
@@ -31,13 +32,17 @@ object Dependencies {
 		fun f2(scope: Scope) = scope.add(
 			"city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}"
 		)
-
 		fun ktor(scope: Scope) = scope.add(
 			"io.ktor:ktor-client-core:${Versions.ktor}",
 			"io.ktor:ktor-client-content-negotiation:${Versions.ktor}",
 			"io.ktor:ktor-client-cio:${Versions.ktor}",
 			"io.ktor:ktor-serialization-kotlinx-json:${Versions.ktor}",
 			"io.ktor:ktor-serialization-jackson:${Versions.ktor}"
+		)
+
+
+		fun cucumber(scope: Scope) = FixersDependencies.Jvm.Test.cucumber(scope).add(
+			"io.cucumber:cucumber-spring:${FixersVersions.Test.cucumber}"
 		)
 	}
 
@@ -57,6 +62,10 @@ object Dependencies {
 		fun ktor(scope: Scope) = scope.add(
 			"io.ktor:ktor-client-core:${Versions.ktor}",
 			"io.ktor:ktor-client-serialization:${Versions.ktor}"
+		)
+		fun s2(scope: Scope) = scope.add(
+			"city.smartb.s2:s2-automate-dsl:${Versions.s2}",
+			"city.smartb.s2:s2-sourcing-dsl:${Versions.s2}"
 		)
 	}
 }

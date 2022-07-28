@@ -14,6 +14,10 @@ include(
 )
 
 include(
+    "im-bdd:bdd-commons"
+)
+
+include(
     "im-commons:im-commons-api",
     "im-commons:im-commons-domain"
 )
