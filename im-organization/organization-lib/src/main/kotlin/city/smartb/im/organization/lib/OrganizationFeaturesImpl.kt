@@ -11,7 +11,7 @@ import city.smartb.im.organization.domain.features.command.OrganizationUploadedL
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeFunction
 import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
 import city.smartb.im.organization.domain.features.query.OrganizationPageFunction
-import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllFunction
+import city.smartb.im.organization.domain.features.query.OrganizationRefListFunction
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationDTO
 import city.smartb.im.organization.lib.service.OrganizationAggregateService
@@ -41,9 +41,9 @@ class OrganizationFeaturesImpl<MODEL: OrganizationDTO>(
         organizationFinderService.organizationPage(query, organizationMapper)
     }
 
-    override fun organizationRefGetAll(): OrganizationRefGetAllFunction = f2Function { query ->
-        logger.info("organizationRefGetAll: $query")
-        organizationFinderService.organizationRefGetAll(query)
+    override fun organizationRefList(): OrganizationRefListFunction = f2Function { query ->
+        logger.info("organizationRefList: $query")
+        organizationFinderService.organizationRefList(query)
     }
 
     override fun organizationCreate(): OrganizationCreateFunction = f2Function { cmd ->

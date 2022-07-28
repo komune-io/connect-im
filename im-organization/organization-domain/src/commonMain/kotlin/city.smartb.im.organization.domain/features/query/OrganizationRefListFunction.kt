@@ -11,13 +11,13 @@ import f2.dsl.fnc.F2Function
  * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
  * @order 40
  */
-typealias OrganizationRefGetAllFunction = F2Function<OrganizationRefGetAllQuery, OrganizationRefGetAllResult>
+typealias OrganizationRefListFunction = F2Function<OrganizationRefListQuery, OrganizationRefListResult>
 
 /**
  * @d2 query
- * @parent [OrganizationRefGetAllFunction]
+ * @parent [OrganizationRefListFunction]
  */
-data class OrganizationRefGetAllQuery(
+data class OrganizationRefListQuery(
 	/**
 	 * If false, filter out the disabled organizations. (default: false)
 	 * @example false
@@ -27,9 +27,9 @@ data class OrganizationRefGetAllQuery(
 
 /**
  * @d2 result
- * @parent [OrganizationRefGetAllFunction]
+ * @parent [OrganizationRefListFunction]
  */
-data class OrganizationRefGetAllResult(
+data class OrganizationRefListResult(
 	/**
 	 * All Organization Refs.
 	 */

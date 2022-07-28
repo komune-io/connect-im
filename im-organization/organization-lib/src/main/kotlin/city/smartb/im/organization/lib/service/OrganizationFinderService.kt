@@ -1,18 +1,18 @@
 package city.smartb.im.organization.lib.service
 
 import city.smartb.im.api.config.bean.ImAuthenticationResolver
-import city.smartb.im.organization.lib.model.toOrganization
-import city.smartb.im.organization.lib.model.toOrganizationRef
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeQuery
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeResult
 import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
 import city.smartb.im.organization.domain.features.query.OrganizationGetResult
 import city.smartb.im.organization.domain.features.query.OrganizationPageQuery
 import city.smartb.im.organization.domain.features.query.OrganizationPageResult
-import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllQuery
-import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllResult
+import city.smartb.im.organization.domain.features.query.OrganizationRefListQuery
+import city.smartb.im.organization.domain.features.query.OrganizationRefListResult
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationDTO
+import city.smartb.im.organization.lib.model.toOrganization
+import city.smartb.im.organization.lib.model.toOrganizationRef
 import f2.dsl.cqrs.page.PagePagination
 import f2.dsl.fnc.invoke
 import i2.keycloak.f2.group.domain.features.query.GroupGetFunction
@@ -69,15 +69,15 @@ class OrganizationFinderService<MODEL: OrganizationDTO>(
         )
     }
 
-    suspend fun organizationRefGetAll(query: OrganizationRefGetAllQuery): OrganizationRefGetAllResult {
+    suspend fun organizationRefList(query: OrganizationRefListQuery): OrganizationRefListResult {
         return groupPageFunction.invoke(query.toGroupPageQuery())
             .page
             .items
             .map(GroupModel::toOrganizationRef)
-            .let(::OrganizationRefGetAllResult)
+            .let(::OrganizationRefListResult)
     }
 
-    private suspend fun OrganizationRefGetAllQuery.toGroupPageQuery(): GroupPageQuery {
+    private suspend fun OrganizationRefListQuery.toGroupPageQuery(): GroupPageQuery {
         val auth = authenticationResolver.getAuth()
         return GroupPageQuery(
             search = null,

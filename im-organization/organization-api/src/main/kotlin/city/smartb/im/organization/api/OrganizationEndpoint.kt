@@ -9,18 +9,18 @@ import city.smartb.im.organization.domain.features.command.OrganizationUploadedL
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeFunction
 import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
 import city.smartb.im.organization.domain.features.query.OrganizationPageFunction
-import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllFunction
+import city.smartb.im.organization.domain.features.query.OrganizationRefListFunction
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.lib.OrganizationFeaturesImpl
 import city.smartb.im.organization.lib.service.OrganizationAggregateService
 import city.smartb.im.organization.lib.service.OrganizationFinderService
-import javax.annotation.security.RolesAllowed
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
+import javax.annotation.security.RolesAllowed
 
 /**
  * @d2 service
@@ -66,7 +66,7 @@ class OrganizationEndpoint(
      */
     @Bean
     @RolesAllowed(Roles.READ_ORGANIZATION)
-    fun organizationRefGetAll(): OrganizationRefGetAllFunction = organizationFeatures.organizationRefGetAll()
+    fun organizationRefList(): OrganizationRefListFunction = organizationFeatures.organizationRefList()
 
     /**
      * Create an organization.

@@ -3,7 +3,7 @@ package city.smartb.im.organization.domain
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeFunction
 import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
 import city.smartb.im.organization.domain.features.query.OrganizationPageFunction
-import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllFunction
+import city.smartb.im.organization.domain.features.query.OrganizationRefListFunction
 import city.smartb.im.organization.domain.model.OrganizationDTO
 
 interface OrganizationQueryFeatures<MODEL: OrganizationDTO> {
@@ -26,6 +26,6 @@ interface OrganizationQueryFeatures<MODEL: OrganizationDTO> {
     /**
      * Fetch all OrganizationRef.
      */
-    fun organizationRefGetAll(): OrganizationRefGetAllFunction
+    fun organizationRefList(): OrganizationRefListFunction
 
 }

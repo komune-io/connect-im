@@ -11,9 +11,8 @@ import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
 import city.smartb.im.organization.domain.features.query.OrganizationGetResult
 import city.smartb.im.organization.domain.features.query.OrganizationPageQuery
 import city.smartb.im.organization.domain.features.query.OrganizationPageResult
-import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllQuery
-import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllResult
-import city.smartb.im.organization.domain.model.Organization
+import city.smartb.im.organization.domain.features.query.OrganizationRefListQuery
+import city.smartb.im.organization.domain.features.query.OrganizationRefListResult
 import city.smartb.im.organization.domain.model.OrganizationDTO
 
 class OrganizationClient<MODEL: OrganizationDTO>(
@@ -30,8 +29,8 @@ class OrganizationClient<MODEL: OrganizationDTO>(
     suspend fun organizationPage(queries: List<OrganizationPageQuery>):
             List<OrganizationPageResult<MODEL>> = post("organizationPage", queries)
 
-    suspend fun organizationRefGetAll(queries: List<OrganizationRefGetAllQuery>):
-            List<OrganizationRefGetAllResult> = post("organizationRefGetAll", queries)
+    suspend fun organizationRefList(queries: List<OrganizationRefListQuery>):
+            List<OrganizationRefListResult> = post("organizationRefList", queries)
 
     suspend fun organizationCreate(commands: List<OrganizationCreateCommand>):
             List<OrganizationCreatedEvent> = post("organizationCreate", commands)
