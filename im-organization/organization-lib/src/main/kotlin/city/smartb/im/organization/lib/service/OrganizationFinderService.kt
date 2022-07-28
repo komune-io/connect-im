@@ -11,6 +11,7 @@ import city.smartb.im.organization.domain.features.query.OrganizationPageQuery
 import city.smartb.im.organization.domain.features.query.OrganizationPageResult
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllQuery
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllResult
+import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationDTO
 import f2.dsl.cqrs.page.PagePagination
 import f2.dsl.fnc.invoke
@@ -27,12 +28,17 @@ class OrganizationFinderService<MODEL: OrganizationDTO>(
     private val groupGetFunction: GroupGetFunction,
     private val groupPageFunction: GroupPageFunction,
     private val authenticationResolver: ImAuthenticationResolver,
+    private val groupMapper: GroupMapper,
 ) {
 
-    suspend fun organizationGet(query: OrganizationGetQuery, organizationMapper: OrganizationMapper<MODEL>): OrganizationGetResult<MODEL> {
+    suspend fun organizationGet(
+        query: OrganizationGetQuery,
+        organizationMapper: OrganizationMapper<Organization, MODEL>
+    ): OrganizationGetResult<MODEL> {
         return groupGetFunction.invoke(query.toGroupGetByIdQuery())
             .item
-            ?.let { group -> organizationMapper.toOrganization(group) }
+            ?.let { group -> groupMapper.toOrganization(group) }
+            ?.let { org -> organizationMapper.from(org) }
             .let { dto ->
                 OrganizationGetResult(dto)
             }
@@ -53,12 +59,12 @@ class OrganizationFinderService<MODEL: OrganizationDTO>(
 
     suspend fun organizationPage(
         query: OrganizationPageQuery,
-        organizationMapper: OrganizationMapper<MODEL>
+        organizationMapper: OrganizationMapper<Organization, MODEL>
     ): OrganizationPageResult<MODEL> {
         val result = groupPageFunction.invoke(query.toGroupPageQuery())
-
+        val items = result.page.items.map { groupMapper.toOrganization(it)}.map { organizationMapper.from(it)}
         return OrganizationPageResult(
-            items = result.page.items.map { organizationMapper.toOrganization(it)},
+            items = items,
             total = result.page.total
         )
     }

@@ -12,6 +12,7 @@ import city.smartb.im.organization.domain.features.query.OrganizationGetFromInse
 import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
 import city.smartb.im.organization.domain.features.query.OrganizationPageFunction
 import city.smartb.im.organization.domain.features.query.OrganizationRefGetAllFunction
+import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationDTO
 import city.smartb.im.organization.lib.service.OrganizationAggregateService
 import city.smartb.im.organization.lib.service.OrganizationFinderService
@@ -21,7 +22,7 @@ import f2.dsl.fnc.f2Function
 class OrganizationFeaturesImpl<MODEL: OrganizationDTO>(
     private val organizationFinderService: OrganizationFinderService<MODEL>,
     private val organizationAggregateService: OrganizationAggregateService<MODEL>,
-    private val organizationMapper: OrganizationMapper<MODEL>,
+    private val organizationMapper: OrganizationMapper<Organization, MODEL>,
 ): OrganizationQueryFeatures<MODEL>, OrganizationCommandFeatures {
     private val logger by s2.spring.utils.logger.Logger()
 

@@ -27,6 +27,7 @@ import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesCommand
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
+import i2.keycloak.f2.group.domain.model.GroupModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.ws.rs.NotFoundException
@@ -38,7 +39,8 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val groupDisableFunction: GroupDisableFunction,
     private val groupSetAttributesFunction: GroupSetAttributesFunction,
     private val groupUpdateFunction: GroupUpdateFunction,
-    private val organizationFinderService: OrganizationFinderService<MODEL>
+    private val organizationFinderService: OrganizationFinderService<MODEL>,
+
 ) {
 
     @Autowired(required = false)
@@ -55,11 +57,11 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
             }
     }
 
-    suspend fun update(command: OrganizationUpdateCommand, mapper: OrganizationMapper<MODEL>): OrganizationUpdatedResult {
+    suspend fun update(command: OrganizationUpdateCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationUpdatedResult {
         val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id), mapper).item
             ?: throw NotFoundException("Organization [${command.id}] not found")
 
-        return groupUpdateFunction.invoke(command.toGroupUpdateCommand(organization))
+        return groupUpdateFunction.invoke(command.toGroupUpdateCommand(  mapper.to(organization)))
             .let { result -> OrganizationUpdatedResult(result.id) }
     }
 
@@ -126,7 +128,7 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
         )
     }
 
-    private suspend fun OrganizationUpdateCommand.toGroupUpdateCommand(organization: MODEL): GroupUpdateCommand {
+    private suspend fun OrganizationUpdateCommand.toGroupUpdateCommand(organization: Organization): GroupUpdateCommand {
         val auth = authenticationResolver.getAuth()
         return GroupUpdateCommand(
             id = id,

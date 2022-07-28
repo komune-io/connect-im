@@ -1,8 +1,7 @@
 package city.smartb.im.organization.lib.service
 
-import i2.keycloak.f2.group.domain.model.GroupModel
+interface OrganizationMapper<FROM, TO> {
 
-interface OrganizationMapper<MODEL> {
-
-    fun toOrganization(group: GroupModel): MODEL
+    fun from(model: FROM): TO
+    fun to(model: TO): FROM
 }
