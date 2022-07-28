@@ -1,6 +1,6 @@
 package city.smartb.im.organization.domain.features.command
 
-import city.smartb.im.commons.model.AddressBase
+import city.smartb.im.commons.model.Address
 import city.smartb.im.organization.domain.model.OrganizationId
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
@@ -40,7 +40,7 @@ data class OrganizationCreateCommand(
     /**
      * Address of the organization.
      */
-    val address: AddressBase?,
+    val address: Address?,
 
     /**
      * Website of the organization.

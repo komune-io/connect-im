@@ -1,6 +1,6 @@
 package city.smartb.im.user.domain.features.command
 
-import city.smartb.im.commons.model.AddressBase
+import city.smartb.im.commons.model.Address
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.model.UserId
 import f2.dsl.cqrs.Command
@@ -44,7 +44,7 @@ data class UserCreateCommand(
     /**
      * Address of the user.
      */
-    val address: AddressBase?,
+    val address: Address?,
 
     /**
      * Telephone number of the user.

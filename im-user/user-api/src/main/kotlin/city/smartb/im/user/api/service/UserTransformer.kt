@@ -1,10 +1,10 @@
 package city.smartb.im.user.api.service
 
 import city.smartb.im.api.auth.ImAuthenticationResolver
-import city.smartb.im.commons.model.AddressBase
+import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.parseJsonTo
-import city.smartb.im.organization.lib.model.orEmpty
 import city.smartb.im.organization.domain.model.OrganizationRef
+import city.smartb.im.organization.lib.model.orEmpty
 import city.smartb.im.user.domain.model.User
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.query.UserGetGroupsFunction
@@ -43,7 +43,7 @@ class UserTransformer(
 			email = user.email ?: "",
 			givenName = user.firstName ?: "",
 			familyName = user.lastName ?: "",
-			address = user.attributes[User::address.name]?.parseJsonTo(AddressBase::class.java).orEmpty(),
+			address = user.attributes[User::address.name]?.parseJsonTo(Address::class.java).orEmpty(),
 			phone = user.attributes[User::phone.name],
 			roles = user.roles,
 			attributes = attributes,

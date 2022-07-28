@@ -1,9 +1,9 @@
 package city.smartb.im.organization.lib.model
 
-import city.smartb.im.commons.model.AddressBase
+import city.smartb.im.commons.model.Address
+import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.lib.model.insee.InseeAddress
 import city.smartb.im.organization.lib.model.insee.InseeOrganization
-import city.smartb.im.organization.domain.model.Organization
 
 fun InseeOrganization.toOrganization() = Organization(
     id = "",
@@ -18,7 +18,7 @@ fun InseeOrganization.toOrganization() = Organization(
     creationDate = System.currentTimeMillis()
 )
 
-fun InseeAddress.toAddress() = AddressBase(
+fun InseeAddress.toAddress() = Address(
     street = street(),
     postalCode = codePostalEtablissement.orEmpty(),
     city = libelleCommuneEtablissement.orEmpty()

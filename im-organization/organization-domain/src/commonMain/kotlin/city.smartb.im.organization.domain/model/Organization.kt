@@ -1,7 +1,9 @@
 package city.smartb.im.organization.domain.model
 
-import city.smartb.im.commons.model.Address
+import city.smartb.im.commons.model.AddressDTO
 import i2.keycloak.f2.group.domain.model.GroupId
+import kotlin.js.JsExport
+import kotlin.js.JsName
 
 /**
  * Unique identifier of an organization.
@@ -12,12 +14,14 @@ import i2.keycloak.f2.group.domain.model.GroupId
  */
 typealias OrganizationId = GroupId
 
+@JsExport
+@JsName("OrganizationDTO")
 interface OrganizationDTO {
     val id: OrganizationId
     val siret: String?
     val name: String
     val description: String?
-    val address: Address?
+    val address: AddressDTO?
     val website: String?
     val attributes: Map<String, String>
     val roles: List<String>?
@@ -58,7 +62,7 @@ data class Organization(
     /**
      * Address of the organization.
      */
-    override val address: Address?,
+    override val address: AddressDTO?,
 
     /**
      * Website of the organization.

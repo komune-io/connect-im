@@ -1,12 +1,17 @@
 package city.smartb.im.commons.model
 
+import kotlin.js.JsExport
+import kotlin.js.JsName
+
 /**
  * Representation of the address.
  * @d2 model
  * @parent [city.smartb.im.commons.D2AddressPage]
  * @title Model
  */
-interface Address {
+@JsExport
+@JsName("AddressDTO")
+interface AddressDTO {
     /**
      * The street address.
      * @example "2 Rue du pavillon"
@@ -24,8 +29,8 @@ interface Address {
     val city: String
 }
 
-data class AddressBase(
+data class Address(
     override val street: String,
     override val postalCode: String,
     override val city: String
-): Address
+): AddressDTO
