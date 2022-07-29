@@ -1,5 +1,6 @@
 package city.smartb.im.organization.domain.model
 
+import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.AddressDTO
 import i2.keycloak.f2.group.domain.model.GroupId
 import kotlin.js.JsExport
@@ -62,7 +63,7 @@ data class Organization(
     /**
      * Address of the organization.
      */
-    override val address: AddressDTO?,
+    override val address: Address?,
 
     /**
      * Website of the organization.

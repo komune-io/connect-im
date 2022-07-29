@@ -1,5 +1,6 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
     city.smartb.im.organization.lib.config.OrganizationFsConfig,\
     city.smartb.im.organization.lib.service.InseeHttpClient,\
+    city.smartb.im.organization.lib.service.GroupMapper,\
     city.smartb.im.organization.lib.service.OrganizationAggregateService,\
     city.smartb.im.organization.lib.service.OrganizationFinderService
