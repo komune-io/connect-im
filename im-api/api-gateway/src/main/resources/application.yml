@@ -8,17 +8,21 @@ spring:
 i2:
   issuers:
     -
-      uri: http://localhost:8080/auth/realms/test
+      name: auth-test
       authUrl: http://localhost:8080/auth
       realm: test
-      clientId: i2-api
-      clientSecret: cc7c636d-cfbc-4cf2-9a59-a4f759893966
+      im:
+        clientId: i2-api
+        clientSecret: cc7c636d-cfbc-4cf2-9a59-a4f759893966
     -
-      uri: http://localhost:8080/auth/realms/test2
+      name: auth-test2
       authUrl: http://localhost:8080/auth
       realm: test2
-      clientId: i2-api
-      clientSecret: 5e471884-ab65-4b84-a20b-6d16a77aa553
+      im:
+        clientId: i2-api
+        clientSecret: 5e471884-ab65-4b84-a20b-6d16a77aa553
+
+im:
   organization:
     insee:
       token: ${INSEE_TOKEN}
@@ -36,8 +40,9 @@ spring:
 i2:
   issuers:
     -
-      uri: https://auth.smart-b.io/auth/realms/test
+      name: local
       authUrl: https://auth.smart-b.io/auth
       realm: test
-      clientId: i2-api
-      clientSecret: e44dbaf6-d9af-4234-9a30-3a481c96e157
+      im:
+        clientId: i2-api
+        clientSecret: e44dbaf6-d9af-4234-9a30-3a481c96e157
