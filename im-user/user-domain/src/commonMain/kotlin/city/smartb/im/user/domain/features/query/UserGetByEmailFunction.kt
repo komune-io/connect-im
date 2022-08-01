@@ -1,9 +1,12 @@
 package city.smartb.im.user.domain.features.query
 
 import city.smartb.im.user.domain.model.User
-import f2.dsl.cqrs.Command
+import city.smartb.im.user.domain.model.UserDTO
 import f2.dsl.cqrs.Event
+import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
+import kotlin.js.JsExport
+import kotlin.js.JsName
 
 /**
  * Get a user by email.
@@ -16,24 +19,36 @@ typealias UserGetByEmailFunction = F2Function<UserGetByEmailQuery, UserGetByEmai
 typealias KeycloakUserGetByEmailFunction = i2.keycloak.f2.user.domain.features.query.UserGetByEmailFunction
 typealias KeycloakUserGetByEmailQuery = i2.keycloak.f2.user.domain.features.query.UserGetByEmailQuery
 
+@JsExport
+@JsName("UserGetByEmailQueryDTO")
+interface UserGetByEmailQueryDTO: Query {
+    /**
+     * Email address of the user.
+     */
+    val email: String
+}
+
 /**
  * @d2 query
  * @parent [UserGetByEmailFunction]
  */
 data class UserGetByEmailQuery(
+    override val email: String
+): UserGetByEmailQueryDTO
+
+@JsExport
+@JsName("UserGetByEmailResultDTO")
+interface UserGetByEmailResultDTO: Event {
     /**
-     * Email address of the user.
+     * The user.
      */
-    val email: String
-): Command
+    val item: UserDTO?
+}
 
 /**
  * @d2 result
  * @parent [UserGetByEmailFunction]
  */
 data class UserGetByEmailResult(
-    /**
-     * The user.
-     */
-	val item: User?
-): Event
+    override val item: User?
+): UserGetByEmailResultDTO

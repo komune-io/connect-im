@@ -2,6 +2,7 @@ package city.smartb.im.user.domain.model
 
 import city.smartb.im.commons.model.AddressDTO
 import city.smartb.im.organization.domain.model.OrganizationRef
+import city.smartb.im.organization.domain.model.OrganizationRefDTO
 import i2.keycloak.f2.user.domain.model.UserRoles
 import kotlin.js.JsExport
 import kotlin.js.JsName
@@ -19,7 +20,7 @@ typealias UserId = String
 @JsName("UserDTO")
 interface UserDTO {
     val id: UserId
-    val memberOf: OrganizationRef?
+    val memberOf: OrganizationRefDTO?
     val email: String
     val givenName: String
     val familyName: String
