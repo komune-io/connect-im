@@ -2,6 +2,7 @@ package city.smartb.im.role.api
 
 import city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE
 import city.smartb.im.role.api.service.RoleAggregateService
+import city.smartb.im.role.domain.RoleCommandFeatures
 import city.smartb.im.role.domain.features.command.RoleAddCompositesFunction
 import city.smartb.im.role.domain.features.command.RoleCreateFunction
 import city.smartb.im.role.domain.features.command.RoleUpdateFunction
@@ -14,15 +15,15 @@ import javax.annotation.security.RolesAllowed
  * @d2 service
  */
 @Configuration
-class RoleEndpoint(
+class RoleCommandApi(
     private val roleAggregateService: RoleAggregateService
-) {
+): RoleCommandFeatures {
     /**
      * Associate roles to another role. Associated roles must exist.
      */
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
-    fun roleAddComposites(): RoleAddCompositesFunction = f2Function { cmd ->
+    override fun roleAddComposites(): RoleAddCompositesFunction = f2Function { cmd ->
         roleAggregateService.roleAddComposites(cmd)
     }
 
@@ -31,7 +32,7 @@ class RoleEndpoint(
      */
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
-    fun roleCreate(): RoleCreateFunction = f2Function { cmd ->
+    override fun roleCreate(): RoleCreateFunction = f2Function { cmd ->
         roleAggregateService.roleCreate(cmd)
     }
 
@@ -40,7 +41,7 @@ class RoleEndpoint(
      */
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
-    fun roleUpdate(): RoleUpdateFunction = f2Function { cmd ->
+    override fun roleUpdate(): RoleUpdateFunction = f2Function { cmd ->
         roleAggregateService.roleUpdate(cmd)
     }
 }

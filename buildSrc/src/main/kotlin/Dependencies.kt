@@ -40,10 +40,11 @@ object Dependencies {
 			"io.ktor:ktor-serialization-jackson:${Versions.ktor}"
 		)
 
-
 		fun cucumber(scope: Scope) = FixersDependencies.Jvm.Test.cucumber(scope).add(
-			"io.cucumber:cucumber-spring:${FixersVersions.Test.cucumber}"
-		)
+			"io.cucumber:cucumber-spring:${FixersVersions.Test.cucumber}",
+			"org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}"
+		).also(::junit)
+		fun junit(scope: Scope) = FixersDependencies.Jvm.Test.junit(scope)
 	}
 
 	object Js {
