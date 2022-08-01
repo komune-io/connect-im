@@ -11,7 +11,7 @@ import io.cucumber.java8.En
 import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
 
-class RoleIsEligibleSteps : En, CucumberStepsDefinition() {
+class RoleQuerySteps : En, CucumberStepsDefinition() {
 
     @Autowired
     private lateinit var roleFinderService: RoleFinderService
