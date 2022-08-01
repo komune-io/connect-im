@@ -79,13 +79,16 @@ class RoleCreateSteps: En, CucumberStepsDefinition() {
         roleAggregateService.roleCreate(command).id
     }
 
-    private fun roleInitParams(entry: Map<String, String>?) = RoleInitParams(
-        identifier = entry?.get("identifier").orRandom(),
-        name = entry?.get("name") ?: UUID.randomUUID().toString(),
-        description = entry?.get("description") ?: UUID.randomUUID().toString(),
-        isClientRole = entry?.get("isClientRole").toBoolean(),
-        composites = entry?.extractList("composites") ?: emptyList()
-    )
+    private fun roleInitParams(entry: Map<String, String>?): RoleInitParams {
+        val identifier = entry?.get("identifier").orRandom()
+        return RoleInitParams(
+            identifier = identifier,
+            name = entry?.get("name") ?: "roleName-${identifier}",
+            description = entry?.get("description") ?: UUID.randomUUID().toString(),
+            isClientRole = entry?.get("isClientRole").toBoolean(),
+            composites = entry?.extractList("composites") ?: emptyList()
+        )
+    }
 
     private data class RoleInitParams(
         val identifier: TestContextKey,

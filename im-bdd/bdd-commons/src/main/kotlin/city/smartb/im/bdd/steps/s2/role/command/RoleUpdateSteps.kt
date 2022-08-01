@@ -81,7 +81,7 @@ class RoleUpdateSteps: En, CucumberStepsDefinition() {
 
     private fun roleUpdateParams(entry: Map<String, String>?) = RoleUpdateParams(
         identifier = entry?.get("identifier") ?: context.roleIds.lastUsedKey,
-        name = entry?.get("name") ?: "roleName-${UUID.randomUUID()}",
+        name = entry?.get("name") ?: "roleName-${context.roleIds.lastUsedKey}",
         description = entry?.get("description") ?: "6666",
         isClientRole = entry?.get("isClientRole").toBoolean(),
         composites = entry?.extractList("composites") ?: emptyList()
