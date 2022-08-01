@@ -43,7 +43,6 @@ class RoleFinderService(
         }
     }
 
-    @Bean
     suspend fun getByName(query: RoleGetByNameQuery): RoleGetByNameResult {
         val auth = authenticationResolver.getAuth()
         val realmClient = AuthRealmClientBuilder().build(auth)

@@ -1,25 +1,25 @@
 package city.smartb.im.api.config
 
-import city.smartb.im.api.config.properties.ImIssuers
+import city.smartb.im.api.config.bean.AuthRealmDeserializer
+import city.smartb.im.api.config.properties.ImProperties
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.AuthRealmClientSecret
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
-@ConfigurationProperties(prefix = "i2")
-@ConstructorBinding
-data class ImConfig (
-    val issuers: List<ImIssuers>
-) {
-    fun getIssuersMap(): Map<String, AuthRealm> {
-        return issuers.associate {
-            it.uri to AuthRealmClientSecret(
-                serverUrl = it.authUrl,
-                realmId = it.realm,
-                redirectUrl = "",
-                clientId = it.im.clientId,
-                clientSecret = it.im.clientSecret
-            )
-        }
+
+@Configuration
+@EnableConfigurationProperties(ImProperties::class)
+class ImConfig {
+
+    @Bean
+    fun authRealmJacksonDeserializer(): ObjectMapper = jacksonObjectMapper().also { mapper ->
+        val module = SimpleModule()
+        module.addDeserializer(AuthRealm::class.java, AuthRealmDeserializer())
+        mapper.registerModule(module)
     }
+
 }

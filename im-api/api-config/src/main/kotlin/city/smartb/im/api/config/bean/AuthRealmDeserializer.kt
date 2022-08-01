@@ -15,7 +15,6 @@ import i2.keycloak.master.domain.AuthRealmPassword
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-@Configuration
 class AuthRealmDeserializer: JsonDeserializer<AuthRealm>() {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): AuthRealm {
         val json = p.codec.readTree<JsonNode>(p).toJson()

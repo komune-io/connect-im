@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   keycloak-it:
-    image: smartbcity/i2-keycloak:dev
+    image: smartbcity/i2-keycloak:0.9.0
     environment:
       KC_DB_URL: 'jdbc:postgresql://keycloak-postgres/keycloak-it'
       KC_DB_PASSWORD: admin
