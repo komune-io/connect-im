@@ -12,7 +12,7 @@ object PluginVersions {
 }
 
 object Versions {
-	val i2 = "next-SNAPSHOT"
+	val i2 = "experimental-SNAPSHOT"
 	val f2 = PluginVersions.fixers
 	val fs = "0.9.1"
 	val s2 = PluginVersions.fixers
@@ -23,6 +23,7 @@ object Versions {
 
 	const val kdatetime = "0.1.1"
 	const val keycloak = "18.0.0"
+	const val mockito = "4.6.1"
 
 	const val testcontainers = FixersVersions.Test.testcontainers
 }
@@ -40,11 +41,19 @@ object Dependencies {
 			"io.ktor:ktor-serialization-jackson:${Versions.ktor}"
 		)
 
-		fun cucumber(scope: Scope) = FixersDependencies.Jvm.Test.cucumber(scope).add(
-			"io.cucumber:cucumber-spring:${FixersVersions.Test.cucumber}",
-			"org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}"
-		).also(::junit)
+		fun cucumber(scope: Scope) = FixersDependencies.Jvm.Test.cucumber(scope)
+			.add(
+				"io.cucumber:cucumber-spring:${FixersVersions.Test.cucumber}",
+				"org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}"
+			)
+			.also(::junit)
+			.also(::mockito)
+
 		fun junit(scope: Scope) = FixersDependencies.Jvm.Test.junit(scope)
+
+		fun mockito(scope: Scope) = scope.add(
+			"org.mockito:mockito-core:${Versions.mockito}"
+		)
 	}
 
 	object Js {

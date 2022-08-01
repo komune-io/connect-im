@@ -2,7 +2,7 @@ package city.smartb.im.organization.lib.service
 
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
-import city.smartb.im.api.config.bean.ImAuthenticationResolver
+import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
@@ -33,7 +33,7 @@ import javax.ws.rs.NotFoundException
 
 @Service
 class OrganizationAggregateService<MODEL: OrganizationDTO>(
-    private val authenticationResolver: ImAuthenticationResolver,
+    private val authenticationResolver: ImAuthenticationProvider,
     private val groupCreateFunction: GroupCreateFunction,
     private val groupDisableFunction: GroupDisableFunction,
     private val groupSetAttributesFunction: GroupSetAttributesFunction,

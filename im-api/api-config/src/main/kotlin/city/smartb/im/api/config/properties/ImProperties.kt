@@ -10,15 +10,21 @@ import org.springframework.boot.context.properties.ConstructorBinding
 data class ImProperties (
     val issuers: List<ImIssuersProperties>
 ) {
+    fun getAuthRealm(): List<AuthRealm> {
+        return issuers.map { toAuthRealm(it) }
+    }
+
     fun getIssuersMap(): Map<String, AuthRealm> {
         return issuers.associate {
-            it.uri to AuthRealmClientSecret(
-                serverUrl = it.authUrl,
-                realmId = it.realm,
-                redirectUrl = "",
-                clientId = it.im.clientId,
-                clientSecret = it.im.clientSecret
-            )
+            it.uri to toAuthRealm(it)
         }
     }
+
+    private fun toAuthRealm(it: ImIssuersProperties): AuthRealm = AuthRealmClientSecret(
+        serverUrl = it.authUrl,
+        realmId = it.realm,
+        redirectUrl = "",
+        clientId = it.im.clientId,
+        clientSecret = it.im.clientSecret
+    )
 }

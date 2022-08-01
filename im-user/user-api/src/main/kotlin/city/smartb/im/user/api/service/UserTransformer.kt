@@ -1,6 +1,6 @@
 package city.smartb.im.user.api.service
 
-import city.smartb.im.api.config.bean.ImAuthenticationResolver
+import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.parseJsonTo
 import city.smartb.im.organization.domain.model.OrganizationRef
@@ -12,8 +12,8 @@ import i2.keycloak.f2.user.domain.features.query.UserGetGroupsQuery
 import i2.keycloak.f2.user.domain.model.UserModel
 
 class UserTransformer(
-    private val authenticationResolver: ImAuthenticationResolver,
-    private val userGetGroupsQueryFunction: UserGetGroupsFunction
+	private val authenticationResolver: ImAuthenticationProvider,
+	private val userGetGroupsQueryFunction: UserGetGroupsFunction
 ) {
 	suspend fun toUser(user: UserModel): User {
 		val auth = authenticationResolver.getAuth()

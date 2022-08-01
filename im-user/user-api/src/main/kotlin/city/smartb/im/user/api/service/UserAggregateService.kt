@@ -2,7 +2,7 @@ package city.smartb.im.user.api.service
 
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
-import city.smartb.im.api.config.bean.ImAuthenticationResolver
+import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.api.config.UserFsConfig
@@ -45,7 +45,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserAggregateService(
-    private val authenticationResolver: ImAuthenticationResolver,
+    private val authenticationResolver: ImAuthenticationProvider,
     private val keycloakUserCreateFunction: KeycloakUserCreateFunction,
     private val keycloakUserDisableFunction: KeycloakUserDisableFunction,
     private val keycloakUserUpdateFunction: KeycloakUserUpdateFunction,

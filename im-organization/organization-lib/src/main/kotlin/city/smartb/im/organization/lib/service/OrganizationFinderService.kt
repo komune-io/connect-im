@@ -1,6 +1,6 @@
 package city.smartb.im.organization.lib.service
 
-import city.smartb.im.api.config.bean.ImAuthenticationResolver
+import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeQuery
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeResult
 import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
@@ -27,7 +27,7 @@ class OrganizationFinderService<MODEL: OrganizationDTO>(
     private val inseeHttpClient: InseeHttpClient,
     private val groupGetFunction: GroupGetFunction,
     private val groupPageFunction: GroupPageFunction,
-    private val authenticationResolver: ImAuthenticationResolver,
+    private val authenticationResolver: ImAuthenticationProvider,
     private val groupMapper: GroupMapper,
 ) {
 

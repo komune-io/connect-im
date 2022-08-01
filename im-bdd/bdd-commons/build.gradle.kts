@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+	implementation(project(":im-api:api-config"))
 	implementation(project(":im-organization:organization-api"))
 	implementation(project(":im-role:role-api"))
 	implementation(project(":im-user:user-api"))

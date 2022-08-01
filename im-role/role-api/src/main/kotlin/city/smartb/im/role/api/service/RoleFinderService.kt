@@ -1,6 +1,6 @@
 package city.smartb.im.role.api.service
 
-import city.smartb.im.api.config.bean.ImAuthenticationResolver
+import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.role.domain.features.query.RoleGetByIdQuery
 import city.smartb.im.role.domain.features.query.RoleGetByIdResult
 import city.smartb.im.role.domain.features.query.RoleGetByNameQuery
@@ -11,13 +11,12 @@ import i2.keycloak.f2.role.domain.RoleModel
 import i2.keycloak.realm.client.config.AuthRealmClientBuilder
 import javax.ws.rs.NotFoundException
 import org.keycloak.representations.idm.RoleRepresentation
-import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service
 import s2.spring.utils.logger.Logger
 
 @Service
 class RoleFinderService(
-    private val authenticationResolver: ImAuthenticationResolver,
+    private val authenticationResolver: ImAuthenticationProvider,
 ) {
 
     private val logger by Logger()

@@ -1,6 +1,6 @@
 package city.smartb.im.user.api.service
 
-import city.smartb.im.api.config.bean.ImAuthenticationResolver
+import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.user.domain.features.query.KeycloakUserGetByEmailFunction
 import city.smartb.im.user.domain.features.query.KeycloakUserGetByEmailQuery
 import city.smartb.im.user.domain.features.query.KeycloakUserGetFunction
@@ -21,7 +21,7 @@ class UserFinderService(
     private val keycloakUserGetFunction: KeycloakUserGetFunction,
     private val keycloakUserGetByEmailFunction: KeycloakUserGetByEmailFunction,
     private val keycloakUserPageFunction: KeycloakUserPageFunction,
-    private val authenticationResolver: ImAuthenticationResolver
+    private val authenticationResolver: ImAuthenticationProvider
 ) {
     suspend fun userGet(query: UserGetQuery): User? {
         val auth = authenticationResolver.getAuth()
