@@ -160,6 +160,26 @@ Properties prefix: `fs`
 |--------------|----------------------------|------------------------------------------|----------------------------------------|
 | url          | Points to an FS instance. This property is optional but will disable associated features if not set (ex: upload logo) | http://localhost:8090 | null
 
+# Tests
+
+To run tests you need to:
+ * Start keycloak
+
+```bash
+docker-compose -f docker-compose-keycloak.yml up -d
+```
+
+ * Init keycloak realm
+
+```bash
+docker-compose -f docker-compose-i2-init.yml up -d
+```
+
+ * Run test
+```bash
+./gradlew test
+```
+
 # Errors
 
 ## FileClient not initialized  

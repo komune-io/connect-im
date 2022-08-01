@@ -18,7 +18,7 @@ class AssertionRole(
 )
     {
     suspend fun assertThat(id: RoleId): RoleAssert {
-        val role = api.roleGetById().invoke(RoleGetByIdQuery(id, realmId)).item!!
+        val role = api.roleGetById().invoke(RoleGetByIdQuery(id = id, realmId = realmId)).item!!
         return assertThat(role)
     }
     fun assertThat(entity: RoleModel) = RoleAssert(entity)
@@ -33,7 +33,7 @@ class AssertionRole(
             isClientRole: Boolean = role.isClientRole
         ) = also {
             Assertions.assertThat(role.id).isEqualTo(id)
-            Assertions.assertThat(role.name).isEqualTo(description)
+            Assertions.assertThat(role.name).isEqualTo(name)
             Assertions.assertThat(role.description).isEqualTo(description)
             Assertions.assertThat(role.isClientRole).isEqualTo(isClientRole)
         }

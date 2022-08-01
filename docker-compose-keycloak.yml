@@ -18,7 +18,6 @@ services:
       - '8080:8080'
     depends_on:
       - keycloak-postgres-it
-
   keycloak-postgres-it:
     image: postgres
     container_name: keycloak-postgres

@@ -8,19 +8,12 @@ spring:
 i2:
   issuers:
     -
-      name: auth-test
+      name: im-test
       authUrl: http://localhost:8080/auth
-      realm: test
+      realm: im-test
       im:
-        clientId: i2-api
-        clientSecret: cc7c636d-cfbc-4cf2-9a59-a4f759893966
-    -
-      name: auth-test2
-      authUrl: http://localhost:8080/auth
-      realm: test2
-      im:
-        clientId: i2-api
-        clientSecret: 5e471884-ab65-4b84-a20b-6d16a77aa553
+        clientId: im-test-client
+        clientSecret: secret
 
 im:
   organization:

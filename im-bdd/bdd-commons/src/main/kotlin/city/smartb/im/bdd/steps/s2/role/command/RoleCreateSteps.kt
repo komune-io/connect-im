@@ -10,6 +10,7 @@ import city.smartb.im.role.api.service.RoleAggregateService
 import city.smartb.im.role.domain.features.command.RoleCreateCommand
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
+import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 
 class RoleCreateSteps: En, CucumberStepsDefinition() {
@@ -80,8 +81,8 @@ class RoleCreateSteps: En, CucumberStepsDefinition() {
 
     private fun roleInitParams(entry: Map<String, String>?) = RoleInitParams(
         identifier = entry?.get("identifier").orRandom(),
-        name = entry?.get("name") ?: "6666",
-        description = entry?.get("description") ?: "6666",
+        name = entry?.get("name") ?: UUID.randomUUID().toString(),
+        description = entry?.get("description") ?: UUID.randomUUID().toString(),
         isClientRole = entry?.get("isClientRole").toBoolean(),
         composites = entry?.extractList("composites") ?: emptyList()
     )

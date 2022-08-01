@@ -9,7 +9,7 @@ typealias TestContextKey = String
 @Component
 class TestContext {
     private val entityLists = mutableListOf<TestEntities<*, *>>()
-    val realmId = "test"
+    val realmId = "im-test"
     val roleIds = testEntities<String, RoleId>("Role")
 //    val projectIds = testEntities<String, ProjectId>("Project")
 

@@ -14,7 +14,7 @@ class AuthenticationProviderStub {
     fun imAuthenticationProvider(imProperties: ImProperties): ImAuthenticationProvider {
         return object: ImAuthenticationProvider {
             override suspend fun getAuth(): AuthRealm {
-                return imProperties.getAuthRealm().associateBy { it.realmId }["test"]!!
+                return imProperties.getAuthRealm().associateBy { it.realmId }["im-test"]!!
             }
         }
 
