@@ -1,4 +1,4 @@
-package city.smartb.im.user.api.service
+package city.smartb.im.user.lib.service
 
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.user.domain.features.query.KeycloakUserGetByEmailFunction

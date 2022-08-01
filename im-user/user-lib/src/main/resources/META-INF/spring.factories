@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    city.smartb.im.user.lib.UserFeaturesImpl,\
+    city.smartb.im.user.lib.config.UserFsConfig,\
+    city.smartb.im.user.lib.service.UserAggregateService,\
+    city.smartb.im.user.lib.service.UserTransformer,\
+    city.smartb.im.user.lib.service.UserFinderService

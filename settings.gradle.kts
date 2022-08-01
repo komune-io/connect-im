@@ -23,16 +23,17 @@ include(
 )
 
 include(
-    "im-organization:organization-lib",
     "im-organization:organization-api",
     "im-organization:organization-domain",
-    "im-organization:organization-client"
+    "im-organization:organization-client",
+    "im-organization:organization-lib"
 )
 
 include(
     "im-user:user-api",
     "im-user:user-domain",
-    "im-user:user-client"
+    "im-user:user-client",
+    "im-user:user-lib"
 )
 
 include(

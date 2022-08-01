@@ -1,4 +1,4 @@
-package city.smartb.im.user.api.service
+package city.smartb.im.user.lib.service
 
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.commons.model.Address
@@ -10,7 +10,9 @@ import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.query.UserGetGroupsFunction
 import i2.keycloak.f2.user.domain.features.query.UserGetGroupsQuery
 import i2.keycloak.f2.user.domain.model.UserModel
+import org.springframework.stereotype.Service
 
+@Service
 class UserTransformer(
 	private val authenticationResolver: ImAuthenticationProvider,
 	private val userGetGroupsQueryFunction: UserGetGroupsFunction

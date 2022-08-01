@@ -1,11 +1,10 @@
-package city.smartb.im.user.api.service
+package city.smartb.im.user.lib.service
 
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.model.OrganizationId
-import city.smartb.im.user.api.config.UserFsConfig
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateFunction
 import city.smartb.im.user.domain.features.command.KeycloakUserDisableCommand
@@ -31,6 +30,7 @@ import city.smartb.im.user.domain.features.command.UserUpdatedPasswordEvent
 import city.smartb.im.user.domain.features.command.UserUploadLogoCommand
 import city.smartb.im.user.domain.features.command.UserUploadedLogoEvent
 import city.smartb.im.user.domain.model.UserId
+import city.smartb.im.user.lib.config.UserFsConfig
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsCommand
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsFunction
