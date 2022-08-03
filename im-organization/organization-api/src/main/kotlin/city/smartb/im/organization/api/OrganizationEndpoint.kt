@@ -1,7 +1,9 @@
 package city.smartb.im.organization.api
 
+import city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE
 import city.smartb.im.api.config.Roles
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
+import city.smartb.im.organization.domain.features.command.OrganizationDeleteFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDisableFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
@@ -98,4 +100,11 @@ class OrganizationEndpoint(
     @Bean
     @RolesAllowed(Roles.WRITE_ORGANIZATION)
     fun organizationDisable(): OrganizationDisableFunction = organizationFeatures.organizationDisable()
+
+    /**
+     * Delete an organization and its users.
+     */
+    @Bean
+    @RolesAllowed(SUPER_ADMIN_ROLE)
+    fun organizationDelete(): OrganizationDeleteFunction = organizationFeatures.organizationDelete()
 }

@@ -7,6 +7,8 @@ import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateFunction
+import city.smartb.im.user.domain.features.command.KeycloakUserDeleteCommand
+import city.smartb.im.user.domain.features.command.KeycloakUserDeleteFunction
 import city.smartb.im.user.domain.features.command.KeycloakUserDisableCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserDisableFunction
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdateCommand
@@ -17,6 +19,8 @@ import city.smartb.im.user.domain.features.command.KeycloakUserUpdatePasswordCom
 import city.smartb.im.user.domain.features.command.KeycloakUserUpdatePasswordFunction
 import city.smartb.im.user.domain.features.command.UserCreateCommand
 import city.smartb.im.user.domain.features.command.UserCreatedEvent
+import city.smartb.im.user.domain.features.command.UserDeleteCommand
+import city.smartb.im.user.domain.features.command.UserDeletedEvent
 import city.smartb.im.user.domain.features.command.UserDisableCommand
 import city.smartb.im.user.domain.features.command.UserDisabledEvent
 import city.smartb.im.user.domain.features.command.UserResetPasswordCommand
@@ -48,6 +52,7 @@ class UserAggregateService(
     private val authenticationResolver: ImAuthenticationProvider,
     private val keycloakUserCreateFunction: KeycloakUserCreateFunction,
     private val keycloakUserDisableFunction: KeycloakUserDisableFunction,
+    private val keycloakUserDeleteFunction: KeycloakUserDeleteFunction,
     private val keycloakUserUpdateFunction: KeycloakUserUpdateFunction,
     private val keycloakUserUpdateEmailFunction: KeycloakUserUpdateEmailFunction,
     private val keycloakUserUpdatePasswordFunction: KeycloakUserUpdatePasswordFunction,
@@ -163,6 +168,20 @@ class UserAggregateService(
         ).invokeWith(keycloakUserDisableFunction)
 
         return UserDisabledEvent(
+            id = event.id
+        )
+    }
+
+    suspend fun delete(command: UserDeleteCommand): UserDeletedEvent {
+        val auth = authenticationResolver.getAuth()
+
+        val event = KeycloakUserDeleteCommand(
+            id = command.id,
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(keycloakUserDeleteFunction)
+
+        return UserDeletedEvent(
             id = event.id
         )
     }

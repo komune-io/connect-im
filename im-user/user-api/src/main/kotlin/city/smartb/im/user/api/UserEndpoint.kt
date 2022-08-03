@@ -1,8 +1,10 @@
 package city.smartb.im.user.api
 
 import city.smartb.i2.spring.boot.auth.PermissionEvaluator
+import city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE
 import city.smartb.im.api.config.Roles
 import city.smartb.im.user.domain.features.command.UserCreateFunction
+import city.smartb.im.user.domain.features.command.UserDeleteFunction
 import city.smartb.im.user.domain.features.command.UserDisableFunction
 import city.smartb.im.user.domain.features.command.UserResetPasswordFunction
 import city.smartb.im.user.domain.features.command.UserUpdateEmailFunction
@@ -114,4 +116,11 @@ class UserEndpoint(
     @Bean
     @RolesAllowed(Roles.WRITE_USER)
     fun userDisable(): UserDisableFunction = userFeaturesImpl.userDisable()
+
+    /**
+     * Delete a user.
+     */
+    @Bean
+    @RolesAllowed(SUPER_ADMIN_ROLE)
+    fun userDelete(): UserDeleteFunction = userFeaturesImpl.userDelete()
 }

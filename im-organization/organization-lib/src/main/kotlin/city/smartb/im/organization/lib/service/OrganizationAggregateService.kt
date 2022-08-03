@@ -6,6 +6,8 @@ import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
+import city.smartb.im.organization.domain.features.command.OrganizationDeleteCommand
+import city.smartb.im.organization.domain.features.command.OrganizationDeletedEvent
 import city.smartb.im.organization.domain.features.command.OrganizationDisableCommand
 import city.smartb.im.organization.domain.features.command.OrganizationDisabledEvent
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateCommand
@@ -21,6 +23,8 @@ import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupCreateFunction
+import i2.keycloak.f2.group.domain.features.command.GroupDeleteCommand
+import i2.keycloak.f2.group.domain.features.command.GroupDeleteFunction
 import i2.keycloak.f2.group.domain.features.command.GroupDisableCommand
 import i2.keycloak.f2.group.domain.features.command.GroupDisableFunction
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesCommand
@@ -35,12 +39,12 @@ import javax.ws.rs.NotFoundException
 class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val authenticationResolver: ImAuthenticationProvider,
     private val groupCreateFunction: GroupCreateFunction,
+    private val groupDeleteFunction: GroupDeleteFunction,
     private val groupDisableFunction: GroupDisableFunction,
     private val groupSetAttributesFunction: GroupSetAttributesFunction,
     private val groupUpdateFunction: GroupUpdateFunction,
-    private val organizationFinderService: OrganizationFinderService<MODEL>,
-
-    ) {
+    private val organizationFinderService: OrganizationFinderService<MODEL>
+) {
 
     @Autowired(required = false)
     private lateinit var fileClient: FileClient
@@ -96,6 +100,20 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
         return OrganizationDisabledEvent(
             id = event.id,
             userIds = event.userIds
+        )
+    }
+
+    suspend fun delete(command: OrganizationDeleteCommand): OrganizationDeletedEvent {
+        val auth = authenticationResolver.getAuth()
+
+        val event = GroupDeleteCommand(
+            id = command.id,
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(groupDeleteFunction)
+
+        return OrganizationDeletedEvent(
+            id = event.id
         )
     }
 

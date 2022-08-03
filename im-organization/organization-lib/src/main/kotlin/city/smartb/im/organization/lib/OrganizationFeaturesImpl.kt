@@ -4,6 +4,7 @@ import city.smartb.im.commons.utils.contentByteArray
 import city.smartb.im.organization.domain.OrganizationCommandFeatures
 import city.smartb.im.organization.domain.OrganizationQueryFeatures
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
+import city.smartb.im.organization.domain.features.command.OrganizationDeleteFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDisableFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
@@ -67,5 +68,10 @@ class OrganizationFeaturesImpl<MODEL: OrganizationDTO>(
     override fun organizationDisable(): OrganizationDisableFunction = f2Function { cmd ->
         logger.info("organizationDisable: $cmd")
         organizationAggregateService.disable(cmd)
+    }
+
+    override fun organizationDelete(): OrganizationDeleteFunction = f2Function { cmd ->
+        logger.info("organizationDelete: $cmd")
+        organizationAggregateService.delete(cmd)
     }
 }

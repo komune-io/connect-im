@@ -1,6 +1,7 @@
 package city.smartb.im.user.lib
 
 import city.smartb.im.user.domain.features.command.UserCreateFunction
+import city.smartb.im.user.domain.features.command.UserDeleteFunction
 import city.smartb.im.user.domain.features.command.UserDisableFunction
 import city.smartb.im.user.domain.features.command.UserResetPasswordFunction
 import city.smartb.im.user.domain.features.command.UserUpdateEmailFunction
@@ -117,5 +118,13 @@ class UserFeaturesImpl(
     fun userDisable(): UserDisableFunction = f2Function { cmd ->
         logger.info("userDisable: $cmd")
         userAggregateService.disable(cmd)
+    }
+
+    /**
+     * Delete a user.
+     */
+    fun userDelete(): UserDeleteFunction = f2Function { cmd ->
+        logger.info("userDelete: $cmd")
+        userAggregateService.delete(cmd)
     }
 }
