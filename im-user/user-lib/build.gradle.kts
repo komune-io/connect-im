@@ -8,6 +8,7 @@ dependencies {
     api(project(":im-user:user-domain"))
 
     implementation(project(":im-api:api-config"))
+    implementation(project(":im-infra:infra-redis"))
 
     implementation("city.smartb.i2:user-f2-create:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-delete:${Versions.i2}")

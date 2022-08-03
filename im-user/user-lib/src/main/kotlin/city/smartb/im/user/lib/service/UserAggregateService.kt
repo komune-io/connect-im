@@ -7,6 +7,8 @@ import city.smartb.im.commons.exception.NotFoundException
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.toJson
+import city.smartb.im.infra.redis.CacheName
+import city.smartb.im.infra.redis.RedisCache
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateFunction
@@ -51,9 +53,9 @@ import i2.keycloak.f2.user.domain.features.command.UserRolesSetCommand
 import i2.keycloak.f2.user.domain.features.command.UserRolesSetFunction
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
+import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 @Service
 class UserAggregateService(
@@ -69,7 +71,8 @@ class UserAggregateService(
     private val userJoinGroupFunction: UserJoinGroupFunction,
     private val userRolesSetFunction: UserRolesSetFunction,
     private val userSetAttributesFunction: UserSetAttributesFunction,
-    private val groupGetFunction: GroupGetFunction
+    private val groupGetFunction: GroupGetFunction,
+    private val redisCache: RedisCache,
 ) {
 
     @Autowired(required = false)
@@ -112,7 +115,8 @@ class UserAggregateService(
         return UserUpdatedPasswordEvent(command.id)
     }
 
-    suspend fun update(command: UserUpdateCommand): UserUpdatedEvent {
+    suspend fun update(command: UserUpdateCommand): UserUpdatedEvent =
+        redisCache.getFormCacheOr(CacheName.Organization, command.id) {
         organizationExist(command.memberOf)
 
         command.toKeycloakUserUpdateCommand().invokeWith(keycloakUserUpdateFunction)
@@ -126,7 +130,8 @@ class UserAggregateService(
         return UserUpdatedEvent(command.id)
     }
 
-    suspend fun uploadLogo(command: UserUploadLogoCommand, file: ByteArray): UserUploadedLogoEvent {
+    suspend fun uploadLogo(command: UserUploadLogoCommand, file: ByteArray): UserUploadedLogoEvent =
+        redisCache.getFormCacheOr(CacheName.Organization, command.id) {
         if (!::fileClient.isInitialized) {
             throw IllegalStateException("FileClient not initialized.")
         }
@@ -152,7 +157,8 @@ class UserAggregateService(
         )
     }
 
-    suspend fun updateEmail(command: UserUpdateEmailCommand): UserUpdatedEmailEvent {
+    suspend fun updateEmail(command: UserUpdateEmailCommand): UserUpdatedEmailEvent =
+        redisCache.getFormCacheOr(CacheName.Organization, command.id) {
         val auth = authenticationResolver.getAuth()
         KeycloakUserUpdateEmailCommand(
             userId = command.id,
@@ -169,7 +175,8 @@ class UserAggregateService(
         )
     }
 
-    suspend fun disable(command: UserDisableCommand): UserDisabledEvent {
+    suspend fun disable(command: UserDisableCommand): UserDisabledEvent =
+        redisCache.getFormCacheOr(CacheName.Organization, command.id) {
         val auth = authenticationResolver.getAuth()
 
         val user = userFinderService.userGet(UserGetQuery(command.id))
@@ -209,7 +216,8 @@ class UserAggregateService(
         )
     }
 
-    suspend fun delete(command: UserDeleteCommand): UserDeletedEvent {
+    suspend fun delete(command: UserDeleteCommand): UserDeletedEvent =
+        redisCache.getFormCacheOr(CacheName.Organization, command.id) {
         val auth = authenticationResolver.getAuth()
 
         val event = KeycloakUserDeleteCommand(

@@ -23,6 +23,10 @@ include(
 )
 
 include(
+    "im-infra:infra-redis"
+)
+
+include(
     "im-organization:organization-api",
     "im-organization:organization-domain",
     "im-organization:organization-client",

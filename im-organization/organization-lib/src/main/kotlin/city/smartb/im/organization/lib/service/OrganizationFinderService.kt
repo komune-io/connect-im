@@ -1,6 +1,8 @@
 package city.smartb.im.organization.lib.service
 
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
+import city.smartb.im.infra.redis.CacheName
+import city.smartb.im.infra.redis.RedisCache
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeQuery
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeResult
 import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
@@ -29,12 +31,13 @@ class OrganizationFinderService<MODEL: OrganizationDTO>(
     private val groupPageFunction: GroupPageFunction,
     private val authenticationResolver: ImAuthenticationProvider,
     private val groupMapper: GroupMapper,
+    private val redisCache: RedisCache,
 ) {
 
     suspend fun organizationGet(
         query: OrganizationGetQuery,
         organizationMapper: OrganizationMapper<Organization, MODEL>
-    ): OrganizationGetResult<MODEL> {
+    ): OrganizationGetResult<MODEL> = redisCache.getFormCacheOr(CacheName.Organization, query.id) {
         return groupGetFunction.invoke(query.toGroupGetByIdQuery())
             .item
             ?.let { group -> groupMapper.toOrganization(group) }

@@ -19,6 +19,7 @@ object Versions {
 	const val ktor = "2.0.3"
 
 	const val springBoot = PluginVersions.springBoot
+	const val springData = FixersVersions.Spring.data
 	const val springOauth2 = "5.6.0"
 
 	const val kdatetime = "0.1.1"
@@ -50,6 +51,11 @@ object Dependencies {
 			.also(::mockito)
 
 		fun junit(scope: Scope) = FixersDependencies.Jvm.Test.junit(scope)
+
+		fun cache(scope: Scope) = scope.add(
+			"org.springframework.boot:spring-boot-starter-cache:${Versions.springBoot}",
+			"org.springframework.data:spring-data-redis:${Versions.springData}",
+		)
 
 		fun mockito(scope: Scope) = scope.add(
 			"org.mockito:mockito-core:${Versions.mockito}"

@@ -6,6 +6,8 @@ import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.toJson
+import city.smartb.im.infra.redis.CacheName
+import city.smartb.im.infra.redis.RedisCache
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
 import city.smartb.im.organization.domain.features.command.OrganizationDeleteCommand
@@ -52,7 +54,8 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val groupUpdateFunction: GroupUpdateFunction,
     private val organizationFinderService: OrganizationFinderService<MODEL>,
     private val userAggregateService: UserAggregateService,
-    private val userFinderService: UserFinderService
+    private val userFinderService: UserFinderService,
+    private val redisCache: RedisCache,
 ) {
 
     @Autowired(required = false)
@@ -69,7 +72,8 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
             }
     }
 
-    suspend fun update(command: OrganizationUpdateCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationUpdatedResult {
+    suspend fun update(command: OrganizationUpdateCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationUpdatedResult
+            = redisCache.evictIfPresent(CacheName.Organization, command.id) {
         val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id), mapper).item
             ?: throw NotFoundException("Organization [${command.id}] not found")
 
@@ -77,7 +81,8 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
             .let { result -> OrganizationUpdatedResult(result.id) }
     }
 
-    suspend fun uploadLogo(command: OrganizationUploadLogoCommand, file: ByteArray): OrganizationUploadedLogoEvent {
+    suspend fun uploadLogo(command: OrganizationUploadLogoCommand, file: ByteArray): OrganizationUploadedLogoEvent
+            = redisCache.evictIfPresent(CacheName.Organization, command.id) {
         if (!::fileClient.isInitialized) {
             throw IllegalStateException("FileClient not initialized.")
         }
@@ -97,7 +102,8 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
         )
     }
 
-    suspend fun disable(command: OrganizationDisableCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationDisabledEvent {
+    suspend fun disable(command: OrganizationDisableCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationDisabledEvent
+            = redisCache.evictIfPresent(CacheName.Organization, command.id) {
         val auth = authenticationResolver.getAuth()
 
         val event = GroupDisableCommand(
@@ -148,7 +154,8 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
         )
     }
 
-    suspend fun delete(command: OrganizationDeleteCommand): OrganizationDeletedEvent {
+    suspend fun delete(command: OrganizationDeleteCommand): OrganizationDeletedEvent
+            = redisCache.evictIfPresent(CacheName.Organization, command.id) {
         val auth = authenticationResolver.getAuth()
 
         val event = GroupDeleteCommand(

@@ -1,6 +1,8 @@
 package city.smartb.im.user.lib.service
 
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
+import city.smartb.im.infra.redis.CacheName
+import city.smartb.im.infra.redis.RedisCache
 import city.smartb.im.user.domain.features.query.KeycloakUserGetByEmailFunction
 import city.smartb.im.user.domain.features.query.KeycloakUserGetByEmailQuery
 import city.smartb.im.user.domain.features.query.KeycloakUserGetFunction
@@ -21,9 +23,10 @@ class UserFinderService(
     private val keycloakUserGetFunction: KeycloakUserGetFunction,
     private val keycloakUserGetByEmailFunction: KeycloakUserGetByEmailFunction,
     private val keycloakUserPageFunction: KeycloakUserPageFunction,
-    private val authenticationResolver: ImAuthenticationProvider
+    private val authenticationResolver: ImAuthenticationProvider,
+    private val redisCache: RedisCache,
 ) {
-    suspend fun userGet(query: UserGetQuery): User? {
+    suspend fun userGet(query: UserGetQuery): User? = redisCache.getFormCacheOr(CacheName.User, query.id) {
         val auth = authenticationResolver.getAuth()
         return KeycloakUserGetQuery(
             id = query.id,
