@@ -1,6 +1,8 @@
 package city.smartb.im.commons.http
 
-import city.smartb.im.commons.http.ClientBuilder
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -10,16 +12,12 @@ object HttpClientBuilderJvm: ClientBuilder {
 	override fun build(): HttpClient {
 		return HttpClient(CIO) {
 			install(ContentNegotiation) {
-				jackson()
+				jackson {
+					configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+					configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+					propertyNamingStrategy = PropertyNamingStrategies.LOWER_CAMEL_CASE
+				}
 			}
-//			install(JsonFeature) {
-//				serializer = JacksonSerializer {
-//					this.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-//							.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-//							.registerModule(KotlinModule())
-//							.setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
-//				}
-//			}
 		}
 	}
 }

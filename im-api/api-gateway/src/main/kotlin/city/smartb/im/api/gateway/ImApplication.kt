@@ -10,6 +10,7 @@ class ImApplication
 
 fun main(args: Array<String>) {
 	SpringApplication(ImApplication::class.java).run {
+//		setAdditionalProfiles("local")
 		run(*args)
 	}
 }
