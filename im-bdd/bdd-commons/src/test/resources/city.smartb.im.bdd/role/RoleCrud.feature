@@ -6,9 +6,9 @@ Feature: Role Crud
 
   Scenario: I want to update a role
     Given I create a role:
-      | description |
-      | The description    |
+      | description     |
+      | The description |
     When I update the role:
-      | condition |
-      | The new description  |
+      | description         |
+      | The new description |
     Then The role should be updated
