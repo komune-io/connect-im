@@ -74,14 +74,18 @@ class UserAggregateService(
             setRoles(userId, command.roles)
         }
 
+        if (!command.isEmailVerified) {
+            sendEmail(userId, "VERIFY_EMAIL")
+        }
+
         if (command.sendEmailLink) {
-            sendUpdatePassword(userId)
+            sendEmail(userId, "UPDATE_PASSWORD")
         }
         return UserCreatedEvent(userId)
     }
 
     suspend fun resetPassword(command: UserResetPasswordCommand): UserResetPasswordEvent {
-        sendUpdatePassword(command.id)
+        sendEmail(command.id, "UPDATE_PASSWORD")
         return UserResetPasswordEvent(command.id)
     }
 
@@ -113,7 +117,7 @@ class UserAggregateService(
         setRoles(command.id, command.roles)
 
         if (command.sendEmailLink) {
-            sendUpdatePassword(command.id)
+            sendEmail(command.id, "UPDATE_PASSWORD")
         }
         return UserUpdatedEvent(command.id)
     }
@@ -209,13 +213,13 @@ class UserAggregateService(
         ).invokeWith(userRolesSetFunction)
     }
 
-    private suspend fun sendUpdatePassword(userId: UserId) {
+    private suspend fun sendEmail(userId: UserId, vararg actions: String) {
         val auth = authenticationResolver.getAuth()
         UserEmailSendActionsCommand(
             userId = userId,
             clientId = null,
             redirectUri = null,
-            actions = listOf("UPDATE_PASSWORD"),
+            actions = actions.toList(),
             realmId = auth.realmId,
             auth = auth
         ).invokeWith(userEmailSendActionsFunction)
@@ -244,7 +248,9 @@ class UserAggregateService(
             firstname = givenName,
             lastname = familyName,
             email = email,
+            password = password,
             isEnable = true,
+            isEmailVerified = isEmailVerified,
             attributes = attributes.orEmpty().plus(listOfNotNull(
                 address?.let { ::address.name to it.toJson() },
                 phone?.let { ::phone.name to it },

@@ -24,6 +24,7 @@ typealias KeycloakUserCreateFunction = i2.keycloak.f2.user.domain.features.comma
 @JsName("UserCreateCommandDTO")
 interface UserCreateCommandDTO: Command {
     val email: String
+    val password: String?
     val givenName: String
     val familyName: String
     val address: Address?
@@ -32,6 +33,7 @@ interface UserCreateCommandDTO: Command {
     val sendEmailLink: Boolean
     val memberOf: OrganizationId?
     val attributes: Map<String, String>?
+    val isEmailVerified: Boolean
 }
 
 /**
@@ -44,6 +46,12 @@ data class UserCreateCommand(
      * @example [city.smartb.im.user.domain.model.User.email]
      */
     override val email: String,
+
+    /**
+     * Email address.
+     * @example "zepasworde"
+     */
+    override val password: String?,
 
     /**
      * First name of the user.
@@ -89,7 +97,13 @@ data class UserCreateCommand(
      * Additional arbitrary attributes assigned to the user.
      * @example [city.smartb.im.user.domain.model.User.attributes]
      */
-    override val attributes: Map<String, String>?
+    override val attributes: Map<String, String>?,
+
+    /**
+     * False if the user has to verify their email.
+     * @example true
+     */
+    override val isEmailVerified: Boolean
 ): UserCreateCommandDTO
 
 @JsExport

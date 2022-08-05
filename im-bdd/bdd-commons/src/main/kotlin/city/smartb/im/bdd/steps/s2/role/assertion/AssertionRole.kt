@@ -1,7 +1,6 @@
 package city.smartb.im.bdd.steps.s2.role.assertion
 
 import city.smartb.im.bdd.assertion.AssertionBdd
-import city.smartb.im.role.api.RoleCommandApi
 import city.smartb.im.role.api.RoleQueryApi
 import city.smartb.im.role.domain.features.query.RoleGetByIdQuery
 import city.smartb.im.role.domain.model.RoleId
@@ -15,8 +14,7 @@ fun AssertionBdd.role(api: RoleQueryApi, realmId: RealmId) = AssertionRole(api, 
 class AssertionRole(
     val api: RoleQueryApi,
     val realmId: RealmId
-)
-    {
+) {
     suspend fun assertThat(id: RoleId): RoleAssert {
         val role = api.roleGetById().invoke(RoleGetByIdQuery(id = id, realmId = realmId)).item!!
         return assertThat(role)
