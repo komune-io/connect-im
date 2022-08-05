@@ -20,7 +20,7 @@ class GroupMapper {
             website = group.attributes[Organization::website.name],
             attributes = group.attributes.filterKeys { key -> key !in imGroupAttributes },
             roles = group.roles,
-            enabled = group.attributes[Organization::enabled.name]?.toBoolean() ?: true,
+            enabled = group.enabled,
             creationDate = group.attributes[Organization::creationDate.name]?.toLong() ?: 0
         )
     }
