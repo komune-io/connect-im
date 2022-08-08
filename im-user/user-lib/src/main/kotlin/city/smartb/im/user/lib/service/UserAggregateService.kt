@@ -217,8 +217,8 @@ class UserAggregateService(
         val auth = authenticationResolver.getAuth()
         UserEmailSendActionsCommand(
             userId = userId,
-            clientId = null,
-            redirectUri = null,
+            clientId = auth.clientId,
+            redirectUri = auth.redirectUrl,
             actions = actions.toList(),
             realmId = auth.realmId,
             auth = auth
