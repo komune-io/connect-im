@@ -1,14 +1,10 @@
+#TODO create a user with a non existing organizationRef
 Feature: User crud
-
   Scenario: I want to create a user
     When I create a user
     Then The user should be created
 
-  Scenario: I want to update an eligibility
-    Given I create an user:
-      | name |
-      | My Im User Name    |
-    When I update the user:
-      | condition |
-      | My New Im User Name     |
-    Then The user should be updated
+  Scenario: I want to create a user belonging to an organization
+    Given An organization is created
+    When I create a user
+    Then The user should be created

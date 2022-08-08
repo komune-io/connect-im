@@ -2,6 +2,7 @@ package city.smartb.im.bdd.data
 
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.role.domain.model.RoleId
+import city.smartb.im.user.domain.model.UserId
 import f2.dsl.cqrs.Event
 import org.springframework.stereotype.Component
 
@@ -13,6 +14,7 @@ class TestContext {
     val realmId = "im-test"
     val roleIds = testEntities<String, RoleId>("Role")
     val organizationIds = testEntities<String, OrganizationId>("Organization")
+    val userIds = testEntities<String, UserId>("User")
 
     val errors = ExceptionList()
     val events = mutableListOf<Event>()

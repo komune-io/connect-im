@@ -27,7 +27,7 @@ class AssertionOrganization(
         Assertions.assertThat(get(id)).isNull()
     }
 
-    private suspend fun get(id: OrganizationId): Organization? {
+    suspend fun get(id: OrganizationId): Organization? {
         return OrganizationGetQuery(id).invokeWith(api.organizationGet()).item
     }
 
