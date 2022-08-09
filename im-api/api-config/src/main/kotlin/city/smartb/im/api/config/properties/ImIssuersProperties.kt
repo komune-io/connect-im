@@ -6,7 +6,6 @@ class ImIssuersProperties(
     name: String,
     authUrl: String,
     realm: String,
-    val redirectUrl: String?,
     val im: ImIssuersClientProperties
 ): I2TrustedIssuerProperties(
     name = name,
@@ -16,5 +15,6 @@ class ImIssuersProperties(
 
 class ImIssuersClientProperties(
     val clientId: String,
-    val clientSecret: String
+    val clientSecret: String,
+    val redirectUrl: String?
 )

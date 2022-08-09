@@ -23,7 +23,7 @@ data class ImProperties (
     private fun toAuthRealm(it: ImIssuersProperties): AuthRealm = AuthRealmClientSecret(
         serverUrl = it.authUrl,
         realmId = it.realm,
-        redirectUrl = it.redirectUrl ?: "",
+        redirectUrl = it.im.redirectUrl ?: "",
         clientId = it.im.clientId,
         clientSecret = it.im.clientSecret
     )
