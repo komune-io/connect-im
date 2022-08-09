@@ -1,21 +1,21 @@
 package city.smartb.im.organization.lib.model.insee
 
 data class InseeOrganization(
-    val siren: String,
-    val nic: String,
-    val siret: String,
+    val siren: String?,
+    val nic: String?,
+    val siret: String?,
     val statutDiffusionEtablissement: String?,
     val dateCreationEtablissement: String?,
     val trancheEffectifsEtablissement: String?,
     val anneeEffectifsEtablissement: String?,
     val activitePrincipaleRegistreMetiersEtablissement: String?,
     val dateDernierTraitementEtablissement: String?,
-    val etablissementSiege: Boolean,
-    val nombrePeriodesEtablissement: Int,
+    val etablissementSiege: Boolean?,
+    val nombrePeriodesEtablissement: Int?,
     val uniteLegale: InseeLegalUnit?,
     val adresseEtablissement: InseeAddress?,
     val adresse2Etablissement: InseeAddress2?,
-    val periodesEtablissement: List<InseePeriod>
+    val periodesEtablissement: List<InseePeriod>?
 )
 
 /*
