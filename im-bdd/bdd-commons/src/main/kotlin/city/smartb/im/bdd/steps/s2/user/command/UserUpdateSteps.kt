@@ -8,59 +8,59 @@ import city.smartb.im.bdd.steps.s2.user.assertion.user
 import city.smartb.im.commons.model.Address
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.api.UserEndpoint
-import city.smartb.im.user.domain.features.command.UserCreateCommand
+import city.smartb.im.user.domain.features.command.UserUpdateCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import java.util.UUID
+import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
 
-class UserCreateSteps: En, CucumberStepsDefinition() {
+class UserUpdateSteps: En, CucumberStepsDefinition() {
     @Autowired
     private lateinit var userEndpoint: UserEndpoint
 
-    private lateinit var command: UserCreateCommand
+    private lateinit var command: UserUpdateCommand
 
     init {
-        DataTableType(::userCreateParams)
+        DataTableType(::userUpdateParams)
 
-        When("I create a user") {
+        When("I update a user") {
             step {
-                createUser(userCreateParams(null))
+                updateUser(userUpdateParams(null))
             }
         }
 
-        When("I create a user:") { params: UserCreateParams ->
+        When("I update a user:") { params: UserUpdateParams ->
             step {
-                createUser(params)
+                updateUser(params)
             }
         }
 
-        Given("A user is created") {
+        Given("A user is updated") {
             step {
-                createUser(userCreateParams(null))
+                updateUser(userUpdateParams(null))
             }
         }
 
-        Given("A user is created:") { params: UserCreateParams ->
+        Given("A user is updated:") { params: UserUpdateParams ->
             step {
-                createUser(params)
+                updateUser(params)
             }
         }
 
-        Given("Some users are created:") { dataTable: DataTable ->
+        Given("Some users are updated:") { dataTable: DataTable ->
             step {
-                dataTable.asList(UserCreateParams::class.java)
-                    .forEach { createUser(it) }
+                dataTable.asList(UserUpdateParams::class.java)
+                    .forEach { updateUser(it) }
             }
         }
 
-        Then("The user should be created") {
+        Then("The user should be updated") {
             step {
                 val userId = context.userIds.lastUsed
 
                 AssertionBdd.user(userEndpoint).assertThat(userId).hasFields(
-                    email = command.email,
                     givenName = command.givenName,
                     familyName = command.familyName,
                     address = command.address,
@@ -73,17 +73,17 @@ class UserCreateSteps: En, CucumberStepsDefinition() {
             }
         }
 
-        Then("The user should not be created") {
+        Then("The user's organization should not be updated") {
             step {
-                AssertionBdd.user(userEndpoint).notExistsByEmail(command.email)
+                val user = AssertionBdd.user(userEndpoint).get(context.userIds.lastUsed)
+                Assertions.assertThat(user?.memberOf).isNotEqualTo(command.memberOf)
             }
         }
     }
 
-    private suspend fun createUser(params: UserCreateParams) = context.userIds.register(params.identifier) {
-        command = UserCreateCommand(
-            email = params.email,
-            password = params.password,
+    private suspend fun updateUser(params: UserUpdateParams) {
+        command = UserUpdateCommand(
+            id = context.userIds.safeGet(params.identifier),
             givenName = params.givenName,
             familyName = params.familyName,
             address = params.address,
@@ -92,37 +92,31 @@ class UserCreateSteps: En, CucumberStepsDefinition() {
             sendEmailLink = params.sendEmailLink,
             memberOf = params.memberOf,
             attributes = params.attributes,
-            isEmailVerified = params.isEmailVerified
         )
 
-        userEndpoint.userCreate().invoke(command).id
+        userEndpoint.userUpdate().invoke(command).id
     }
 
-    private fun userCreateParams(entry: Map<String, String>?): UserCreateParams {
-        return UserCreateParams(
-            identifier = entry?.get("identifier").orRandom(),
-            email = entry?.get("email") ?: "user@test.com",
-            password = entry?.get("password") ?: "azerty12345",
+    private fun userUpdateParams(entry: Map<String, String>?): UserUpdateParams {
+        return UserUpdateParams(
+            identifier = entry?.get("identifier") ?: context.userIds.lastUsedKey,
             givenName = entry?.get("givenName") ?: "John",
             familyName = entry?.get("familyName") ?: "Deuf",
             address = Address(
-                street = "street",
-                postalCode = "12345",
-                city = "city"
+                street = entry?.get("street") ?: "street",
+                postalCode = entry?.get("postalCode") ?: "12345",
+                city = entry?.get("city") ?: "city"
             ),
             phone = entry?.get("phone") ?: "0600000000",
             roles = listOfNotNull(context.roleIds.lastUsedOrNull),
             sendEmailLink = false,
             memberOf = entry?.get("memberOf").parseNullableOrDefault(context.organizationIds.lastUsedOrNull),
             attributes = userAttributesParams(entry),
-            isEmailVerified = true
         )
     }
 
-    private data class UserCreateParams(
+    private data class UserUpdateParams(
         val identifier: TestContextKey,
-        val email: String,
-        val password: String?,
         val givenName: String,
         val familyName: String,
         val address: Address?,
@@ -131,7 +125,6 @@ class UserCreateSteps: En, CucumberStepsDefinition() {
         val sendEmailLink: Boolean,
         val memberOf: OrganizationId?,
         val attributes: Map<String, String>,
-        val isEmailVerified: Boolean
     )
 
     private fun userAttributesParams(entry: Map<String, String>?): Map<String, String> {

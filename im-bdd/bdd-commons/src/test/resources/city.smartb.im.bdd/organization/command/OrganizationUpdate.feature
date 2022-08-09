@@ -8,7 +8,7 @@ Feature: OrganizationUpdate
       | My New Im Test Organization Name |
     Then The organization should be updated
 
-  Scenario: I want to update the roles of an organization
+  Scenario: I want to update the role of an organization
     Given A role is created
     And An organization is created
     When A role is created

@@ -4,6 +4,7 @@ import city.smartb.im.bdd.assertion.AssertionBdd
 import city.smartb.im.commons.model.AddressDTO
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.api.UserEndpoint
+import city.smartb.im.user.domain.features.query.UserGetByEmailQuery
 import city.smartb.im.user.domain.features.query.UserGetQuery
 import city.smartb.im.user.domain.model.User
 import city.smartb.im.user.domain.model.UserId
@@ -28,8 +29,16 @@ class AssertionUser(
         Assertions.assertThat(get(id)).isNull()
     }
 
-    private suspend fun get(id: UserId): User? {
+    suspend fun notExistsByEmail(email: String) {
+        Assertions.assertThat(getByEmail(email)).isNull()
+    }
+
+    suspend fun get(id: UserId): User? {
         return UserGetQuery(id).invokeWith(api.userGet()).item
+    }
+
+    private suspend fun getByEmail(email: String): User? {
+        return UserGetByEmailQuery(email).invokeWith(api.userGetByEmail()).item
     }
 
     inner class UserAssert(
