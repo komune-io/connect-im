@@ -108,17 +108,9 @@ class UserAggregateService(
     }
 
     suspend fun update(command: UserUpdateCommand): UserUpdatedEvent {
-        val auth = authenticationResolver.getAuth()
+        organizationExist(command.memberOf)
+
         command.toKeycloakUserUpdateCommand().invokeWith(keycloakUserUpdateFunction)
-        command.memberOf?.let {
-            UserJoinGroupCommand(
-                id = command.id,
-                groupId = command.memberOf!!,
-                realmId = auth.realmId,
-                auth = auth,
-                leaveOtherGroups = true
-            ).invokeWith(userJoinGroupFunction)
-        }
 
         command.memberOf?.let { joinOrganization(command.id, it) }
         setRoles(command.id, command.roles)
