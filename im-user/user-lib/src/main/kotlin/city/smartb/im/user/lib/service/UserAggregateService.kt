@@ -4,6 +4,8 @@ import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.commons.exception.NotFoundException
+import city.smartb.im.commons.model.Address
+import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
@@ -155,6 +157,9 @@ class UserAggregateService(
         KeycloakUserUpdateEmailCommand(
             userId = command.id,
             email = command.email,
+            sendVerificationEmail = command.sendVerificationEmail,
+            clientId = auth.clientId.takeUnless { auth.redirectUrl.isBlank() },
+            redirectUri = auth.redirectUrl.ifBlank { null },
             realmId = auth.realmId,
             auth = auth
         ).invokeWith(keycloakUserUpdateEmailFunction)
@@ -181,8 +186,8 @@ class UserAggregateService(
                 id = command.id,
                 givenName = "anonymous",
                 familyName = "anonymous",
-                address = null,
-                phone = null,
+                address = (null as Address?).orEmpty(),
+                phone = "",
                 sendEmailLink = false,
                 memberOf = user.memberOf?.id,
                 roles = user.roles.assignedRoles,
@@ -194,7 +199,8 @@ class UserAggregateService(
 
             UserUpdateEmailCommand(
                 id = command.id,
-                email = "${UUID.randomUUID()}@anonymous.com"
+                email = "${UUID.randomUUID()}@anonymous.com",
+                sendVerificationEmail = false
             ).let { updateEmail(it) }
         }
 

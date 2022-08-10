@@ -3,6 +3,8 @@ package city.smartb.im.organization.lib.service
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
+import city.smartb.im.commons.model.Address
+import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
@@ -110,9 +112,9 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
             OrganizationUpdateCommand(
                 id = command.id,
                 name = "anonymous",
-                description = null,
-                address = null,
-                website = null,
+                description = "",
+                address = (null as Address?).orEmpty(),
+                website = "",
                 roles = organization.roles,
                 attributes = command.attributes.orEmpty().plus(listOf(
                     Organization::disabledBy.name to command.disabledBy.orEmpty(),

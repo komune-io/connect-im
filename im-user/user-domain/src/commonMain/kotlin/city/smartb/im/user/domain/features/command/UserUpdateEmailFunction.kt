@@ -30,6 +30,12 @@ interface UserUpdateEmailCommandDTO: Command {
      * New email of the user.
      */
     val email: String
+
+    /**
+     * Whether to send a verification email after a successful update.
+     * @example true
+     */
+    val sendVerificationEmail: Boolean
 }
 
 /**
@@ -38,7 +44,8 @@ interface UserUpdateEmailCommandDTO: Command {
  */
 data class UserUpdateEmailCommand(
     override val id: UserId,
-    override val email: String
+    override val email: String,
+    override val sendVerificationEmail: Boolean = true
 ): UserUpdateEmailCommandDTO
 
 @JsExport
