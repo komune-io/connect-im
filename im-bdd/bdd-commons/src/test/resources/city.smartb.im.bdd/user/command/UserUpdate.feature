@@ -15,22 +15,30 @@ Feature: UserUpdate
     Then The user's organization should not be updated
 
   Scenario: I want to update the address of a user
-    Given A user is created
+    Given A user is created:
+      | memberOf |
+      | null     |
     When I update a user:
-      | street     | city     | postalCode     |
-      | new street | new city | new postalCode |
+      | street     | city     | postalCode     | memberOf |
+      | new street | new city | new postalCode | null     |
     Then The user should be updated
 
   Scenario: I want to update the role of a user
     Given A role is created
-    And A user is created
+    And A user is created:
+      | memberOf |
+      | null     |
     When A role is created
-    And I update a user
+    And I update a user:
+      | memberOf |
+      | null     |
     Then The user should be updated
 
   Scenario: I want to update the job attribute of a user
-    Given A user is created
+    Given A user is created:
+      | memberOf |
+      | null     |
     When I update a user:
-      | job     |
-      | new job |
+      | job     | memberOf |
+      | new job | null     |
     Then The user should be updated

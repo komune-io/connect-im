@@ -68,8 +68,8 @@ class OrganizationDisableSteps: En, CucumberStepsDefinition() {
     private fun disableOrganization(params: OrganizationDisableParams) = runBlocking {
         command = OrganizationDisableCommand(
             id = context.organizationIds.safeGet(params.identifier),
-            disabledBy = command.disabledBy,
-            anonymize = command.anonymize,
+            disabledBy = params.disabledBy,
+            anonymize = params.anonymize,
             attributes = null,
             userAttributes = null
         )

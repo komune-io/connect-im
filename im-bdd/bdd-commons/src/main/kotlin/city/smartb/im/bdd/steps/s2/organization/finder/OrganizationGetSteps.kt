@@ -16,20 +16,20 @@ class OrganizationGetSteps: En, CucumberStepsDefinition() {
     init {
         DataTableType(::organizationGetParams)
 
-        When ("I get an organization by its ID") {
+        When ("I get an organization by ID") {
             step {
-                fetchOrganizationGet(organizationGetParams(null))
+                organizationGet(organizationGetParams(null))
             }
         }
 
-        When ("I get an organization by its ID:") { params: OrganizationGetParams ->
+        When ("I get an organization by ID:") { params: OrganizationGetParams ->
             step {
-                fetchOrganizationGet(params)
+                organizationGet(params)
             }
         }
     }
 
-    private suspend fun fetchOrganizationGet(params: OrganizationGetParams) {
+    private suspend fun organizationGet(params: OrganizationGetParams) {
         context.fetched.organizations = listOfNotNull(
             OrganizationGetQuery(
                 id = params.identifier

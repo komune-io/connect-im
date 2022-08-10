@@ -6,9 +6,7 @@ import city.smartb.im.bdd.data.TestContextKey
 import city.smartb.im.bdd.data.parser.safeExtract
 import city.smartb.im.bdd.steps.s2.organization.assertion.organization
 import city.smartb.im.organization.api.OrganizationEndpoint
-import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
 import city.smartb.im.organization.domain.model.Organization
-import f2.dsl.fnc.invokeWith
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.assertj.core.api.Assertions
@@ -32,18 +30,6 @@ class OrganizationFinderSteps: En, CucumberStepsDefinition() {
             )
         }
 
-        When("I fetch the organization by id") {
-            step {
-                fetchOrganizationById(context.organizationIds.lastUsedKey)
-            }
-        }
-
-        When("I fetch the organization by id:") { params: FetchByIdParams ->
-            step {
-                fetchOrganizationById(params.identifier)
-            }
-        }
-
         Then("I should receive the organization") {
             step {
                 assertOrganizationsFetched(listOf(context.organizationIds.lastUsedKey))
@@ -65,13 +51,6 @@ class OrganizationFinderSteps: En, CucumberStepsDefinition() {
         }
 
 
-    }
-
-    private suspend fun fetchOrganizationById(identifier: TestContextKey) {
-        val actualId = context.organizationIds[identifier].orRandom()
-        context.fetched.organizations = listOfNotNull(
-            OrganizationGetQuery(actualId).invokeWith(organizationEndpoint.organizationGet()).item
-        )
     }
 
     private suspend fun assertOrganizationsFetched(identifiers: List<TestContextKey>) {

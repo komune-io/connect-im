@@ -86,5 +86,19 @@ class AssertionUser(
             Assertions.assertThat(user.phone).isEqualTo("")
             Assertions.assertThat(user.roles.assignedRoles).isEqualTo(user.roles.assignedRoles)
         }
+
+        fun matches(other: User) = hasFields(
+            memberOf = other.memberOf?.id,
+            email = other.email,
+            givenName = other.givenName,
+            familyName = other.familyName,
+            address = other.address,
+            phone = other.phone,
+            roles = other.roles.assignedRoles,
+            attributes = other.attributes,
+            sendEmailLink = other.sendEmailLink,
+            enabled = other.enabled,
+            creationDate = other.creationDate
+        )
     }
 }
