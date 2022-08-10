@@ -34,6 +34,8 @@ import city.smartb.im.user.domain.features.command.UserUpdatedEvent
 import city.smartb.im.user.domain.features.command.UserUpdatedPasswordEvent
 import city.smartb.im.user.domain.features.command.UserUploadLogoCommand
 import city.smartb.im.user.domain.features.command.UserUploadedLogoEvent
+import city.smartb.im.user.domain.features.query.UserGetQuery
+import city.smartb.im.user.domain.model.User
 import city.smartb.im.user.domain.model.UserId
 import city.smartb.im.user.lib.config.UserFsConfig
 import f2.dsl.fnc.invokeWith
@@ -61,6 +63,7 @@ class UserAggregateService(
     private val keycloakUserUpdateEmailFunction: KeycloakUserUpdateEmailFunction,
     private val keycloakUserUpdatePasswordFunction: KeycloakUserUpdatePasswordFunction,
     private val userEmailSendActionsFunction: UserEmailSendActionsFunction,
+    private val userFinderService: UserFinderService,
     private val userJoinGroupFunction: UserJoinGroupFunction,
     private val userRolesSetFunction: UserRolesSetFunction,
     private val userSetAttributesFunction: UserSetAttributesFunction,
@@ -164,11 +167,36 @@ class UserAggregateService(
     suspend fun disable(command: UserDisableCommand): UserDisabledEvent {
         val auth = authenticationResolver.getAuth()
 
+        val user = userFinderService.userGet(UserGetQuery(command.id))
+            ?: throw NotFoundException("User", command.id)
+
         val event = KeycloakUserDisableCommand(
             id = command.id,
             realmId = auth.realmId,
             auth = auth
         ).invokeWith(keycloakUserDisableFunction)
+
+        if (command.anonymize) {
+            UserUpdateCommand(
+                id = command.id,
+                givenName = "anonymous",
+                familyName = "anonymous",
+                address = null,
+                phone = null,
+                sendEmailLink = false,
+                memberOf = user.memberOf?.id,
+                roles = user.roles.assignedRoles,
+                attributes = command.attributes.orEmpty().plus(listOf(
+                    User::disabledBy.name to command.disabledBy.orEmpty(),
+                    User::disabledDate.name to System.currentTimeMillis().toString()
+                ))
+            ).let { update(it) }
+
+            UserUpdateEmailCommand(
+                id = command.id,
+                email = "${UUID.randomUUID()}@anonymous.com"
+            ).let { updateEmail(it) }
+        }
 
         return UserDisabledEvent(
             id = event.id

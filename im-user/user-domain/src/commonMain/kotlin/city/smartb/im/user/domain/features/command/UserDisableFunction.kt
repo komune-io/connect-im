@@ -25,6 +25,26 @@ interface UserDisableCommandDTO: Command {
      * Identifier of the user to disable.
      */
     val id: UserId
+
+    /**
+     * Identifier of the user executing the command.
+     * @example "d61e6ab6-12d2-40ec-ba15-534aa7302a2b"
+     */
+    val disabledBy: UserId?
+
+    /**
+     * Whether to anonymize the personal data of the user or not.
+     * This will remove or blank all sensible fields except custom attributes. To anonymize custom attributes, see `attributes` field.
+     * @example true
+     */
+    val anonymize: Boolean
+
+    /**
+     * Custom attributes to update during anonymization.
+     * Use this field only if `anonymize` is set to true.
+     * @example { "age": null }
+     */
+    val attributes: Map<String, String>?
 }
 
 /**
@@ -32,7 +52,10 @@ interface UserDisableCommandDTO: Command {
  * @parent [UserDisableFunction]
  */
 data class UserDisableCommand(
-    override val id: UserId
+    override val id: UserId,
+    override val disabledBy: UserId?,
+    override val anonymize: Boolean,
+    override val attributes: Map<String, String>?
 ): UserDisableCommandDTO
 
 @JsExport

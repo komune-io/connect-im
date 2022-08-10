@@ -67,7 +67,7 @@ class OrganizationFeaturesImpl<MODEL: OrganizationDTO>(
 
     override fun organizationDisable(): OrganizationDisableFunction = f2Function { cmd ->
         logger.info("organizationDisable: $cmd")
-        organizationAggregateService.disable(cmd)
+        organizationAggregateService.disable(cmd, organizationMapper)
     }
 
     override fun organizationDelete(): OrganizationDeleteFunction = f2Function { cmd ->

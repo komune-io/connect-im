@@ -30,7 +30,9 @@ interface UserDTO {
     val attributes: Map<String, String>
     val sendEmailLink: Boolean?
     val enabled: Boolean
+    val disabledBy: UserId?
     val creationDate: Long
+    val disabledDate: Long?
 }
 
 /**
@@ -97,14 +99,26 @@ data class User(
     override val sendEmailLink: Boolean?,
 
     /**
-     * Specifies if the user is enabled or not/
+     * Specifies if the user is enabled or not.
      * @example true
      */
     override val enabled: Boolean,
 
     /**
+     * Identifier of the user that disabled the user.
+     * @example null
+     */
+    override val disabledBy: UserId?,
+
+    /**
      * Creation date of the user, as UNIX timestamp in milliseconds.
      * @example 1656938975000
      */
-    override val creationDate: Long
+    override val creationDate: Long,
+
+    /**
+     * Disabled date of the user, as UNIX timestamp in milliseconds.
+     * @example null
+     */
+    override val disabledDate: Long?
 ): UserDTO

@@ -27,7 +27,9 @@ interface OrganizationDTO {
     val attributes: Map<String, String>
     val roles: List<String>?
     val enabled: Boolean
+    val disabledBy: OrganizationId?
     val creationDate: Long
+    val disabledDate: Long?
 }
 
 /**
@@ -90,8 +92,20 @@ data class Organization(
     override val enabled: Boolean,
 
     /**
+     * Identifier of the user that disabled the organization.
+     * @example null
+     */
+    override val disabledBy: OrganizationId?,
+
+    /**
      * Creation date of the organization, as UNIX timestamp in milliseconds.
      * @example 1656938975000
      */
-    override val creationDate: Long
+    override val creationDate: Long,
+
+    /**
+     * Disabled date of the organization, as UNIX timestamp in milliseconds.
+     * @example null
+     */
+    override val disabledDate: Long?
 ): OrganizationDTO

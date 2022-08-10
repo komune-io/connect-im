@@ -2,9 +2,9 @@ package city.smartb.im.user.lib.service
 
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.commons.model.Address
+import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.parseJsonTo
 import city.smartb.im.organization.domain.model.OrganizationRef
-import city.smartb.im.organization.lib.model.orEmpty
 import city.smartb.im.user.domain.model.User
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.query.UserGetGroupsFunction
@@ -33,6 +33,8 @@ class UserTransformer(
 
 		val imAttributes = listOf(
 			User::address.name,
+			User::disabledBy.name,
+			User::disabledDate.name,
 			User::phone.name,
 			User::sendEmailLink.name
 		)
@@ -51,7 +53,9 @@ class UserTransformer(
 			attributes = attributes,
 			sendEmailLink = user.attributes[User::sendEmailLink.name].toBoolean(),
 			enabled = user.enabled,
-			creationDate = user.creationDate
+			disabledBy = user.attributes[User::disabledBy.name],
+			creationDate = user.creationDate,
+			disabledDate = user.attributes[User::disabledDate.name]?.toLong()
 		)
 	}
 	

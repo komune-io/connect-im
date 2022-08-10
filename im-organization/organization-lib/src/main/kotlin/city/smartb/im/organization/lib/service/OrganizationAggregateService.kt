@@ -19,6 +19,11 @@ import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationDTO
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.organization.lib.config.OrganizationFsConfig
+import city.smartb.im.user.domain.features.command.UserDisableCommand
+import city.smartb.im.user.domain.features.command.UserDisabledEvent
+import city.smartb.im.user.domain.features.query.UserPageQuery
+import city.smartb.im.user.lib.service.UserAggregateService
+import city.smartb.im.user.lib.service.UserFinderService
 import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
@@ -43,7 +48,9 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val groupDisableFunction: GroupDisableFunction,
     private val groupSetAttributesFunction: GroupSetAttributesFunction,
     private val groupUpdateFunction: GroupUpdateFunction,
-    private val organizationFinderService: OrganizationFinderService<MODEL>
+    private val organizationFinderService: OrganizationFinderService<MODEL>,
+    private val userAggregateService: UserAggregateService,
+    private val userFinderService: UserFinderService
 ) {
 
     @Autowired(required = false)
@@ -88,7 +95,7 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
         )
     }
 
-    suspend fun disable(command: OrganizationDisableCommand): OrganizationDisabledEvent {
+    suspend fun disable(command: OrganizationDisableCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationDisabledEvent {
         val auth = authenticationResolver.getAuth()
 
         val event = GroupDisableCommand(
@@ -97,9 +104,45 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
             auth = auth
         ).invokeWith(groupDisableFunction)
 
+        if (command.anonymize) {
+            val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id), mapper).item!!
+
+            OrganizationUpdateCommand(
+                id = command.id,
+                name = "anonymous",
+                description = null,
+                address = null,
+                website = null,
+                roles = organization.roles,
+                attributes = command.attributes.orEmpty().plus(listOf(
+                    Organization::disabledBy.name to command.disabledBy.orEmpty(),
+                    Organization::disabledDate.name to System.currentTimeMillis().toString()
+                ))
+            ).let { update(it, mapper) }
+        }
+
+        val userEvents = UserPageQuery(
+            organizationId = command.id,
+            search = null,
+            role = null,
+            attributes = null,
+            withDisabled = false,
+            page = 0,
+            size = Int.MAX_VALUE
+        ).let { userFinderService.userPage(it) }
+            .items
+            .map { user ->
+                UserDisableCommand(
+                    id = user.id,
+                    disabledBy = command.disabledBy,
+                    anonymize = command.anonymize,
+                    attributes = command.userAttributes
+                ).let { userAggregateService.disable(it) }
+            }
+
         return OrganizationDisabledEvent(
             id = event.id,
-            userIds = event.userIds
+            userIds = userEvents.map(UserDisabledEvent::id)
         )
     }
 

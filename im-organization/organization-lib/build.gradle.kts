@@ -8,6 +8,7 @@ dependencies {
     api(project(":im-organization:organization-domain"))
 
     implementation(project(":im-api:api-config"))
+    implementation(project(":im-user:user-lib"))
 
     implementation("city.smartb.i2:group-f2-query:${Versions.i2}")
     implementation("city.smartb.i2:group-f2-create:${Versions.i2}")

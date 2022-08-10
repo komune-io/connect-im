@@ -1,4 +1,4 @@
-package city.smartb.im.organization.lib.model
+package city.smartb.im.commons.utils
 
 import city.smartb.im.commons.model.Address
 

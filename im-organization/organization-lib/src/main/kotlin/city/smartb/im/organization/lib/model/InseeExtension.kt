@@ -18,7 +18,9 @@ fun InseeOrganization.toOrganization() = Organization(
         "original" to toJson()
     ),
     enabled = true,
-    creationDate = System.currentTimeMillis()
+    disabledBy = null,
+    creationDate = System.currentTimeMillis(),
+    disabledDate = null
 )
 
 fun InseeAddress.toAddress() = Address(

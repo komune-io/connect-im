@@ -7,7 +7,6 @@ plugins {
 dependencies {
     api(project(":im-user:user-domain"))
 
-    implementation(project(":im-organization:organization-lib"))
     implementation(project(":im-api:api-config"))
 
     implementation("city.smartb.i2:user-f2-create:${Versions.i2}")
