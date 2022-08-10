@@ -46,6 +46,7 @@ import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class UserAggregateService(
@@ -244,7 +245,7 @@ class UserAggregateService(
     private suspend fun UserCreateCommand.toKeycloakUserCreateCommand(): KeycloakUserCreateCommand {
         val auth = authenticationResolver.getAuth()
         return KeycloakUserCreateCommand(
-            username = email,
+            username = UUID.randomUUID().toString(),
             firstname = givenName,
             lastname = familyName,
             email = email,
