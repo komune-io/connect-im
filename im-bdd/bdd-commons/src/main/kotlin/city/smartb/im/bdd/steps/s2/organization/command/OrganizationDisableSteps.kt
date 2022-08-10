@@ -55,27 +55,38 @@ class OrganizationDisableSteps: En, CucumberStepsDefinition() {
         Then("The organization should be disabled") {
             step {
                 val organizationId = context.organizationIds.lastUsed
-                AssertionBdd.organization(organizationEndpoint).assertThat(organizationId).hasFields(
-                    enabled = false
-                )
+                val assertThat = AssertionBdd.organization(organizationEndpoint).assertThat(organizationId)
+
+                assertThat.hasFields(enabled = false)
+                if (command.anonymize) {
+                   assertThat.isAnonymized()
+                }
             }
         }
     }
 
     private fun disableOrganization(params: OrganizationDisableParams) = runBlocking {
         command = OrganizationDisableCommand(
-            id = context.organizationIds.safeGet(params.identifier)
+            id = context.organizationIds.safeGet(params.identifier),
+            disabledBy = command.disabledBy,
+            anonymize = command.anonymize,
+            attributes = null,
+            userAttributes = null
         )
         organizationEndpoint.organizationDisable().invoke(command).id
     }
 
     private fun organizationDisableParams(entry: Map<String, String>?): OrganizationDisableParams {
         return OrganizationDisableParams(
-            identifier = entry?.get("identifier") ?: context.organizationIds.lastUsedKey
+            identifier = entry?.get("identifier") ?: context.organizationIds.lastUsedKey,
+            disabledBy = entry?.get("disabledBy"),
+            anonymize = entry?.get("anonymize").toBoolean()
         )
     }
 
     private data class OrganizationDisableParams(
-        val identifier: TestContextKey
+        val identifier: TestContextKey,
+        val disabledBy: String?,
+        val anonymize: Boolean
     )
 }

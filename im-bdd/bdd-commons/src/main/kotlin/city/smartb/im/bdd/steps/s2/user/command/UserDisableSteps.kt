@@ -54,27 +54,40 @@ class UserDisableSteps: En, CucumberStepsDefinition() {
 
         Then("The user should be disabled") {
             step {
-                AssertionBdd.user(userEndpoint).assertThat(command.id).hasFields(
-                    enabled = false
+                val assertThat = AssertionBdd.user(userEndpoint).assertThat(command.id)
+                assertThat.hasFields(
+                    enabled = false,
+                    disabledBy = command.disabledBy,
                 )
+
+                if (command.anonymize) {
+                    assertThat.isAnonymized()
+                }
             }
         }
     }
 
     private fun disableUser(params: UserDisableParams) = runBlocking {
         command = UserDisableCommand(
-            id = context.userIds.safeGet(params.identifier)
+            id = context.userIds.safeGet(params.identifier),
+            disabledBy = params.disabledBy,
+            anonymize = params.anonymize,
+            attributes = null
         )
         userEndpoint.userDisable().invoke(command).id
     }
 
     private fun userDisableParams(entry: Map<String, String>?): UserDisableParams {
         return UserDisableParams(
-            identifier = entry?.get("identifier") ?: context.userIds.lastUsedKey
+            identifier = entry?.get("identifier") ?: context.userIds.lastUsedKey,
+            disabledBy = entry?.get("disabledBy"),
+            anonymize = entry?.get("anonymize").toBoolean()
         )
     }
 
     private data class UserDisableParams(
-        val identifier: TestContextKey
+        val identifier: TestContextKey,
+        val disabledBy: String?,
+        val anonymize: Boolean
     )
 }

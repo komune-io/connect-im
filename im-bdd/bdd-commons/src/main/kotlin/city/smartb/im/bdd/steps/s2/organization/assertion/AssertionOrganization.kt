@@ -74,5 +74,13 @@ class AssertionOrganization(
             enabled = other.enabled,
             creationDate = other.creationDate
         )
+
+        fun isAnonymized() = also {
+            Assertions.assertThat(organization.name).isEqualTo("anonymous")
+            Assertions.assertThat(organization.description).isNull()
+            Assertions.assertThat(organization.address).isNull()
+            Assertions.assertThat(organization.website).isNull()
+            Assertions.assertThat(organization.roles).isEqualTo(organization.roles)
+        }
     }
 }

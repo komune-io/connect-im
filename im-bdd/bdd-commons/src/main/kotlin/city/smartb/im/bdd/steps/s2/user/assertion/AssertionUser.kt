@@ -55,7 +55,9 @@ class AssertionUser(
             attributes: Map<String, String> = user.attributes,
             sendEmailLink: Boolean? = user.sendEmailLink,
             enabled: Boolean = user.enabled,
-            creationDate: Long = user.creationDate
+            disabledBy: UserId? = user.disabledBy,
+            creationDate: Long = user.creationDate,
+            disabledDate: Long? = user.disabledDate
         ) = also {
             Assertions.assertThat(user.email).isEqualTo(email)
             Assertions.assertThat(user.givenName).isEqualTo(givenName)
@@ -67,12 +69,22 @@ class AssertionUser(
             Assertions.assertThat(user.enabled).isEqualTo(enabled)
             Assertions.assertThat(user.creationDate).isEqualTo(creationDate)
             Assertions.assertThat(user.memberOf?.id).isEqualTo(memberOf)
+            Assertions.assertThat(user.disabledBy).isEqualTo(disabledBy)
+            Assertions.assertThat(user.disabledDate).isEqualTo(disabledDate)
         }.hasAddress(address)
 
         fun hasAddress(address: AddressDTO?) = also {
             Assertions.assertThat(user.address?.city).isEqualTo(address?.city)
             Assertions.assertThat(user.address?.postalCode).isEqualTo(address?.postalCode)
             Assertions.assertThat(user.address?.street).isEqualTo(address?.street)
+        }
+
+        fun isAnonymized() = also {
+            Assertions.assertThat(user.email).endsWith("@anonymous.com")
+            Assertions.assertThat(user.givenName).isEqualTo("anonymous")
+            Assertions.assertThat(user.familyName).isEqualTo("anonymous")
+            Assertions.assertThat(user.phone).isEqualTo("")
+            Assertions.assertThat(user.roles.assignedRoles).isEqualTo(user.roles.assignedRoles)
         }
     }
 }
