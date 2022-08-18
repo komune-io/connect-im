@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
 	implementation(project(":im-api:api-config"))
-	implementation(project(":im-api:api-auth"))
+	implementation(project(":im-infra:infra-redis"))
 
 	implementation(project(":im-organization:organization-api"))
 	implementation(project(":im-role:role-api"))
@@ -14,6 +14,8 @@ dependencies {
 
 	implementation("city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}")
 	implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")
+
+	implementation("city.smartb.i2:i2-spring-boot-starter-auth:${Versions.i2}")
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {

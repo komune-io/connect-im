@@ -1,10 +1,13 @@
 package city.smartb.im.organization.domain.features.command
 
-import city.smartb.im.commons.model.AddressBase
+import city.smartb.im.commons.model.Address
+import city.smartb.im.commons.model.AddressDTO
 import city.smartb.im.organization.domain.model.OrganizationId
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
+import kotlin.js.JsExport
+import kotlin.js.JsName
 
 /**
  * Create a new organization.
@@ -13,6 +16,19 @@ import f2.dsl.fnc.F2Function
  * @order 10
  */
 typealias OrganizationCreateFunction = F2Function<OrganizationCreateCommand, OrganizationCreatedEvent>
+
+@JsExport
+@JsName("OrganizationCreateCommandDTO")
+interface OrganizationCreateCommandDTO: Command {
+    val siret: String?
+    val name: String
+    val description: String?
+    val address: AddressDTO?
+    val website: String?
+    val roles: List<String>?
+    val parentOrganizationId: OrganizationId?
+    val attributes: Map<String, String>?
+}
 
 /**
  * @d2 command
@@ -23,48 +39,55 @@ data class OrganizationCreateCommand(
      * Siret number of the organization.
      * @example [city.smartb.im.organization.domain.model.Organization.siret]
      */
-    val siret: String?,
+    override val siret: String?,
 
     /**
      * Official name of the organization.
      * @example [city.smartb.im.organization.domain.model.Organization.name]
      */
-    val name: String,
+    override val name: String,
 
     /**
      * Description of the organization.
      * @example [city.smartb.im.organization.domain.model.Organization.description]
      */
-    val description: String?,
+    override val description: String?,
 
     /**
      * Address of the organization.
      */
-    val address: AddressBase?,
+    override val address: Address?,
 
     /**
      * Website of the organization.
      * @example [city.smartb.im.organization.domain.model.Organization.website]
      */
-    val website: String?,
+    override val website: String?,
 
     /**
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
      * @example [city.smartb.im.organization.domain.model.Organization.roles]
      */
-    val roles: List<String>?,
+    override val roles: List<String>?,
 
     /**
      * The identifier of a larger organization that this organization is a subOrganization of, if any.
      */
-    val parentOrganizationId: OrganizationId? = null,
+    override val parentOrganizationId: OrganizationId? = null,
 
     /**
      * Additional arbitrary attributes assigned to the organization.
      * @example [city.smartb.im.organization.domain.model.Organization.attributes]
      */
-    val attributes: Map<String, String>?
-): Command
+    override val attributes: Map<String, String>?
+): OrganizationCreateCommandDTO
+
+@JsExport
+@JsName("OrganizationCreatedEventDTO")
+interface OrganizationCreatedEventDTO: Event {
+    val id: OrganizationId
+    val parentOrganization: OrganizationId?
+}
 
 /**
  * @d2 event
@@ -74,10 +97,10 @@ data class OrganizationCreatedEvent(
     /**
      * Identifier of the organization.
      */
-    val id: OrganizationId,
+    override val id: OrganizationId,
 
     /**
      * The identifier of a larger organization that this organization is a subOrganization of, if any.
      */
-    val parentOrganization: OrganizationId? = null
-): Event
+    override val parentOrganization: OrganizationId? = null
+): OrganizationCreatedEventDTO

@@ -1,7 +1,10 @@
 package city.smartb.im.organization.domain.model
 
 import city.smartb.im.commons.model.Address
+import city.smartb.im.commons.model.AddressDTO
 import i2.keycloak.f2.group.domain.model.GroupId
+import kotlin.js.JsExport
+import kotlin.js.JsName
 
 /**
  * Unique identifier of an organization.
@@ -11,6 +14,23 @@ import i2.keycloak.f2.group.domain.model.GroupId
  * @visual json "85171569-8970-45fb-b52a-85b59f06c292"
  */
 typealias OrganizationId = GroupId
+
+@JsExport
+@JsName("OrganizationDTO")
+interface OrganizationDTO {
+    val id: OrganizationId
+    val siret: String?
+    val name: String
+    val description: String?
+    val address: AddressDTO?
+    val website: String?
+    val attributes: Map<String, String>
+    val roles: List<String>?
+    val enabled: Boolean
+    val disabledBy: OrganizationId?
+    val creationDate: Long
+    val disabledDate: Long?
+}
 
 /**
  * Representation of an organization.
@@ -22,58 +42,70 @@ data class Organization(
     /**
      * Identifier of the organization.
      */
-    val id: OrganizationId,
+    override val id: OrganizationId,
 
     /**
      * Siret number of the organization.
      * @example "84488096300013"
      */
-    val siret: String,
+    override val siret: String?,
 
     /**
      * Official name of the organization.
      * @example "SmartB"
      */
-    val name: String,
+    override val name: String,
 
     /**
      * Description of the organization.
      * @example "We use technology, design and systems thinking to tackle global sustainability & financing challenges."
      */
-    val description: String?,
+    override val description: String?,
 
     /**
      * Address of the organization.
      */
-    val address: Address?,
+    override val address: Address?,
 
     /**
      * Website of the organization.
      * @example "https://smartb.city/"
      */
-    val website: String?,
+    override val website: String?,
 
     /**
      * Platform-specific attributes assigned to the organization
      * @example { "otherWebsite": "https://smartb.network" }
      */
-    val attributes: Map<String, String>,
+    override val attributes: Map<String, String>,
 
     /**
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
      * @example [["admin", "write_user", "read_user", "write_organization", "read_organization"]]
      */
-    val roles: List<String>?,
+    override val roles: List<String>?,
 
     /**
      * Specifies if the organization is enabled or not
      * @example true
      */
-    val enabled: Boolean,
+    override val enabled: Boolean,
+
+    /**
+     * Identifier of the user that disabled the organization.
+     * @example null
+     */
+    override val disabledBy: OrganizationId?,
 
     /**
      * Creation date of the organization, as UNIX timestamp in milliseconds.
      * @example 1656938975000
      */
-    val creationDate: Long
-)
+    override val creationDate: Long,
+
+    /**
+     * Disabled date of the organization, as UNIX timestamp in milliseconds.
+     * @example null
+     */
+    override val disabledDate: Long?
+): OrganizationDTO

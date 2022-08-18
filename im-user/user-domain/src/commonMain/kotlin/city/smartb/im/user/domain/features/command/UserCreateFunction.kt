@@ -1,11 +1,13 @@
 package city.smartb.im.user.domain.features.command
 
-import city.smartb.im.commons.model.AddressBase
+import city.smartb.im.commons.model.Address
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.model.UserId
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
+import kotlin.js.JsExport
+import kotlin.js.JsName
 
 /**
  * Create a new user.
@@ -18,6 +20,22 @@ typealias UserCreateFunction = F2Function<UserCreateCommand, UserCreatedEvent>
 typealias KeycloakUserCreateCommand = i2.keycloak.f2.user.domain.features.command.UserCreateCommand
 typealias KeycloakUserCreateFunction = i2.keycloak.f2.user.domain.features.command.UserCreateFunction
 
+@JsExport
+@JsName("UserCreateCommandDTO")
+interface UserCreateCommandDTO: Command {
+    val email: String
+    val password: String?
+    val givenName: String
+    val familyName: String
+    val address: Address?
+    val phone: String?
+    val roles: List<String>
+    val sendEmailLink: Boolean
+    val memberOf: OrganizationId?
+    val attributes: Map<String, String>?
+    val isEmailVerified: Boolean
+}
+
 /**
  * @d2 command
  * @parent [UserCreateFunction]
@@ -27,54 +45,72 @@ data class UserCreateCommand(
      * Email address.
      * @example [city.smartb.im.user.domain.model.User.email]
      */
-    val email: String,
+    override val email: String,
+
+    /**
+     * Email address.
+     * @example "zepasworde"
+     */
+    override val password: String?,
 
     /**
      * First name of the user.
      * @example [city.smartb.im.user.domain.model.User.givenName]
      */
-    val givenName: String,
+    override val givenName: String,
 
     /**
      * Family name of the user.
      * @example [city.smartb.im.user.domain.model.User.familyName]
      */
-    val familyName: String,
+    override val familyName: String,
 
     /**
      * Address of the user.
      */
-    val address: AddressBase?,
+    override val address: Address?,
 
     /**
      * Telephone number of the user.
      * @example [city.smartb.im.user.domain.model.User.phone]
      */
-    val phone: String?,
+    override val phone: String?,
 
     /**
      * Roles assigned to the user.
      * @example [["admin"]]
      */
-    val roles: List<String>,
+    override val roles: List<String>,
 
     /**
      * Send a validation email to the user.
      * @example [city.smartb.im.user.domain.model.User.sendEmailLink]
      */
-    val sendEmailLink: Boolean,
+    override val sendEmailLink: Boolean,
 
     /**
      * Organization to which the user belongs.
      */
-    val memberOf: OrganizationId?,
+    override val memberOf: OrganizationId?,
 
     /**
      * Additional arbitrary attributes assigned to the user.
      * @example [city.smartb.im.user.domain.model.User.attributes]
      */
-    val attributes: Map<String, String>?
-): Command
+    override val attributes: Map<String, String>?,
+
+    /**
+     * False if the user has to verify their email.
+     * @example true
+     */
+    override val isEmailVerified: Boolean
+): UserCreateCommandDTO
+
+@JsExport
+@JsName("UserCreatedEventDTO")
+interface UserCreatedEventDTO: Event {
+    val id: UserId
+}
 
 /**
  * @d2 event
@@ -84,5 +120,5 @@ data class UserCreatedEvent(
     /**
      * Identifier of the user.
      */
-    val id: UserId
-): Event
+    override val id: UserId
+): UserCreatedEventDTO

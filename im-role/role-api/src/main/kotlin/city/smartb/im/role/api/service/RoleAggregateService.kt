@@ -1,6 +1,6 @@
 package city.smartb.im.role.api.service
 
-import city.smartb.im.api.auth.ImAuthenticationResolver
+import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.role.domain.features.command.KeycloakRoleAddCompositesCommand
 import city.smartb.im.role.domain.features.command.KeycloakRoleAddCompositesFunction
 import city.smartb.im.role.domain.features.command.KeycloakRoleCreateCommand
@@ -21,7 +21,7 @@ class RoleAggregateService(
     private val keycloakRoleAddCompositesFunction: KeycloakRoleAddCompositesFunction,
     private val keycloakRoleCreateFunction: KeycloakRoleCreateFunction,
     private val keycloakRoleUpdateFunction: KeycloakRoleUpdateFunction,
-    private val authenticationResolver: ImAuthenticationResolver
+    private val authenticationResolver: ImAuthenticationProvider
 ) {
 
     suspend fun roleAddComposites(command: RoleAddCompositesCommand): RoleAddedCompositesEvent {

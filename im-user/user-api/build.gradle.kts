@@ -7,11 +7,11 @@ plugins {
 dependencies {
     api(project(":im-user:user-domain"))
 
-    implementation(project(":im-organization:organization-api"))
+    implementation(project(":im-user:user-lib"))
     implementation(project(":im-api:api-config"))
-    implementation(project(":im-api:api-auth"))
 
     implementation("city.smartb.i2:user-f2-create:${Versions.i2}")
+    implementation("city.smartb.i2:user-f2-delete:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-disable:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-email-actions:${Versions.i2}")
     implementation("city.smartb.i2:user-f2-join-group:${Versions.i2}")

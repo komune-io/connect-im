@@ -160,6 +160,26 @@ Properties prefix: `fs`
 |--------------|----------------------------|------------------------------------------|----------------------------------------|
 | url          | Points to an FS instance. This property is optional but will disable associated features if not set (ex: upload logo) | http://localhost:8090 | null
 
+# Tests
+
+To run tests you need to:
+ * Start keycloak
+
+```bash
+docker-compose -f docker-compose-keycloak.yml up -d
+```
+
+ * Init keycloak realm
+
+```bash
+docker-compose -f docker-compose-i2-init.yml up -d
+```
+
+ * Run test
+```bash
+./gradlew test
+```
+
 # Errors
 
 ## FileClient not initialized  
@@ -175,3 +195,20 @@ Appears when trying to use a feature that calls FS but no FS configuration was p
 ### Solution
 
 Define a [configuration](#configuration) pointing to a valid FS instance or do not use any feature that needs it.
+
+## Certificate is not trusted
+
+### Message
+
+`sun.security.validator.ValidatorException`
+
+### Cause
+
+The JVM is trying to reach a HTTPS server that is not trusted by the JVM trust store
+
+### Solution
+
+Generate a certificate for this server and add it to the trust store
+
+`openssl x509 -in <(openssl s_client -connect $HOST:$PORT -prexit 2>/dev/null) -out ~/$ALIAS.crt`
+`sudo keytool -importcert -file ~/$ALIAS.crt -alias $ALIAS -keystore $(/usr/libexec/java_home)/lib/security/cacerts -storepass changeit`

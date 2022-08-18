@@ -1,0 +1,12 @@
+version: "3.2"
+services:
+  redis:
+    image: redis/redis-stack:6.2.2-v5
+    network_mode: host
+    ports:
+      - "6379:6379"
+      - "8011:8001"
+#  redisinsight:
+#    image: redislabs/redisinsight:latest
+#    ports:
+#      - '8001:8001'

@@ -1,5 +1,16 @@
 package city.smartb.im.organization.domain.model
 
+import kotlin.js.JsExport
+import kotlin.js.JsName
+
+@JsExport
+@JsName("OrganizationRefDTO")
+interface OrganizationRefDTO {
+    val id: OrganizationId
+    val name: String
+    val roles: List<String>
+}
+
 /**
  * Short representation of an organization.
  * @D2 model
@@ -10,17 +21,17 @@ data class OrganizationRef(
     /**
      * Identifier of the organization.
      */
-    val id: OrganizationId,
+    override val id: OrganizationId,
 
     /**
      * Name of the organization.
      * @example [Organization.name]
      */
-    val name: String,
+    override val name: String,
 
     /**
      * Assigned and effective roles of the organization.
      * @example [Organization.roles]
      */
-    val roles: List<String>
-)
+    override val roles: List<String>
+): OrganizationRefDTO

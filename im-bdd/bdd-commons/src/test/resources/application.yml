@@ -1,0 +1,22 @@
+server:
+  port: 8009
+
+spring:
+  main:
+    web-application-type: reactive
+
+i2:
+  issuers:
+    -
+      name: im-test
+      authUrl: http://localhost:8080/auth
+      realm: im-test
+      im:
+        clientId: im-test-client
+        clientSecret: secret
+
+im:
+  organization:
+    insee:
+      token: ${INSEE_TOKEN}
+      sirene-api: https://api.insee.fr/entreprises/sirene/V3

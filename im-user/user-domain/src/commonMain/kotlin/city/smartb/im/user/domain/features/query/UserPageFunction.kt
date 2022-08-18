@@ -2,9 +2,12 @@ package city.smartb.im.user.domain.features.query
 
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.model.User
-import f2.dsl.cqrs.Command
+import city.smartb.im.user.domain.model.UserDTO
 import f2.dsl.cqrs.Event
+import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
+import kotlin.js.JsExport
+import kotlin.js.JsName
 
 /**
  * Get a page of users.
@@ -17,63 +20,82 @@ typealias UserPageFunction = F2Function<UserPageQuery, UserPageResult>
 typealias KeycloakUserPageQuery = i2.keycloak.f2.user.domain.features.query.UserPageQuery
 typealias KeycloakUserPageFunction = i2.keycloak.f2.user.domain.features.query.UserPageFunction
 
-/**
- * @d2 query
- * @parent [UserPageFunction]
- */
-data class UserPageQuery(
+@JsExport
+@JsName("UserPageQueryDTO")
+interface UserPageQueryDTO: Query {
 	/**
 	 * Organization ID filter.
 	 */
-	val organizationId: OrganizationId?,
+	val organizationId: OrganizationId?
 
 	/**
 	 * Search string filtering on the email, firstname and lastname of the user.
 	 */
-	val search: String?,
+	val search: String?
 
 	/**
 	 * Role filter.
 	 */
-	val role: String?,
+	val role: String?
 
 	/**
 	 * Arbitrary attributes filter.
 	 */
-	val attributes: Map<String, String>?,
+	val attributes: Map<String, String>?
 
 	/**
 	 * If false, filter out the disabled users. (default: false)
 	 * @example false
 	 */
-	val withDisabled: Boolean = false,
+	val withDisabled: Boolean
 
 	/**
 	 * Number of the page.
 	 * @example 0
 	 */
-	val page: Int?,
+	val page: Int?
 
 	/**
 	 * Size of the page.
 	 * @example 10
 	 */
 	val size: Int?
-): Command
+}
 
 /**
- * @d2 result
+ * @d2 query
  * @parent [UserPageFunction]
  */
-data class UserPageResult(
+data class UserPageQuery(
+	override val organizationId: OrganizationId?,
+	override val search: String?,
+	override val role: String?,
+	override val attributes: Map<String, String>?,
+	override val withDisabled: Boolean,
+	override val page: Int?,
+	override val size: Int?
+): UserPageQueryDTO
+
+@JsExport
+@JsName("UserPageResultDTO")
+interface UserPageResultDTO: Event {
 	/**
 	 * List of users satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
 	 */
-	val items: List<User>,
+	val items: List<UserDTO>
 
 	/**
 	 * The total amount of users satisfying the requesting filters.
 	 * @example 38
 	 */
 	val total: Int
-): Event
+}
+
+/**
+ * @d2 result
+ * @parent [UserPageFunction]
+ */
+data class UserPageResult(
+	override val items: List<User>,
+	override val total: Int
+): UserPageResultDTO
