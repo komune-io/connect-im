@@ -25,7 +25,7 @@ import i2.keycloak.f2.group.domain.model.GroupModel
 import org.springframework.stereotype.Service
 
 @Service
-class OrganizationFinderService<MODEL: OrganizationDTO>(
+class OrganizationFinderService<MODEL : OrganizationDTO>(
     private val inseeHttpClient: InseeHttpClient,
     private val groupGetFunction: GroupGetFunction,
     private val groupPageFunction: GroupPageFunction,
@@ -36,16 +36,16 @@ class OrganizationFinderService<MODEL: OrganizationDTO>(
 
     suspend fun organizationGet(
         query: OrganizationGetQuery,
-        organizationMapper: OrganizationMapper<Organization, MODEL>
+        organizationMapper: OrganizationMapper<Organization, MODEL>,
     ): OrganizationGetResult<MODEL> = redisCache.getFormCacheOr(CacheName.Organization, query.id) {
-        return groupGetFunction.invoke(query.toGroupGetByIdQuery())
+        groupGetFunction.invoke(query.toGroupGetByIdQuery())
             .item
             ?.let { group -> groupMapper.toOrganization(group) }
-            ?.let { org -> organizationMapper.mapModel(org) }
-            .let { dto ->
-                OrganizationGetResult(dto)
-            }
     }
+        ?.let { org -> organizationMapper.mapModel(org) }
+        .let { dto ->
+            OrganizationGetResult(dto)
+        }
 
 
     suspend fun organizationGetFromInsee(query: OrganizationGetFromInseeQuery): OrganizationGetFromInseeResult {
@@ -62,10 +62,10 @@ class OrganizationFinderService<MODEL: OrganizationDTO>(
 
     suspend fun organizationPage(
         query: OrganizationPageQuery,
-        organizationMapper: OrganizationMapper<Organization, MODEL>
+        organizationMapper: OrganizationMapper<Organization, MODEL>,
     ): OrganizationPageResult<MODEL> {
         val result = groupPageFunction.invoke(query.toGroupPageQuery())
-        val items = result.page.items.map { groupMapper.toOrganization(it)}.map { organizationMapper.mapModel(it)}
+        val items = result.page.items.map { groupMapper.toOrganization(it) }.map { organizationMapper.mapModel(it) }
         return OrganizationPageResult(
             items = items,
             total = result.page.total

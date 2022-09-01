@@ -28,13 +28,14 @@ class UserFinderService(
 ) {
     suspend fun userGet(query: UserGetQuery): User? = redisCache.getFormCacheOr(CacheName.User, query.id) {
         val auth = authenticationResolver.getAuth()
-        return KeycloakUserGetQuery(
+        KeycloakUserGetQuery(
             id = query.id,
             realmId = auth.realmId,
             auth = auth
         ).invokeWith(keycloakUserGetFunction)
             .item
             ?.let { userTransformer.toUser(it) }
+
     }
 
     suspend fun userGetByEmail(email: String): User? {

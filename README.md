@@ -169,6 +169,12 @@ To run tests you need to:
 docker-compose -f docker-compose-keycloak.yml up -d
 ```
 
+ * Start keycloak
+
+```bash
+docker-compose -f docker-compose-redis.yml up -d
+```
+
  * Init keycloak realm
 
 ```bash

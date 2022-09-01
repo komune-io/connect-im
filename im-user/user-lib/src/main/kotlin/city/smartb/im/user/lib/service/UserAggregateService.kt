@@ -9,6 +9,7 @@ import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.infra.redis.CacheName
 import city.smartb.im.infra.redis.RedisCache
+import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateFunction
@@ -116,120 +117,122 @@ class UserAggregateService(
     }
 
     suspend fun update(command: UserUpdateCommand): UserUpdatedEvent =
-        redisCache.getFormCacheOr(CacheName.Organization, command.id) {
-        organizationExist(command.memberOf)
+        redisCache.evictIfPresent(CacheName.User, command.id) {
+            organizationExist(command.memberOf)
 
-        command.toKeycloakUserUpdateCommand().invokeWith(keycloakUserUpdateFunction)
+            command.toKeycloakUserUpdateCommand().invokeWith(keycloakUserUpdateFunction)
 
-        command.memberOf?.let { joinOrganization(command.id, it) }
-        setRoles(command.id, command.roles)
+            command.memberOf?.let { joinOrganization(command.id, it) }
+            setRoles(command.id, command.roles)
 
-        if (command.sendEmailLink) {
-            sendEmail(command.id, "UPDATE_PASSWORD")
+            if (command.sendEmailLink) {
+                sendEmail(command.id, "UPDATE_PASSWORD")
+            }
+            UserUpdatedEvent(command.id)
         }
-        return UserUpdatedEvent(command.id)
-    }
 
     suspend fun uploadLogo(command: UserUploadLogoCommand, file: ByteArray): UserUploadedLogoEvent =
-        redisCache.getFormCacheOr(CacheName.Organization, command.id) {
-        if (!::fileClient.isInitialized) {
-            throw IllegalStateException("FileClient not initialized.")
+        redisCache.evictIfPresent(CacheName.User, command.id) {
+            if (!::fileClient.isInitialized) {
+                throw IllegalStateException("FileClient not initialized.")
+            }
+
+            val event = fileClient.fileUpload(
+                command = FileUploadCommand(
+                    path = UserFsConfig.pathForUser(command.id),
+                ),
+                file = file
+            )
+
+            val auth = authenticationResolver.getAuth()
+            UserSetAttributesCommand(
+                id = command.id,
+                attributes = mapOf("logo" to event.url),
+                realmId = auth.realmId,
+                auth = auth
+            ).invokeWith(userSetAttributesFunction)
+
+            UserUploadedLogoEvent(
+                id = command.id,
+                url = event.url
+            )
         }
-
-        val event = fileClient.fileUpload(
-            command = FileUploadCommand(
-                path = UserFsConfig.pathForUser(command.id),
-            ),
-            file = file
-        )
-
-        val auth = authenticationResolver.getAuth()
-        UserSetAttributesCommand(
-            id = command.id,
-            attributes = mapOf("logo" to event.url),
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(userSetAttributesFunction)
-
-        return UserUploadedLogoEvent(
-            id = command.id,
-            url = event.url
-        )
-    }
 
     suspend fun updateEmail(command: UserUpdateEmailCommand): UserUpdatedEmailEvent =
-        redisCache.getFormCacheOr(CacheName.Organization, command.id) {
-        val auth = authenticationResolver.getAuth()
-        KeycloakUserUpdateEmailCommand(
-            userId = command.id,
-            email = command.email,
-            sendVerificationEmail = command.sendVerificationEmail,
-            clientId = auth.clientId.takeUnless { auth.redirectUrl.isBlank() },
-            redirectUri = auth.redirectUrl.ifBlank { null },
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(keycloakUserUpdateEmailFunction)
+        redisCache.evictIfPresent(CacheName.User, command.id) {
+            val auth = authenticationResolver.getAuth()
+            KeycloakUserUpdateEmailCommand(
+                userId = command.id,
+                email = command.email,
+                sendVerificationEmail = command.sendVerificationEmail,
+                clientId = auth.clientId.takeUnless { auth.redirectUrl.isBlank() },
+                redirectUri = auth.redirectUrl.ifBlank { null },
+                realmId = auth.realmId,
+                auth = auth
+            ).invokeWith(keycloakUserUpdateEmailFunction)
 
-        return UserUpdatedEmailEvent(
-            id = command.id
-        )
-    }
-
-    suspend fun disable(command: UserDisableCommand): UserDisabledEvent =
-        redisCache.getFormCacheOr(CacheName.Organization, command.id) {
-        val auth = authenticationResolver.getAuth()
-
-        val user = userFinderService.userGet(UserGetQuery(command.id))
-            ?: throw NotFoundException("User", command.id)
-
-        val event = KeycloakUserDisableCommand(
-            id = command.id,
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(keycloakUserDisableFunction)
-
-        if (command.anonymize) {
-            UserUpdateCommand(
-                id = command.id,
-                givenName = "anonymous",
-                familyName = "anonymous",
-                address = (null as Address?).orEmpty(),
-                phone = "",
-                sendEmailLink = false,
-                memberOf = user.memberOf?.id,
-                roles = user.roles.assignedRoles,
-                attributes = command.attributes.orEmpty().plus(listOf(
-                    User::disabledBy.name to command.disabledBy.orEmpty(),
-                    User::disabledDate.name to System.currentTimeMillis().toString()
-                ))
-            ).let { update(it) }
-
-            UserUpdateEmailCommand(
-                id = command.id,
-                email = "${UUID.randomUUID()}@anonymous.com",
-                sendVerificationEmail = false
-            ).let { updateEmail(it) }
+            UserUpdatedEmailEvent(
+                id = command.id
+            )
         }
 
-        return UserDisabledEvent(
-            id = event.id
-        )
-    }
+    suspend fun disable(command: UserDisableCommand): UserDisabledEvent =
+        redisCache.evictIfPresent(CacheName.User, command.id) {
+            val auth = authenticationResolver.getAuth()
+
+            val user = userFinderService.userGet(UserGetQuery(command.id))
+                ?: throw NotFoundException("User", command.id)
+
+            val event = KeycloakUserDisableCommand(
+                id = command.id,
+                realmId = auth.realmId,
+                auth = auth
+            ).invokeWith(keycloakUserDisableFunction)
+
+            if (command.anonymize) {
+                UserUpdateCommand(
+                    id = command.id,
+                    givenName = "anonymous",
+                    familyName = "anonymous",
+                    address = (null as Address?).orEmpty(),
+                    phone = "",
+                    sendEmailLink = false,
+                    memberOf = user.memberOf?.id,
+                    roles = user.roles.assignedRoles,
+                    attributes = command.attributes.orEmpty().plus(
+                        listOf(
+                            User::disabledBy.name to command.disabledBy.orEmpty(),
+                            User::disabledDate.name to System.currentTimeMillis().toString()
+                        )
+                    )
+                ).let { update(it) }
+
+                UserUpdateEmailCommand(
+                    id = command.id,
+                    email = "${UUID.randomUUID()}@anonymous.com",
+                    sendVerificationEmail = false
+                ).let { updateEmail(it) }
+            }
+
+            UserDisabledEvent(
+                id = event.id
+            )
+        }
 
     suspend fun delete(command: UserDeleteCommand): UserDeletedEvent =
-        redisCache.getFormCacheOr(CacheName.Organization, command.id) {
-        val auth = authenticationResolver.getAuth()
+        redisCache.evictIfPresent(CacheName.User, command.id) {
+            val auth = authenticationResolver.getAuth()
 
-        val event = KeycloakUserDeleteCommand(
-            id = command.id,
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(keycloakUserDeleteFunction)
+            val event = KeycloakUserDeleteCommand(
+                id = command.id,
+                realmId = auth.realmId,
+                auth = auth
+            ).invokeWith(keycloakUserDeleteFunction)
 
-        return UserDeletedEvent(
-            id = event.id
-        )
-    }
+            UserDeletedEvent(
+                id = event.id
+            )
+        }
 
     private suspend fun organizationExist(organizationId: OrganizationId?) {
         if (organizationId == null) return

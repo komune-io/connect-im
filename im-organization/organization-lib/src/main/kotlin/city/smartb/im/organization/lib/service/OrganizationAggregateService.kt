@@ -77,7 +77,7 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
         val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id), mapper).item
             ?: throw NotFoundException("Organization [${command.id}] not found")
 
-        return groupUpdateFunction.invoke(command.toGroupUpdateCommand(  mapper.mapOrganization(organization)))
+        groupUpdateFunction.invoke(command.toGroupUpdateCommand(  mapper.mapOrganization(organization)))
             .let { result -> OrganizationUpdatedResult(result.id) }
     }
 
@@ -96,7 +96,7 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
 
         setAttributes(command.id, mapOf("logo" to event.url))
 
-        return OrganizationUploadedLogoEvent(
+        OrganizationUploadedLogoEvent(
             id = command.id,
             url = event.url
         )
@@ -148,7 +148,7 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
                 ).let { userAggregateService.disable(it) }
             }
 
-        return OrganizationDisabledEvent(
+        OrganizationDisabledEvent(
             id = event.id,
             userIds = userEvents.map(UserDisabledEvent::id)
         )
@@ -164,7 +164,7 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
             auth = auth
         ).invokeWith(groupDeleteFunction)
 
-        return OrganizationDeletedEvent(
+        OrganizationDeletedEvent(
             id = event.id
         )
     }

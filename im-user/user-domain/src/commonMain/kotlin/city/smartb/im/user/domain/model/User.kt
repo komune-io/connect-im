@@ -1,5 +1,6 @@
 package city.smartb.im.user.domain.model
 
+import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.AddressDTO
 import city.smartb.im.organization.domain.model.OrganizationRef
 import city.smartb.im.organization.domain.model.OrganizationRefDTO
@@ -73,7 +74,7 @@ data class User(
     /**
      * Address of the user.
      */
-    override val address: AddressDTO?,
+    override val address: Address?,
 
     /**
      * Telephone number of the user.
