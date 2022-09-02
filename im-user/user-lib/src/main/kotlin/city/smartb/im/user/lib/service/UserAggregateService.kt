@@ -9,7 +9,6 @@ import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.infra.redis.CacheName
 import city.smartb.im.infra.redis.RedisCache
-import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateFunction
@@ -54,9 +53,9 @@ import i2.keycloak.f2.user.domain.features.command.UserRolesSetCommand
 import i2.keycloak.f2.user.domain.features.command.UserRolesSetFunction
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
-import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class UserAggregateService(
@@ -209,7 +208,7 @@ class UserAggregateService(
 
                 UserUpdateEmailCommand(
                     id = command.id,
-                    email = "${UUID.randomUUID()}@anonymous.com",
+                    email = "${command.id}@anonymous.com",
                     sendVerificationEmail = false
                 ).let { updateEmail(it) }
             }

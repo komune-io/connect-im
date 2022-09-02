@@ -117,7 +117,7 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
 
             OrganizationUpdateCommand(
                 id = command.id,
-                name = "anonymous",
+                name = "anonymous-${command.id}",
                 description = "",
                 address = (null as Address?).orEmpty(),
                 website = "",
