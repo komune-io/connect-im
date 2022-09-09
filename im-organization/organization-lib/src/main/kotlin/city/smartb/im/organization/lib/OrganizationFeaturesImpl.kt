@@ -28,32 +28,32 @@ class OrganizationFeaturesImpl<MODEL: OrganizationDTO>(
     private val logger by s2.spring.utils.logger.Logger()
 
     override fun organizationGet(): OrganizationGetFunction<MODEL> = f2Function { query ->
-        logger.info("organizationGet: $query")
+        logger.debug("organizationGet: $query")
         organizationFinderService.organizationGet(query, organizationMapper)
     }
 
     override fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = f2Function { query ->
-        logger.info("organizationGetFromInsee: $query")
+        logger.debug("organizationGetFromInsee: $query")
         organizationFinderService.organizationGetFromInsee(query)
     }
 
     override fun organizationPage(): OrganizationPageFunction<MODEL> = f2Function { query ->
-        logger.info("organizationPage: $query")
+        logger.debug("organizationPage: $query")
         organizationFinderService.organizationPage(query, organizationMapper)
     }
 
     override fun organizationRefList(): OrganizationRefListFunction = f2Function { query ->
-        logger.info("organizationRefList: $query")
+        logger.debug("organizationRefList: $query")
         organizationFinderService.organizationRefList(query)
     }
 
     override fun organizationCreate(): OrganizationCreateFunction = f2Function { cmd ->
-        logger.info("organizationCreate: $cmd")
+        logger.debug("organizationCreate: $cmd")
         organizationAggregateService.create(cmd)
     }
 
     override fun organizationUpdate(): OrganizationUpdateFunction = f2Function { cmd ->
-        logger.info("organizationUpdate: $cmd")
+        logger.debug("organizationUpdate: $cmd")
         organizationAggregateService.update(cmd, organizationMapper)
     }
 
@@ -61,17 +61,17 @@ class OrganizationFeaturesImpl<MODEL: OrganizationDTO>(
         cmd: OrganizationUploadLogoCommand,
         file: org.springframework.http.codec.multipart.FilePart
     ): OrganizationUploadedLogoEvent {
-        logger.info("organizationUploadLogo: $cmd")
+        logger.debug("organizationUploadLogo: $cmd")
         return organizationAggregateService.uploadLogo(cmd, file.contentByteArray())
     }
 
     override fun organizationDisable(): OrganizationDisableFunction = f2Function { cmd ->
-        logger.info("organizationDisable: $cmd")
+        logger.debug("organizationDisable: $cmd")
         organizationAggregateService.disable(cmd, organizationMapper)
     }
 
     override fun organizationDelete(): OrganizationDeleteFunction = f2Function { cmd ->
-        logger.info("organizationDelete: $cmd")
+        logger.debug("organizationDelete: $cmd")
         organizationAggregateService.delete(cmd)
     }
 }

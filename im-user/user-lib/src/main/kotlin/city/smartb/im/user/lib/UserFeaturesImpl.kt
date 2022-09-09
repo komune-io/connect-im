@@ -31,7 +31,7 @@ class UserFeaturesImpl(
      * Fetch a User by its ID.
      */
     fun userGet(): UserGetFunction = f2Function { query ->
-        logger.info("userGet: $query")
+        logger.debug("userGet: $query")
         userFinderService.userGet(query).let(::UserGetResult)
     }
 
@@ -39,7 +39,7 @@ class UserFeaturesImpl(
      * Fetch a User by its email address.
      */
     fun userGetByEmail(): UserGetByEmailFunction = f2Function { query ->
-        logger.info("userGetByEmail: $query")
+        logger.debug("userGetByEmail: $query")
         userFinderService.userGetByEmail(query.email).let(::UserGetByEmailResult)
     }
 
@@ -47,7 +47,7 @@ class UserFeaturesImpl(
      * Check if a User exists by its email address.
      */
     fun userExistsByEmail(): UserExistsByEmailFunction = f2Function { query ->
-        logger.info("userExistsByEmail: $query")
+        logger.debug("userExistsByEmail: $query")
         UserExistsByEmailResult(
             item = userFinderService.userGetByEmail(query.email) != null
         )
@@ -57,7 +57,7 @@ class UserFeaturesImpl(
      * Fetch a page of users.
      */
     fun userPage(): UserPageFunction = f2Function { query ->
-        logger.info("userPage: $query")
+        logger.debug("userPage: $query")
         userFinderService.userPage(query)
     }
 
@@ -65,7 +65,7 @@ class UserFeaturesImpl(
      * Create a User.
      */
     fun userCreate(): UserCreateFunction = f2Function { cmd ->
-        logger.info("userCreate: $cmd")
+        logger.debug("userCreate: $cmd")
         userAggregateService.create(cmd)
     }
 
@@ -73,7 +73,7 @@ class UserFeaturesImpl(
      * Update a User.
      */
     fun userUpdate(): UserUpdateFunction = f2Function { cmd ->
-        logger.info("userUpdate: $cmd")
+        logger.debug("userUpdate: $cmd")
         userAggregateService.update(cmd)
     }
 
@@ -81,7 +81,7 @@ class UserFeaturesImpl(
      * Send a reset password email to a given user.
      */
     fun userResetPassword(): UserResetPasswordFunction = f2Function { cmd ->
-        logger.info("userResetPassword: $cmd")
+        logger.debug("userResetPassword: $cmd")
         userAggregateService.resetPassword(cmd)
     }
 
@@ -89,7 +89,7 @@ class UserFeaturesImpl(
      * Set the given email for a given user.
      */
     fun userUpdateEmail(): UserUpdateEmailFunction = f2Function { cmd ->
-        logger.info("userUpdateEmail: $cmd")
+        logger.debug("userUpdateEmail: $cmd")
         userAggregateService.updateEmail(cmd)
     }
 
@@ -97,7 +97,7 @@ class UserFeaturesImpl(
      * Set the given password for a given user ID.
      */
     fun userUpdatePassword(): UserUpdatePasswordFunction = f2Function { cmd ->
-        logger.info("userUpdatePassword: $cmd")
+        logger.debug("userUpdatePassword: $cmd")
         userAggregateService.updatePassword(cmd)
     }
 
@@ -108,7 +108,7 @@ class UserFeaturesImpl(
 //        @RequestPart("command") cmd: UserUploadLogoCommand,
 //        @RequestPart("file") file: FilePart
 //    ): UserUploadedLogoEvent {
-//        logger.info("userUploadLogo: $cmd")
+//        logger.debug("userUploadLogo: $cmd")
 //        return userAggregateService.uploadLogo(cmd, file.contentByteArray())
 //    }
 
@@ -116,7 +116,7 @@ class UserFeaturesImpl(
      * Disable a user.
      */
     fun userDisable(): UserDisableFunction = f2Function { cmd ->
-        logger.info("userDisable: $cmd")
+        logger.debug("userDisable: $cmd")
         userAggregateService.disable(cmd)
     }
 
@@ -124,7 +124,7 @@ class UserFeaturesImpl(
      * Delete a user.
      */
     fun userDelete(): UserDeleteFunction = f2Function { cmd ->
-        logger.info("userDelete: $cmd")
+        logger.debug("userDelete: $cmd")
         userAggregateService.delete(cmd)
     }
 }

@@ -19,7 +19,7 @@ class RedisCache(
     }
 
     suspend fun <T> evictIfPresent(cacheName: CacheName, vararg id: String, exec: suspend () -> T): T {
-        logger.info("Cache[$cacheName] - evict[${id}]")
+        logger.debug("Cache[$cacheName] - evict[${id}]")
         val key = SimpleKey(id)
         return exec().also {
             getCache(cacheName)?.evictIfPresent(key)
@@ -31,10 +31,10 @@ class RedisCache(
             val key = SimpleKey(objectId)
             val value = cache.get(key)?.get() as String?
             if (value != null) {
-                logger.info("Cache[$cacheName] - id[${objectId.joinToString(", ")} - $key] found in cache")
+                logger.debug("Cache[$cacheName] - id[${objectId.joinToString(", ")} - $key] found in cache")
                 objectMapper.readValue(value)
             } else {
-                logger.info("Cache[$cacheName] - id[$key] not found in cache")
+                logger.debug("Cache[$cacheName] - id[$key] not found in cache")
                 fetch()?.also { newVal ->
                     putInCache<T>(newVal, cache, key)
                 }

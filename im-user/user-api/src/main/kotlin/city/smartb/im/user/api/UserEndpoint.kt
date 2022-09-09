@@ -106,7 +106,7 @@ class UserEndpoint(
 //        @RequestPart("command") cmd: UserUploadLogoCommand,
 //        @RequestPart("file") file: FilePart
 //    ): UserUploadedLogoEvent {
-//        logger.info("userUploadLogo: $cmd")
+//        logger.debug("userUploadLogo: $cmd")
 //        return userAggregateService.uploadLogo(cmd, file.contentByteArray())
 //    }
 
