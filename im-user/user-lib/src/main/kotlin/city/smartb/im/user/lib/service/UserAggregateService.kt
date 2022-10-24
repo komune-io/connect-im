@@ -303,6 +303,7 @@ class UserAggregateService(
             lastname = familyName,
             email = email,
             password = password,
+            isPasswordTemporary = isPasswordTemporary,
             isEnable = true,
             isEmailVerified = isEmailVerified,
             attributes = attributes.orEmpty().plus(listOfNotNull(

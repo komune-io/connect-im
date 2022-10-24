@@ -34,6 +34,7 @@ interface UserCreateCommandDTO: Command {
     val memberOf: OrganizationId?
     val attributes: Map<String, String>?
     val isEmailVerified: Boolean
+    val isPasswordTemporary: Boolean
 }
 
 /**
@@ -103,7 +104,13 @@ data class UserCreateCommand(
      * False if the user has to verify their email.
      * @example true
      */
-    override val isEmailVerified: Boolean
+    override val isEmailVerified: Boolean,
+
+    /**
+     * True if the given password is temporary and has to be redefined on first login.
+     * @example false
+     */
+    override val isPasswordTemporary: Boolean = false
 ): UserCreateCommandDTO
 
 @JsExport

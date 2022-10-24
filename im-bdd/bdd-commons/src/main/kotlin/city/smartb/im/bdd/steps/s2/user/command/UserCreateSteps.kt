@@ -12,8 +12,8 @@ import city.smartb.im.user.domain.features.command.UserCreateCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.UUID
 
 class UserCreateSteps: En, CucumberStepsDefinition() {
     @Autowired
@@ -146,4 +146,3 @@ class UserCreateSteps: En, CucumberStepsDefinition() {
         return command.attributes.orEmpty().plus("memberOf" to memberOf)
     }
 }
-
