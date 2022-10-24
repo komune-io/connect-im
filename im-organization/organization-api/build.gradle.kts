@@ -8,7 +8,7 @@ dependencies {
     implementation(project(":im-api:api-config"))
 
     implementation("city.smartb.f2:f2-spring-boot-starter-function:${Versions.f2}")
-    implementation("city.smartb.i2:group-domain:${Versions.i2}")
+    implementation("city.smartb.i2:i2-group-domain:${Versions.i2}")
 
 
     api(project(":im-organization:organization-lib"))

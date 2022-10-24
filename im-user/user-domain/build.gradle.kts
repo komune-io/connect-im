@@ -7,6 +7,6 @@ dependencies {
     commonMainApi(project(":im-organization:organization-domain"))
     commonMainApi(project(":im-commons:im-commons-domain"))
 
-    commonMainApi("city.smartb.i2:user-domain:${Versions.i2}")
+    commonMainApi("city.smartb.i2:i2-user-domain:${Versions.i2}")
     Dependencies.Mpp.f2(::commonMainApi)
 }
