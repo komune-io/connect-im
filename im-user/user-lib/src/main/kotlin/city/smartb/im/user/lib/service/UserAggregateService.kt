@@ -164,8 +164,8 @@ class UserAggregateService(
                 userId = command.id,
                 email = command.email,
                 sendVerificationEmail = command.sendVerificationEmail,
-                clientId = auth.clientId.takeUnless { auth.redirectUrl.isBlank() },
-                redirectUri = auth.redirectUrl.ifBlank { null },
+                clientId = auth.clientId.takeUnless { auth.redirectUrl?.isBlank() ?: false },
+                redirectUri = auth.redirectUrl?.ifBlank { null },
                 realmId = auth.realmId,
                 auth = auth
             ).invokeWith(keycloakUserUpdateEmailFunction)
@@ -271,8 +271,8 @@ class UserAggregateService(
         val auth = authenticationResolver.getAuth()
         UserEmailSendActionsCommand(
             userId = userId,
-            clientId = auth.clientId.takeUnless { auth.redirectUrl.isBlank() },
-            redirectUri = auth.redirectUrl.ifBlank { null },
+            clientId = auth.clientId.takeUnless { auth.redirectUrl?.isBlank() ?: false },
+            redirectUri = auth.redirectUrl?.ifBlank { null },
             actions = actions.toList(),
             realmId = auth.realmId,
             auth = auth
