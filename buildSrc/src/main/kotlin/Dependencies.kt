@@ -33,6 +33,7 @@ object Dependencies {
 		fun f2(scope: Scope) = scope.add(
 			"city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}"
 		)
+
 		fun ktor(scope: Scope) = scope.add(
 			"io.ktor:ktor-client-core:${Versions.ktor}",
 			"io.ktor:ktor-client-content-negotiation:${Versions.ktor}",
