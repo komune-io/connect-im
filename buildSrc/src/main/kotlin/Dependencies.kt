@@ -14,21 +14,18 @@ object PluginVersions {
 object Versions {
 	val f2 = PluginVersions.fixers
 	val s2 = PluginVersions.fixers
-	val i2 = "next-SNAPSHOT"
+	val i2 = PluginVersions.fixers
 
-	val fs = "0.10.1"
+	val fs = PluginVersions.fixers
 
-	const val ktor = "2.0.3"
+	const val ktor = FixersVersions.Kotlin.ktor
 
 	const val springBoot = PluginVersions.springBoot
 	const val springData = FixersVersions.Spring.data
-	const val springOauth2 = "5.6.0"
 
 	const val kdatetime = "0.1.1"
 	const val keycloak = "18.0.0"
 	const val mockito = "4.6.1"
-
-	const val testcontainers = FixersVersions.Test.testcontainers
 }
 
 object Dependencies {

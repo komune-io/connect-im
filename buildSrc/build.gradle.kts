@@ -9,5 +9,5 @@ repositories {
 }
 
 dependencies {
-    implementation("city.smartb.fixers.gradle:dependencies:0.10.0")
+    implementation("city.smartb.fixers.gradle:dependencies:experimental-SNAPSHOT")
 }

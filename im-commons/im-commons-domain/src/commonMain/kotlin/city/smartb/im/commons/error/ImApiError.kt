@@ -1,13 +1,11 @@
 package city.smartb.im.commons.error
 
-import f2.dsl.cqrs.error.ErrorSeverityError
-
 class ImApiError(
-	override val description: String,
-	override val payload: Map<String, String>,
+	id: String,
+	timestamp: String,
+	code: Int,
+	message: String,
+	requestId: String? = null
 ): ImError(
-	type = ImApiError::class.simpleName!!,
-	severity = ErrorSeverityError(),
-	description = description,
-	payload = payload,
+	id, timestamp, code, message, requestId
 )
