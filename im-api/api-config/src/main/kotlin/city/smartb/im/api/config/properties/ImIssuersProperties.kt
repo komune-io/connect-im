@@ -2,10 +2,10 @@ package city.smartb.im.api.config.properties
 
 import city.smartb.i2.spring.boot.auth.config.I2TrustedIssuerProperties
 
-class ImIssuersProperties(
-    name: String,
-    authUrl: String,
-    realm: String,
+data class ImIssuersProperties(
+    override val name: String,
+    override val authUrl: String,
+    override val realm: String,
     val im: ImIssuersClientProperties
 ): I2TrustedIssuerProperties(
     name = name,
@@ -13,8 +13,7 @@ class ImIssuersProperties(
     realm = realm
 )
 
-class ImIssuersClientProperties(
+data class ImIssuersClientProperties(
     val clientId: String,
     val clientSecret: String,
-    val redirectUrl: String?
 )

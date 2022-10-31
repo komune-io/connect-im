@@ -4,8 +4,8 @@ server:
 spring:
   main:
     web-application-type: reactive
-  redis:
-    password: redis
+#  redis:
+#    password: redis
   cache:
     cache-names: "organization, user"
 

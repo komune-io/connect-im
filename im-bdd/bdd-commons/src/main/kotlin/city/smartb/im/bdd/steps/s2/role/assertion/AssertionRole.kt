@@ -9,14 +9,13 @@ import f2.dsl.fnc.invoke
 import i2.keycloak.master.domain.RealmId
 import org.assertj.core.api.Assertions
 
-fun AssertionBdd.role(api: RoleQueryApi, realmId: RealmId) = AssertionRole(api, realmId)
+fun AssertionBdd.role(api: RoleQueryApi) = AssertionRole(api)
 
 class AssertionRole(
     val api: RoleQueryApi,
-    val realmId: RealmId
 ) {
     suspend fun assertThat(id: RoleId): RoleAssert {
-        val role = api.roleGetById().invoke(RoleGetByIdQuery(id = id, realmId = realmId)).item!!
+        val role = api.roleGetById().invoke(RoleGetByIdQuery(id = id)).item!!
         return assertThat(role)
     }
     fun assertThat(entity: RoleModel) = RoleAssert(entity)

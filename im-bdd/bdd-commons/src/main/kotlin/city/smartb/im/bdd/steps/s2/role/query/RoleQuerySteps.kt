@@ -34,9 +34,9 @@ class RoleQuerySteps : En, CucumberStepsDefinition() {
 
     private suspend fun checkRole(params: RoleCheckParams) {
         if (params.id != null) {
-            role = roleFinderService.getById(RoleGetByIdQuery(params.id, context.realmId)).item
+            role = roleFinderService.getById(RoleGetByIdQuery(params.id)).item
         } else if (params.name != null) {
-            role = roleFinderService.getByName(RoleGetByNameQuery(params.name, context.realmId)).item
+            role = roleFinderService.getByName(RoleGetByNameQuery(params.name)).item
         }
     }
 

@@ -46,7 +46,7 @@ class RoleFinderService(
         val auth = authenticationResolver.getAuth()
         val realmClient = AuthRealmClientBuilder().build(auth)
         return try {
-            realmClient.getRoleResource(query.realmId, query.name)
+            realmClient.getRoleResource(auth.realmId, query.name)
                 .toRepresentation()
                 .asModel()
                 .let(::RoleGetByNameResult)

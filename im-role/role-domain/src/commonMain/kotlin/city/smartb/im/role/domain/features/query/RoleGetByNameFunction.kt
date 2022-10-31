@@ -13,13 +13,11 @@ typealias RoleGetByNameFunction = F2Function<RoleGetByNameQuery, RoleGetByNameRe
 @JsExport
 @JsName("RoleGetByNameQueryDTO")
 interface RoleGetByNameQueryDTO {
-    val realmId: RealmId
     val name: RoleName
 }
 
 @JsName("RoleGetByNameQuery")
 class RoleGetByNameQuery(
-    override val realmId: RealmId,
     override val name: RoleName
 ): RoleGetByNameQueryDTO
 

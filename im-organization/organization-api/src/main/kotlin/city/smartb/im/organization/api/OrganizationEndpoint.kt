@@ -74,7 +74,7 @@ class OrganizationEndpoint(
      * Create an organization.
      */
     @Bean
-    @RolesAllowed(city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE)
+    @RolesAllowed(SUPER_ADMIN_ROLE)
     fun organizationCreate(): OrganizationCreateFunction = organizationFeatures.organizationCreate()
 
     /**

@@ -20,14 +20,14 @@ class OrganizationClient<MODEL: OrganizationDTO>(
     generateBearerToken: suspend () -> String? = { null }
 ): ClientJvm(url, generateBearerToken) {
 
-    suspend fun organizationGet(queries: List<OrganizationGetQuery>):
-            List<OrganizationGetResult<MODEL>> = post("organizationGet",  queries)
+    suspend inline fun <OUT : MODEL> organizationGet(queries: List<OrganizationGetQuery>):
+            List<OrganizationGetResult<OUT>> = post("organizationGet",  queries)
 
     suspend fun organizationGetFromInsee(queries: List<OrganizationGetFromInseeQuery>):
             List<OrganizationGetFromInseeResult> = post("organizationGetFromInsee", queries)
 
-    suspend fun organizationPage(queries: List<OrganizationPageQuery>):
-            List<OrganizationPageResult<MODEL>> = post("organizationPage", queries)
+    suspend fun <OUT : MODEL> organizationPage(queries: List<OrganizationPageQuery>):
+            List<OrganizationPageResult<OUT>> = post("organizationPage", queries)
 
     suspend fun organizationRefList(queries: List<OrganizationRefListQuery>):
             List<OrganizationRefListResult> = post("organizationRefList", queries)

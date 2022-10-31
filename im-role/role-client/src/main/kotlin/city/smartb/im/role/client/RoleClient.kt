@@ -7,6 +7,9 @@ import city.smartb.im.role.domain.features.command.RoleCreateCommand
 import city.smartb.im.role.domain.features.command.RoleCreatedEvent
 import city.smartb.im.role.domain.features.command.RoleUpdateCommand
 import city.smartb.im.role.domain.features.command.RoleUpdatedEvent
+import city.smartb.im.role.domain.features.query.RoleGetByIdQuery
+import city.smartb.im.role.domain.features.query.RoleGetByNameQuery
+import city.smartb.im.role.domain.features.query.RoleGetByNameResult
 
 class RoleClient(
     url: String,
@@ -21,4 +24,12 @@ class RoleClient(
 
     suspend fun roleUpdate(commands: List<RoleUpdateCommand>):
             List<RoleUpdatedEvent> = post("roleUpdate", commands)
+
+
+    suspend fun roleGetById(commands: List<RoleGetByIdQuery>):
+            List<RoleGetByIdQuery> = post("roleGetById", commands)
+
+    suspend fun roleGetByName(commands: List<RoleGetByNameQuery>):
+            List<RoleGetByNameResult> = post("roleGetByName", commands)
+
 }

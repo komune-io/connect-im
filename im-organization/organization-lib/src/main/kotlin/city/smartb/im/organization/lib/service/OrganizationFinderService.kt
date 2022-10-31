@@ -102,7 +102,7 @@ class OrganizationFinderService<MODEL : OrganizationDTO>(
             search = search,
             role = role,
             attributes = attributes.orEmpty(),
-            withDisabled = withDisabled,
+            withDisabled = withDisabled ?: false,
             page = PagePagination(
                 page = page,
                 size = size

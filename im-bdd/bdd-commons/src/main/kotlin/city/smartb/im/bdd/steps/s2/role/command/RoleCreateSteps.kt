@@ -60,7 +60,7 @@ class RoleCreateSteps: En, CucumberStepsDefinition() {
         Then("The role should be created") {
             step {
                 val roleId = context.roleIds.lastUsed
-                AssertionBdd.role(roleQueryApi, context.realmId).assertThat(roleId).hasFields(
+                AssertionBdd.role(roleQueryApi).assertThat(roleId).hasFields(
                     name = command.name,
                     description = command.description,
                     isClientRole = command.isClientRole

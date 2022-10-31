@@ -19,9 +19,9 @@ class ImConfig {
 
     @Bean
     @ConditionalOnMissingBean(ImAuthenticationProvider::class)
-    fun imAuthenticationProvider(imProperties: ImProperties): ImAuthenticationProvider
-        = ImAuthenticationProviderImpl(imProperties)
-
+    fun imAuthenticationProvider(imProperties: ImProperties): ImAuthenticationProvider {
+        return ImAuthenticationProviderImpl(imProperties)
+    }
     @Bean
     fun authRealmJacksonDeserializer(): ObjectMapper = jacksonObjectMapper().also { mapper ->
         val module = SimpleModule()

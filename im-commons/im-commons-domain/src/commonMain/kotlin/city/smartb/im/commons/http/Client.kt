@@ -17,7 +17,7 @@ open class Client(
     httpClientBuilder: ClientBuilder,
     protected open var generateBearerToken: suspend () -> String? = { null },
 ) {
-    protected val client = httpClientBuilder.build()
+    val client = httpClientBuilder.build()
 
     protected suspend inline fun <reified T> get(path: String, withAuth: Boolean = true): T {
         println("GET $path")
@@ -26,7 +26,7 @@ open class Client(
         }.body()
     }
 
-    protected suspend inline fun <reified T> post(path: String, jsonBody: Any, withAuth: Boolean = true): T {
+    suspend inline fun <reified T> post(path: String, jsonBody: Any, withAuth: Boolean = true): T {
         println("POST json $path")
         return client.post {
             jsonSetup(path, jsonBody, withAuth)
@@ -54,7 +54,7 @@ open class Client(
         }.body()
     }
 
-    protected suspend fun HttpRequestBuilder.jsonSetup(path: String, jsonBody: Any, withAuth: Boolean) {
+    suspend fun HttpRequestBuilder.jsonSetup(path: String, jsonBody: Any, withAuth: Boolean) {
         basicSetup(path, withAuth)
         header("Content-Type", ContentType.Application.Json)
         setBody(jsonBody)

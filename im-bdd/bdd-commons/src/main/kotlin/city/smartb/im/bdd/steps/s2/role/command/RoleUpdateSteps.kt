@@ -10,7 +10,6 @@ import city.smartb.im.role.api.service.RoleAggregateService
 import city.smartb.im.role.domain.features.command.RoleUpdateCommand
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 
 class RoleUpdateSteps: En, CucumberStepsDefinition() {
@@ -60,7 +59,7 @@ class RoleUpdateSteps: En, CucumberStepsDefinition() {
         Then("The role should be updated") {
             step {
                 val roleId = context.roleIds.lastUsed
-                AssertionBdd.role(roleQueryApi, context.realmId).assertThat(roleId).hasFields(
+                AssertionBdd.role(roleQueryApi).assertThat(roleId).hasFields(
                     name = command.name,
                     description = command.description,
                     isClientRole = command.isClientRole,

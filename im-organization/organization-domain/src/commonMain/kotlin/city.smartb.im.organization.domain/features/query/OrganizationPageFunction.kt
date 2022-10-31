@@ -24,7 +24,7 @@ interface OrganizationPageQueryDTO: Query {
 	val search: String?
 	val role: String?
 	val attributes: Map<String, String>?
-	val withDisabled: Boolean
+	val withDisabled: Boolean?
 	val page: Int?
 	val size: Int?
 }
@@ -54,7 +54,7 @@ data class OrganizationPageQuery(
 	 * If false, filter out the disabled organizations. (default: false)
 	 * @example false
 	 */
-	override val withDisabled: Boolean = false,
+	override val withDisabled: Boolean? = false,
 
 	/**
 	 * Number of the page.
