@@ -16,5 +16,5 @@ val imGroupAttributes = listOf(
 fun GroupModel.toOrganizationRef() = OrganizationRef(
     id = id,
     name = name,
-    roles = roles
+    roles = roles.assignedRoles
 )

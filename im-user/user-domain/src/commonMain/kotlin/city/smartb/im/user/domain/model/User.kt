@@ -4,7 +4,7 @@ import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.AddressDTO
 import city.smartb.im.organization.domain.model.OrganizationRef
 import city.smartb.im.organization.domain.model.OrganizationRefDTO
-import i2.keycloak.f2.user.domain.model.UserRoles
+import i2.keycloak.f2.role.domain.RolesCompositesModel
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
@@ -27,7 +27,7 @@ interface UserDTO {
     val familyName: String
     val address: AddressDTO?
     val phone: String?
-    val roles: UserRoles
+    val roles: RolesCompositesModel
     val attributes: Map<String, String>
     val enabled: Boolean
     val disabledBy: UserId?
@@ -84,7 +84,7 @@ data class User(
     /**
      * Roles of the user.
      */
-    override val roles: UserRoles,
+    override val roles: RolesCompositesModel,
 
     /**
      * Platform-specific attributes assigned to the user

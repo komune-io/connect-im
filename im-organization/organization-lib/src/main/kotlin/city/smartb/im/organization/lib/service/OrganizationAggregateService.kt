@@ -121,7 +121,7 @@ class OrganizationAggregateService<MODEL: OrganizationDTO>(
                 description = "",
                 address = (null as Address?).orEmpty(),
                 website = "",
-                roles = organization.roles,
+                roles = organization.roles?.assignedRoles,
                 attributes = command.attributes.orEmpty().plus(listOf(
                     Organization::disabledBy.name to command.disabledBy.orEmpty(),
                     Organization::disabledDate.name to System.currentTimeMillis().toString()
