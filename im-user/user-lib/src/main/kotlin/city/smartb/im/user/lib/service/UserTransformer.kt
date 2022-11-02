@@ -36,7 +36,6 @@ class UserTransformer(
 			User::disabledBy.name,
 			User::disabledDate.name,
 			User::phone.name,
-			User::sendEmailLink.name
 		)
 
 		val attributes = user.attributes.filterKeys { key -> key !in imAttributes }
@@ -51,7 +50,6 @@ class UserTransformer(
 			phone = user.attributes[User::phone.name],
 			roles = user.roles,
 			attributes = attributes,
-			sendEmailLink = user.attributes[User::sendEmailLink.name].toBoolean(),
 			enabled = user.enabled,
 			disabledBy = user.attributes[User::disabledBy.name],
 			creationDate = user.creationDate,

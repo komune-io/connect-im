@@ -29,7 +29,6 @@ interface UserDTO {
     val phone: String?
     val roles: UserRoles
     val attributes: Map<String, String>
-    val sendEmailLink: Boolean?
     val enabled: Boolean
     val disabledBy: UserId?
     val creationDate: Long
@@ -92,12 +91,6 @@ data class User(
      * @example { "age": "42" }
      */
     override val attributes: Map<String, String>,
-
-    /**
-     * Send a validation email to the user on subscription.
-     * @example true
-     */
-    override val sendEmailLink: Boolean?,
 
     /**
      * Specifies if the user is enabled or not.

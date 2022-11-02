@@ -30,11 +30,12 @@ interface UserCreateCommandDTO: Command {
     val address: Address?
     val phone: String?
     val roles: List<String>
-    val sendEmailLink: Boolean
     val memberOf: OrganizationId?
     val attributes: Map<String, String>?
     val isEmailVerified: Boolean
     val isPasswordTemporary: Boolean
+    val sendResetPassword: Boolean
+    val sendVerifyEmail: Boolean
 }
 
 /**
@@ -84,12 +85,6 @@ data class UserCreateCommand(
     override val roles: List<String>,
 
     /**
-     * Send a validation email to the user.
-     * @example [city.smartb.im.user.domain.model.User.sendEmailLink]
-     */
-    override val sendEmailLink: Boolean,
-
-    /**
      * Organization to which the user belongs.
      */
     override val memberOf: OrganizationId?,
@@ -110,7 +105,17 @@ data class UserCreateCommand(
      * True if the given password is temporary and has to be redefined on first login.
      * @example false
      */
-    override val isPasswordTemporary: Boolean = false
+    override val isPasswordTemporary: Boolean = false,
+
+    /**
+     * Send a reset_password email to the newly created user.
+     */
+    override val sendResetPassword: Boolean,
+
+    /**
+     * Send a verify_email email to the newly created user.
+     */
+    override val sendVerifyEmail: Boolean,
 ): UserCreateCommandDTO
 
 @JsExport

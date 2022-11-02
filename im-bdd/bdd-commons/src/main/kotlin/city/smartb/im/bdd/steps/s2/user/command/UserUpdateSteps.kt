@@ -12,9 +12,9 @@ import city.smartb.im.user.domain.features.command.UserUpdateCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import java.util.UUID
 import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.UUID
 
 class UserUpdateSteps: En, CucumberStepsDefinition() {
     @Autowired
@@ -66,7 +66,6 @@ class UserUpdateSteps: En, CucumberStepsDefinition() {
                     address = command.address,
                     phone = command.phone,
                     roles = command.roles,
-                    sendEmailLink = command.sendEmailLink,
                     memberOf = command.memberOf,
                     attributes = buildAttributesMap(command.attributes, command.memberOf).orEmpty(),
                 )
@@ -89,7 +88,6 @@ class UserUpdateSteps: En, CucumberStepsDefinition() {
             address = params.address,
             phone = params.phone,
             roles = params.roles,
-            sendEmailLink = params.sendEmailLink,
             memberOf = params.memberOf,
             attributes = params.attributes,
         )
@@ -109,7 +107,6 @@ class UserUpdateSteps: En, CucumberStepsDefinition() {
             ),
             phone = entry?.get("phone") ?: "0600000000",
             roles = listOfNotNull(context.roleIds.lastUsedOrNull),
-            sendEmailLink = false,
             memberOf = entry?.get("memberOf").parseNullableOrDefault(context.organizationIds.lastUsedOrNull),
             attributes = userAttributesParams(entry),
         )
@@ -122,7 +119,6 @@ class UserUpdateSteps: En, CucumberStepsDefinition() {
         val address: Address?,
         val phone: String?,
         val roles: List<String>,
-        val sendEmailLink: Boolean,
         val memberOf: OrganizationId?,
         val attributes: Map<String, String>,
     )
@@ -139,4 +135,3 @@ class UserUpdateSteps: En, CucumberStepsDefinition() {
         return command.attributes.orEmpty().plus("memberOf" to memberOf)
     }
 }
-

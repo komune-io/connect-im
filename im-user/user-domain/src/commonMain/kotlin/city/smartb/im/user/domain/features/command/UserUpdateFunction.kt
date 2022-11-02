@@ -52,12 +52,6 @@ interface UserUpdateCommandDTO: Command {
     val phone: String?
 
     /**
-     * Send a validation email to the user.
-     * @example [city.smartb.im.user.domain.model.User.sendEmailLink]
-     */
-    val sendEmailLink: Boolean
-
-    /**
      * Organization to which the user belongs.
      */
     val memberOf: OrganizationId?
@@ -85,7 +79,6 @@ data class UserUpdateCommand(
     override val familyName: String,
     override val address: Address?,
     override val phone: String?,
-    override val sendEmailLink: Boolean,
     override val memberOf: OrganizationId?,
     override val roles: List<String>,
     override val attributes: Map<String, String>?

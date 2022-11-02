@@ -53,7 +53,6 @@ class AssertionUser(
             phone: String? = user.phone,
             roles: List<String> = user.roles.assignedRoles,
             attributes: Map<String, String> = user.attributes,
-            sendEmailLink: Boolean? = user.sendEmailLink,
             enabled: Boolean = user.enabled,
             disabledBy: UserId? = user.disabledBy,
             creationDate: Long = user.creationDate,
@@ -65,7 +64,6 @@ class AssertionUser(
             Assertions.assertThat(user.phone).isEqualTo(phone)
             Assertions.assertThat(user.roles.assignedRoles).isEqualTo(roles)
             Assertions.assertThat(user.attributes).isEqualTo(attributes)
-            Assertions.assertThat(user.sendEmailLink).isEqualTo(sendEmailLink)
             Assertions.assertThat(user.enabled).isEqualTo(enabled)
             Assertions.assertThat(user.creationDate).isEqualTo(creationDate)
             Assertions.assertThat(user.memberOf?.id).isEqualTo(memberOf)
@@ -96,7 +94,6 @@ class AssertionUser(
             phone = other.phone,
             roles = other.roles.assignedRoles,
             attributes = other.attributes,
-            sendEmailLink = other.sendEmailLink,
             enabled = other.enabled,
             creationDate = other.creationDate
         )

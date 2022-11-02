@@ -89,13 +89,12 @@ class UserAggregateService(
             setRoles(userId, command.roles)
         }
 
-        if (!command.isEmailVerified) {
-            sendEmail(userId, "VERIFY_EMAIL")
-        }
+        listOfNotNull(
+            "VERIFY_EMAIL".takeIf { command.sendVerifyEmail },
+            "UPDATE_PASSWORD".takeIf { command.sendResetPassword },
+        ).ifEmpty { null }
+            ?.let { sendEmail(userId, *it.toTypedArray()) }
 
-        if (command.sendEmailLink) {
-            sendEmail(userId, "UPDATE_PASSWORD")
-        }
         return UserCreatedEvent(userId)
     }
 
@@ -124,9 +123,6 @@ class UserAggregateService(
             command.memberOf?.let { joinOrganization(command.id, it) }
             setRoles(command.id, command.roles)
 
-            if (command.sendEmailLink) {
-                sendEmail(command.id, "UPDATE_PASSWORD")
-            }
             UserUpdatedEvent(command.id)
         }
 
@@ -195,7 +191,6 @@ class UserAggregateService(
                     familyName = "anonymous",
                     address = (null as Address?).orEmpty(),
                     phone = "",
-                    sendEmailLink = false,
                     memberOf = user.memberOf?.id,
                     roles = user.roles.assignedRoles,
                     attributes = command.attributes.orEmpty().plus(
@@ -309,7 +304,6 @@ class UserAggregateService(
             attributes = attributes.orEmpty().plus(listOfNotNull(
                 address?.let { ::address.name to it.toJson() },
                 phone?.let { ::phone.name to it },
-                ::sendEmailLink.name to sendEmailLink.toJson(),
                 memberOf?.let { ::memberOf.name to it }
             )).toMap(),
             realmId = auth.realmId,

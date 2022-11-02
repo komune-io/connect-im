@@ -66,7 +66,6 @@ class UserCreateSteps: En, CucumberStepsDefinition() {
                     address = command.address,
                     phone = command.phone,
                     roles = command.roles,
-                    sendEmailLink = command.sendEmailLink,
                     memberOf = command.memberOf,
                     attributes = buildAttributesMap(command.attributes, command.memberOf).orEmpty(),
                 )
@@ -89,10 +88,11 @@ class UserCreateSteps: En, CucumberStepsDefinition() {
             address = params.address,
             phone = params.phone,
             roles = params.roles,
-            sendEmailLink = params.sendEmailLink,
             memberOf = params.memberOf,
             attributes = params.attributes,
-            isEmailVerified = params.isEmailVerified
+            isEmailVerified = params.isEmailVerified,
+            sendResetPassword = false,
+            sendVerifyEmail = false
         )
 
         userEndpoint.userCreate().invoke(command).id
