@@ -6,6 +6,7 @@ import city.smartb.im.user.domain.model.UserId
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
+import i2.keycloak.f2.role.domain.RoleName
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
@@ -60,7 +61,7 @@ interface UserUpdateCommandDTO: Command {
      * Add roles to the user.
      * @example [["admin"]]
      */
-    val roles: List<String>
+    val roles: List<RoleName>
 
     /**
      * Additional arbitrary attributes assigned to the user.
@@ -80,7 +81,7 @@ data class UserUpdateCommand(
     override val address: Address?,
     override val phone: String?,
     override val memberOf: OrganizationId?,
-    override val roles: List<String>,
+    override val roles: List<RoleName>,
     override val attributes: Map<String, String>?
 ): UserUpdateCommandDTO
 

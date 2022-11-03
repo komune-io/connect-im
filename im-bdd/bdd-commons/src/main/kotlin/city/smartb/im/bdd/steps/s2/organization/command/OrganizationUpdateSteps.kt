@@ -66,7 +66,7 @@ class OrganizationUpdateSteps: En, CucumberStepsDefinition() {
                     description = command.description ?: organization.description,
                     address = command.address ?: organization.address,
                     website = command.website ?: organization.website,
-                    roles = command.roles ?: organization.roles?.effectiveRoles,
+                    roles = command.roles ?: organization.roles,
                     attributes = command.attributes ?: organization.attributes
                 )
             }

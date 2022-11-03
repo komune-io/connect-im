@@ -5,6 +5,7 @@ import city.smartb.im.commons.utils.toJson
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.lib.model.insee.InseeAddress
 import city.smartb.im.organization.lib.model.insee.InseeOrganization
+import i2.keycloak.f2.role.domain.RolesCompositesModel
 
 fun InseeOrganization.toOrganization() = Organization(
     id = "",
@@ -13,7 +14,10 @@ fun InseeOrganization.toOrganization() = Organization(
     description = null,
     address = adresseEtablissement?.toAddress(),
     website = null,
-    roles = null,
+    roles = emptyList(),
+    rolesComposites = RolesCompositesModel(
+        emptyList(), emptyList()
+    ),
     attributes = mapOf(
         "original" to toJson()
     ),

@@ -51,7 +51,7 @@ class AssertionUser(
             familyName: String = user.familyName,
             address: AddressDTO? = user.address,
             phone: String? = user.phone,
-            roles: List<String> = user.roles.assignedRoles,
+            roles: List<String> = user.roles,
             attributes: Map<String, String> = user.attributes,
             enabled: Boolean = user.enabled,
             disabledBy: UserId? = user.disabledBy,
@@ -62,7 +62,7 @@ class AssertionUser(
             Assertions.assertThat(user.givenName).isEqualTo(givenName)
             Assertions.assertThat(user.familyName).isEqualTo(familyName)
             Assertions.assertThat(user.phone).isEqualTo(phone)
-            Assertions.assertThat(user.roles.assignedRoles).isEqualTo(roles)
+            Assertions.assertThat(user.roles).isEqualTo(roles)
             Assertions.assertThat(user.attributes).isEqualTo(attributes)
             Assertions.assertThat(user.enabled).isEqualTo(enabled)
             Assertions.assertThat(user.creationDate).isEqualTo(creationDate)
@@ -82,7 +82,7 @@ class AssertionUser(
             Assertions.assertThat(user.givenName).isEqualTo("anonymous")
             Assertions.assertThat(user.familyName).isEqualTo("anonymous")
             Assertions.assertThat(user.phone).isEqualTo("")
-            Assertions.assertThat(user.roles.assignedRoles).isEqualTo(user.roles.assignedRoles)
+            Assertions.assertThat(user.roles).isEqualTo(user.roles)
         }
 
         fun matches(other: User) = hasFields(
@@ -92,7 +92,7 @@ class AssertionUser(
             familyName = other.familyName,
             address = other.address,
             phone = other.phone,
-            roles = other.roles.assignedRoles,
+            roles = other.roles,
             attributes = other.attributes,
             enabled = other.enabled,
             creationDate = other.creationDate

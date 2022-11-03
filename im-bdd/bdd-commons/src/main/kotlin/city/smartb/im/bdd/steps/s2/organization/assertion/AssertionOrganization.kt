@@ -42,7 +42,7 @@ class AssertionOrganization(
             address: Address? = organization.address,
             website: String? = organization.website,
             attributes: Map<String, String> = organization.attributes,
-            roles: List<String>? = organization.roles?.effectiveRoles,
+            roles: List<String>? = organization.roles,
             enabled: Boolean = organization.enabled,
             creationDate: Long = organization.creationDate
         ) = also {
@@ -70,7 +70,7 @@ class AssertionOrganization(
             address = other.address,
             website = other.website,
             attributes = other.attributes,
-            roles = other.roles?.effectiveRoles,
+            roles = other.roles,
             enabled = other.enabled,
             creationDate = other.creationDate
         )

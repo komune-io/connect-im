@@ -192,7 +192,7 @@ class UserAggregateService(
                     address = (null as Address?).orEmpty(),
                     phone = "",
                     memberOf = user.memberOf?.id,
-                    roles = user.roles.assignedRoles,
+                    roles = user.roles,
                     attributes = command.attributes.orEmpty().plus(
                         listOf(
                             User::disabledBy.name to command.disabledBy.orEmpty(),
