@@ -1,7 +1,7 @@
 package city.smartb.im.organization.api
 
-import city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE
-import city.smartb.im.api.config.Roles
+import city.smartb.im.commons.auth.policies.verify
+import city.smartb.im.organization.api.policies.OrganizationPoliciesEnforcer
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDeleteFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDisableFunction
@@ -14,15 +14,12 @@ import city.smartb.im.organization.domain.features.query.OrganizationPageFunctio
 import city.smartb.im.organization.domain.features.query.OrganizationRefListFunction
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.lib.OrganizationFeaturesImpl
-import city.smartb.im.organization.lib.service.OrganizationAggregateService
-import city.smartb.im.organization.lib.service.OrganizationFinderService
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
-import javax.annotation.security.RolesAllowed
+import org.springframework.stereotype.Service
 
 /**
  * @d2 service
@@ -30,64 +27,67 @@ import javax.annotation.security.RolesAllowed
  */
 @RestController
 @RequestMapping
-@Configuration
+@Service
 class OrganizationEndpoint(
-    organizationFinderService: OrganizationFinderService<Organization>,
-    organizationAggregateService: OrganizationAggregateService<Organization>,
+    private val organizationFeatures: OrganizationFeaturesImpl<Organization>,
+    private val organizationPoliciesEnforcer: OrganizationPoliciesEnforcer,
 ) {
-
-    private val organizationFeatures = OrganizationFeaturesImpl(
-        organizationFinderService,
-        organizationAggregateService,
-        OrganizationMapperImpl()
-    )
 
     /**
      * Fetch an Organization by its ID.
      */
     @Bean
-    @RolesAllowed(Roles.READ_ORGANIZATION)
-    fun organizationGet(): OrganizationGetFunction<Organization> = organizationFeatures.organizationGet()
+    fun organizationGet(): OrganizationGetFunction<Organization> = verify(organizationFeatures.organizationGet()) { query ->
+        organizationPoliciesEnforcer.checkGet(query.id)
+    }
 
     /**
      * Fetch an Organization by its siret number from the Insee Sirene API.
      */
     @Bean
-    @RolesAllowed(Roles.READ_ORGANIZATION)
-    fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = organizationFeatures.organizationGetFromInsee()
+    fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = verify(organizationFeatures.organizationGetFromInsee()) { query ->
+        organizationPoliciesEnforcer.checkList()
+    }
+
 
     /**
      * Fetch a page of organizations.
      */
     @Bean
-    @RolesAllowed(Roles.READ_ORGANIZATION)
-    fun organizationPage(): OrganizationPageFunction<Organization> = organizationFeatures.organizationPage()
+    fun organizationPage(): OrganizationPageFunction<Organization> = verify(organizationFeatures.organizationPage()) { query ->
+        organizationPoliciesEnforcer.checkPage()
+    }
+
 
     /**
      * Fetch all OrganizationRef.
      */
     @Bean
-    @RolesAllowed(Roles.READ_ORGANIZATION)
-    fun organizationRefList(): OrganizationRefListFunction = organizationFeatures.organizationRefList()
+    fun organizationRefList(): OrganizationRefListFunction = verify(organizationFeatures.organizationRefList()) { query ->
+        organizationPoliciesEnforcer.checkRefList()
+    }
 
     /**
      * Create an organization.
      */
     @Bean
-    @RolesAllowed(SUPER_ADMIN_ROLE)
-    fun organizationCreate(): OrganizationCreateFunction = organizationFeatures.organizationCreate()
+    fun organizationCreate(): OrganizationCreateFunction = verify(organizationFeatures.organizationCreate()) { command ->
+        organizationPoliciesEnforcer.checkCreate()
+    }
 
-    /**
+
+        /**
      * Update an organization.
      */
     @Bean
-    @RolesAllowed(Roles.WRITE_ORGANIZATION)
-    fun organizationUpdate(): OrganizationUpdateFunction = organizationFeatures.organizationUpdate()
+    fun organizationUpdate(): OrganizationUpdateFunction = verify(organizationFeatures.organizationUpdate()) { command ->
+        organizationPoliciesEnforcer.checkUpdate(command.id)
+    }
 
-    /**
+
+        /**
      * Upload a logo for a given organization
      */
-    @RolesAllowed(Roles.WRITE_ORGANIZATION)
     @PostMapping("/organizationUploadLogo")
     suspend fun organizationUploadLogo(
         @RequestPart("command") cmd: OrganizationUploadLogoCommand,
@@ -98,13 +98,17 @@ class OrganizationEndpoint(
      * Disable an organization and its users.
      */
     @Bean
-    @RolesAllowed(Roles.WRITE_ORGANIZATION)
-    fun organizationDisable(): OrganizationDisableFunction = organizationFeatures.organizationDisable()
+    fun organizationDisable(): OrganizationDisableFunction = verify(organizationFeatures.organizationDisable()) { command ->
+        organizationPoliciesEnforcer.checkDisable(command.id)
+    }
 
-    /**
+
+        /**
      * Delete an organization and its users.
      */
     @Bean
-    @RolesAllowed(SUPER_ADMIN_ROLE)
-    fun organizationDelete(): OrganizationDeleteFunction = organizationFeatures.organizationDelete()
+    fun organizationDelete(): OrganizationDeleteFunction = verify(organizationFeatures.organizationDelete()) { command ->
+        organizationPoliciesEnforcer.checkDelete(command.id)
+    }
+
 }

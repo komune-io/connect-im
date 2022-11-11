@@ -1,8 +1,10 @@
 package city.smartb.im.user.api
 
-import city.smartb.i2.spring.boot.auth.PermissionEvaluator
 import city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE
-import city.smartb.im.api.config.Roles
+import city.smartb.im.commons.auth.policies.enforce
+import city.smartb.im.commons.auth.policies.verify
+import city.smartb.im.commons.auth.policies.verifyAfter
+import city.smartb.im.user.api.policies.UserPoliciesEnforcer
 import city.smartb.im.user.domain.features.command.UserCreateFunction
 import city.smartb.im.user.domain.features.command.UserDeleteFunction
 import city.smartb.im.user.domain.features.command.UserDisableFunction
@@ -31,7 +33,7 @@ import javax.annotation.security.RolesAllowed
 @Configuration
 class UserEndpoint(
     private val userFeaturesImpl: UserFeaturesImpl,
-    private val permissionEvaluator: PermissionEvaluator
+    private val policiesEnforcer: UserPoliciesEnforcer,
 ) {
     private val logger by Logger()
 
@@ -39,63 +41,117 @@ class UserEndpoint(
      * Fetch a User by its ID.
      */
     @Bean
-    @RolesAllowed(Roles.READ_USER)
-    fun userGet(): UserGetFunction = userFeaturesImpl.userGet()
+    fun userGet(): UserGetFunction = verifyAfter(userFeaturesImpl.userGet()) { result ->
+        policiesEnforcer.checkGet(result.item)
+    }
+
+        /**
+     * Fetch a User by its email address.
+     */
 
     /**
      * Fetch a User by its email address.
      */
     @Bean
-    @RolesAllowed(Roles.READ_USER)
-    fun userGetByEmail(): UserGetByEmailFunction = userFeaturesImpl.userGetByEmail()
+    fun userGetByEmail(): UserGetByEmailFunction = verify(userFeaturesImpl.userGetByEmail()) { query ->
+        policiesEnforcer.checkGet()
+    }
+
+
+    /**
+     * Check if a User exists by its email address.
+     */
 
     /**
      * Check if a User exists by its email address.
      */
     @Bean
-    @RolesAllowed(Roles.READ_USER)
-    fun userExistsByEmail(): UserExistsByEmailFunction = userFeaturesImpl.userExistsByEmail()
+    fun userExistsByEmail(): UserExistsByEmailFunction = verify(userFeaturesImpl.userExistsByEmail()) { query ->
+        policiesEnforcer.checkGet()
+    }
+
+
+    /**
+     * Fetch a page of users.
+     */
 
     /**
      * Fetch a page of users.
      */
     @Bean
-    @RolesAllowed(Roles.READ_USER)
-    fun userPage(): UserPageFunction = userFeaturesImpl.userPage()
+    fun userPage(): UserPageFunction = enforce(userFeaturesImpl.userPage()) { query ->
+        policiesEnforcer.enforcePage(query)
+    }
+
+
+    /**
+     * Create a User.
+     */
 
     /**
      * Create a User.
      */
     @Bean
-    @RolesAllowed(Roles.WRITE_USER)
-    fun userCreate(): UserCreateFunction = userFeaturesImpl.userCreate()
+    fun userCreate(): UserCreateFunction = verify(userFeaturesImpl.userCreate()) { command ->
+        policiesEnforcer.checkCreate()
+    }
+
+
+    /**
+     * Update a User.
+     */
 
     /**
      * Update a User.
      */
     @Bean
-    @RolesAllowed(Roles.WRITE_USER)
-    fun userUpdate(): UserUpdateFunction = userFeaturesImpl.userUpdate()
+    fun userUpdate(): UserUpdateFunction = verify(userFeaturesImpl.userUpdate()) { command ->
+        policiesEnforcer.checkUpdate(command.id)
+    }
+
+
+    /**
+     * Send a reset password email to a given user.
+     */
 
     /**
      * Send a reset password email to a given user.
      */
     @Bean
-    fun userResetPassword(): UserResetPasswordFunction = userFeaturesImpl.userResetPassword()
+    fun userResetPassword(): UserResetPasswordFunction = verify(userFeaturesImpl.userResetPassword()) { command ->
+        policiesEnforcer.checkUpdate(command.id)
+    }
+
+
+    /**
+     * Set the given email for a given user.
+     */
 
     /**
      * Set the given email for a given user.
      */
     @Bean
-    @RolesAllowed(Roles.WRITE_USER)
-    fun userUpdateEmail(): UserUpdateEmailFunction = userFeaturesImpl.userUpdateEmail()
+    fun userUpdateEmail(): UserUpdateEmailFunction = verify(userFeaturesImpl.userUpdateEmail()) { command ->
+        policiesEnforcer.checkUpdate(command.id)
+    }
+
+
+    /**
+     * Set the given password for a given user ID.
+     */
 
     /**
      * Set the given password for a given user ID.
      */
     @Bean
-    @RolesAllowed(Roles.WRITE_USER)
-    fun userUpdatePassword(): UserUpdatePasswordFunction = userFeaturesImpl.userUpdatePassword()
+    fun userUpdatePassword(): UserUpdatePasswordFunction = verify(userFeaturesImpl.userUpdatePassword()) { command ->
+        policiesEnforcer.checkUpdate(command.id)
+    }
+
+
+    /**
+     * Upload a logo for a given user.
+     */
 
     /**
      * Upload a logo for a given user.
@@ -114,13 +170,17 @@ class UserEndpoint(
      * Disable a user.
      */
     @Bean
-    @RolesAllowed(Roles.WRITE_USER)
-    fun userDisable(): UserDisableFunction = userFeaturesImpl.userDisable()
+    fun userDisable(): UserDisableFunction = verify(userFeaturesImpl.userDisable()) { command ->
+        policiesEnforcer.checkDisable(command.id)
+    }
 
     /**
      * Delete a user.
      */
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
-    fun userDelete(): UserDeleteFunction = userFeaturesImpl.userDelete()
+    fun userDelete(): UserDeleteFunction = verify(userFeaturesImpl.userDelete()) { command ->
+        policiesEnforcer.checkDelete(command.id)
+    }
+
 }

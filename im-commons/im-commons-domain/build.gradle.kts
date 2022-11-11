@@ -6,7 +6,6 @@ plugins {
 dependencies {
     commonMainApi("city.smartb.f2:f2-dsl-cqrs:${Versions.f2}")
     commonMainApi("city.smartb.i2:keycloak-auth-domain:${Versions.i2}")
-
     commonMainApi("org.jetbrains.kotlinx:kotlinx-datetime:${Versions.kdatetime}")
 
 

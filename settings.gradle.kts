@@ -19,6 +19,7 @@ include(
 
 include(
     "im-commons:im-commons-api",
+    "im-commons:im-commons-auth",
     "im-commons:im-commons-domain"
 )
 
