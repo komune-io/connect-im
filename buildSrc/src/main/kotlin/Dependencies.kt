@@ -14,7 +14,7 @@ object PluginVersions {
 object Versions {
 	val f2 = PluginVersions.fixers
 	val s2 = PluginVersions.fixers
-	val i2 = "next-SNAPSHOT"
+	val i2 = PluginVersions.fixers
 
 	val fs = PluginVersions.fixers
 
@@ -80,8 +80,7 @@ object Dependencies {
 			"io.ktor:ktor-client-serialization:${Versions.ktor}"
 		)
 		fun s2(scope: Scope) = scope.add(
-			"city.smartb.s2:s2-automate-dsl:${Versions.s2}",
-			"city.smartb.s2:s2-sourcing-dsl:${Versions.s2}"
+			"city.smartb.s2:s2-automate-dsl:${Versions.s2}"
 		)
 	}
 }
