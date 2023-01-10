@@ -45,10 +45,6 @@ class UserEndpoint(
         policiesEnforcer.checkGet(result.item)
     }
 
-        /**
-     * Fetch a User by its email address.
-     */
-
     /**
      * Fetch a User by its email address.
      */

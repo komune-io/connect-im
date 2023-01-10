@@ -24,20 +24,37 @@ allprojects {
     }
 }
 
-subprojects {
-    plugins.withType(city.smartb.fixers.gradle.config.ConfigPlugin::class.java).whenPluginAdded {
-        fixers {
-            bundle {
-                id = "im"
-                name = "IM"
-                description = "Identity Management"
-                url = "https://gitlab.smartb.city/framework/connect/im"
-            }
-        }
-    }
-}
+//subprojects {
+//    plugins.withType(city.smartb.fixers.gradle.config.ConfigPlugin::class.java).whenPluginAdded {
+//        fixers {
+//            bundle {
+//                id = "im"
+//                name = "IM"
+//                description = "Identity Management"
+//                url = "https://gitlab.smartb.city/framework/connect/im"
+//            }
+//            kt2Ts {
+//                outputDirectory = "./storybook/d2"
+//            }
+//            d2 {
+//                outputDirectory = file("storybook/d2/")
+//            }
+//        }
+//
+//    }
+//}
 fixers {
     d2 {
         outputDirectory = file("storybook/d2/")
     }
+    bundle {
+        id = "im"
+        name = "IM"
+        description = "Identity Management"
+        url = "https://gitlab.smartb.city/framework/connect/im"
+    }
+    kt2Ts {
+        outputDirectory = "ts/"
+    }
+
 }

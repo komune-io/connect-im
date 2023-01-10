@@ -17,6 +17,5 @@ class AuthenticationProviderStub {
                 return imProperties.getAuthRealm().associateBy { it.realmId }["im-test"]!!
             }
         }
-
     }
 }

@@ -19,5 +19,5 @@ dependencies {
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
-	imageName = "smartbcity/im-gateway:${this.project.version}"
+	imageName.set("smartbcity/im-gateway:${this.project.version}")
 }
