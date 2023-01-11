@@ -41,11 +41,9 @@ import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 import javax.ws.rs.NotFoundException
 
-@Service
-class OrganizationAggregateService<MODEL: OrganizationDTO>(
+open class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val authenticationResolver: ImAuthenticationProvider,
     private val groupCreateFunction: GroupCreateFunction,
     private val groupDeleteFunction: GroupDeleteFunction,

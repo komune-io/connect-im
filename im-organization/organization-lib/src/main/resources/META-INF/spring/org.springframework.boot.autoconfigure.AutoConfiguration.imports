@@ -1,0 +1,3 @@
+city.smartb.im.organization.lib.config.OrganizationFsConfig
+city.smartb.im.organization.lib.service.InseeHttpClient
+city.smartb.im.organization.lib.service.GroupMapper

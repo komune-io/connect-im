@@ -1,12 +1,12 @@
 package city.smartb.im.role.api.service
 
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
+import city.smartb.im.commons.error.RoleFetchingError
 import city.smartb.im.role.domain.features.query.RoleGetByIdQuery
 import city.smartb.im.role.domain.features.query.RoleGetByIdResult
 import city.smartb.im.role.domain.features.query.RoleGetByNameQuery
 import city.smartb.im.role.domain.features.query.RoleGetByNameResult
-import i2.keycloak.f2.commons.domain.error.I2ApiError
-import i2.keycloak.f2.commons.domain.error.asI2Exception
+import f2.dsl.cqrs.error.asException
 import i2.keycloak.f2.role.domain.RoleModel
 import i2.keycloak.realm.client.config.AuthRealmClientBuilder
 import javax.ws.rs.NotFoundException
@@ -34,11 +34,7 @@ class RoleFinderService(
         } catch (e: Exception) {
             val msg = "Error fetching role with id[${cmd.id}]"
             logger.error(msg, e)
-            //TODO Change By IM ERROR AND CREATE IM-ERROR
-            throw I2ApiError(
-                description = msg,
-                payload = emptyMap()
-            ).asI2Exception()
+            throw RoleFetchingError(msg).asException(e)
         }
     }
 
@@ -55,10 +51,7 @@ class RoleFinderService(
         } catch (e: Exception) {
             val msg = "Error fetching role with name[${query.name}]"
             logger.error(msg, e)
-            throw I2ApiError(
-                description = msg,
-                payload = emptyMap()
-            ).asI2Exception()
+            throw RoleFetchingError(msg).asException(e)
         }
     }
 
@@ -68,5 +61,5 @@ class RoleFinderService(
         description = description,
         isClientRole = clientRole
     )
-
 }
+

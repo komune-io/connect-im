@@ -22,10 +22,8 @@ import i2.keycloak.f2.group.domain.features.query.GroupGetQuery
 import i2.keycloak.f2.group.domain.features.query.GroupPageFunction
 import i2.keycloak.f2.group.domain.features.query.GroupPageQuery
 import i2.keycloak.f2.group.domain.model.GroupModel
-import org.springframework.stereotype.Service
 
-@Service
-class OrganizationFinderService<MODEL : OrganizationDTO>(
+open class OrganizationFinderService<MODEL : OrganizationDTO>(
     private val inseeHttpClient: InseeHttpClient,
     private val groupGetFunction: GroupGetFunction,
     private val groupPageFunction: GroupPageFunction,

@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    city.smartb.im.infra.redis.config.RedisCacheAutoconfigure, \
-    city.smartb.im.infra.redis.config.RedisNoCacheAutoconfigure

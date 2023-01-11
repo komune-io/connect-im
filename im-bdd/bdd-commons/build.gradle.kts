@@ -14,4 +14,7 @@ dependencies {
 	Dependencies.Mpp.f2(::implementation)
 	Dependencies.Mpp.s2(::implementation)
 	Dependencies.Jvm.cucumber(::implementation)
+
+
+	implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")
 }

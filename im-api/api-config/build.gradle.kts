@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     api(project(":im-commons:im-commons-api"))
+    api(project(":im-commons:im-commons-auth"))
     api("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     api("city.smartb.fs:file-client:${Versions.fs}")

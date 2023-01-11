@@ -16,7 +16,7 @@ object Versions {
 	val s2 = FixersPluginVersions.fixers
 	val i2 = FixersPluginVersions.fixers
 
-	val fs = "0.11.0"
+	val fs = FixersPluginVersions.fixers
 
 	const val ktor = FixersVersions.Kotlin.ktor
 

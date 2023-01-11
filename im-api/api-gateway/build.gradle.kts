@@ -14,8 +14,6 @@ dependencies {
 
 	implementation("city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}")
 	implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")
-
-	implementation("city.smartb.i2:i2-spring-boot-starter-auth:${Versions.i2}")
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
