@@ -7,13 +7,28 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-const val FS_URL_PROPERTY = "fs.url"
+const val FS_URL_PROPERTY = "connect.fs.url"
 
 @Configuration
 @ConditionalOnProperty(FS_URL_PROPERTY)
 class FsConfig {
 
     @Value("\${$FS_URL_PROPERTY}")
+    lateinit var fsUrl: String
+
+    @ConditionalOnMissingBean
+    @Bean
+    fun fsClient() = FileClient(
+        url = fsUrl
+    )
+}
+
+@Deprecated("Use connect.fs.url")
+@Configuration
+@ConditionalOnProperty("fs.url")
+class FsConfigOld {
+
+    @Value("\${fs.url}")
     lateinit var fsUrl: String
 
     @ConditionalOnMissingBean
