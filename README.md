@@ -154,7 +154,7 @@ Properties prefix: `i2.organization.insee`
 | token        | Token used to authenticate | c6ef3de5-3ef1-330a-8917-21f6750dcb09 | c6ef3de5-3ef1-330a-8917-21f6750dcb09 |
 | sirene-api   | Sirene-api URL             | https://api.insee.fr/entreprises/sirene/V3             | https://api.insee.fr/entreprises/sirene/V3             |
 
-Properties prefix: `fs`
+Properties prefix: `connect.fs`
 
 | Property     | Description                | Example                                  | Default                                |
 |--------------|----------------------------|------------------------------------------|----------------------------------------|
