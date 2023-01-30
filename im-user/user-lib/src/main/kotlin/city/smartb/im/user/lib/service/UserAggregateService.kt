@@ -270,7 +270,7 @@ class UserAggregateService(
     private suspend fun sendEmail(userId: UserId, vararg actions: String) {
         val auth = authenticationResolver.getAuth()
             val clientId = AuthenticationProvider.getClientId().takeIf {
-            imProperties.user?.actions?.useJwtClientID == true
+            imProperties.user?.action?.useJwtClientId == true
         } ?: auth.clientId.takeUnless { auth.redirectUrl?.isBlank() ?: true }
         val redirectUri = auth.redirectUrl?.ifBlank { null }
         logger.debug("sendAction[${actions.joinToString(", ")}] " +
