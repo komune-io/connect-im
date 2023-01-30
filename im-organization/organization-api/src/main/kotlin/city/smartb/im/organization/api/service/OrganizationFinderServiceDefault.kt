@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class OrganizationFinderServiceDefault(
-    inseeHttpClient: InseeHttpClient,
+    inseeHttpClient: InseeHttpClient?,
     groupGetFunction: GroupGetFunction,
     groupPageFunction: GroupPageFunction,
     authenticationResolver: ImAuthenticationProvider,

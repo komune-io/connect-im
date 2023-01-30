@@ -24,7 +24,7 @@ import i2.keycloak.f2.group.domain.features.query.GroupPageQuery
 import i2.keycloak.f2.group.domain.model.GroupModel
 
 open class OrganizationFinderService<MODEL : OrganizationDTO>(
-    private val inseeHttpClient: InseeHttpClient,
+    private val inseeHttpClient: InseeHttpClient?,
     private val groupGetFunction: GroupGetFunction,
     private val groupPageFunction: GroupPageFunction,
     private val authenticationResolver: ImAuthenticationProvider,
@@ -48,7 +48,7 @@ open class OrganizationFinderService<MODEL : OrganizationDTO>(
 
     suspend fun organizationGetFromInsee(query: OrganizationGetFromInseeQuery): OrganizationGetFromInseeResult {
         val organizationDetails = try {
-            inseeHttpClient.getOrganizationBySiret(query.siret)
+            inseeHttpClient?.getOrganizationBySiret(query.siret)
         } catch (e: Exception) {
             e.printStackTrace()
             null

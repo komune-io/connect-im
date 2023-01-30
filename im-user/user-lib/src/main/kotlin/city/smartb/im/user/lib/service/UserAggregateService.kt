@@ -2,7 +2,9 @@ package city.smartb.im.user.lib.service
 
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
+import city.smartb.i2.spring.boot.auth.AuthenticationProvider
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
+import city.smartb.im.api.config.properties.IMProperties
 import city.smartb.im.commons.exception.NotFoundException
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.orEmpty
@@ -56,9 +58,11 @@ import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.UUID
+import org.slf4j.LoggerFactory
 
 @Service
 class UserAggregateService(
+    private val imProperties: IMProperties,
     private val authenticationResolver: ImAuthenticationProvider,
     private val keycloakUserCreateFunction: KeycloakUserCreateFunction,
     private val keycloakUserDisableFunction: KeycloakUserDisableFunction,
@@ -74,6 +78,7 @@ class UserAggregateService(
     private val groupGetFunction: GroupGetFunction,
     private val redisCache: RedisCache,
 ) {
+    private val logger = LoggerFactory.getLogger(UserAggregateService::class.java)
 
     @Autowired(required = false)
     private lateinit var fileClient: FileClient
@@ -264,10 +269,20 @@ class UserAggregateService(
 
     private suspend fun sendEmail(userId: UserId, vararg actions: String) {
         val auth = authenticationResolver.getAuth()
+            val clientId = AuthenticationProvider.getClientId().takeIf {
+            imProperties.user?.actions?.useJwtClientID == true
+        } ?: auth.clientId.takeUnless { auth.redirectUrl?.isBlank() ?: true }
+        val redirectUri = auth.redirectUrl?.ifBlank { null }
+        logger.debug("sendAction[${actions.joinToString(", ")}] " +
+                "realmId[${auth.realmId}] " +
+                "userId[${userId}] " +
+                "clientId[${clientId}] " +
+                "redirectUri[${redirectUri}]"
+        )
         UserEmailSendActionsCommand(
             userId = userId,
-            clientId = auth.clientId.takeUnless { auth.redirectUrl?.isBlank() ?: false },
-            redirectUri = auth.redirectUrl?.ifBlank { null },
+            clientId = clientId,
+            redirectUri = redirectUri,
             actions = actions.toList(),
             realmId = auth.realmId,
             auth = auth

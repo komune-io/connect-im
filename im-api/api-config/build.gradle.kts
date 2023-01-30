@@ -12,4 +12,6 @@ dependencies {
 
     api("city.smartb.fs:file-client:${Versions.fs}")
     api("city.smartb.i2:i2-spring-boot-starter-auth:${Versions.i2}")
+
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }

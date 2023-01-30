@@ -28,6 +28,8 @@ i2:
         clientSecret: 5e471884-ab65-4b84-a20b-6d16a77aa553
 
 im:
+  user:
+    sendInvitationFromJwtClientID: true
   organization:
     insee:
       token: ${INSEE_TOKEN}
