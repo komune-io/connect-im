@@ -26,14 +26,15 @@ i2:
       im:
         clientId: i2-api
         clientSecret: 5e471884-ab65-4b84-a20b-6d16a77aa553
-
-im:
-  user:
-    sendInvitationFromJwtClientID: true
-  organization:
-    insee:
-      token: ${INSEE_TOKEN}
-      sirene-api: https://api.insee.fr/entreprises/sirene/V3
+connect:
+  im:
+    user:
+      action:
+        useJwtClientId: true
+    organization:
+      insee:
+        token: ${INSEE_TOKEN}
+        sireneApi: https://api.insee.fr/entreprises/sirene/V3
 
 ---
 spring:
