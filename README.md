@@ -218,3 +218,20 @@ Generate a certificate for this server and add it to the trust store
 
 `openssl x509 -in <(openssl s_client -connect $HOST:$PORT -prexit 2>/dev/null) -out ~/$ALIAS.crt`
 `sudo keytool -importcert -file ~/$ALIAS.crt -alias $ALIAS -keystore $(/usr/libexec/java_home)/lib/security/cacerts -storepass changeit`
+
+
+## Database column too small
+
+### Cause
+We store json in a field designed to just store a string data can be too long
+
+### Solution
+
+Execute sql script on keycloak database.
+```
+ALTER TABLE public."group_attribute"
+ALTER COLUMN value TYPE TEXT;
+
+ALTER TABLE public."user_attribute"
+ALTER COLUMN value TYPE TEXT;
+```
