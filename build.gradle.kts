@@ -6,7 +6,7 @@ plugins {
 
     id("city.smartb.fixers.gradle.config") version PluginVersions.fixers
     id("city.smartb.fixers.gradle.sonar") version PluginVersions.fixers
-    id("city.smartb.fixers.gradle.d2") version PluginVersions.d2
+    id("city.smartb.fixers.gradle.d2") version PluginVersions.fixers
 
     id("city.smartb.fixers.gradle.kotlin.mpp") version PluginVersions.fixers apply false
     id("city.smartb.fixers.gradle.kotlin.jvm") version PluginVersions.fixers apply false
