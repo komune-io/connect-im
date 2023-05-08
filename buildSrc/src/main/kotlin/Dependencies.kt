@@ -9,7 +9,6 @@ object Framework {
 	val connect =  "experimental-SNAPSHOT"
 }
 
-
 object PluginVersions {
 	val fixers = Framework.fixers
 	const val springBoot = FixersPluginVersions.springBoot
@@ -21,7 +20,7 @@ object Versions {
 	val s2 = Framework.fixers
 	val i2 = Framework.fixers
 
-	val fs = Framework.fixers
+	val fs = Framework.connect
 
 	const val ktor = FixersVersions.Kotlin.ktor
 
