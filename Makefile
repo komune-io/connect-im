@@ -7,16 +7,27 @@ IM_APP_IMG	    	:= ${IM_APP_NAME}:${VERSION}
 IM_APP_PACKAGE	   	:= :im-api:api-gateway:bootBuildImage
 
 libs: package-kotlin
-docker: package-app
-docs: package-storybook
+docker: docker-build docker-push
+docs: docs-build docs-push
+
+docker-build: docker-im-gateway-build
+docker-push: docker-im-gateway-push
+
+docs-build: package-im-storybook-build
+docs-push: package-im-storybook-push
 
 package-kotlin:
 	@gradle clean build publish -x test --stacktrace
 
-package-storybook:
+docker-im-gateway-build:
+	VERSION=${VERSION} ./gradlew build ${IM_APP_PACKAGE} -x test --stacktrace
+
+docker-im-gateway-push:
+	@docker push ${IM_APP_IMG}
+
+package-im-storybook-build:
 	@docker build -f ${STORYBOOK_DOCKERFILE} -t ${STORYBOOK_IMG} .
+
+package-im-storybook-push:
 	@docker push ${STORYBOOK_IMG}
 
-package-app:
-	VERSION=${VERSION} ./gradlew build ${IM_APP_PACKAGE} -x test --stacktrace
-	@docker push ${IM_APP_IMG}
