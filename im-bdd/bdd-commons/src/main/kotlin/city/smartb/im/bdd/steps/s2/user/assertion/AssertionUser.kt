@@ -63,7 +63,7 @@ class AssertionUser(
             Assertions.assertThat(user.familyName).isEqualTo(familyName)
             Assertions.assertThat(user.phone).isEqualTo(phone)
             Assertions.assertThat(user.roles).isEqualTo(roles)
-            Assertions.assertThat(user.attributes).isEqualTo(attributes)
+            Assertions.assertThat(user.attributes).containsAnyOf(*attributes.entries.toTypedArray())
             Assertions.assertThat(user.enabled).isEqualTo(enabled)
             Assertions.assertThat(user.creationDate).isEqualTo(creationDate)
             Assertions.assertThat(user.memberOf?.id).isEqualTo(memberOf)

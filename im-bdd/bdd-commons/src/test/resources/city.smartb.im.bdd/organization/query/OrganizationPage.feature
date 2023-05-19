@@ -1,4 +1,6 @@
 Feature: OrganizationPage
+  Background:
+    Given I am logged in as an admin
   Scenario: I want to get a page of organizations
     Given Some organizations are created:
       | identifier |

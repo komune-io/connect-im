@@ -1,4 +1,6 @@
 Feature: UserCreate
+  Background:
+    Given I am logged in as an admin
   Scenario: I want to create a user not belonging to an organization
     When I create a user:
       | memberOf |

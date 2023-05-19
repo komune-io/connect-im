@@ -1,4 +1,6 @@
 Feature: OrganizationGetFromInsee
+  Background:
+    Given I am logged in as an admin
   Scenario: I want to get an organization by its siret number
     When I get an organization by its siret number from Insee:
       | siret          |

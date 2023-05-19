@@ -1,4 +1,6 @@
 Feature: UserGet
+  Background:
+    Given I am logged in as an admin
   Scenario: I want to get a user by ID
     Given A user is created:
       | memberOf |

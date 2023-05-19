@@ -30,12 +30,16 @@ object Versions {
 	const val kdatetime = "0.1.1"
 	const val keycloak = "18.0.0"
 	const val mockito = "4.6.1"
+	const val testcontainers = "1.18.0"
 }
 
 object Dependencies {
 	object Jvm {
 		fun f2(scope: Scope) = scope.add(
 			"city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}"
+		)
+		fun i2AuthClient(scope: Scope) = scope.add(
+			"city.smartb.i2:keycloak-auth-client:${Versions.i2}"
 		)
 
 		fun ktor(scope: Scope) = scope.add(
@@ -63,6 +67,10 @@ object Dependencies {
 
 		fun mockito(scope: Scope) = scope.add(
 			"org.mockito:mockito-core:${Versions.mockito}"
+		)
+
+		fun testcontainers(scope: Scope) = scope.add(
+			"org.testcontainers:junit-jupiter:${Versions.testcontainers}"
 		)
 	}
 

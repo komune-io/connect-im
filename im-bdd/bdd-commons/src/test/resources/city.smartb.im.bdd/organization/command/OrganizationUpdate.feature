@@ -1,4 +1,6 @@
 Feature: OrganizationUpdate
+  Background:
+    Given I am logged in as an admin
   Scenario: I want to update the name of an organization
     Given An organization is created:
       | name                         |

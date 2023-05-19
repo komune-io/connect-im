@@ -1,5 +1,7 @@
 # TODO Test create an organization with a parentOrganizationId that is not existing
 Feature: OrganizationCreate
+  Background:
+    Given I am logged in as an admin
   Scenario: I want to create an organization
     When I create an organization
     Then The organization should be created

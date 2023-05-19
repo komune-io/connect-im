@@ -9,7 +9,6 @@ import city.smartb.im.user.domain.features.command.UserDeleteCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
 
 class UserDeleteSteps: En, CucumberStepsDefinition() {
@@ -59,7 +58,7 @@ class UserDeleteSteps: En, CucumberStepsDefinition() {
         }
     }
 
-    private fun deleteUser(params: UserDeleteParams) = runBlocking {
+    private suspend fun deleteUser(params: UserDeleteParams) {
         command = UserDeleteCommand(
             id = context.userIds.safeGet(params.identifier)
         )

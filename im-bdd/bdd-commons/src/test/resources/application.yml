@@ -20,8 +20,9 @@ i2:
         clientId: im-test-client
         clientSecret: secret
 
-im:
-  organization:
-    insee:
-      token: ${INSEE_TOKEN}
-      sirene-api: https://api.insee.fr/entreprises/sirene/V3
+connect:
+  im:
+    organization:
+      insee:
+        token: ${INSEE_TOKEN}
+        sirene-api: https://api.insee.fr/entreprises/sirene/V3

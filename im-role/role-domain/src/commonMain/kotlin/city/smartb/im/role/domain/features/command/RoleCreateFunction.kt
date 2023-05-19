@@ -31,19 +31,19 @@ data class RoleCreateCommand(
      * Roles to associate with the role. These roles must exist to be associated.
      * @example [["write_user","read_user"]]
      */
-    val composites: List<RoleName>,
+    val composites: List<RoleName> = emptyList(),
 
     /**
      * Description of the role.
      * @example [i2.keycloak.f2.role.domain.RoleModel.description]
      */
-    val description: String?,
+    val description: String? = null,
 
     /**
      * Whether it is a client role or not.
      * @example [i2.keycloak.f2.role.domain.RoleModel.isClientRole]
      */
-    val isClientRole: Boolean
+    val isClientRole: Boolean = false,
 ): Command
 
 /**

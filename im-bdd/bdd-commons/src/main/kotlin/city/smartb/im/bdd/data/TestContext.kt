@@ -1,5 +1,6 @@
 package city.smartb.im.bdd.data
 
+import city.smartb.im.commons.auth.AuthedUser
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.role.domain.model.RoleId
 import city.smartb.im.user.domain.model.UserId
@@ -15,7 +16,7 @@ class TestContext {
     val roleIds = testEntities<String, RoleId>("Role")
     val organizationIds = testEntities<String, OrganizationId>("Organization")
     val userIds = testEntities<String, UserId>("User")
-
+    var authedUser: AuthedUser? = null
     val errors = ExceptionList()
     val events = mutableListOf<Event>()
 

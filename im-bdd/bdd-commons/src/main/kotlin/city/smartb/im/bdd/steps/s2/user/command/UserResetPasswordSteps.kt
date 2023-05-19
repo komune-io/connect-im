@@ -6,7 +6,6 @@ import city.smartb.im.user.api.UserEndpoint
 import city.smartb.im.user.domain.features.command.UserResetPasswordCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.java8.En
-import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
 
 class UserResetPasswordSteps: En, CucumberStepsDefinition() {
@@ -43,7 +42,7 @@ class UserResetPasswordSteps: En, CucumberStepsDefinition() {
         }
     }
 
-    private fun resetUserPassword(params: UserResetPasswordParams) = runBlocking {
+    private suspend fun resetUserPassword(params: UserResetPasswordParams) {
         command = UserResetPasswordCommand(
             id = context.userIds.safeGet(params.identifier)
         )

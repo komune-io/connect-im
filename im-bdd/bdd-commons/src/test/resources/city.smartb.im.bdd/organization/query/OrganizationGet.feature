@@ -1,4 +1,6 @@
 Feature: OrganizationGet
+  Background:
+    Given I am logged in as an admin
   Scenario: I want to get an organization by ID
     Given An organization is created
     When I get an organization by ID

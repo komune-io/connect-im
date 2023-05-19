@@ -9,7 +9,6 @@ import city.smartb.im.user.domain.features.command.UserDisableCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
 
 class UserDisableSteps: En, CucumberStepsDefinition() {
@@ -67,7 +66,7 @@ class UserDisableSteps: En, CucumberStepsDefinition() {
         }
     }
 
-    private fun disableUser(params: UserDisableParams) = runBlocking {
+    private suspend fun disableUser(params: UserDisableParams) {
         command = UserDisableCommand(
             id = context.userIds.safeGet(params.identifier),
             disabledBy = params.disabledBy,

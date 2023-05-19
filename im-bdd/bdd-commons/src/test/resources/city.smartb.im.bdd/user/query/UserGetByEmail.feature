@@ -1,4 +1,6 @@
 Feature: UserGetByEmail
+  Background:
+    Given I am logged in as an admin
   Scenario: I want to get a user by email
     Given A user is created:
       | memberOf |

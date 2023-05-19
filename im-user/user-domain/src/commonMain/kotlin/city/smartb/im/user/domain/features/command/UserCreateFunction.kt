@@ -54,7 +54,7 @@ data class UserCreateCommand(
      * Email address.
      * @example "zepasworde"
      */
-    override val password: String?,
+    override val password: String? = null,
 
     /**
      * First name of the user.
@@ -71,13 +71,13 @@ data class UserCreateCommand(
     /**
      * Address of the user.
      */
-    override val address: Address?,
+    override val address: Address? = null,
 
     /**
      * Telephone number of the user.
      * @example [city.smartb.im.user.domain.model.User.phone]
      */
-    override val phone: String?,
+    override val phone: String? = null,
 
     /**
      * Roles assigned to the user.
@@ -88,19 +88,19 @@ data class UserCreateCommand(
     /**
      * Organization to which the user belongs.
      */
-    override val memberOf: OrganizationId?,
+    override val memberOf: OrganizationId? = null,
 
     /**
      * Additional arbitrary attributes assigned to the user.
      * @example [city.smartb.im.user.domain.model.User.attributes]
      */
-    override val attributes: Map<String, String>?,
+    override val attributes: Map<String, String>? = null,
 
     /**
      * False if the user has to verify their email.
      * @example true
      */
-    override val isEmailVerified: Boolean,
+    override val isEmailVerified: Boolean = false,
 
     /**
      * True if the given password is temporary and has to be redefined on first login.
@@ -111,12 +111,12 @@ data class UserCreateCommand(
     /**
      * Send a reset_password email to the newly created user.
      */
-    override val sendResetPassword: Boolean,
+    override val sendResetPassword: Boolean = false,
 
     /**
      * Send a verify_email email to the newly created user.
      */
-    override val sendVerifyEmail: Boolean,
+    override val sendVerifyEmail: Boolean = true,
 ): UserCreateCommandDTO
 
 @JsExport

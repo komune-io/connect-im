@@ -1,5 +1,6 @@
 Feature: Role Crud
-
+  Background:
+    Given I am logged in as an admin
   Scenario: I want to create an role
     When I create a role
     Then The role should be created

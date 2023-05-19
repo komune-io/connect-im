@@ -12,9 +12,11 @@ import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Autowired
 
 class OrganizationUpdateSteps: En, CucumberStepsDefinition() {
+
     @Autowired
     private lateinit var organizationEndpoint: OrganizationEndpoint
 
@@ -73,7 +75,7 @@ class OrganizationUpdateSteps: En, CucumberStepsDefinition() {
         }
     }
 
-    private fun updateOrganization(params: OrganizationUpdateParams) = runBlocking {
+    private suspend fun updateOrganization(params: OrganizationUpdateParams) {
         command = OrganizationUpdateCommand(
             id = context.organizationIds.safeGet(params.identifier),
             name = params.name,
@@ -86,7 +88,7 @@ class OrganizationUpdateSteps: En, CucumberStepsDefinition() {
         organizationEndpoint.organizationUpdate().invoke(command).id
     }
 
-    private fun organizationUpdateParams(entry: Map<String, String>?): OrganizationUpdateParams = runBlocking {
+    private fun organizationUpdateParams(entry: Map<String, String>?): OrganizationUpdateParams = runBlocking(authedContext()) {
         val identifier = entry?.get("identifier") ?: context.organizationIds.lastUsedKey
         val organization = organizationEndpoint.organizationGet()
             .invoke(OrganizationGetQuery(context.organizationIds.safeGet(identifier)))
@@ -116,7 +118,6 @@ class OrganizationUpdateSteps: En, CucumberStepsDefinition() {
         val roles: List<String>?,
         val attributes: Map<String, String>?
     )
-
 
     private fun organizationAttributesParams(entry: Map<String, String>?): Map<String, String>? {
         if (entry == null) return null

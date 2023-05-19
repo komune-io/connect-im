@@ -50,7 +50,6 @@ open class OrganizationFinderService<MODEL : OrganizationDTO>(
         val organizationDetails = try {
             inseeHttpClient?.getOrganizationBySiret(query.siret)
         } catch (e: Exception) {
-            e.printStackTrace()
             null
         }
         return organizationDetails?.etablissement

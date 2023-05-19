@@ -9,7 +9,6 @@ import city.smartb.im.organization.domain.features.command.OrganizationDeleteCom
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
 
 class OrganizationDeleteSteps: En, CucumberStepsDefinition() {
@@ -59,7 +58,7 @@ class OrganizationDeleteSteps: En, CucumberStepsDefinition() {
         }
     }
 
-    private fun deleteOrganization(params: OrganizationDeleteParams) = runBlocking {
+    private suspend fun deleteOrganization(params: OrganizationDeleteParams) {
         command = OrganizationDeleteCommand(
             id = context.organizationIds.safeGet(params.identifier)
         )

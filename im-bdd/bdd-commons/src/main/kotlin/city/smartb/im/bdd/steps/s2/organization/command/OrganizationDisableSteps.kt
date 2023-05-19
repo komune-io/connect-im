@@ -9,7 +9,6 @@ import city.smartb.im.organization.domain.features.command.OrganizationDisableCo
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
 
 class OrganizationDisableSteps: En, CucumberStepsDefinition() {
@@ -65,7 +64,7 @@ class OrganizationDisableSteps: En, CucumberStepsDefinition() {
         }
     }
 
-    private fun disableOrganization(params: OrganizationDisableParams) = runBlocking {
+    private suspend fun disableOrganization(params: OrganizationDisableParams) {
         command = OrganizationDisableCommand(
             id = context.organizationIds.safeGet(params.identifier),
             disabledBy = params.disabledBy,
