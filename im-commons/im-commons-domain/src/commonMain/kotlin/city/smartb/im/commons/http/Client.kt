@@ -27,7 +27,6 @@ open class Client(
     }
 
     suspend inline fun <reified T> post(path: String, jsonBody: Any, withAuth: Boolean = true): T {
-        println("POST json $path")
         return client.post {
             jsonSetup(path, jsonBody, withAuth)
         }.body()
