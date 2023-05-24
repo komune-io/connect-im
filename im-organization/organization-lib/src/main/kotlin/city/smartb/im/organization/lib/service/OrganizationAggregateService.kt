@@ -32,6 +32,8 @@ import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.features.command.ClientCreateCommand
 import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
+import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantCommand
+import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupCreateFunction
 import i2.keycloak.f2.group.domain.features.command.GroupDeleteCommand
@@ -50,6 +52,7 @@ import javax.ws.rs.NotFoundException
 open class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val authenticationResolver: ImAuthenticationProvider,
     private val clientCreateFunction: ClientCreateFunction,
+    private val clientServiceAccountRolesGrantFunction: ClientServiceAccountRolesGrantFunction,
     private val groupCreateFunction: GroupCreateFunction,
     private val groupDeleteFunction: GroupDeleteFunction,
     private val groupDisableFunction: GroupDisableFunction,
@@ -82,9 +85,10 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
                 .replace(Regex("-+"), "-")
                 .removePrefix("-")
                 .removeSuffix("-")
+            val clientIdentifier = "tr-$sanitizedName-app"
 
             ClientCreateCommand(
-                clientIdentifier = "tr-$sanitizedName-app",
+                clientIdentifier = clientIdentifier,
                 secret = UUID.randomUUID().toString(),
                 isPublicClient = false,
                 isDirectAccessGrantsEnabled = false,
@@ -95,6 +99,15 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
                 realmId = auth.realmId,
                 auth = auth
             ).invokeWith(clientCreateFunction)
+
+            if (command.roles.orEmpty().isNotEmpty()) {
+                ClientServiceAccountRolesGrantCommand(
+                    id = clientIdentifier,
+                    roles = command.roles!!,
+                    realmId = auth.realmId,
+                    auth = auth
+                ).invokeWith(clientServiceAccountRolesGrantFunction)
+            }
         }
 
         return createdEvent
