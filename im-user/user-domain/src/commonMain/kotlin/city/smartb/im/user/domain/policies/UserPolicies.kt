@@ -2,6 +2,7 @@ package city.smartb.im.user.domain.policies
 
 import city.smartb.im.commons.auth.AuthedUserDTO
 import city.smartb.im.commons.auth.Role
+import city.smartb.im.commons.auth.hasOneOfRoles
 import city.smartb.im.commons.auth.hasRole
 import city.smartb.im.user.domain.model.UserDTO
 import city.smartb.im.user.domain.model.UserId
@@ -24,7 +25,7 @@ object UserPolicies {
      * User can list users
      */
     fun canPage(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(Role.IM_USER_READ) ||authedUser.hasRole(Role.IM_MY_ORGANIZATION_WRITE)
+        return authedUser.hasOneOfRoles(Role.IM_USER_READ, Role.IM_MY_ORGANIZATION_WRITE)
     }
 
     /**
@@ -60,5 +61,4 @@ object UserPolicies {
     fun canDelete(authedUser: AuthedUserDTO, userId: UserId): Boolean {
         return authedUser.hasRole(Role.IM_USER_WRITE)
     }
-
 }

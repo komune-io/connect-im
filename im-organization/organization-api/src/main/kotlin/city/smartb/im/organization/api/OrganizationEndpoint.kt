@@ -15,11 +15,11 @@ import city.smartb.im.organization.domain.features.query.OrganizationRefListFunc
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.lib.OrganizationFeaturesImpl
 import org.springframework.context.annotation.Bean
+import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.stereotype.Service
 
 /**
  * @d2 service
@@ -75,8 +75,7 @@ class OrganizationEndpoint(
         organizationPoliciesEnforcer.checkCreate()
     }
 
-
-        /**
+    /**
      * Update an organization.
      */
     @Bean

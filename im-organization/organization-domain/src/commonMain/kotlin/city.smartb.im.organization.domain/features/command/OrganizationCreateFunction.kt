@@ -28,6 +28,7 @@ interface OrganizationCreateCommandDTO: Command {
     val roles: List<String>?
     val parentOrganizationId: OrganizationId?
     val attributes: Map<String, String>?
+    val withClient: Boolean
 }
 
 /**
@@ -79,7 +80,13 @@ data class OrganizationCreateCommand(
      * Additional arbitrary attributes assigned to the organization.
      * @example [city.smartb.im.organization.domain.model.Organization.attributes]
      */
-    override val attributes: Map<String, String>?
+    override val attributes: Map<String, String>?,
+
+    /**
+     * Whether to create a keycloak client linked to the organization for API access
+     * @example false
+     */
+    override val withClient: Boolean = false
 ): OrganizationCreateCommandDTO
 
 @JsExport

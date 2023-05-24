@@ -13,4 +13,5 @@ dependencies {
 
     implementation("city.smartb.i2:i2-group-f2-query:${Versions.i2}")
     implementation("city.smartb.i2:i2-group-f2-command:${Versions.i2}")
+    implementation("city.smartb.i2:i2-client-f2-command:${Versions.i2}")
 }

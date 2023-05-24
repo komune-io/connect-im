@@ -30,6 +30,8 @@ import city.smartb.im.user.lib.service.UserAggregateService
 import city.smartb.im.user.lib.service.UserFinderService
 import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
+import i2.keycloak.f2.client.domain.features.command.ClientCreateCommand
+import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupCreateFunction
 import i2.keycloak.f2.group.domain.features.command.GroupDeleteCommand
@@ -41,10 +43,13 @@ import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
 import org.springframework.beans.factory.annotation.Autowired
+import java.text.Normalizer
+import java.util.UUID
 import javax.ws.rs.NotFoundException
 
 open class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val authenticationResolver: ImAuthenticationProvider,
+    private val clientCreateFunction: ClientCreateFunction,
     private val groupCreateFunction: GroupCreateFunction,
     private val groupDeleteFunction: GroupDeleteFunction,
     private val groupDisableFunction: GroupDisableFunction,
@@ -60,14 +65,39 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private lateinit var fileClient: FileClient
 
     suspend fun create(command: OrganizationCreateCommand): OrganizationCreatedEvent {
-        return groupCreateFunction.invoke(command.toGroupCreateCommand())
+        val createdEvent = groupCreateFunction.invoke(command.toGroupCreateCommand())
             .id
             .let { groupId ->
                 OrganizationCreatedEvent(
-                    parentOrganization = command.parentOrganizationId,
-                    id = groupId
+                    id = groupId,
+                    parentOrganization = command.parentOrganizationId
                 )
             }
+
+        if (command.withClient) {
+            val auth = authenticationResolver.getAuth()
+            val sanitizedName = Normalizer.normalize(command.name, Normalizer.Form.NFD)
+                .lowercase()
+                .replace(Regex("[^a-z0-9]"), "-")
+                .replace(Regex("-+"), "-")
+                .removePrefix("-")
+                .removeSuffix("-")
+
+            ClientCreateCommand(
+                clientIdentifier = "tr-$sanitizedName-app",
+                secret = UUID.randomUUID().toString(),
+                isPublicClient = false,
+                isDirectAccessGrantsEnabled = false,
+                isServiceAccountsEnabled = true,
+                authorizationServicesEnabled = true,
+                isStandardFlowEnabled = true,
+                protocolMappers = mapOf("memberOf" to createdEvent.id),
+                realmId = auth.realmId,
+                auth = auth
+            ).invokeWith(clientCreateFunction)
+        }
+
+        return createdEvent
     }
 
     suspend fun update(command: OrganizationUpdateCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationUpdatedResult
