@@ -93,8 +93,8 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
                 isPublicClient = false,
                 isDirectAccessGrantsEnabled = false,
                 isServiceAccountsEnabled = true,
-                authorizationServicesEnabled = true,
-                isStandardFlowEnabled = true,
+                authorizationServicesEnabled = false,
+                isStandardFlowEnabled = false,
                 protocolMappers = mapOf("memberOf" to createdEvent.id),
                 realmId = auth.realmId,
                 auth = auth
