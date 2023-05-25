@@ -2,6 +2,7 @@ package city.smartb.im.organization.api
 
 import city.smartb.im.commons.auth.policies.verify
 import city.smartb.im.organization.api.policies.OrganizationPoliciesEnforcer
+import city.smartb.im.organization.domain.features.command.OrganizationAddClientFunction
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDeleteFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDisableFunction
@@ -83,8 +84,7 @@ class OrganizationEndpoint(
         organizationPoliciesEnforcer.checkUpdate(command.id)
     }
 
-
-        /**
+    /**
      * Upload a logo for a given organization
      */
     @PostMapping("/organizationUploadLogo")
@@ -92,6 +92,14 @@ class OrganizationEndpoint(
         @RequestPart("command") cmd: OrganizationUploadLogoCommand,
         @RequestPart("file") file: org.springframework.http.codec.multipart.FilePart
     ): OrganizationUploadedLogoEvent = organizationFeatures.organizationUploadLogo(cmd, file)
+
+    /**
+     * Create a client for an organization.
+     */
+    @Bean
+    fun organizationAddClient(): OrganizationAddClientFunction = verify(organizationFeatures.organizationAddClient()) { command ->
+        organizationPoliciesEnforcer.checkUpdate(command.id)
+    }
 
     /**
      * Disable an organization and its users.

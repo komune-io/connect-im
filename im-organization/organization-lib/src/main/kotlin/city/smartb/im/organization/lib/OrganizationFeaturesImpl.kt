@@ -3,6 +3,7 @@ package city.smartb.im.organization.lib
 import city.smartb.im.commons.utils.contentByteArray
 import city.smartb.im.organization.domain.OrganizationCommandFeatures
 import city.smartb.im.organization.domain.OrganizationQueryFeatures
+import city.smartb.im.organization.domain.features.command.OrganizationAddClientFunction
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDeleteFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDisableFunction
@@ -55,6 +56,11 @@ class OrganizationFeaturesImpl<MODEL: OrganizationDTO>(
     override fun organizationUpdate(): OrganizationUpdateFunction = f2Function { cmd ->
         logger.debug("organizationUpdate: $cmd")
         organizationAggregateService.update(cmd, organizationMapper)
+    }
+
+    override fun organizationAddClient(): OrganizationAddClientFunction = f2Function { cmd ->
+        logger.debug("organizationAddClient: $cmd")
+        organizationAggregateService.addClient(cmd, organizationMapper)
     }
 
     suspend fun organizationUploadLogo(

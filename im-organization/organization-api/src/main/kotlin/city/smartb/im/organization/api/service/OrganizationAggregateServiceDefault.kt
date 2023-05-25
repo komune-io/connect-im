@@ -8,17 +8,20 @@ import city.smartb.im.user.lib.service.UserAggregateService
 import city.smartb.im.user.lib.service.UserFinderService
 import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction
+import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountFunction
 import i2.keycloak.f2.group.domain.features.command.GroupCreateFunction
 import i2.keycloak.f2.group.domain.features.command.GroupDeleteFunction
 import i2.keycloak.f2.group.domain.features.command.GroupDisableFunction
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
+import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
 import org.springframework.stereotype.Service
 
 @Service
 class OrganizationAggregateServiceDefault(
     authenticationResolver: ImAuthenticationProvider,
     clientCreateFunction: ClientCreateFunction,
+    clientGetServiceAccountFunction: ClientGetServiceAccountFunction,
     clientServiceAccountRolesGrantFunction: ClientServiceAccountRolesGrantFunction,
     groupCreateFunction: GroupCreateFunction,
     groupDeleteFunction: GroupDeleteFunction,
@@ -28,10 +31,12 @@ class OrganizationAggregateServiceDefault(
     organizationFinderService: OrganizationFinderServiceDefault,
     userAggregateService: UserAggregateService,
     userFinderService: UserFinderService,
+    userSetAttributesFunction: UserSetAttributesFunction,
     redisCache: RedisCache,
 ): OrganizationAggregateService<Organization>(
     authenticationResolver = authenticationResolver,
     clientCreateFunction = clientCreateFunction,
+    clientGetServiceAccountFunction = clientGetServiceAccountFunction,
     clientServiceAccountRolesGrantFunction = clientServiceAccountRolesGrantFunction,
     groupCreateFunction = groupCreateFunction,
     groupDeleteFunction = groupDeleteFunction,
@@ -41,5 +46,6 @@ class OrganizationAggregateServiceDefault(
     organizationFinderService = organizationFinderService,
     userAggregateService = userAggregateService,
     userFinderService = userFinderService,
+    userSetAttributesFunction = userSetAttributesFunction,
     redisCache = redisCache,
 )

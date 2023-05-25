@@ -8,6 +8,8 @@ import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.infra.redis.CacheName
 import city.smartb.im.infra.redis.RedisCache
+import city.smartb.im.organization.domain.features.command.OrganizationAddClientCommand
+import city.smartb.im.organization.domain.features.command.OrganizationAddedClientEvent
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
 import city.smartb.im.organization.domain.features.command.OrganizationDeleteCommand
@@ -34,6 +36,8 @@ import i2.keycloak.f2.client.domain.features.command.ClientCreateCommand
 import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantCommand
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction
+import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountFunction
+import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountQuery
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupCreateFunction
 import i2.keycloak.f2.group.domain.features.command.GroupDeleteCommand
@@ -44,6 +48,8 @@ import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesCommand
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
+import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
+import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
 import org.springframework.beans.factory.annotation.Autowired
 import java.text.Normalizer
 import java.util.UUID
@@ -52,6 +58,7 @@ import javax.ws.rs.NotFoundException
 open class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val authenticationResolver: ImAuthenticationProvider,
     private val clientCreateFunction: ClientCreateFunction,
+    private val clientGetServiceAccountFunction: ClientGetServiceAccountFunction,
     private val clientServiceAccountRolesGrantFunction: ClientServiceAccountRolesGrantFunction,
     private val groupCreateFunction: GroupCreateFunction,
     private val groupDeleteFunction: GroupDeleteFunction,
@@ -61,6 +68,7 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val organizationFinderService: OrganizationFinderService<MODEL>,
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService,
+    private val userSetAttributesFunction: UserSetAttributesFunction,
     private val redisCache: RedisCache,
 ) {
 
@@ -68,7 +76,7 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private lateinit var fileClient: FileClient
 
     suspend fun create(command: OrganizationCreateCommand): OrganizationCreatedEvent {
-        val createdEvent = groupCreateFunction.invoke(command.toGroupCreateCommand())
+        return groupCreateFunction.invoke(command.toGroupCreateCommand())
             .id
             .let { groupId ->
                 OrganizationCreatedEvent(
@@ -76,41 +84,6 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
                     parentOrganization = command.parentOrganizationId
                 )
             }
-
-        if (command.withClient) {
-            val auth = authenticationResolver.getAuth()
-            val sanitizedName = Normalizer.normalize(command.name, Normalizer.Form.NFD)
-                .lowercase()
-                .replace(Regex("[^a-z0-9]"), "-")
-                .replace(Regex("-+"), "-")
-                .removePrefix("-")
-                .removeSuffix("-")
-            val clientIdentifier = "tr-$sanitizedName-app"
-
-            ClientCreateCommand(
-                clientIdentifier = clientIdentifier,
-                secret = UUID.randomUUID().toString(),
-                isPublicClient = false,
-                isDirectAccessGrantsEnabled = false,
-                isServiceAccountsEnabled = true,
-                authorizationServicesEnabled = false,
-                isStandardFlowEnabled = false,
-                protocolMappers = mapOf("memberOf" to createdEvent.id),
-                realmId = auth.realmId,
-                auth = auth
-            ).invokeWith(clientCreateFunction)
-
-            if (command.roles.orEmpty().isNotEmpty()) {
-                ClientServiceAccountRolesGrantCommand(
-                    id = clientIdentifier,
-                    roles = command.roles!!,
-                    realmId = auth.realmId,
-                    auth = auth
-                ).invokeWith(clientServiceAccountRolesGrantFunction)
-            }
-        }
-
-        return createdEvent
     }
 
     suspend fun update(command: OrganizationUpdateCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationUpdatedResult
@@ -140,6 +113,61 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
         OrganizationUploadedLogoEvent(
             id = command.id,
             url = event.url
+        )
+    }
+
+    suspend fun addClient(
+        command: OrganizationAddClientCommand, mapper: OrganizationMapper<Organization, MODEL>
+    ): OrganizationAddedClientEvent = redisCache.evictIfPresent(CacheName.Organization, command.id) {
+        val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id), mapper).item!!
+
+        val auth = authenticationResolver.getAuth()
+        val clientIdentifier = Normalizer.normalize("tr-${organization.name}-${command.name}-app", Normalizer.Form.NFD)
+            .lowercase()
+            .replace(Regex("[^a-z0-9]"), "-")
+            .replace(Regex("-+"), "-")
+
+        ClientCreateCommand(
+            clientIdentifier = clientIdentifier,
+            secret = UUID.randomUUID().toString(),
+            isPublicClient = false,
+            isDirectAccessGrantsEnabled = false,
+            isServiceAccountsEnabled = true,
+            authorizationServicesEnabled = false,
+            isStandardFlowEnabled = false,
+            protocolMappers = mapOf("memberOf" to command.id),
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(clientCreateFunction)
+
+        if (organization.roles.isNotEmpty()) {
+            ClientServiceAccountRolesGrantCommand(
+                id = clientIdentifier,
+                roles = organization.roles,
+                realmId = auth.realmId,
+                auth = auth
+            ).invokeWith(clientServiceAccountRolesGrantFunction)
+        }
+
+        val serviceAccountUser = ClientGetServiceAccountQuery(
+            id = clientIdentifier,
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(clientGetServiceAccountFunction).item!!
+
+        UserSetAttributesCommand(
+            id = serviceAccountUser.id,
+            attributes = mapOf(
+                "memberOf" to command.id,
+                "display_name" to command.name
+            ),
+            realmId = auth.realmId,
+            auth = auth
+        ).invokeWith(userSetAttributesFunction)
+
+        OrganizationAddedClientEvent(
+            id = organization.id,
+            clientIdentifier = clientIdentifier
         )
     }
 

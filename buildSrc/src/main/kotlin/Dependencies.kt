@@ -18,7 +18,7 @@ object PluginVersions {
 object Versions {
 	val f2 = Framework.fixers
 	val s2 = Framework.fixers
-	val i2 = Framework.fixers
+	val i2 = "experimental-SNAPSHOT" //Framework.fixers
 
 	val fs = Framework.connect
 
