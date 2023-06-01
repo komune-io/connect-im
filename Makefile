@@ -26,8 +26,7 @@ docker-im-gateway-push:
 	@docker push ${IM_APP_IMG}
 
 package-im-storybook-build:
-	@docker build -f ${STORYBOOK_DOCKERFILE} -t ${STORYBOOK_IMG} .
+	@docker build --build-arg CI_NPM_AUTH_TOKEN=${CI_NPM_AUTH_TOKEN} -f ${STORYBOOK_DOCKERFILE} -t ${STORYBOOK_IMG} .
 
 package-im-storybook-push:
 	@docker push ${STORYBOOK_IMG}
-

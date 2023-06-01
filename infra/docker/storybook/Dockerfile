@@ -1,22 +1,23 @@
 #### Stage 1: Build the react application
-FROM node:12.4.0 as build
-
+FROM node:lts as build
+ARG CI_NPM_AUTH_TOKEN
 WORKDIR /app
 
 COPY *.md ./
-COPY .npmrc ./
 COPY storybook ./storybook
-
-RUN  apt update && apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
 
 WORKDIR /app/storybook
 
+RUN echo access=public \\n\
+         @smartb:registry=https://gitlab.smartb.city/api/v4/projects/127/packages/npm/ \\n\
+         //gitlab.smartb.city/api/v4/projects/127/packages/npm/:_authToken=${CI_NPM_AUTH_TOKEN} \
+         > .npmrc
+
 RUN yarn install
 ENV PATH /app/storybook/node_modules/.bin:$PATH
-RUN yarn build-storybook
-RUN npx sb extract
+RUN export SET NODE_OPTIONS=--openssl-legacy-provider && yarn build-storybook
 
-FROM nginx:1.17.0-alpine
+FROM nginx:1.25.0-alpine
 
 COPY --from=build /app/storybook/storybook-static /var/www
 COPY infra/docker/storybook/nginx.conf /etc/nginx/nginx.conf
