@@ -21,6 +21,7 @@ fun InseeOrganization.toOrganization() = Organization(
     attributes = mapOf(
         "original" to toJson()
     ),
+    apiKeys = emptyList(),
     enabled = true,
     disabledBy = null,
     creationDate = System.currentTimeMillis(),

@@ -28,7 +28,7 @@ interface OrganizationCreateCommandDTO: Command {
     val roles: List<String>?
     val parentOrganizationId: OrganizationId?
     val attributes: Map<String, String>?
-    val withClient: Boolean
+    val withApiKey: Boolean
 }
 
 /**
@@ -83,10 +83,10 @@ data class OrganizationCreateCommand(
     override val attributes: Map<String, String>?,
 
     /**
-     * Whether to create a keycloak client linked to the organization for API access
+     * Whether to create a default API key for the new organization.
      * @example false
      */
-    override val withClient: Boolean = false
+    override val withApiKey: Boolean = false
 ): OrganizationCreateCommandDTO
 
 @JsExport

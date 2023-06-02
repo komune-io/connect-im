@@ -7,6 +7,7 @@ import city.smartb.im.organization.lib.service.OrganizationAggregateService
 import city.smartb.im.user.lib.service.UserAggregateService
 import city.smartb.im.user.lib.service.UserFinderService
 import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
+import i2.keycloak.f2.client.domain.features.command.ClientDeleteFunction
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction
 import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountFunction
 import i2.keycloak.f2.group.domain.features.command.GroupCreateFunction
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service
 class OrganizationAggregateServiceDefault(
     authenticationResolver: ImAuthenticationProvider,
     clientCreateFunction: ClientCreateFunction,
+    clientDeleteFunction: ClientDeleteFunction,
     clientGetServiceAccountFunction: ClientGetServiceAccountFunction,
     clientServiceAccountRolesGrantFunction: ClientServiceAccountRolesGrantFunction,
     groupCreateFunction: GroupCreateFunction,
@@ -36,6 +38,7 @@ class OrganizationAggregateServiceDefault(
 ): OrganizationAggregateService<Organization>(
     authenticationResolver = authenticationResolver,
     clientCreateFunction = clientCreateFunction,
+    clientDeleteFunction = clientDeleteFunction,
     clientGetServiceAccountFunction = clientGetServiceAccountFunction,
     clientServiceAccountRolesGrantFunction = clientServiceAccountRolesGrantFunction,
     groupCreateFunction = groupCreateFunction,

@@ -2,10 +2,11 @@ package city.smartb.im.organization.api
 
 import city.smartb.im.commons.auth.policies.verify
 import city.smartb.im.organization.api.policies.OrganizationPoliciesEnforcer
-import city.smartb.im.organization.domain.features.command.OrganizationAddClientFunction
+import city.smartb.im.organization.domain.features.command.OrganizationAddApiKeyFunction
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDeleteFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDisableFunction
+import city.smartb.im.organization.domain.features.command.OrganizationRemoveApiKeyFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
 import city.smartb.im.organization.domain.features.command.OrganizationUploadedLogoEvent
@@ -94,10 +95,18 @@ class OrganizationEndpoint(
     ): OrganizationUploadedLogoEvent = organizationFeatures.organizationUploadLogo(cmd, file)
 
     /**
-     * Create a client for an organization.
+     * Create an API key for an organization.
      */
     @Bean
-    fun organizationAddClient(): OrganizationAddClientFunction = verify(organizationFeatures.organizationAddClient()) { command ->
+    fun organizationAddApiKey(): OrganizationAddApiKeyFunction = verify(organizationFeatures.organizationAddApiKey()) { command ->
+        organizationPoliciesEnforcer.checkUpdate(command.id)
+    }
+
+    /**
+     * Remove an API key from an organization.
+     */
+    @Bean
+    fun organizationRemoveApiKey(): OrganizationRemoveApiKeyFunction = verify(organizationFeatures.organizationRemoveApiKey()) { command ->
         organizationPoliciesEnforcer.checkUpdate(command.id)
     }
 

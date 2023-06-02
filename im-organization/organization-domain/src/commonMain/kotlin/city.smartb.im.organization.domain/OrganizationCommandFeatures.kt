@@ -1,9 +1,10 @@
 package city.smartb.im.organization.domain
 
-import city.smartb.im.organization.domain.features.command.OrganizationAddClientFunction
+import city.smartb.im.organization.domain.features.command.OrganizationAddApiKeyFunction
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDeleteFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDisableFunction
+import city.smartb.im.organization.domain.features.command.OrganizationRemoveApiKeyFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateFunction
 
 interface OrganizationCommandFeatures {
@@ -24,9 +25,14 @@ interface OrganizationCommandFeatures {
 //    suspend fun organizationUploadLogo(cmd: OrganizationUploadLogoCommand, file: FilePart): OrganizationUploadedLogoEvent
 
     /**
-     * Create client for an organization
+     * Create api key for an organization
      */
-    fun organizationAddClient(): OrganizationAddClientFunction
+    fun organizationAddApiKey(): OrganizationAddApiKeyFunction
+
+    /**
+     * Remove api key from an organization
+     */
+    fun organizationRemoveApiKey(): OrganizationRemoveApiKeyFunction
 
     /**
      * Disable an organization and its users.

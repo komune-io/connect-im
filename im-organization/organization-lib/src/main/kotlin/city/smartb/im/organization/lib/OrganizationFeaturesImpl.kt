@@ -3,10 +3,11 @@ package city.smartb.im.organization.lib
 import city.smartb.im.commons.utils.contentByteArray
 import city.smartb.im.organization.domain.OrganizationCommandFeatures
 import city.smartb.im.organization.domain.OrganizationQueryFeatures
-import city.smartb.im.organization.domain.features.command.OrganizationAddClientFunction
+import city.smartb.im.organization.domain.features.command.OrganizationAddApiKeyFunction
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDeleteFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDisableFunction
+import city.smartb.im.organization.domain.features.command.OrganizationRemoveApiKeyFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
 import city.smartb.im.organization.domain.features.command.OrganizationUploadedLogoEvent
@@ -58,9 +59,14 @@ class OrganizationFeaturesImpl<MODEL: OrganizationDTO>(
         organizationAggregateService.update(cmd, organizationMapper)
     }
 
-    override fun organizationAddClient(): OrganizationAddClientFunction = f2Function { cmd ->
-        logger.debug("organizationAddClient: $cmd")
-        organizationAggregateService.addClient(cmd, organizationMapper)
+    override fun organizationAddApiKey(): OrganizationAddApiKeyFunction = f2Function { cmd ->
+        logger.debug("organizationAddApiKey: $cmd")
+        organizationAggregateService.addApiKey(cmd, organizationMapper)
+    }
+
+    override fun organizationRemoveApiKey(): OrganizationRemoveApiKeyFunction = f2Function { cmd ->
+        logger.debug("organizationRemoveApiKey: $cmd")
+        organizationAggregateService.removeApiKey(cmd, organizationMapper)
     }
 
     suspend fun organizationUploadLogo(

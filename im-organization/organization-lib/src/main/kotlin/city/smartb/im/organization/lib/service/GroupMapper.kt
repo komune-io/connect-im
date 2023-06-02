@@ -3,6 +3,7 @@ package city.smartb.im.organization.lib.service
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.parseJsonTo
+import city.smartb.im.organization.domain.model.ApiKey
 import city.smartb.im.organization.domain.model.Organization
 import i2.keycloak.f2.group.domain.model.GroupModel
 import org.springframework.stereotype.Component
@@ -21,6 +22,7 @@ class GroupMapper {
             attributes = group.attributes.filterKeys { key -> key !in imGroupAttributes },
             roles = group.roles.assignedRoles,
             rolesComposites = group.roles,
+            apiKeys = group.attributes[Organization::apiKeys.name]?.parseJsonTo(Array<ApiKey>::class.java).orEmpty(),
             enabled = group.enabled,
             disabledBy = group.attributes[Organization::disabledBy.name],
             creationDate = group.attributes[Organization::creationDate.name]?.toLong() ?: 0,
@@ -30,6 +32,7 @@ class GroupMapper {
 
     private val imGroupAttributes = listOf(
         Organization::address.name,
+        Organization::apiKeys.name,
         Organization::creationDate.name,
         Organization::description.name,
         Organization::disabledBy.name,
