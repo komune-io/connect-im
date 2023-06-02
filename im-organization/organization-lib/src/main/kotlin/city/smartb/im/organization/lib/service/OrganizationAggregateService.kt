@@ -75,8 +75,8 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
     @Autowired(required = false)
     private lateinit var fileClient: FileClient
 
-    suspend fun create(command: OrganizationCreateCommand): OrganizationCreatedEvent {
-        return groupCreateFunction.invoke(command.toGroupCreateCommand())
+    suspend fun create(command: OrganizationCreateCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationCreatedEvent {
+        val event = groupCreateFunction.invoke(command.toGroupCreateCommand())
             .id
             .let { groupId ->
                 OrganizationCreatedEvent(
@@ -84,6 +84,15 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
                     parentOrganization = command.parentOrganizationId
                 )
             }
+
+        if (command.withClient) {
+            addClient(OrganizationAddClientCommand(
+                id = event.id,
+                name = ""
+            ), mapper)
+        }
+
+        return event
     }
 
     suspend fun update(command: OrganizationUpdateCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationUpdatedResult

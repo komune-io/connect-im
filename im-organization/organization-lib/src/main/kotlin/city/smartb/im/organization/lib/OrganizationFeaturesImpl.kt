@@ -50,7 +50,7 @@ class OrganizationFeaturesImpl<MODEL: OrganizationDTO>(
 
     override fun organizationCreate(): OrganizationCreateFunction = f2Function { cmd ->
         logger.debug("organizationCreate: $cmd")
-        organizationAggregateService.create(cmd)
+        organizationAggregateService.create(cmd, organizationMapper)
     }
 
     override fun organizationUpdate(): OrganizationUpdateFunction = f2Function { cmd ->
