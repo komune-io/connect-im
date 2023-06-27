@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.7"
 
 services:
   keycloak-it:
@@ -8,7 +8,7 @@ services:
       KC_DB_PASSWORD: admin
       KC_DB_USERNAME: admin
       KC_DB_SCHEMA: public
-      KC_HOSTNAME: localhost:8080
+      KC_HOSTNAME: keycloak-it:8080
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       PROXY_ADDRESS_FORWARDING: "true"
@@ -27,20 +27,23 @@ services:
       POSTGRES_PASSWORD: admin
 #    volumes:
 #      - ./postgres/data:/var/lib/postgresql/data
-  i2-init:
-    image: smartbcity/i2-init:experimental
-    network_mode: host
-    environment:
-      - i2_keycloak_auth-server-url=http://localhost:8080/auth
-      - i2_keycloak_username=admin
-      - i2_keycloak_password=admin
-      - i2_init_realm=im-test
-      - i2_init_admin-user_username=im-admin
-      - i2_init_admin-user_password=!tesTTest!
-      - i2_init_admin-user_email=admin@smart-b.io
-      - i2_init_admin-user_firstname=admin
-      - i2_init_admin-user_lastname=im
-      - i2.init.admin-client=im-test-client
-      - i2.init.admin-client-secret=secret
+#  i2-init:
+#    image: smartbcity/i2-init:experimental
+#    network_mode: host
+#    environment:
+#      - i2_keycloak_auth-server-url=http://localhost:8080/auth
+#      - i2_keycloak_username=admin
+#      - i2_keycloak_password=admin
+#      - i2_init_realm=im-test
+#      - i2_init_admin-user_username=im-admin
+#      - i2_init_admin-user_password=!tesTTest!
+#      - i2_init_admin-user_email=admin@smart-b.io
+#      - i2_init_admin-user_firstname=admin
+#      - i2_init_admin-user_lastname=im
+#      - i2.init.admin-client=im-test-client
+#      - i2.init.admin-client-secret=secret
 
-
+networks:
+  bclannet-it:
+    name: bclannet-it
+    external: true
