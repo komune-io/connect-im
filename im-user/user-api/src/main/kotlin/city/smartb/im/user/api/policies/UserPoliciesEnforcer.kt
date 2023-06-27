@@ -37,7 +37,6 @@ class UserPoliciesEnforcer: PolicyEnforcer() {
         UserPolicies.canUpdate(authedUser, userId)
     }
 
-
     suspend fun checkDisable(userId: UserId) = check("disable an user") { authedUser ->
         UserPolicies.canDisable(authedUser, userId)
     }
