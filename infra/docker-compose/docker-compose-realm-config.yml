@@ -1,0 +1,15 @@
+version: "3.3"
+
+services:
+  i2-config:
+    image: smartbcity/i2-config:experimental-1ef69118670781e90e27bf77fd99c4c38690e1c2
+    container_name: i2-config
+    environment:
+      i2_keycloak_auth-server-url: ${AUTH_HOST_URL}
+      i2_keycloak_realm: ${KC_REALM}
+      i2_keycloak_client-id: ${KC_ADMIN_CLIENT_ID}
+      i2_keycloak_client-secret: ${KC_ADMIN_CLIENT_SECRET}
+      i2_json: file:/tmp/config.json
+    volumes:
+      - ./config.json:/tmp/config.json
+

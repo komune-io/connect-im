@@ -1,4 +1,4 @@
-DOCKER_COMPOSE_FILE = keycloak init-realm
+DOCKER_COMPOSE_FILE = keycloak realm-init realm-config
 
 DOCKER_COMPOSE_PATH = infra/docker-compose
 DOCKER_COMPOSE_ENV = $(DOCKER_COMPOSE_PATH)/.env_dev

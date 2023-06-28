@@ -1,0 +1,27 @@
+{
+  "webClients": [
+    {
+      "clientId": "sb-platform-web",
+      "webUrl": "http://localhost:5173"
+    }
+  ],
+  "appClients": [],
+  "users": [],
+  "roles": [
+    "tr_orchestrator",
+    "tr_orchestrator_user",
+    "tr_orchestrator_admin",
+    "tr_project_manager",
+    "tr_project_manager_user",
+    "tr_project_manager_admin",
+    "tr_stakeholder",
+    "tr_stakeholder_user",
+    "tr_stakeholder_admin"
+  ],
+  "roleComposites": {
+    "tr_orchestrator_admin": ["im_read_organization", "im_write_organization", "im_write_role"],
+    "tr_orchestrator_user": ["im_read_user"],
+    "tr_project_manager_admin": ["im_write_my_organization"],
+    "tr_stakeholder_admin": ["im_write_my_organization"]
+  }
+}
