@@ -279,14 +279,20 @@ class UserAggregateService(
                 "clientId[${clientId}] " +
                 "redirectUri[${redirectUri}]"
         )
-        UserEmailSendActionsCommand(
-            userId = userId,
-            clientId = clientId,
-            redirectUri = redirectUri,
-            actions = actions.toList(),
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(userEmailSendActionsFunction)
+        try {
+            UserEmailSendActionsCommand(
+                userId = userId,
+                clientId = clientId,
+                redirectUri = redirectUri,
+                actions = actions.toList(),
+                realmId = auth.realmId,
+                auth = auth
+            ).invokeWith(userEmailSendActionsFunction)
+        } catch (e: Exception) {
+            // TODO Send a warning to the user
+            logger.error("Error sending email to user[$userId]", e)
+        }
+
     }
 
     private suspend fun UserUpdateCommand.toKeycloakUserUpdateCommand(): KeycloakUserUpdateCommand {
