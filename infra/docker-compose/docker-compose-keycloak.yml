@@ -8,9 +8,9 @@ services:
       KC_DB_PASSWORD: admin
       KC_DB_USERNAME: admin
       KC_DB_SCHEMA: public
-      KC_HOSTNAME: keycloak-it:8080
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: ${KC_HOSTNAME}:8080
+      KEYCLOAK_ADMIN: ${KC_ROOT_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KC_ROOT_PASS}
       PROXY_ADDRESS_FORWARDING: "true"
       JDBC_PARAMS: "ssl=false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
