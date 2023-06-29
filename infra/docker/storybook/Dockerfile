@@ -1,6 +1,6 @@
 #### Stage 1: Build the react application
 FROM node:lts as build
-ARG CI_NPM_AUTH_TOKEN
+
 WORKDIR /app
 
 COPY *.md ./

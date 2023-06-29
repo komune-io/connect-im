@@ -1254,6 +1254,17 @@
     "@emotion/weak-memoize" "^0.3.1"
     stylis "4.2.0"
 
+"@emotion/css@^11.10.6":
+  version "11.11.2"
+  resolved "https://registry.yarnpkg.com/@emotion/css/-/css-11.11.2.tgz#e5fa081d0c6e335352e1bc2b05953b61832dca5a"
+  integrity sha512-VJxe1ucoMYMS7DkiMdC2T7PWNbrEI0a39YRiyDvK2qq4lXwjRbVP/z4lpG+odCsRzadlR+1ywwrTzhdm5HNdew==
+  dependencies:
+    "@emotion/babel-plugin" "^11.11.0"
+    "@emotion/cache" "^11.11.0"
+    "@emotion/serialize" "^1.1.2"
+    "@emotion/sheet" "^1.2.2"
+    "@emotion/utils" "^1.2.1"
+
 "@emotion/hash@^0.8.0":
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@emotion/hash/-/hash-0.8.0.tgz#bbbff68978fefdbe68ccb533bc8cbe1d1afb5413"
@@ -2053,7 +2064,7 @@
     vis-data "^7.1.2"
     vis-network "^9.0.0"
 
-"@smartb/g2-storybook-documentation@^1.0.0-alpha.150":
+"@smartb/g2-storybook-documentation@^1.0.0-alpha.156":
   version "1.0.0-alpha.156"
   resolved "https://gitlab.smartb.city/api/v4/projects/127/packages/npm/@smartb/g2-storybook-documentation/-/@smartb/g2-storybook-documentation-1.0.0-alpha.156.tgz#9666d3672c9cbec2e60f03b06917c239b3840685"
   integrity sha1-lmbTZyycvsLmDwOwaRfCObOEBoU=
@@ -2081,7 +2092,7 @@
     i18next "^22.4.11"
     react-query "^3.39.1"
 
-"@smartb/g2@^1.0.0-alpha.150":
+"@smartb/g2@^1.0.0-alpha.156":
   version "1.0.0-alpha.156"
   resolved "https://gitlab.smartb.city/api/v4/projects/127/packages/npm/@smartb/g2/-/@smartb/g2-1.0.0-alpha.156.tgz#4e475513a38cb13ce79384806b0e2fd003c51368"
   integrity sha1-TkdVE6OMsTznk4SAaw4v0APFE2g=
