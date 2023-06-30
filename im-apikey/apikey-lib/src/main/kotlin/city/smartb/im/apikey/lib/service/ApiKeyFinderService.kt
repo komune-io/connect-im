@@ -81,7 +81,7 @@ open class ApiKeyFinderService<MODEL : ApiKeyDTO>(
     private suspend fun ApiKeyGetQuery.toGroupGetByIdQuery(): GroupGetQuery {
         val auth = authenticationResolver.getAuth()
         return GroupGetQuery(
-            id = id,
+            id = organizationId,
             realmId = auth.realmId,
             auth = auth
         )

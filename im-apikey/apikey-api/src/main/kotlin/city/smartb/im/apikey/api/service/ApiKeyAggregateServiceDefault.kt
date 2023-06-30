@@ -28,7 +28,6 @@ class ApiKeyAggregateServiceDefault(
     organizationFinderService: OrganizationFinderService<Organization>,
     userSetAttributesFunction: UserSetAttributesFunction,
     redisCache: RedisCache,
-    fileClient: FileClient,
     groupSetAttributesFunction: GroupSetAttributesFunction,
     organizationMapper: OrganizationMapper<Organization, Organization>,
 ): ApiKeyAggregateService<ApiKey>(
@@ -41,7 +40,6 @@ class ApiKeyAggregateServiceDefault(
     organizationFinderService = organizationFinderService,
     userSetAttributesFunction = userSetAttributesFunction,
     redisCache = redisCache,
-    fileClient = fileClient,
     groupSetAttributesFunction = groupSetAttributesFunction,
     organizationMapper = organizationMapper
 )

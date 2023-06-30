@@ -37,6 +37,6 @@ class ApiKeyFeaturesImpl<MODEL: ApiKeyDTO>(
 
     override fun apiKeyRemove(): ApikeyRemoveFunction = f2Function { cmd ->
         logger.debug("organizationDelete: $cmd")
-        apikeyAggregateService.removeApiKey(cmd, apikeyMapper)
+        apikeyAggregateService.removeApiKey(cmd)
     }
 }

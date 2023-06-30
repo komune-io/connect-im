@@ -1,12 +1,10 @@
 package city.smartb.im.apikey.lib.service
 
-import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddKeyCommand
 import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddedEvent
 import city.smartb.im.apikey.domain.features.command.ApikeyRemoveCommand
 import city.smartb.im.apikey.domain.features.command.ApikeyRemoveEvent
-import city.smartb.im.apikey.domain.features.query.ApiKeyGetQuery
 import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.domain.model.ApiKeyDTO
 import city.smartb.im.commons.exception.NotFoundException
@@ -32,7 +30,7 @@ import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
 import java.text.Normalizer
 import java.util.UUID
-import org.springframework.beans.factory.annotation.Autowired
+import org.slf4j.LoggerFactory
 
 open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
     private val authenticationResolver: ImAuthenticationProvider,
@@ -46,8 +44,9 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
     private val userSetAttributesFunction: UserSetAttributesFunction,
     private val groupSetAttributesFunction: GroupSetAttributesFunction,
     private val redisCache: RedisCache,
-    private var fileClient: FileClient
 ) {
+
+    val logger = LoggerFactory.getLogger(ApiKeyAggregateService::class.java)
 
     @Suppress("LongMethod")
     suspend fun addApiKey(
@@ -123,14 +122,11 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
 
     suspend fun removeApiKey(
         command: ApikeyRemoveCommand,
-        mapper: ApiKeyMapper<ApiKey, MODEL>
     ): ApikeyRemoveEvent {
         val auth = authenticationResolver.getAuth()
         val organization = organizationFinderService
             .organizationGet(OrganizationGetQuery(command.organizationId), organizationMapper)
             .item!!
-
-        val apikey = apikeyFinderService.apikeyGet(ApiKeyGetQuery(id = command.id, organizationId = command.organizationId), mapper).item!!
 
         ClientGetServiceAccountQuery(
             id = command.id,
@@ -138,17 +134,22 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
             auth = auth
         ).invokeWith(clientGetServiceAccountFunction)
             .item
-            ?.takeIf { it.attributes["memberOf"] == command.id }
+            ?.takeIf { it.attributes["memberOf"] == command.organizationId }
             ?: throw NotFoundException("Client", command.id)
-
-        ClientDeleteCommand(
-            id = command.id,
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(clientDeleteFunction)
+        try {
+            ClientDeleteCommand(
+                id = command.id,
+                realmId = auth.realmId,
+                auth = auth
+            ).invokeWith(clientDeleteFunction)
+        } catch (e: NotFoundException) {
+            logger.error("Error while deleting client", e)
+        } catch (e: Exception) {
+            logger.error("Error while deleting client", e)
+        }
 
         setAttributes(
-            id = command.id,
+            id = command.organizationId,
             attributes = mapOf(Organization::apiKeys.name to organization.apiKeys.filter { it.id != command.id }.toJson())
         )
 
