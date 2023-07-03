@@ -2,11 +2,9 @@ package city.smartb.im.organization.api
 
 import city.smartb.im.commons.auth.policies.verify
 import city.smartb.im.organization.api.policies.OrganizationPoliciesEnforcer
-import city.smartb.im.organization.domain.features.command.OrganizationAddApiKeyFunction
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDeleteFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDisableFunction
-import city.smartb.im.organization.domain.features.command.OrganizationRemoveApiKeyFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
 import city.smartb.im.organization.domain.features.command.OrganizationUploadedLogoEvent
@@ -93,22 +91,6 @@ class OrganizationEndpoint(
         @RequestPart("command") cmd: OrganizationUploadLogoCommand,
         @RequestPart("file") file: org.springframework.http.codec.multipart.FilePart
     ): OrganizationUploadedLogoEvent = organizationFeatures.organizationUploadLogo(cmd, file)
-
-    /**
-     * Create an API key for an organization.
-     */
-    @Bean
-    fun organizationAddApiKey(): OrganizationAddApiKeyFunction = verify(organizationFeatures.organizationAddApiKey()) { command ->
-        organizationPoliciesEnforcer.checkUpdate(command.id)
-    }
-
-    /**
-     * Remove an API key from an organization.
-     */
-    @Bean
-    fun organizationRemoveApiKey(): OrganizationRemoveApiKeyFunction = verify(organizationFeatures.organizationRemoveApiKey()) { command ->
-        organizationPoliciesEnforcer.checkUpdate(command.id)
-    }
 
     /**
      * Disable an organization and its users.

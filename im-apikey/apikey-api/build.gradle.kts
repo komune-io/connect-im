@@ -12,6 +12,5 @@ dependencies {
 
     api(project(":im-apikey:apikey-lib"))
     api(project(":im-apikey:apikey-domain"))
-    api(project(":im-organization:organization-lib"))
     implementation(project(":im-user:user-lib"))
 }

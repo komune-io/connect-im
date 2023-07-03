@@ -22,6 +22,7 @@ i2:
         clientSecret: secret
 
 connect:
+  fs: http://fs:8090
   im:
     user:
       action:

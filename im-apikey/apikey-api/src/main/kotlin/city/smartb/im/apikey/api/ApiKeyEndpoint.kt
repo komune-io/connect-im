@@ -5,10 +5,9 @@ import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddFuncti
 import city.smartb.im.apikey.domain.features.command.ApikeyRemoveFunction
 import city.smartb.im.apikey.domain.features.query.ApiKeyGetFunction
 import city.smartb.im.apikey.domain.features.query.ApiKeyPageFunction
-import city.smartb.im.commons.auth.policies.verify
-
-import city.smartb.im.apikey.lib.ApiKeyFeaturesImpl
 import city.smartb.im.apikey.domain.model.ApiKey
+import city.smartb.im.apikey.lib.ApiKeyFeaturesImpl
+import city.smartb.im.commons.auth.policies.verify
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.RequestMapping

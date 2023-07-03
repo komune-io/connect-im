@@ -6,7 +6,6 @@ import i2.keycloak.f2.group.domain.model.GroupModel
 
 val imGroupAttributes = listOf(
     Organization::address.name,
-    Organization::apiKeys.name,
     Organization::creationDate.name,
     Organization::description.name,
     Organization::enabled.name,

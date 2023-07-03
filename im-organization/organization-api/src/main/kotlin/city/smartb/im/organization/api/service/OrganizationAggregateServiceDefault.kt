@@ -1,6 +1,8 @@
 package city.smartb.im.organization.api.service
 
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
+import city.smartb.im.apikey.domain.model.ApiKey
+import city.smartb.im.apikey.lib.service.ApiKeyAggregateService
 import city.smartb.im.infra.redis.RedisCache
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.lib.service.OrganizationAggregateService
@@ -35,6 +37,7 @@ class OrganizationAggregateServiceDefault(
     userFinderService: UserFinderService,
     userSetAttributesFunction: UserSetAttributesFunction,
     redisCache: RedisCache,
+    apiKeyService: ApiKeyAggregateService<ApiKey>,
 ): OrganizationAggregateService<Organization>(
     authenticationResolver = authenticationResolver,
     clientCreateFunction = clientCreateFunction,
@@ -51,4 +54,5 @@ class OrganizationAggregateServiceDefault(
     userFinderService = userFinderService,
     userSetAttributesFunction = userSetAttributesFunction,
     redisCache = redisCache,
+    apiKeyService = apiKeyService
 )

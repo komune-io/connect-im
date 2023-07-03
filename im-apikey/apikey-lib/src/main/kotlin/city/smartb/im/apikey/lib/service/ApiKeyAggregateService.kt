@@ -10,11 +10,9 @@ import city.smartb.im.apikey.domain.model.ApiKeyDTO
 import city.smartb.im.commons.exception.NotFoundException
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.infra.redis.RedisCache
-import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationId
-import city.smartb.im.organization.lib.service.OrganizationFinderService
-import city.smartb.im.organization.lib.service.OrganizationMapper
+import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.features.command.ClientCreateCommand
 import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
@@ -26,6 +24,9 @@ import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountFuncti
 import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountQuery
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesCommand
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
+import i2.keycloak.f2.group.domain.features.query.GroupGetFunction
+import i2.keycloak.f2.group.domain.features.query.GroupGetQuery
+import i2.keycloak.f2.group.domain.model.GroupModel
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
 import java.text.Normalizer
@@ -39,8 +40,7 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
     private val clientGetServiceAccountFunction: ClientGetServiceAccountFunction,
     private val clientServiceAccountRolesGrantFunction: ClientServiceAccountRolesGrantFunction,
     private val apikeyFinderService: ApiKeyFinderService<MODEL>,
-    private val organizationFinderService: OrganizationFinderService<Organization>,
-    private val organizationMapper: OrganizationMapper<Organization, Organization>,
+    private val groupGetFunction: GroupGetFunction,
     private val userSetAttributesFunction: UserSetAttributesFunction,
     private val groupSetAttributesFunction: GroupSetAttributesFunction,
     private val redisCache: RedisCache,
@@ -52,12 +52,9 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
     suspend fun addApiKey(
         command: ApiKeyOrganizationAddKeyCommand
     ): ApiKeyOrganizationAddedEvent {
-        val organization = organizationFinderService
-                .organizationGet(OrganizationGetQuery(command.organizationId), organizationMapper)
-                .item!!
-
+        val group = getOrganization(command.organizationId)
         val auth = authenticationResolver.getAuth()
-        val clientIdentifier = Normalizer.normalize("tr-${organization.name}-${command.name}-app", Normalizer.Form.NFD)
+        val clientIdentifier = Normalizer.normalize("tr-${group.name}-${command.name}-app", Normalizer.Form.NFD)
             .lowercase()
             .replace(Regex("[^a-z0-9]"), "-")
             .replace(Regex("-+"), "-")
@@ -82,15 +79,16 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
             identifier = clientIdentifier,
             creationDate = System.currentTimeMillis()
         )
+        val apiKeys = group.toApiKeys() + newApiKey
         setAttributes(
-            id = organization.id,
-            attributes = mapOf(Organization::apiKeys.name to (organization.apiKeys + newApiKey).toJson())
+            id = group.id,
+            attributes = mapOf(GROUP_API_KEYS_FIELD to (apiKeys).toJson())
         )
 
-        if (organization.roles.isNotEmpty()) {
+        if (group.roles.assignedRoles.isNotEmpty()) {
             ClientServiceAccountRolesGrantCommand(
                 id = clientId,
-                roles = organization.roles,
+                roles = group.roles.assignedRoles,
                 realmId = auth.realmId,
                 auth = auth
             ).invokeWith(clientServiceAccountRolesGrantFunction)
@@ -113,21 +111,24 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
         ).invokeWith(userSetAttributesFunction)
 
         return ApiKeyOrganizationAddedEvent(
-            organizationId = organization.id,
-            keyId = clientId,
+            organizationId = group.id,
+            id = clientId,
             keyIdentifier = clientIdentifier,
             keySecret = clientSecret
         )
+    }
+
+    private suspend fun getOrganization(organizationId: OrganizationId): GroupModel {
+        val group = groupGetFunction.invoke(toGroupGetByIdQuery(organizationId)).item
+            ?: throw NotFoundException("Organization", organizationId)
+        return group
     }
 
     suspend fun removeApiKey(
         command: ApikeyRemoveCommand,
     ): ApikeyRemoveEvent {
         val auth = authenticationResolver.getAuth()
-        val organization = organizationFinderService
-            .organizationGet(OrganizationGetQuery(command.organizationId), organizationMapper)
-            .item!!
-
+        val group = getOrganization(command.organizationId)
         ClientGetServiceAccountQuery(
             id = command.id,
             realmId = auth.realmId,
@@ -147,10 +148,10 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
         } catch (e: Exception) {
             logger.error("Error while deleting client", e)
         }
-
+        val apiKeys = group.toApiKeys()
         setAttributes(
             id = command.organizationId,
-            attributes = mapOf(Organization::apiKeys.name to organization.apiKeys.filter { it.id != command.id }.toJson())
+            attributes = mapOf(GROUP_API_KEYS_FIELD to apiKeys.filter { it.id != command.id }.toJson())
         )
 
         return ApikeyRemoveEvent(
@@ -167,5 +168,14 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
             realmId = auth.realmId,
             auth = auth
         ).invokeWith(groupSetAttributesFunction)
+
+    }
+    private suspend fun toGroupGetByIdQuery(organizationId: OrganizationId  ): GroupGetQuery {
+        val auth = authenticationResolver.getAuth()
+        return GroupGetQuery(
+            id = organizationId,
+            realmId = auth.realmId,
+            auth = auth
+        )
     }
 }

@@ -4,7 +4,6 @@ import city.smartb.im.bdd.assertion.AssertionBdd
 import city.smartb.im.commons.model.Address
 import city.smartb.im.organization.api.OrganizationEndpoint
 import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
-import city.smartb.im.organization.domain.model.ApiKey
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationId
 import f2.dsl.fnc.invoke
@@ -46,7 +45,6 @@ class AssertionOrganization(
             roles: List<String>? = organization.roles,
             enabled: Boolean = organization.enabled,
             creationDate: Long = organization.creationDate,
-            apiKeys: List<ApiKey> = organization.apiKeys
         ) = also {
             Assertions.assertThat(organization.id).isEqualTo(id)
             Assertions.assertThat(organization.siret).isEqualTo(siret)
@@ -57,7 +55,6 @@ class AssertionOrganization(
             Assertions.assertThat(organization.roles).isEqualTo(roles)
             Assertions.assertThat(organization.enabled).isEqualTo(enabled)
             Assertions.assertThat(organization.creationDate).isEqualTo(creationDate)
-            Assertions.assertThat(organization.apiKeys).isEqualTo(apiKeys)
         }.hasAddress(address)
 
         fun hasAddress(address: Address?) = also {
@@ -86,16 +83,5 @@ class AssertionOrganization(
             Assertions.assertThat(organization.roles).isEqualTo(organization.roles)
         }
 
-        fun hasApiKey(apiKeyName: String) = also {
-            Assertions.assertThat(organization.apiKeys).anyMatch { key ->
-                key.name == apiKeyName
-            }
-        }
-
-        fun hasNotApiKey(keyId: String) = also {
-            Assertions.assertThat(organization.apiKeys).noneMatch { key ->
-                key.id == keyId
-            }
-        }
     }
 }

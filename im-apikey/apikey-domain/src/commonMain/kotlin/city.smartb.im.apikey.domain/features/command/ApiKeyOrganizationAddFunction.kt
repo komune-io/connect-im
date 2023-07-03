@@ -44,7 +44,7 @@ data class ApiKeyOrganizationAddKeyCommand(
 @JsName("ApiKeyAddedEventDTO")
 interface ApiKeyAddedEventDTO: Event {
     val organizationId: OrganizationId
-    val keyId: ApiKeyId
+    val id: ApiKeyId
     val keyIdentifier: ApiKeyIdentifier
     val keySecret: String
 }
@@ -54,15 +54,16 @@ interface ApiKeyAddedEventDTO: Event {
  * @parent [ApiKeyOrganizationAddFunction]
  */
 data class ApiKeyOrganizationAddedEvent(
-    /**
-     * Id of the apikey.
-     */
-    override val organizationId: OrganizationId,
 
     /**
      * Id of the new key.
      */
-    override val keyId: ApiKeyId,
+    override val id: ApiKeyId,
+
+    /**
+     * Id of the organization.
+     */
+    override val organizationId: OrganizationId,
 
     /**
      * Identifier of the new key.
