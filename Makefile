@@ -43,5 +43,5 @@ help:
 	@echo 'Dev Environment tasks: make dev-help'
 	@make -s dev-help
 
-## DEV ENVIRONMENT
+## DOCKER-COMPOSE DEV ENVIRONMENT
 include infra/docker-compose/dev-compose.mk
