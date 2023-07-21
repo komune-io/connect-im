@@ -1,4 +1,4 @@
-package city.smartb.im.organization.domain.model
+package city.smartb.im.apikey.domain.model
 
 import i2.keycloak.f2.client.domain.ClientId
 import i2.keycloak.f2.client.domain.ClientIdentifier

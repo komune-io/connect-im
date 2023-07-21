@@ -7,6 +7,7 @@ import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.lib.OrganizationFeaturesImpl
 import city.smartb.im.organization.lib.service.OrganizationAggregateService
 import city.smartb.im.organization.lib.service.OrganizationFinderService
+import city.smartb.im.organization.lib.service.OrganizationMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -14,13 +15,16 @@ import org.springframework.context.annotation.Configuration
 class OrganizationFeaturesConfig {
 
     @Bean
+    fun  organizationMapper(): OrganizationMapper<Organization, Organization> =  OrganizationMapperImpl()
+    @Bean
     fun organizationFeatures(
         organizationFinderService: OrganizationFinderServiceDefault,
         organizationAggregateService: OrganizationAggregateServiceDefault,
+        organizationMapper: OrganizationMapper<Organization, Organization>,
     ) = OrganizationFeaturesImpl(
         organizationFinderService,
         organizationAggregateService,
-        OrganizationMapperImpl()
+        organizationMapper
     )
 }
 

@@ -9,6 +9,7 @@ dependencies {
 
     implementation(project(":im-api:api-config"))
     implementation(project(":im-user:user-lib"))
+    implementation(project(":im-apikey:apikey-lib"))
     implementation(project(":im-infra:infra-redis"))
 
     implementation("city.smartb.i2:i2-client-f2-command:${Versions.i2}")

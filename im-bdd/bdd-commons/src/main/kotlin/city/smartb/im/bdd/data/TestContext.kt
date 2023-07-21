@@ -13,6 +13,7 @@ typealias TestContextKey = String
 class TestContext {
     private val entityLists = mutableListOf<TestEntities<*, *>>()
     val realmId = "im-test"
+    val apikeyIds = testEntities<String, RoleId>("Role")
     val roleIds = testEntities<String, RoleId>("Role")
     val organizationIds = testEntities<String, OrganizationId>("Organization")
     val userIds = testEntities<String, UserId>("User")

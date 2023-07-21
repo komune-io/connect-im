@@ -44,7 +44,7 @@ class AssertionOrganization(
             attributes: Map<String, String> = organization.attributes,
             roles: List<String>? = organization.roles,
             enabled: Boolean = organization.enabled,
-            creationDate: Long = organization.creationDate
+            creationDate: Long = organization.creationDate,
         ) = also {
             Assertions.assertThat(organization.id).isEqualTo(id)
             Assertions.assertThat(organization.siret).isEqualTo(siret)
@@ -82,5 +82,6 @@ class AssertionOrganization(
             Assertions.assertThat(organization.website).isNull()
             Assertions.assertThat(organization.roles).isEqualTo(organization.roles)
         }
+
     }
 }

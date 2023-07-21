@@ -44,6 +44,13 @@ include(
 )
 
 include(
+    "im-apikey:apikey-api",
+    "im-apikey:apikey-domain",
+    "im-apikey:apikey-client",
+    "im-apikey:apikey-lib"
+)
+
+include(
     "im-role:role-api",
     "im-role:role-domain",
     "im-role:role-client"

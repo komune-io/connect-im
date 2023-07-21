@@ -3,28 +3,26 @@ package city.smartb.im.organization.lib.service
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
+import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddKeyCommand
+import city.smartb.im.apikey.domain.model.ApiKey
+import city.smartb.im.apikey.lib.service.ApiKeyAggregateService
 import city.smartb.im.commons.exception.NotFoundException
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.infra.redis.CacheName
 import city.smartb.im.infra.redis.RedisCache
-import city.smartb.im.organization.domain.features.command.OrganizationAddApiKeyCommand
-import city.smartb.im.organization.domain.features.command.OrganizationAddedApiKeyEvent
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
 import city.smartb.im.organization.domain.features.command.OrganizationDeleteCommand
 import city.smartb.im.organization.domain.features.command.OrganizationDeletedEvent
 import city.smartb.im.organization.domain.features.command.OrganizationDisableCommand
 import city.smartb.im.organization.domain.features.command.OrganizationDisabledEvent
-import city.smartb.im.organization.domain.features.command.OrganizationRemoveApiKeyCommand
-import city.smartb.im.organization.domain.features.command.OrganizationRemovedApiKeyEvent
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationUpdatedResult
 import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
 import city.smartb.im.organization.domain.features.command.OrganizationUploadedLogoEvent
 import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
-import city.smartb.im.organization.domain.model.ApiKey
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationDTO
 import city.smartb.im.organization.domain.model.OrganizationId
@@ -36,14 +34,10 @@ import city.smartb.im.user.lib.service.UserAggregateService
 import city.smartb.im.user.lib.service.UserFinderService
 import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
-import i2.keycloak.f2.client.domain.features.command.ClientCreateCommand
 import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
-import i2.keycloak.f2.client.domain.features.command.ClientDeleteCommand
 import i2.keycloak.f2.client.domain.features.command.ClientDeleteFunction
-import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantCommand
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction
 import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountFunction
-import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountQuery
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupCreateFunction
 import i2.keycloak.f2.group.domain.features.command.GroupDeleteCommand
@@ -54,11 +48,8 @@ import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesCommand
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
-import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
 import org.springframework.beans.factory.annotation.Autowired
-import java.text.Normalizer
-import java.util.UUID
 
 open class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val authenticationResolver: ImAuthenticationProvider,
@@ -75,6 +66,7 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService,
     private val userSetAttributesFunction: UserSetAttributesFunction,
+    private val apiKeyService: ApiKeyAggregateService<ApiKey>,
     private val redisCache: RedisCache,
 ) {
 
@@ -92,10 +84,10 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
             }
 
         if (command.withApiKey) {
-            addApiKey(OrganizationAddApiKeyCommand(
-                id = event.id,
+            apiKeyService.addApiKey(ApiKeyOrganizationAddKeyCommand(
+                organizationId = event.id,
                 name = "Default"
-            ), mapper)
+            ))
         }
 
         return event
@@ -128,107 +120,6 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
         OrganizationUploadedLogoEvent(
             id = command.id,
             url = event.url
-        )
-    }
-
-    suspend fun addApiKey(
-        command: OrganizationAddApiKeyCommand, mapper: OrganizationMapper<Organization, MODEL>
-    ): OrganizationAddedApiKeyEvent = redisCache.evictIfPresent(CacheName.Organization, command.id) {
-        val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id), mapper).item!!
-
-        val auth = authenticationResolver.getAuth()
-        val clientIdentifier = Normalizer.normalize("tr-${organization.name}-${command.name}-app", Normalizer.Form.NFD)
-            .lowercase()
-            .replace(Regex("[^a-z0-9]"), "-")
-            .replace(Regex("-+"), "-")
-        val clientSecret = UUID.randomUUID().toString()
-
-        val clientId = ClientCreateCommand(
-            clientIdentifier = clientIdentifier,
-            secret = clientSecret,
-            isPublicClient = false,
-            isDirectAccessGrantsEnabled = false,
-            isServiceAccountsEnabled = true,
-            authorizationServicesEnabled = false,
-            isStandardFlowEnabled = false,
-            protocolMappers = mapOf("memberOf" to command.id),
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(clientCreateFunction).id
-
-        val newApiKey = ApiKey(
-            id = clientId,
-            name = command.name,
-            identifier = clientIdentifier,
-            creationDate = System.currentTimeMillis()
-        )
-        setAttributes(
-            id = organization.id,
-            attributes = mapOf(Organization::apiKeys.name to (organization.apiKeys + newApiKey).toJson())
-        )
-
-        if (organization.roles.isNotEmpty()) {
-            ClientServiceAccountRolesGrantCommand(
-                id = clientId,
-                roles = organization.roles,
-                realmId = auth.realmId,
-                auth = auth
-            ).invokeWith(clientServiceAccountRolesGrantFunction)
-        }
-
-        val serviceAccountUser = ClientGetServiceAccountQuery(
-            id = clientId,
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(clientGetServiceAccountFunction).item!!
-
-        UserSetAttributesCommand(
-            id = serviceAccountUser.id,
-            attributes = mapOf(
-                "memberOf" to command.id,
-                "display_name" to command.name
-            ),
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(userSetAttributesFunction)
-
-        OrganizationAddedApiKeyEvent(
-            id = organization.id,
-            keyId = clientId,
-            keyIdentifier = clientIdentifier,
-            keySecret = clientSecret
-        )
-    }
-
-    suspend fun removeApiKey(
-        command: OrganizationRemoveApiKeyCommand, mapper: OrganizationMapper<Organization, MODEL>
-    ): OrganizationRemovedApiKeyEvent {
-        val auth = authenticationResolver.getAuth()
-        val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id), mapper).item!!
-
-        ClientGetServiceAccountQuery(
-            id = command.keyId,
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(clientGetServiceAccountFunction)
-            .item
-            ?.takeIf { it.attributes["memberOf"] == command.id }
-            ?: throw NotFoundException("Client", command.keyId)
-
-        ClientDeleteCommand(
-            id = command.keyId,
-            realmId = auth.realmId,
-            auth = auth
-        ).invokeWith(clientDeleteFunction)
-
-        setAttributes(
-            id = command.id,
-            attributes = mapOf(Organization::apiKeys.name to organization.apiKeys.filter { it.id != command.keyId }.toJson())
-        )
-
-        return OrganizationRemovedApiKeyEvent(
-            id = command.id,
-            keyId = command.keyId
         )
     }
 

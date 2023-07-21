@@ -7,6 +7,9 @@ enum class Role(val value: String) {
     IM_ORGANIZATION_READ("im_read_organization"),
     IM_ORGANIZATION_WRITE("im_write_organization"),
 
+    IM_APIKEY_READ("im_read_apikey"),
+    IM_APIKEY_WRITE("im_write_apikey"),
+
     IM_ROLE_READ("im_read_role"),
     IM_ROLE_WRITE("im_write_role"),
 

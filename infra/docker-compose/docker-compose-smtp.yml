@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  smtp:
+    container_name: connect-fake-smtp
+    image: reachfive/fake-smtp-server:latest
+    ports:
+      - "1025:1025"
+      - "1080:1080"
+
+networks:
+  default:
+    name: bclannet-it
+    external: true

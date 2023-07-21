@@ -30,3 +30,18 @@ package-im-storybook-build:
 
 package-im-storybook-push:
 	@docker push ${STORYBOOK_IMG}
+help:
+	@echo '/////////////////////////////////'
+	@echo 'Build tasks:'
+	@echo 'Usage: make [TARGET]'
+	@echo 'Targets:'
+	@echo '  libs: Build kotlin libraries'
+	@echo '  docker: Build and push docker images'
+	@echo '  docs: Build and push docs'
+	@echo ''
+	@echo '/////////////////////////////////'
+	@echo 'Dev Environment tasks: make dev-help'
+	@make -s dev-help
+
+## DOCKER-COMPOSE DEV ENVIRONMENT
+include infra/docker-compose/dev-compose.mk

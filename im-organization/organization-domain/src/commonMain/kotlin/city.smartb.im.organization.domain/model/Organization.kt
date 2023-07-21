@@ -29,7 +29,6 @@ interface OrganizationDTO {
     val attributes: Map<String, String>
     val roles: List<RoleName>
     val rolesComposites: RolesCompositesModel
-    val apiKeys: List<ApiKeyDTO>
     val enabled: Boolean
     val disabledBy: OrganizationId?
     val creationDate: Long
@@ -92,11 +91,6 @@ data class Organization(
      * All composite roles of the organization.
      */
     override val rolesComposites: RolesCompositesModel,
-
-    /**
-     * List of API keys available to the organization.
-     */
-    override val apiKeys: List<ApiKey>,
 
     /**
      * Specifies if the organization is enabled or not

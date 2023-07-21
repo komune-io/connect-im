@@ -163,27 +163,21 @@ Properties prefix: `connect.fs`
 # Tests
 
 To run tests you need to:
- * Start keycloak
+ * Start dev environment 
 
 ```bash
-docker-compose -f docker-compose-keycloak.yml up -d
-```
-
- * Start keycloak
-
-```bash
-docker-compose -f docker-compose-redis.yml up -d
-```
-
- * Init keycloak realm
-
-```bash
-docker-compose -f docker-compose-i2-init.yml up -d
+make dev up
 ```
 
  * Run test
 ```bash
 ./gradlew test
+```
+
+* Stop dev environment
+
+```bash
+make dev down
 ```
 
 # Errors

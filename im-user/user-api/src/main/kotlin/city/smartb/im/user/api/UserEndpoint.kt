@@ -53,11 +53,6 @@ class UserEndpoint(
         policiesEnforcer.checkGet()
     }
 
-
-    /**
-     * Check if a User exists by its email address.
-     */
-
     /**
      * Check if a User exists by its email address.
      */

@@ -1,0 +1,12 @@
+{
+  "appClients": [],
+  "users": [],
+  "roles": [
+    "admin",
+    "user"
+  ],
+  "roleComposites": {
+    "admin": ["im_read_organization", "im_write_organization", "im_write_role"],
+    "user": ["im_read_user", "im_write_my_organization"]
+  }
+}
