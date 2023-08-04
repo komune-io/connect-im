@@ -50,6 +50,7 @@ class UserFinderService(
     }
 
     suspend fun userPage(query: UserPageQuery): UserPageResult {
+        //TODO Use UserPageQuery.pages
         val result = query.toUserPageQuery().invokeWith(keycloakUserPageFunction).items
         val users = result.items.map { user ->
             userTransformer.toUser(user)

@@ -39,6 +39,11 @@ interface UserPageQueryDTO: Query {
 	val role: String?
 
 	/**
+	 * Roles filter.
+	 */
+	val roles: List<String>?
+
+	/**
 	 * Arbitrary attributes filter.
 	 */
 	val attributes: Map<String, String>?
@@ -67,13 +72,14 @@ interface UserPageQueryDTO: Query {
  * @parent [UserPageFunction]
  */
 data class UserPageQuery(
-	override val organizationId: OrganizationId?,
-	override val search: String?,
-	override val role: String?,
-	override val attributes: Map<String, String>?,
+	override val organizationId: OrganizationId? = null,
+	override val search: String? = null,
+	override val role: String? = null,
+	override val attributes: Map<String, String>? = null,
 	override val withDisabled: Boolean,
-	override val page: Int?,
-	override val size: Int?
+	override val page: Int? = null,
+	override val size: Int? = null,
+	override val roles: List<String>? = null
 ): UserPageQueryDTO
 
 @JsExport
