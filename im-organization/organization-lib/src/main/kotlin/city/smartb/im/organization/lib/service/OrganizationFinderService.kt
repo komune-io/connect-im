@@ -61,6 +61,7 @@ open class OrganizationFinderService<MODEL : OrganizationDTO>(
         query: OrganizationPageQuery,
         organizationMapper: OrganizationMapper<Organization, MODEL>,
     ): OrganizationPageResult<MODEL> {
+        //TODO Add roles filters
         val result = groupPageFunction.invoke(query.toGroupPageQuery())
         val items = result.page.items.map { groupMapper.toOrganization(it) }.map { organizationMapper.mapModel(it) }
         return OrganizationPageResult(

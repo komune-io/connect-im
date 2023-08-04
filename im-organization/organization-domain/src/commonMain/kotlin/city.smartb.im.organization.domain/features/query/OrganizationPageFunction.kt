@@ -23,6 +23,7 @@ typealias OrganizationPageFunction<MODEL> = F2Function<OrganizationPageQuery, Or
 interface OrganizationPageQueryDTO: Query {
 	val search: String?
 	val role: String?
+	val roles: List<String>?
 	val attributes: Map<String, String>?
 	val withDisabled: Boolean?
 	val page: Int?
@@ -38,35 +39,39 @@ data class OrganizationPageQuery(
 	 * Search string filtering on the name of the organization.
 	 * @example "SmartB"
 	 */
-	override val search: String?,
+	override val search: String? = null,
 
 	/**
 	 * Role filter.
 	 */
-	override val role: String?,
+	override val role: String? = null,
 
 	/**
 	 * Arbitrary attributes filter.
 	 */
-	override val attributes: Map<String, String>?,
+	override val attributes: Map<String, String>? = null,
 
-	/**
+    /**
 	 * If false, filter out the disabled organizations. (default: false)
 	 * @example false
 	 */
 	override val withDisabled: Boolean? = false,
 
-	/**
+    /**
 	 * Number of the page.
 	 * @example 0
 	 */
-	override val page: Int?,
+	override val page: Int? = null,
 
 	/**
 	 * Size of the page.
 	 * @example 10
 	 */
-	override val size: Int?
+	override val size: Int? = null,
+	/**
+	 * Role filter.
+	 */
+	override val roles: List<String>? = null
 ): OrganizationPageQueryDTO
 
 @JsExport
