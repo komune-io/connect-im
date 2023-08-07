@@ -1,0 +1,5 @@
+i2.keycloak.f2.group.command.GroupCreateFunctionImpl
+i2.keycloak.f2.group.command.GroupDeleteFunctionImpl
+i2.keycloak.f2.group.command.GroupDisableFunctionImpl
+i2.keycloak.f2.group.command.GroupSetAttributesFunctionImpl
+i2.keycloak.f2.group.command.GroupUpdateFunctionImpl

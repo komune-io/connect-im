@@ -1,0 +1,16 @@
+version: "3.3"
+
+services:
+  i2-config:
+    image: smartbcity/i2-config
+    network_mode: host
+    environment:
+      - i2_keycloak_serverUrl=http://localhost:8080/auth
+      - i2_keycloak_realm=test
+      - i2_keycloak_clientId=i2-api
+      - i2_keycloak_clientSecret=c54915d6-3498-4c8f-8143-7858fb72ef6f
+      - i2_json=file:/tmp/test.json
+    ports:
+      - "8083:8083"
+    volumes:
+      - /Users/teddy/workspace/i2/i2-config/test.json:/tmp/test.json

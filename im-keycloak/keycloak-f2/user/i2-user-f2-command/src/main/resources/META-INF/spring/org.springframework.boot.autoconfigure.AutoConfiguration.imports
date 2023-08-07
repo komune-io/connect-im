@@ -1,0 +1,12 @@
+i2.keycloak.f2.user.command.UserCreateFunctionImpl
+i2.keycloak.f2.user.command.UserDeleteFunctionImpl
+i2.keycloak.f2.user.command.UserDisableFunctionImpl
+i2.keycloak.f2.user.command.UserEmailSendActionsFunctionImpl
+i2.keycloak.f2.user.command.UserJoinGroupFunctionImpl
+i2.keycloak.f2.user.command.UserRolesGrantFunctionImpl
+i2.keycloak.f2.user.command.UserRolesRevokeFunctionImpl
+i2.keycloak.f2.user.command.UserRolesSetFunctionImpl
+i2.keycloak.f2.user.command.UserSetAttributesFunctionImpl
+i2.keycloak.f2.user.command.UserUpdateFunctionImpl
+i2.keycloak.f2.user.command.UserUpdateEmailFunctionImpl
+i2.keycloak.f2.user.command.UserUpdatePasswordFunctionImpl

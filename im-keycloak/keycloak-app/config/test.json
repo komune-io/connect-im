@@ -1,0 +1,34 @@
+{
+  "webClients": [
+    {
+      "clientId": "sb-plateform-web",
+      "webUrl": "https://json.com"
+    }
+  ],
+  "appClients": [
+    {
+      "clientId": "sb-plateform-app",
+      "clientSecret": "secretsecret",
+      "roles": [
+        "role1",
+        "role2"
+      ],
+      "realmManagementRoles": [
+        "manage-users",
+        "view-users",
+        "query-groups"
+      ]
+    }
+  ],
+  "users": [],
+  "roles": [
+    "admin",
+    "role1",
+    "role2",
+    "role3"
+  ],
+  "roleComposites": {
+    "admin": ["role1"],
+    "role1": ["role2", "role3"]
+  }
+}

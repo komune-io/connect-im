@@ -1,0 +1,7 @@
+i2.keycloak.f2.user.query.UserGetFunctionImpl
+i2.keycloak.f2.user.query.UserGetByEmailFunctionImpl
+i2.keycloak.f2.user.query.UserGetByUsernameFunctionImpl
+i2.keycloak.f2.user.query.UserPageFunctionImpl
+i2.keycloak.f2.user.query.UserGetRolesFunctionImpl
+i2.keycloak.f2.user.query.UserGetGroupsFunctionImpl
+i2.keycloak.f2.user.query.service.UserFinderService

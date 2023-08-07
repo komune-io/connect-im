@@ -1,0 +1,17 @@
+version: "3.3"
+
+services:
+  i2-config:
+    image: smartbcity/i2-config
+    network_mode: host
+    environment:
+      - i2_keycloak_serverUrl=http://localhost:8080/auth
+      - i2_keycloak_realm=test
+      - i2_keycloak_clientId=i2-api
+      - i2_keycloak_clientSecret=c54915d6-3498-4c8f-8143-7858fb72ef6f
+      - i2_config_webClient_client-id=plateform-web
+      - i2_config_webClient_web-url=https://application.com
+      - i2_config_webClient_localhost-url=http://localhost:3000
+      - i2_config_appClient_client-id=plateform-app
+    ports:
+      - "8083:8083"
