@@ -10,7 +10,7 @@ suspend fun retryWithExceptions(
     action: suspend () -> Unit): Boolean {
     var success = false
     var attempts = 0
-
+    @Suppress("TooGenericExceptionCaught")
     while (attempts < maxRetries && !success) {
         try {
             logger.info("////////////////////////////////////////////////////")

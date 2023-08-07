@@ -4,6 +4,6 @@ plugins {
 }
 
 dependencies {
-    api(project(":i2-keycloak:keycloak-plugin:keycloak-plugin-domain"))
+    api(project(":im-keycloak:keycloak-plugin:keycloak-plugin-domain"))
     Dependencies.Jvm.ktor(::implementation)
 }

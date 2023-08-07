@@ -5,8 +5,8 @@ plugins {
 }
 
 dependencies {
-    testImplementation(project(":i2-keycloak:keycloak-test:test-bdd"))
-    testImplementation(project(":i2-keycloak:keycloak-auth:keycloak-auth-client"))
+    testImplementation(project(":im-keycloak:keycloak-test:test-bdd"))
+    testImplementation(project(":im-keycloak:keycloak-auth:keycloak-auth-client"))
 
     testImplementation("org.keycloak:keycloak-admin-client:${Versions.keycloak}")
 }

@@ -13,12 +13,14 @@ object PluginVersions {
 	val fixers = Framework.fixers
 	const val springBoot = FixersPluginVersions.springBoot
 	const val kotlin = FixersPluginVersions.kotlin
+
+	const val shadowJar = "7.1.2"
 }
 
 object Versions {
 	val f2 = Framework.fixers
+	val i2 = Framework.fixers
 	val s2 = Framework.fixers
-	val i2 = "experimental-SNAPSHOT" //Framework.fixers
 
 	val fs = Framework.connect
 
@@ -31,6 +33,8 @@ object Versions {
 	const val keycloak = "18.0.0"
 	const val mockito = "4.6.1"
 	const val testcontainers = "1.18.0"
+
+	const val slf4j = FixersVersions.Logging.slf4j
 }
 
 object Dependencies {
@@ -38,6 +42,25 @@ object Dependencies {
 		fun f2(scope: Scope) = scope.add(
 			"city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}"
 		)
+
+		fun f2Function(scope: Scope) = scope.add(
+			"city.smartb.f2:f2-spring-boot-starter-function:${Versions.f2}"
+		)
+
+		fun slf4j(scope: Scope) = scope.add(
+			"org.slf4j:slf4j-api:${Versions.slf4j}",
+		)
+
+		object Fs {
+			fun client(scope: Scope) = scope.add(
+				"city.smartb.fs:file-client:${Versions.fs}"
+			)
+		}
+
+		fun i2Auth(scope: Scope) = scope.add(
+			"city.smartb.i2:i2-spring-boot-starter-auth:${Versions.i2}"
+		)
+
 		fun i2AuthClient(scope: Scope) = scope.add(
 			"city.smartb.i2:keycloak-auth-client:${Versions.i2}"
 		)

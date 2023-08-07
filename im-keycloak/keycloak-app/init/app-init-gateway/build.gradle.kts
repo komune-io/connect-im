@@ -7,14 +7,14 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":i2-keycloak:keycloak-app:core"))
-    implementation(project(":i2-keycloak:keycloak-f2:init:i2-init-command"))
+    implementation(project(":im-keycloak:keycloak-app:core"))
+    implementation(project(":im-keycloak:keycloak-f2:init:im-init-command"))
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
-    Dependencies.Jvm.f2Http(::implementation)
+    Dependencies.Jvm.f2(::implementation)
     Dependencies.Jvm.slf4j(::implementation)
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
-    imageName.set("smartbcity/i2-init:${this.project.version}")
+    imageName.set("smartbcity/im-init:${this.project.version}")
 }
