@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":im-keycloak:keycloak-app:core"))
+    implementation(project(Modules.keycloakAppCore))
     implementation(project(":im-keycloak:keycloak-f2:init:im-init-command"))
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 

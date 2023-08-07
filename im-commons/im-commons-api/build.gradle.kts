@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":im-commons:im-commons-domain"))
+    api(project(Modules.imCommonsDomain))
     api("city.smartb.s2:s2-spring-boot-starter-utils-logger:${Versions.s2}")
     Dependencies.Jvm.f2(::api)
 }

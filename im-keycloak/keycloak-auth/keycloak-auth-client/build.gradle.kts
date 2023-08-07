@@ -6,9 +6,9 @@ plugins {
 }
 
 dependencies {
-    api(project(":im-keycloak:keycloak-auth:keycloak-auth-domain"))
-    api(project(":im-keycloak:keycloak-utils"))
+    api(project(Modules.imKeycloakAuthDomain))
+    api(project(Modules.imKeycloakUtils))
 
-    api("org.keycloak:keycloak-admin-client:${Versions.keycloak}")
+    Dependencies.Jvm.Keycloak.adminClient(::api)
 
 }

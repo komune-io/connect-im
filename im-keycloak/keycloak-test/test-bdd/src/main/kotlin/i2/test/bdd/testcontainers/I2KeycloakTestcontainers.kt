@@ -7,7 +7,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @Testcontainers
 open class I2KeycloakTestcontainers {
 
-	@Container
-	var i2KeycloakContainer: I2KeycloakContainer? =
-		I2KeycloakContainer.getInstance(ClassPathResource("docker-compose-keycloak-it.yml").file)
+//	@Container
+//	var i2KeycloakContainer: I2KeycloakContainer? =
+//		I2KeycloakContainer.getInstance(ClassPathResource("docker-compose-keycloak-it.yml").file)
 }

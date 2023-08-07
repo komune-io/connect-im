@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":im-keycloak:keycloak-plugin:keycloak-plugin-domain"))
+    implementation(project(Modules.keycloakPluginDomain))
 }

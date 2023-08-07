@@ -6,20 +6,20 @@ plugins {
 
 dependencies {
 
-    api(project(":im-keycloak:keycloak-f2:client:im-client-f2-query"))
-    api(project(":im-keycloak:keycloak-f2:client:im-client-f2-command"))
+    api(project(Modules.imKeycloakF2ClientQuery))
+    api(project(Modules.imKeycloakF2ClientCommand))
 
-    api(project(":im-keycloak:keycloak-f2:group:im-group-f2-query"))
-    api(project(":im-keycloak:keycloak-f2:group:im-group-f2-command"))
+    api(project(Modules.imKeycloakF2GroupQuery))
+    api(project(Modules.imKeycloakF2GroupCommand))
 
-    api(project(":im-keycloak:keycloak-f2:realm:im-realm-f2-query"))
-    api(project(":im-keycloak:keycloak-f2:realm:im-realm-f2-command"))
+    api(project(Modules.imKeycloakF2RealmQuery))
+    api(project(Modules.imKeycloakF2RealmCommand))
 
-    api(project(":im-keycloak:keycloak-f2:role:im-role-f2-query"))
-    api(project(":im-keycloak:keycloak-f2:role:im-role-f2-command"))
+    api(project(Modules.imKeycloakF2RoleQuery))
+    api(project(Modules.imKeycloakF2RoleCommand))
 
-    api(project(":im-keycloak:keycloak-f2:user:im-user-f2-query"))
-    api(project(":im-keycloak:keycloak-f2:user:im-user-f2-command"))
+    api(project(Modules.imKeycloakF2UserQuery))
+    api(project(Modules.imKeycloakF2UserCommand))
 
     api(project(":im-keycloak:keycloak-auth:keycloak-auth-client"))
 

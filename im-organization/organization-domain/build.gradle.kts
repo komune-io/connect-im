@@ -4,11 +4,11 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(":im-commons:im-commons-domain"))
+    commonMainApi(project(Modules.imCommonsDomain))
 
-    commonMainApi("city.smartb.i2:i2-client-domain:${Versions.i2}")
-    commonMainApi("city.smartb.i2:i2-group-domain:${Versions.i2}")
+    commonMainApi(project(Modules.imKeycloakF2ClientDomain))
+    commonMainApi(project(Modules.imKeycloakF2GroupDomain))
 
-    commonMainApi("city.smartb.f2:f2-dsl-cqrs:${Versions.f2}")
-    commonMainApi("city.smartb.f2:f2-dsl-function:${Versions.f2}")
+
+    Dependencies.Mpp.f2(::commonMainApi)
 }

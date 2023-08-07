@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":im-keycloak:keycloak-f2:config:im-config-command"))
+    implementation(project(Modules.imKeycloakF2ConfigCommand))
     Dependencies.Jvm.f2(::implementation)
     Dependencies.Jvm.slf4j(::implementation)
 }

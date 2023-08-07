@@ -11,12 +11,12 @@ object KeycloakConfig {
 
 		val username: String
 			get() {
-				return "admin".orIfGitlabEnv("KEYCLOAK_ADMIN_USERNAME")
+				return "root".orIfGitlabEnv("KEYCLOAK_ADMIN_USERNAME")
 			}
 
 		val password: String
 			get() {
-				return "admin".orIfGitlabEnv("KEYCLOAK_ADMIN_PASSWORD")
+				return "root".orIfGitlabEnv("KEYCLOAK_ADMIN_PASSWORD")
 			}
 
 		val clientId: String

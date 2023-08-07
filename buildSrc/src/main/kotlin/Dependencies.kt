@@ -39,6 +39,12 @@ object Versions {
 
 object Dependencies {
 	object Jvm {
+
+		object Keycloak {
+			fun adminClient(scope: Scope) = scope.add(
+				"org.keycloak:keycloak-admin-client:${Versions.keycloak}"
+			)
+		}
 		fun f2(scope: Scope) = scope.add(
 			"city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}"
 		)
@@ -110,6 +116,10 @@ object Dependencies {
 			"city.smartb.f2:f2-dsl-function:${Versions.f2}"
 		)
 
+		fun datetime(scope: Scope) = scope.add(
+			"org.jetbrains.kotlinx:kotlinx-datetime:${Versions.kdatetime}"
+		)
+
 		fun ktor(scope: Scope) = scope.add(
 			"io.ktor:ktor-client-core:${Versions.ktor}",
 			"io.ktor:ktor-client-serialization:${Versions.ktor}"
@@ -119,3 +129,53 @@ object Dependencies {
 		)
 	}
 }
+
+object Modules {
+	val imCommonsDomain = ":im-commons:im-commons-domain"
+
+	val imKeycloakUtils = ":im-keycloak:keycloak-utils"
+
+	val imKeycloakAuthClient = ":im-keycloak:keycloak-auth:keycloak-auth-client"
+	val imKeycloakAuthDomain = ":im-keycloak:keycloak-auth:keycloak-auth-domain"
+
+	val imKeycloakF2CommonsApi = ":im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-api"
+	val imKeycloakF2CommonsDomain = ":im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-domain"
+
+	val imKeycloakF2ClientDomain = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-domain"
+	val imKeycloakF2ClientCommand = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-command"
+	val imKeycloakF2ClientQuery = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-query"
+
+	val imKeycloakF2GroupDomain = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-domain"
+	val imKeycloakF2GroupCommand = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-command"
+	val imKeycloakF2GroupQuery = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-query"
+
+	val imKeycloakF2InitCommand = ":im-keycloak:keycloak-f2:init:im-keycloak-f2-init-command"
+	val imKeycloakF2ConfigCommand = ":im-keycloak:keycloak-f2:config:im-keycloak-f2-config-command"
+
+	val imKeycloakF2RealmDomain = ":im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-domain"
+	val imKeycloakF2RealmCommand = ":im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-command"
+	val imKeycloakF2RealmQuery = ":im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-query"
+
+	val imKeycloakF2RoleDomain = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-domain"
+	val imKeycloakF2RoleCommand = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-command"
+	val imKeycloakF2RoleQuery = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-query"
+
+	val imKeycloakF2UserDomain = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-domain"
+	val imKeycloakF2UserCommand = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-command"
+	val imKeycloakF2UserQuery = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-query"
+
+	val keycloakPlugin = ":im-keycloak:keycloak-plugin"
+	val keycloakGenerateActionToken = ":im-keycloak:keycloak-plugin:keycloak-generate-action-token"
+	val keycloakEventListenerHttp = ":im-keycloak:keycloak-plugin:keycloak-event-listener-http"
+	val keycloakPluginClient = ":im-keycloak:keycloak-plugin:keycloak-plugin-client"
+	val keycloakPluginDomain = ":im-keycloak:keycloak-plugin:keycloak-plugin-domain"
+
+	val keycloakTestBdd = ":im-keycloak:keycloak-test:test-bdd"
+	val keycloakTestIt = ":im-keycloak:keycloak-test:test-it"
+
+	val keycloakAppCore = ":im-keycloak:keycloak-app:core"
+	val keycloakAppInitGateway = ":im-keycloak:keycloak-app:init:app-init-gateway"
+	val keycloakAppConfigGateway = ":im-keycloak:keycloak-app:config:app-config-gateway"
+}
+
+
