@@ -14,7 +14,7 @@ i2:
   issuers:
     -
       name: im-test
-      authUrl: http://localhost:8080/auth
+      authUrl: http://keycloak-it:8080
       realm: im-test
       im:
         clientId: im-test-client

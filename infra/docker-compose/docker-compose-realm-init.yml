@@ -1,24 +1,17 @@
 version: "3.7"
-
 services:
   i2-init:
-    image: smartbcity/i2-init:experimental-82a22bef34d4c7f33ff33aa80fa1e542d5c7e48d
-    container_name: i2-init
+    image: smartbcity/i2-init:${VERSION_I2}
+    network_mode: host
     environment:
-      i2_keycloak_auth-server-url: ${AUTH_HOST_URL}
-      i2_keycloak_username: ${KC_ROOT_USER}
-      i2_keycloak_password: ${KC_ROOT_PASS}
-      i2_init_realm: ${KC_REALM}
-      i2_init_admin-user_username:  ${KC_ADMIN_USER}
-      i2_init_admin-user_email: admin@admin.com
-      i2_init_admin-user_firstname: admin
-      i2_init_admin-user_lastname: admin
-      i2_init_admin-user_password: ${KC_ADMIN_PASS}
-      i2_init_admin-client_secret: ${KC_ADMIN_CLIENT_SECRET}
-      i2_init_admin-client_name: ${KC_ADMIN_CLIENT_ID}
-      i2_init_smtp_host: connect-fake-smtp
-
-networks:
-  bclannet-it:
-    name: bclannet-it
-    external: true
+      - i2_keycloak_serverUrl=${AUTH_HOST_URL}
+      - i2_keycloak_username=${KC_ROOT_PASS}
+      - i2_keycloak_password=${KC_ROOT_USER}
+      - i2_init_realm=${KC_REALM}
+      - i2_init_adminUser_username=${KC_ADMIN_USER}
+      - i2_init_adminUser_password=${KC_ADMIN_PASS}
+      - i2_init_adminUser_email=admin@admin.com
+      - i2_init_adminUser_firstname=admin
+      - i2_init_adminUser_lastname=i2
+      - i2_init_adminClient_name=${KC_ADMIN_CLIENT_ID}
+      - i2_init_adminClient_secret=${KC_ADMIN_CLIENT_SECRET}

@@ -3,7 +3,7 @@ package i2.test.bdd.config
 object KeycloakConfig {
 	val url: String
 		get() {
-			return "http://localhost:8080/auth".orIfGitlabEnv("KEYCLOAK_URL")
+			return "http://keycloak-it:8080".orIfGitlabEnv("KEYCLOAK_URL")
 		}
 
 	object Admin {

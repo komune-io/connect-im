@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   keycloak-it:
-    image: smartbcity/i2-keycloak:experimental
+    image: smartbcity/i2-keycloak:${VERSION_I2}
     environment:
       KC_DB_URL: 'jdbc:postgresql://keycloak-postgres/keycloak-it'
       KC_DB_PASSWORD: admin
@@ -16,8 +16,11 @@ services:
       KC_HOSTNAME_STRICT_HTTPS: "false"
     ports:
       - '8080:8080'
+    networks:
+      - net
     depends_on:
       - keycloak-postgres-it
+
   keycloak-postgres-it:
     image: postgres
     container_name: keycloak-postgres
@@ -25,25 +28,10 @@ services:
       POSTGRES_DB: keycloak-it
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-#    volumes:
-#      - ./postgres/data:/var/lib/postgresql/data
-#  i2-init:
-#    image: smartbcity/i2-init:experimental
-#    network_mode: host
-#    environment:
-#      - i2_keycloak_auth-server-url=http://localhost:8080/auth
-#      - i2_keycloak_username=admin
-#      - i2_keycloak_password=admin
-#      - i2_init_realm=im-test
-#      - i2_init_admin-user_username=im-admin
-#      - i2_init_admin-user_password=!tesTTest!
-#      - i2_init_admin-user_email=admin@smart-b.io
-#      - i2_init_admin-user_firstname=admin
-#      - i2_init_admin-user_lastname=im
-#      - i2.init.admin-client=im-test-client
-#      - i2.init.admin-client-secret=secret
+    networks:
+      - net
 
 networks:
-  bclannet-it:
-    name: bclannet-it
+  net:
+    name: ${DOCKER_NETWORK}
     external: true

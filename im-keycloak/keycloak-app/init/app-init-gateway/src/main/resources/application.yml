@@ -37,7 +37,7 @@ i2:
 
 #i2:
 #  keycloak:
-#    auth-server-url: http://localhost:8080/auth
+#    auth-server-url: http://keycloak-it:8080
 #    realm: master
 #    username: admin
 #    password: admin
