@@ -12,9 +12,9 @@ dependencies {
     implementation(project(":im-apikey:apikey-lib"))
     implementation(project(":im-infra:infra-redis"))
 
-    implementation("city.smartb.i2:i2-client-f2-command:${Versions.i2}")
-    implementation("city.smartb.i2:i2-client-f2-query:${Versions.i2}")
-    implementation("city.smartb.i2:i2-group-f2-query:${Versions.i2}")
-    implementation("city.smartb.i2:i2-group-f2-command:${Versions.i2}")
-    implementation("city.smartb.i2:i2-user-f2-command:${Versions.i2}")
+    implementation(project(Modules.imKeycloakF2ClientCommand))
+    implementation(project(Modules.imKeycloakF2ClientQuery))
+    implementation(project(Modules.imKeycloakF2GroupQuery))
+    implementation(project(Modules.imKeycloakF2ClientCommand))
+    implementation(project(Modules.imKeycloakF2UserCommand))
 }

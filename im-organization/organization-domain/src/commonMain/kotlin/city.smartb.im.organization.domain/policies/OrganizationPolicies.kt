@@ -3,8 +3,6 @@ package city.smartb.im.organization.domain.policies
 import city.smartb.im.commons.auth.AuthedUserDTO
 import city.smartb.im.commons.auth.Role
 import city.smartb.im.commons.auth.hasRole
-import city.smartb.im.commons.auth.hasRoles
-import city.smartb.im.organization.domain.model.OrganizationDTO
 import city.smartb.im.organization.domain.model.OrganizationId
 import kotlin.js.JsExport
 import kotlin.js.JsName

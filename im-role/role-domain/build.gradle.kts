@@ -4,8 +4,9 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(":im-commons:im-commons-domain"))
+    commonMainApi(project(Modules.imCommonsDomain))
 
-    commonMainApi("city.smartb.i2:i2-role-domain:${Versions.i2}")
+//    commonMainApi(project(Modules.imRoleDomain))
+    commonMainApi(project(Modules.imKeycloakF2RoleDomain))
     Dependencies.Mpp.f2(::commonMainApi)
 }

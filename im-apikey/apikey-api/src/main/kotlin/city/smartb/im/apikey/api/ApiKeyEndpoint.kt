@@ -7,6 +7,7 @@ import city.smartb.im.apikey.domain.features.query.ApiKeyGetFunction
 import city.smartb.im.apikey.domain.features.query.ApiKeyPageFunction
 import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.lib.ApiKeyFeaturesImpl
+import city.smartb.im.commons.auth.policies.enforce
 import city.smartb.im.commons.auth.policies.verify
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service
@@ -37,8 +38,8 @@ class ApiKeyEndpoint(
      * Fetch a page of apikeys.
      */
     @Bean
-    fun apiKeyPage(): ApiKeyPageFunction<ApiKey> = verify(apikeyFeatures.apiKeyPage()) { query ->
-        apikeyPoliciesEnforcer.checkPage()
+    fun apiKeyPage(): ApiKeyPageFunction<ApiKey> = enforce(apikeyFeatures.apiKeyPage()) { query ->
+        apikeyPoliciesEnforcer.enforcePage(query)
     }
 
 

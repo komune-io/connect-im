@@ -8,5 +8,5 @@ dependencies {
     implementation(project(":im-api:api-config"))
     api(project(":im-role:role-domain"))
 
-    implementation("city.smartb.i2:i2-role-f2-command:${Versions.i2}")
+    implementation(project(Modules.imKeycloakF2RoleCommand))
 }

@@ -63,10 +63,14 @@ class UserFinderService(
 
     private suspend fun UserPageQuery.toUserPageQuery(): KeycloakUserPageQuery {
         val auth = authenticationResolver.getAuth()
+        val allRoles = buildList {
+            roles?.let(::addAll)
+            role?.let(::add)
+        }
         return KeycloakUserPageQuery(
             groupId = organizationId,
             search = search,
-            role = role,
+            roles = allRoles,
             attributes = attributes.orEmpty(),
             withDisabled = withDisabled,
             page = PagePagination(

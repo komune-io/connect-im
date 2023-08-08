@@ -1,0 +1,5 @@
+i2.keycloak.f2.role.query.RoleGetByIdFunctionImpl
+i2.keycloak.f2.role.query.RoleGetByNameFunctionImpl
+i2.keycloak.f2.role.query.RolePageFunctionImpl
+i2.keycloak.f2.role.query.RolesCompositeGetFunctionImpl
+i2.keycloak.f2.role.query.service.RolesFinderService

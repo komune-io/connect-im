@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(":im-commons:im-commons-domain"))
+    commonMainApi(project(Modules.imCommonsDomain))
 
     jvmMainImplementation("city.smartb.i2:i2-spring-boot-starter-auth:${Versions.i2}")
     jvmMainImplementation("city.smartb.f2:f2-dsl-function:${Versions.f2}")

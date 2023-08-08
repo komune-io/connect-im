@@ -7,8 +7,10 @@ services:
     ports:
       - "1025:1025"
       - "1080:1080"
+    networks:
+      - net
 
 networks:
-  default:
-    name: bclannet-it
+  net:
+    name: ${DOCKER_NETWORK}
     external: true

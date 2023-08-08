@@ -97,8 +97,8 @@ Properties prefix: `i2.issuers[]`
 
 | Property                   | Description                             | Example                                  | Default                                |
 |----------------------------|-----------------------------------------|------------------------------------------|----------------------------------------|
-| uri                        | Issuer URI accepted by IM               | https://auth.smart-b.io/auth/realms/development | http://localhost:8080/auth/realms/test |
-| authUrl                    | Keycloak server URL                     | https://auth.smart-b.io/auth             | http://localhost:8080/auth             |
+| uri                        | Issuer URI accepted by IM               | https://auth.smart-b.io/auth/realms/development | http://keycloak-it:8080/realms/test |
+| authUrl                    | Keycloak server URL                     | https://auth.smart-b.io/auth             | http://keycloak-it:8080             |
 | realm                      | Keycloak realm to authenticate to       | development                              | test                                   |
 | clientId     | Client ID used to authenticate with     | smartclient                              | i2-api                                 |
 | clientSecret | Client Secret used to authenticate with | smartsecret                              | xxxxx                                  |
@@ -111,14 +111,14 @@ For instance:
 i2:
   issuers:
     -
-      uri: http://localhost:8080/auth/realms/test
-      authUrl: http://localhost:8080/auth
+      uri: http://keycloak-it:8080/realms/test
+      authUrl: http://keycloak-it:8080
       realm: test
       clientId: i2-api
       clientSecret: clientSecret
     -
-      uri: http://localhost:8080/auth/realms/test2
-      authUrl: http://localhost:8080/auth
+      uri: http://keycloak-it:8080/realms/test2
+      authUrl: http://keycloak-it:8080
       realm: test2
       clientId: i2-api
       clientSecret: clientSecret2

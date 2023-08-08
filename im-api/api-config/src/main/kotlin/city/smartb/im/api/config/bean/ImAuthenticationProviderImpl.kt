@@ -1,6 +1,5 @@
 package city.smartb.im.api.config.bean
 
-import city.smartb.i2.spring.boot.auth.AuthenticationProvider
 import city.smartb.i2.spring.boot.auth.AuthenticationProvider.getIssuer
 import city.smartb.im.api.config.properties.I2Properties
 import i2.keycloak.master.domain.AuthRealm

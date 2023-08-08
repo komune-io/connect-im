@@ -1,6 +1,7 @@
 package city.smartb.im.apikey.domain.features.query
 
 import city.smartb.im.apikey.domain.model.ApiKeyDTO
+import city.smartb.im.commons.auth.OrganizationId
 import f2.dsl.cqrs.Query
 import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.fnc.F2Function
@@ -22,6 +23,7 @@ typealias ApiKeyPageFunction<MODEL> = F2Function<ApiKeyPageQuery, ApiKeyPageResu
 @JsName("ApiKeyPageQueryDTO")
 interface ApiKeyPageQueryDTO: Query {
 	val search: String?
+	val organizationId: OrganizationId?
 	val role: String?
 	val attributes: Map<String, String>?
 	val withDisabled: Boolean?
@@ -38,17 +40,19 @@ data class ApiKeyPageQuery(
 	 * Search string filtering on the name of the apikey.
 	 * @example "SmartB"
 	 */
-	override val search: String?,
+	override val search: String? = null,
+
+	override val organizationId: OrganizationId? = null,
 
 	/**
 	 * Role filter.
 	 */
-	override val role: String?,
+	override val role: String? = null,
 
 	/**
 	 * Arbitrary attributes filter.
 	 */
-	override val attributes: Map<String, String>?,
+	override val attributes: Map<String, String>? = null,
 
 	/**
 	 * If false, filter out the disabled apikeys. (default: false)
@@ -60,13 +64,13 @@ data class ApiKeyPageQuery(
 	 * Number of the page.
 	 * @example 0
 	 */
-	override val page: Int?,
+	override val page: Int? = 0,
 
 	/**
 	 * Size of the page.
 	 * @example 10
 	 */
-	override val size: Int?
+	override val size: Int? = 10
 ): ApiKeyPageQueryDTO
 
 @JsExport

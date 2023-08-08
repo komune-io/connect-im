@@ -55,3 +55,48 @@ include(
     "im-role:role-domain",
     "im-role:role-client"
 )
+
+include(
+    "im-keycloak:keycloak-auth:keycloak-auth-client",
+    "im-keycloak:keycloak-auth:keycloak-auth-domain",
+    "im-keycloak:keycloak-utils",
+
+    "im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-api",
+    "im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-domain",
+
+    "im-keycloak:keycloak-f2:client:im-keycloak-f2-client-domain",
+    "im-keycloak:keycloak-f2:client:im-keycloak-f2-client-command",
+    "im-keycloak:keycloak-f2:client:im-keycloak-f2-client-query",
+
+    "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-domain",
+    "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-command",
+    "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-query",
+
+    "im-keycloak:keycloak-f2:init:im-init-command",
+    "im-keycloak:keycloak-f2:config:im-keycloak-f2-config-command",
+
+    "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-domain",
+    "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-command",
+    "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-query",
+
+    "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-domain",
+    "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-command",
+    "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-query",
+
+    "im-keycloak:keycloak-f2:user:im-keycloak-f2-user-domain",
+    "im-keycloak:keycloak-f2:user:im-keycloak-f2-user-command",
+    "im-keycloak:keycloak-f2:user:im-keycloak-f2-user-query",
+
+    "im-keycloak:keycloak-plugin",
+    "im-keycloak:keycloak-plugin:keycloak-generate-action-token",
+    "im-keycloak:keycloak-plugin:keycloak-event-listener-http",
+    "im-keycloak:keycloak-plugin:keycloak-plugin-client",
+    "im-keycloak:keycloak-plugin:keycloak-plugin-domain",
+
+    "im-keycloak:keycloak-test:test-bdd",
+    "im-keycloak:keycloak-test:test-it",
+
+    "im-keycloak:keycloak-app:core",
+    "im-keycloak:keycloak-app:init:app-init-gateway",
+    "im-keycloak:keycloak-app:config:app-config-gateway"
+)

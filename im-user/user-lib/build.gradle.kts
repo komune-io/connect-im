@@ -10,6 +10,6 @@ dependencies {
     implementation(project(":im-api:api-config"))
     implementation(project(":im-infra:infra-redis"))
 
-    implementation("city.smartb.i2:i2-user-f2-command:${Versions.i2}")
-    implementation("city.smartb.i2:i2-user-f2-query:${Versions.i2}")
+    implementation(project(Modules.imKeycloakF2UserCommand))
+    implementation(project(Modules.imKeycloakF2UserQuery))
 }

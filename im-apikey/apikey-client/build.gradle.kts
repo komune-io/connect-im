@@ -6,6 +6,6 @@ plugins {
 }
 
 dependencies {
-    api(project(":im-commons:im-commons-domain"))
+    api(project(Modules.imCommonsDomain))
     api(project(":im-apikey:apikey-domain"))
 }

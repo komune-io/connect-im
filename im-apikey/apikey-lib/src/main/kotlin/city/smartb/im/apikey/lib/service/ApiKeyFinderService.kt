@@ -15,6 +15,8 @@ import i2.keycloak.f2.group.domain.features.query.GroupGetFunction
 import i2.keycloak.f2.group.domain.features.query.GroupGetQuery
 import i2.keycloak.f2.group.domain.features.query.GroupPageFunction
 import i2.keycloak.f2.group.domain.features.query.GroupPageQuery
+import org.slf4j.LoggerFactory
+import s2.spring.utils.logger.Logger
 
 open class ApiKeyFinderService<MODEL : ApiKeyDTO>(
     private val groupGetFunction: GroupGetFunction,
@@ -22,6 +24,8 @@ open class ApiKeyFinderService<MODEL : ApiKeyDTO>(
     private val authenticationResolver: ImAuthenticationProvider,
     private val redisCache: RedisCache,
 ) {
+
+    private val logger = LoggerFactory.getLogger(ApiKeyFinderService::class.java)
 
     suspend fun apikeyGet(
         query: ApiKeyGetQuery,
@@ -63,7 +67,8 @@ open class ApiKeyFinderService<MODEL : ApiKeyDTO>(
         val auth = authenticationResolver.getAuth()
         return GroupPageQuery(
             search = search,
-            role = role,
+            groupId = organizationId,
+            roles = listOfNotNull(role),
             attributes = attributes.orEmpty(),
             withDisabled = withDisabled ?: false,
             page = PagePagination(
@@ -79,6 +84,7 @@ open class ApiKeyFinderService<MODEL : ApiKeyDTO>(
         val auth = authenticationResolver.getAuth()
         return GroupGetQuery(
             id = organizationId,
+
             realmId = auth.realmId,
             auth = auth
         )

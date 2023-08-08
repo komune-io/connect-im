@@ -1,13 +1,17 @@
 DOCKER_COMPOSE_FILE = keycloak smtp realm-init
-
 DOCKER_COMPOSE_PATH = infra/docker-compose
 DOCKER_COMPOSE_ENV = $(DOCKER_COMPOSE_PATH)/.env_dev
 .PHONY: $(DOCKER_COMPOSE_FILE)
 ACTIONS = up down logs
 
+-include $(DOCKER_COMPOSE_ENV)
+
 dev:
 	$(eval ACTION := $(filter $(ACTIONS),$(MAKECMDGOALS)))
 	$(eval SERVICE := $(filter $(DOCKER_COMPOSE_FILE),$(MAKECMDGOALS)))
+	@if ! docker network ls | grep -q $(DOCKER_NETWORK); then \
+		docker network create $(DOCKER_NETWORK); \
+	fi
 	@if [ "$(SERVICE)" = "" ]; then \
 		for service in $(DOCKER_COMPOSE_FILE); do \
 			$(MAKE) --no-print-directory dev-service-action ACTION=$(ACTION) SERVICE=$$service; \
@@ -20,7 +24,7 @@ dev-service-action:
 	@if [ "$(ACTION)" = "up" ]; then \
 		docker compose --env-file $(DOCKER_COMPOSE_ENV) -f $(DOCKER_COMPOSE_PATH)/docker-compose-$(SERVICE).yml  up -d; \
 	elif [ "$(ACTION)" = "down" ]; then \
-		docker compose --env-file $(DOCKER_COMPOSE_ENV) -f $(DOCKER_COMPOSE_PATH)/docker-compose-$(SERVICE).yml down -v --remove-orphans; \
+		docker compose --env-file $(DOCKER_COMPOSE_ENV) -f $(DOCKER_COMPOSE_PATH)/docker-compose-$(SERVICE).yml down -v; \
 	elif [ "$(ACTION)" = "logs" ]; then \
 		docker compose --env-file $(DOCKER_COMPOSE_ENV) -f $(DOCKER_COMPOSE_PATH)/docker-compose-$(SERVICE).yml logs -f; \
 	else \

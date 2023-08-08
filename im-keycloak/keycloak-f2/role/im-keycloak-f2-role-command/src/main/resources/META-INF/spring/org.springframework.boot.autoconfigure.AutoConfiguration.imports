@@ -1,0 +1,3 @@
+i2.keycloak.f2.role.command.RoleAddCompositesFunctionImpl
+i2.keycloak.f2.role.command.RoleCreateFunctionImpl
+i2.keycloak.f2.role.command.RoleUpdateFunctionImpl

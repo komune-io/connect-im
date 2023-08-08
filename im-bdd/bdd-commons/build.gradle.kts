@@ -15,7 +15,7 @@ dependencies {
 	implementation(project(":im-user:user-api"))
 	implementation(project(":im-user:user-lib"))
 	implementation(project(":im-role:role-api"))
-	implementation(project(":im-commons:im-commons-domain"))
+	implementation(project(Modules.imCommonsDomain))
 
 	Dependencies.Jvm.f2(::implementation)
 	Dependencies.Mpp.f2(::implementation)
