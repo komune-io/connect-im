@@ -40,7 +40,7 @@ class KeycloakInitService(
         val realmId = properties.realm
         keycloakFinderService.getRealm(realmId)?.let {
           logger.info("Realm already created")
-        } ?: keycloakAggregateService.createRealm(realmId, properties.smtpConfig)
+        } ?: keycloakAggregateService.createRealm(realmId, properties.theme, properties.smtpConfig)
     }
 
     private suspend fun initAdminClient(properties: KeycloakInitProperties) = createClientIfNotExists(properties) { clientId ->

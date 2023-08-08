@@ -15,6 +15,7 @@ class KcInitConfiguration : KcAuthConfiguration() {
         return KeycloakInitProperties(
                 smtpConfig = kcInitProperties.smtp,
                 realm = kcInitProperties.realm,
+                theme = kcInitProperties.theme,
                 clientId = kcInitProperties.adminClient?.name,
                 clientSecret = kcInitProperties.adminClient?.secret,
                 username = kcInitProperties.adminUser?.username,

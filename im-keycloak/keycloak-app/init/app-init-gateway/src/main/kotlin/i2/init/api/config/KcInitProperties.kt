@@ -7,6 +7,7 @@ class KcInitProperties(
     val maxRetries: Int,
     val retryDelayMillis: Long,
     val realm: String,
+    val theme: String,
     val smtp: Map<String, String>,
     val adminClient: KcInitClientProperties?,
     val baseRoles: List<String>,

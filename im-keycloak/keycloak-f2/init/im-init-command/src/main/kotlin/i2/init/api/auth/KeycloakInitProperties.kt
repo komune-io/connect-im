@@ -8,6 +8,7 @@ data class KeycloakInitProperties(
     val username: String? = null,
     val password: String? = null,
     val email: String? = null,
+    val theme: String? = null,
     val firstname: String? = null,
     val lastname: String? = null,
     val baseRoles: List<String> = mutableListOf()
