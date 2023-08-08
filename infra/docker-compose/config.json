@@ -1,12 +1,39 @@
 {
-  "appClients": [],
+  "webClients": [
+    {
+      "clientId": "im-test-web",
+      "webUrl": "http://localhost:3000"
+    }
+  ],
+  "appClients": [
+    {
+      "clientId": "im-test-api",
+      "clientSecret": "secret",
+      "roles": ["super_admin"],
+      "realmManagementRoles": [
+        "manage-users",
+        "view-users",
+        "query-groups",
+        "manage-realm"
+      ]
+    }
+  ],
   "users": [],
   "roles": [
+    "im_read_user",
+    "im_write_user",
+    "im_write_organization",
+    "im_read_organization",
+    "im_read_role",
+    "im_write_role",
+    "im_write_my_organization",
+    "im_read_apikey",
+    "im_write_apikey",
+
+    "super_admin",
     "admin",
     "user"
   ],
   "roleComposites": {
-    "admin": ["im_read_organization", "im_write_organization", "im_write_role"],
-    "user": ["im_read_user", "im_write_my_organization"]
   }
 }

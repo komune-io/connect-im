@@ -6,6 +6,13 @@ IM_APP_NAME	   	 	:= smartbcity/im-gateway
 IM_APP_IMG	    	:= ${IM_APP_NAME}:${VERSION}
 IM_APP_PACKAGE	   	:= :im-api:api-gateway:bootBuildImage
 
+IM_INIT_NAME	   	:= smartbcity/im-init
+IM_INIT_IMG	    	:= ${IM_INIT_NAME}:${VERSION}
+IM_INIT_PACKAGE	   	:= :im-keycloak:keycloak-app:init:app-init-gateway:bootBuildImage
+
+IM_CONFIG_NAME	   	:= smartbcity/im-config
+IM_CONFIG_IMG	    := ${IM_CONFIG_NAME}:${VERSION}
+IM_CONFIG_PACKAGE	:= :im-keycloak:keycloak-app:config:app-config-gateway:bootBuildImage
 
 KEYCLOAK_DOCKERFILE	:= infra/docker/keycloak/Dockerfile
 
@@ -19,8 +26,8 @@ libs: package-kotlin
 docker: docker-build docker-push
 docs: docs-build docs-push
 
-docker-build: docker-im-gateway-build docker-keycloak-build docker-keycloak-auth-build
-docker-push: docker-im-gateway-push docker-keycloak-push docker-keycloak-auth-push
+docker-build: docker-im-gateway-build docker-init-build docker-config-build docker-keycloak-build docker-keycloak-auth-build
+docker-push: docker-im-gateway-push docker-init-push docker-config-push docker-keycloak-push docker-keycloak-auth-push
 
 docs-build: package-im-storybook-build
 docs-push: package-im-storybook-push
@@ -39,6 +46,19 @@ package-im-storybook-build:
 
 package-im-storybook-push:
 	@docker push ${STORYBOOK_IMG}
+
+## Keycloak
+docker-init-build:
+	VERSION=${VERSION} ./gradlew build ${IM_INIT_PACKAGE} -x test --stacktrace
+
+docker-init-push:
+	@docker push ${IM_INIT_IMG}
+
+docker-config-build:
+	VERSION=${VERSION} ./gradlew build ${IM_CONFIG_PACKAGE} -x test --stacktrace
+
+docker-config-push:
+	@docker push ${IM_CONFIG_IMG}
 
 ## Keycloak
 docker-keycloak-build:

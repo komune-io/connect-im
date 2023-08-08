@@ -11,4 +11,4 @@ i2:
   config:
     maxRetries: 5
     retryDelayMillis: 10000
-    json: file:./i2-app/config/test.json
+    json: file:./infra/docker-compose/config.json
