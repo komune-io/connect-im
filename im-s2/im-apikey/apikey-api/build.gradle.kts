@@ -10,9 +10,7 @@ dependencies {
     implementation(project(":im-commons:im-commons-auth"))
     implementation(project(":im-infra:infra-redis"))
 
-    api(project(":im-organization:organization-domain"))
-    api(project(":im-organization:organization-lib"))
-
-    implementation(project(":im-apikey:apikey-lib"))
-    implementation(project(":im-user:user-lib"))
+    api(project(Modules.S2.imApikeyLib))
+    api(project(Modules.S2.imApikeyDomain))
+    implementation(project(Modules.S2.imUserLib))
 }

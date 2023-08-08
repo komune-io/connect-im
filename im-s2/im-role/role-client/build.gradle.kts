@@ -7,5 +7,5 @@ plugins {
 
 dependencies {
     api(project(Modules.imCommonsDomain))
-    api(project(":im-role:role-domain"))
+    api(project(Modules.S2.imRoleDomain))
 }

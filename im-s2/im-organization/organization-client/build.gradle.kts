@@ -7,5 +7,5 @@ plugins {
 
 dependencies {
     api(project(Modules.imCommonsDomain))
-    api(project(":im-apikey:apikey-domain"))
+    api(project(Modules.S2.imOrganizationDomain))
 }

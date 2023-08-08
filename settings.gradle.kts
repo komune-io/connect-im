@@ -30,30 +30,30 @@ include(
 )
 
 include(
-    "im-organization:organization-api",
-    "im-organization:organization-domain",
-    "im-organization:organization-client",
-    "im-organization:organization-lib"
+    "im-s2:im-organization:organization-api",
+    "im-s2:im-organization:organization-domain",
+    "im-s2:im-organization:organization-client",
+    "im-s2:im-organization:organization-lib"
 )
 
 include(
-    "im-user:user-api",
-    "im-user:user-domain",
-    "im-user:user-client",
-    "im-user:user-lib"
+    "im-s2:im-user:user-api",
+    "im-s2:im-user:user-domain",
+    "im-s2:im-user:user-client",
+    "im-s2:im-user:user-lib"
 )
 
 include(
-    "im-apikey:apikey-api",
-    "im-apikey:apikey-domain",
-    "im-apikey:apikey-client",
-    "im-apikey:apikey-lib"
+    "im-s2:im-apikey:apikey-api",
+    "im-s2:im-apikey:apikey-domain",
+    "im-s2:im-apikey:apikey-client",
+    "im-s2:im-apikey:apikey-lib"
 )
 
 include(
-    "im-role:role-api",
-    "im-role:role-domain",
-    "im-role:role-client"
+    "im-s2:im-role:role-api",
+    "im-s2:im-role:role-domain",
+    "im-s2:im-role:role-client"
 )
 
 include(

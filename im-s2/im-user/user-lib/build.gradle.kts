@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":im-user:user-domain"))
+    api(project(Modules.S2.imUserDomain))
 
     implementation(project(":im-api:api-config"))
     implementation(project(":im-infra:infra-redis"))

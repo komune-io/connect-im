@@ -6,15 +6,15 @@ plugins {
 
 dependencies {
 	implementation(project(":im-api:api-config"))
-	implementation(project(":im-apikey:apikey-api"))
-	implementation(project(":im-apikey:apikey-lib"))
+	implementation(project(Modules.S2.imApikeyApi))
+	implementation(project(Modules.S2.imApikeyLib))
 
-	implementation(project(":im-organization:organization-api"))
-	implementation(project(":im-role:role-api"))
+	implementation(project(Modules.S2.imOrganizationApi))
+	implementation(project(Modules.S2.imRoleApi))
 
-	implementation(project(":im-user:user-api"))
-	implementation(project(":im-user:user-lib"))
-	implementation(project(":im-role:role-api"))
+	implementation(project(Modules.S2.imUserApi))
+	implementation(project(Modules.S2.imUserLib))
+	implementation(project(Modules.S2.imRoleApi))
 	implementation(project(Modules.imCommonsDomain))
 
 	Dependencies.Jvm.f2(::implementation)

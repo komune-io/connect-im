@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(":im-organization:organization-domain"))
+    commonMainApi(project(Modules.S2.imOrganizationDomain))
     commonMainApi(project(Modules.imCommonsDomain))
 
     commonMainApi(project(Modules.imKeycloakF2UserDomain))

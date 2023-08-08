@@ -5,9 +5,8 @@ plugins {
 }
 
 dependencies {
-    api(project(":im-user:user-domain"))
-
-    implementation(project(":im-user:user-lib"))
     implementation(project(":im-api:api-config"))
-    implementation(project(":im-commons:im-commons-auth"))
+    api(project(Modules.S2.imRoleDomain))
+
+    implementation(project(Modules.imKeycloakF2RoleCommand))
 }

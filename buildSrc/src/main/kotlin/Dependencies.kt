@@ -131,6 +131,28 @@ object Dependencies {
 }
 
 object Modules {
+	object S2 {
+		val imOrganizationApi = ":im-s2:im-organization:organization-api"
+		val imOrganizationDomain = ":im-s2:im-organization:organization-domain"
+		val imOrganizationClient = ":im-s2:im-organization:organization-client"
+		val imOrganizationLib = ":im-s2:im-organization:organization-lib"
+
+		val imUserApi = ":im-s2:im-user:user-api"
+		val imUserDomain = ":im-s2:im-user:user-domain"
+		val imUserClient = ":im-s2:im-user:user-client"
+		val imUserLib = ":im-s2:im-user:user-lib"
+
+		val imApikeyApi = ":im-s2:im-apikey:apikey-api"
+		val imApikeyDomain = ":im-s2:im-apikey:apikey-domain"
+		val imApikeyClient = ":im-s2:im-apikey:apikey-client"
+		val imApikeyLib = ":im-s2:im-apikey:apikey-lib"
+
+		val imRoleApi = ":im-s2:im-role:role-api"
+		val imRoleDomain = ":im-s2:im-role:role-domain"
+		val imRoleClient = ":im-s2:im-role:role-client"
+	}
+
+
 	val imCommonsDomain = ":im-commons:im-commons-domain"
 
 	val imKeycloakUtils = ":im-keycloak:keycloak-utils"
