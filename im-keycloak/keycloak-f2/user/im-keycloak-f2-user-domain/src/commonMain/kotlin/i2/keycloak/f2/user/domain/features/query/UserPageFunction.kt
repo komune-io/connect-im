@@ -18,7 +18,7 @@ typealias UserPageFunction = F2Function<UserPageQuery, UserPageResult>
 class UserPageQuery(
     val groupId: String? = null,
     val search: String? = null,
-    val role: String? = null,
+    val roles: List<String>? = null,
     val attributes: Map<String, String> = emptyMap(),
     val withDisabled: Boolean,
     val page: PagePagination,

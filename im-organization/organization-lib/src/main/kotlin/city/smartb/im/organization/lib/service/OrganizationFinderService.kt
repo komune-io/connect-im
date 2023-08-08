@@ -82,7 +82,7 @@ open class OrganizationFinderService<MODEL : OrganizationDTO>(
         val auth = authenticationResolver.getAuth()
         return GroupPageQuery(
             search = null,
-            role = null,
+            roles = null,
             attributes = emptyMap(),
             withDisabled = withDisabled,
             page = PagePagination(
@@ -96,9 +96,13 @@ open class OrganizationFinderService<MODEL : OrganizationDTO>(
 
     private suspend fun OrganizationPageQuery.toGroupPageQuery(): GroupPageQuery {
         val auth = authenticationResolver.getAuth()
+        val allRoles = buildList {
+            roles?.let(::addAll)
+            role?.let(::add)
+        }
         return GroupPageQuery(
             search = search,
-            role = role,
+            roles = allRoles,
             attributes = attributes.orEmpty(),
             withDisabled = withDisabled ?: false,
             page = PagePagination(

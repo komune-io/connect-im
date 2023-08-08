@@ -63,7 +63,7 @@ open class ApiKeyFinderService<MODEL : ApiKeyDTO>(
         val auth = authenticationResolver.getAuth()
         return GroupPageQuery(
             search = search,
-            role = role,
+            roles = listOfNotNull(role),
             attributes = attributes.orEmpty(),
             withDisabled = withDisabled ?: false,
             page = PagePagination(

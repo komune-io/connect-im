@@ -42,8 +42,12 @@ class UserPageFunctionImpl {
 				}
 			}
 
-		query.role?.let { roleFilter ->
-			users = users.filter { user -> roleFilter in user.roles.assignedRoles }
+		query.roles?.let { roleFilter ->
+			if(roleFilter.isNotEmpty()) {
+				users = users.filter { user ->
+					roleFilter.any { it in user.roles.assignedRoles }
+				}
+			}
 		}
 
 		query.attributes.forEach { (key, value) ->
