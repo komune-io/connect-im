@@ -34,7 +34,7 @@ class ClientGetByClientIdentifierFunctionImplTest: I2KeycloakTest() {
 		)
 		val result = ClientGetByClientIdentifierFunctionImpl().clientGetByClientIdentifierFunction().invoke(cmd)
 
-		Assertions.assertThat(result.idem).isNotNull
+		Assertions.assertThat(result.item).isNotNull
 	}
 
 	@Test

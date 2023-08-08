@@ -4,6 +4,15 @@ import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.I2Exception
 import i2.keycloak.f2.commons.domain.error.asI2Exception
 import javax.ws.rs.ClientErrorException
+import javax.ws.rs.NotFoundException
+import javax.ws.rs.ProcessingException
+
+fun <T> ProcessingException.handleNotFoundCause(msg: String, block: () -> T): T {
+    if(cause is NotFoundException) {
+        return block()
+    }
+    throw this.asI2Exception(msg)
+}
 
 fun Throwable.asI2Exception(msg: String): I2Exception {
     val description = if(this is ClientErrorException) {

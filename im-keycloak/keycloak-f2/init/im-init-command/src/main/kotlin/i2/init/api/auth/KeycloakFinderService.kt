@@ -39,7 +39,7 @@ class KeycloakFinderService(
             clientIdentifier = id,
             realmId = realmId,
             auth = authRealm
-        ).invokeWith(clientGetByClientIdentifierQueryFunction).idem
+        ).invokeWith(clientGetByClientIdentifierQueryFunction).item
     }
 
     suspend fun getUser(email: String, realmId: RealmId): UserModel? {

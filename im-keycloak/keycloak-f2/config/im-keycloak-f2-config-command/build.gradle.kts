@@ -10,6 +10,7 @@ dependencies {
     implementation(project(Modules.imKeycloakF2ClientCommand))
     implementation(project(Modules.imKeycloakF2ClientQuery))
 
+    api(project(Modules.imKeycloakF2RealmQuery))
     api(project(Modules.imKeycloakF2RealmDomain))
 
     api(project(Modules.imKeycloakF2RoleDomain))

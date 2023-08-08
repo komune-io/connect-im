@@ -1,8 +1,11 @@
 package i2.config.api.auth
 
+import city.smartb.im.commons.exception.NotFoundException
 import i2.config.api.auth.config.KeycloakConfigParser
 import i2.keycloak.f2.client.domain.ClientId
 import i2.keycloak.f2.role.domain.RoleName
+import i2.keycloak.master.domain.AuthRealm
+import i2.keycloak.master.domain.RealmId
 import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
@@ -13,6 +16,7 @@ const val ORGANIZATION_ID_CLAIM_NAME = "memberOf"
 
 @Service
 class KeycloakConfigService (
+    private val authRealm: AuthRealm,
     private val keycloakAggregateService: KeycloakAggregateService,
     private val keycloakFinderService: KeycloakFinderService
 ) {
@@ -24,6 +28,8 @@ class KeycloakConfigService (
     }
 
     fun run(config: KeycloakConfigProperties) = runBlocking {
+        logger.info("Verify Realm[${authRealm.realmId}] exists...")
+        verifyRealm(authRealm.realmId)
         logger.info("Initializing Roles...")
         initRoles(config.roles, config.roleComposites)
         logger.info("Initialized Roles")
@@ -104,6 +110,9 @@ class KeycloakConfigService (
         }
     }
 
+    private suspend fun verifyRealm(realmId: RealmId) {
+        keycloakFinderService.getRealm(realmId) ?: throw NotFoundException("Realm", "")
+    }
     private suspend fun initRoleWithComposites(role: RoleName, composites: List<RoleName> = emptyList()) {
         keycloakFinderService.getRole(role)
             ?: keycloakAggregateService.createRole(role)

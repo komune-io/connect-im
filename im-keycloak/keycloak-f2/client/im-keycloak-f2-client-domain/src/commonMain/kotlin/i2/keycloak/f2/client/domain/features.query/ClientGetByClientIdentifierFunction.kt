@@ -23,5 +23,5 @@ class ClientGetByClientIdentifierQuery(
 @JsExport
 @JsName("ClientGetByClientIdentifierResult")
 class ClientGetByClientIdentifierResult(
-	val idem: ClientModel?
+	val item: ClientModel?
 ): Event

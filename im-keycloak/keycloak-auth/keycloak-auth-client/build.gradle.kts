@@ -8,6 +8,7 @@ plugins {
 dependencies {
     api(project(Modules.imKeycloakAuthDomain))
     api(project(Modules.imKeycloakUtils))
+    api(project(Modules.imCommonsApi))
 
     Dependencies.Jvm.Keycloak.adminClient(::api)
 
