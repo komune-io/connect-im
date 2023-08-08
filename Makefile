@@ -6,12 +6,21 @@ IM_APP_NAME	   	 	:= smartbcity/im-gateway
 IM_APP_IMG	    	:= ${IM_APP_NAME}:${VERSION}
 IM_APP_PACKAGE	   	:= :im-api:api-gateway:bootBuildImage
 
+
+KEYCLOAK_DOCKERFILE	:= infra/docker/keycloak/Dockerfile
+
+KEYCLOAK_NAME	    := smartbcity/im-keycloak
+KEYCLOAK_IMG        := ${KEYCLOAK_NAME}:${VERSION}
+
+KEYCLOAK_AUTH_NAME	:= smartbcity/im-keycloak-auth
+KEYCLOAK_AUTH_IMG   := ${KEYCLOAK_AUTH_NAME}:${VERSION}
+
 libs: package-kotlin
 docker: docker-build docker-push
 docs: docs-build docs-push
 
-docker-build: docker-im-gateway-build
-docker-push: docker-im-gateway-push
+docker-build: docker-im-gateway-build docker-keycloak-build docker-keycloak-auth-build
+docker-push: docker-im-gateway-push docker-keycloak-push docker-keycloak-auth-push
 
 docs-build: package-im-storybook-build
 docs-push: package-im-storybook-push
@@ -30,6 +39,23 @@ package-im-storybook-build:
 
 package-im-storybook-push:
 	@docker push ${STORYBOOK_IMG}
+
+## Keycloak
+docker-keycloak-build:
+	./gradlew im-keycloak:keycloak-plugin:shadowJar
+	@docker build --no-cache --build-arg KC_HTTP_RELATIVE_PATH=/ -f ${KEYCLOAK_DOCKERFILE} -t ${KEYCLOAK_IMG} .
+
+docker-keycloak-push:
+	@docker push ${KEYCLOAK_IMG}
+
+docker-keycloak-auth-build:
+	./gradlew im-keycloak:keycloak-plugin:shadowJar
+	@docker build --no-cache --progress=plain --build-arg KC_HTTP_RELATIVE_PATH=/auth -f ${KEYCLOAK_DOCKERFILE} -t ${KEYCLOAK_AUTH_IMG} .
+
+docker-keycloak-auth-push:
+	@docker push ${KEYCLOAK_AUTH_IMG}
+
+
 help:
 	@echo '/////////////////////////////////'
 	@echo 'Build tasks:'
