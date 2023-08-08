@@ -1,7 +1,10 @@
 package city.smartb.im.apikey.api.policies
 
+import city.smartb.im.apikey.domain.features.query.ApiKeyPageQuery
 import city.smartb.im.apikey.domain.model.ApiKeyId
 import city.smartb.im.apikey.domain.policies.ApiKeyPolicies
+import city.smartb.im.commons.auth.Role
+import city.smartb.im.commons.auth.hasRole
 import city.smartb.im.commons.auth.policies.PolicyEnforcer
 import org.springframework.stereotype.Service
 
@@ -12,8 +15,17 @@ class ApiKeyPoliciesEnforcer: PolicyEnforcer() {
         ApiKeyPolicies.canGet(authedUser, apikeyId)
     }
 
-    suspend fun checkPage() = check("page apikeys") { authedUser ->
-        ApiKeyPolicies.canList(authedUser)
+    suspend fun enforcePage(query: ApiKeyPageQuery): ApiKeyPageQuery = enforce { authedUser ->
+        check("page apikey") {
+            ApiKeyPolicies.canPage(authedUser)
+        }
+        if(authedUser.hasRole(Role.SUPER_ADMIN)) {
+            query
+        } else {
+            query.copy(
+                organizationId = authedUser.memberOf
+            )
+        }
     }
 
 

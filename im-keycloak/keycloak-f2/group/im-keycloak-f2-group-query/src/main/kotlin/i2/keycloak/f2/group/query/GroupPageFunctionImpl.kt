@@ -39,6 +39,10 @@ class GroupPageFunctionImpl{
 				groups = groups.filter { group -> group.name.contains(searchFilter, true) }
 			}
 
+			cmd.groupId?.let { groupId ->
+				groups = groups.filter { group -> group.id == groupId }
+			}
+
 			cmd.roles?.let { roleFilter ->
 				if(roleFilter.isNotEmpty()) {
 					groups = groups.filter { group -> roleFilter.any { it in group.roles.effectiveRoles } }
