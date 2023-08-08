@@ -6,8 +6,8 @@ plugins {
 }
 
 dependencies {
-    api(project(":im-commons:im-commons-api"))
-    api(project(":im-commons:im-commons-auth"))
+    api(project(Modules.imCommonsApi))
+    api(project(Modules.imCommonsAuth))
     api("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     Dependencies.Jvm.Fs.client(::api)

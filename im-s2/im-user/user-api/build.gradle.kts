@@ -9,5 +9,5 @@ dependencies {
 
     implementation(project(Modules.S2.imUserLib))
     implementation(project(":im-api:api-config"))
-    implementation(project(":im-commons:im-commons-auth"))
+    implementation(project(Modules.imCommonsAuth))
 }

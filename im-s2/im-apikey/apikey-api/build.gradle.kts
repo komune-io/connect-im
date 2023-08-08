@@ -7,7 +7,7 @@ plugins {
 dependencies {
     implementation(project(":im-api:api-config"))
 
-    implementation(project(":im-commons:im-commons-auth"))
+    implementation(project(Modules.imCommonsAuth))
     implementation(project(":im-infra:infra-redis"))
 
     api(project(Modules.S2.imApikeyLib))

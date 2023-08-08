@@ -152,7 +152,8 @@ object Modules {
 		val imRoleClient = ":im-s2:im-role:role-client"
 	}
 
-
+	val imCommonsApi = ":im-commons:im-commons-api"
+	val imCommonsAuth = ":im-commons:im-commons-auth"
 	val imCommonsDomain = ":im-commons:im-commons-domain"
 
 	val imKeycloakUtils = ":im-keycloak:keycloak-utils"
