@@ -1,4 +1,4 @@
-package i2.config.api.auth
+package i2.config.api.auth.config
 
 import i2.keycloak.f2.client.domain.ClientIdentifier
 

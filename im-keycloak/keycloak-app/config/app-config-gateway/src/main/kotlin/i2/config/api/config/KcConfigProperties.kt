@@ -6,5 +6,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 class KcConfigProperties(
     val maxRetries: Int,
     val retryDelayMillis: Long,
-    var json: String,
+    val json: String,
 )

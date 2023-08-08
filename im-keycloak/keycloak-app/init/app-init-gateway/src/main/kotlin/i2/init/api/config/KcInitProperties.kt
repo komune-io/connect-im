@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 class KcInitProperties(
     val maxRetries: Int,
     val retryDelayMillis: Long,
+    val json: String,
     val realm: String,
     val theme: String,
     val smtp: Map<String, String>,

@@ -1,4 +1,4 @@
-package i2.config.api.auth.config
+package i2.init.api.auth.config
 
 import city.smartb.im.commons.utils.ParserUtils
 import com.fasterxml.jackson.core.JsonParser
@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory
 const val FILE = "file:"
 
 class KeycloakConfigParser {
+    private val logger = LoggerFactory.getLogger(KeycloakConfigParser::class.java)
 
-    fun getConfiguration(configPath: String)
-        = ParserUtils.getConfiguration(configPath, KeycloakConfigProperties::class.java)
+    fun getConfiguration(configPath: String) = ParserUtils.getConfiguration(configPath, KeycloakInitProperties::class.java)
 
 }

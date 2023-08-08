@@ -1,7 +1,13 @@
 package i2.config.api.auth
 
 import city.smartb.im.commons.exception.NotFoundException
+import i2.config.api.auth.config.AppClient
 import i2.config.api.auth.config.KeycloakConfigParser
+import i2.config.api.auth.config.KeycloakConfigProperties
+import i2.config.api.auth.config.KeycloakUserConfig
+import i2.config.api.auth.config.WebClient
+import i2.config.api.auth.service.KeycloakAggregateService
+import i2.config.api.auth.service.KeycloakFinderService
 import i2.keycloak.f2.client.domain.ClientId
 import i2.keycloak.f2.role.domain.RoleName
 import i2.keycloak.master.domain.AuthRealm
