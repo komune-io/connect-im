@@ -1,15 +1,15 @@
 version: "3.3"
 
 services:
-  i2-config:
+  im-config:
     image: smartbcity/im-config:${VERSION_IM}
     network_mode: host
     environment:
-      - i2_keycloak_serverUrl=${AUTH_HOST_URL}
-      - i2_keycloak_realm=${KC_REALM}
-      - i2_keycloak_clientId=${KC_ADMIN_CLIENT_ID}
-      - i2_keycloak_clientSecret=${KC_ADMIN_CLIENT_SECRET}
-      - i2_config_json=file:/tmp/config.json
+      - im_keycloak_serverUrl=${AUTH_HOST_URL}
+      - im_keycloak_realm=${KC_REALM}
+      - im_keycloak_clientId=${KC_ADMIN_CLIENT_ID}
+      - im_keycloak_clientSecret=${KC_ADMIN_CLIENT_SECRET}
+      - im_config_json=file:/tmp/config.json
     ports:
       - "8083:8083"
     volumes:

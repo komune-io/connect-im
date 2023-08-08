@@ -2,7 +2,7 @@ spring:
   main:
     web-application-type: none
 
-i2:
+im:
   keycloak:
     serverUrl: http://keycloak-it:8080/auth
     realm: test

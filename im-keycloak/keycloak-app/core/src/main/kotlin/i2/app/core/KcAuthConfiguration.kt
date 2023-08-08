@@ -6,7 +6,7 @@ import i2.keycloak.master.domain.AuthRealmPassword
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 
-@ConfigurationProperties("i2.keycloak")
+@ConfigurationProperties("im.keycloak")
 data class KcAuthProperties(
     val serverUrl: String,
     val realm: String,

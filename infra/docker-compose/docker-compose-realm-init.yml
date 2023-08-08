@@ -1,17 +1,18 @@
 version: "3.7"
 services:
-  i2-init:
+  im-init:
     image: smartbcity/im-init:${VERSION_IM}
     network_mode: host
     environment:
-      - i2_keycloak_serverUrl=${AUTH_HOST_URL}
-      - i2_keycloak_username=${KC_ROOT_PASS}
-      - i2_keycloak_password=${KC_ROOT_USER}
-      - i2_init_realm=${KC_REALM}
-      - i2_init_adminUser_username=${KC_ADMIN_USER}
-      - i2_init_adminUser_password=${KC_ADMIN_PASS}
-      - i2_init_adminUser_email=admin@admin.com
-      - i2_init_adminUser_firstname=admin
-      - i2_init_adminUser_lastname=im
-      - i2_init_adminClient_name=${KC_ADMIN_CLIENT_ID}
-      - i2_init_adminClient_secret=${KC_ADMIN_CLIENT_SECRET}
+      - im_keycloak_serverUrl=${AUTH_HOST_URL}
+      - im_keycloak_username=${KC_ROOT_PASS}
+      - im_keycloak_password=${KC_ROOT_USER}
+      - im_init_realm=${KC_REALM}
+      - im_init_adminUser_username=${KC_ADMIN_USER}
+      - im_init_adminUser_password=${KC_ADMIN_PASS}
+      - im_init_theme=im
+      - im_init_adminUser_email=admin@admin.com
+      - im_init_adminUser_firstname=admin
+      - im_init_adminUser_lastname=im
+      - im_init_adminClient_name=${KC_ADMIN_CLIENT_ID}
+      - im_init_adminClient_secret=${KC_ADMIN_CLIENT_SECRET}
