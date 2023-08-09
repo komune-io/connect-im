@@ -8,6 +8,8 @@ dependencies {
 
     api(project(Modules.imCommonsApi))
 
+    api(project(Modules.Script.imScriptFunctionCore))
+
     api(project(Modules.imKeycloakF2ClientDomain))
     implementation(project(Modules.imKeycloakF2ClientCommand))
     implementation(project(Modules.imKeycloakF2ClientQuery))

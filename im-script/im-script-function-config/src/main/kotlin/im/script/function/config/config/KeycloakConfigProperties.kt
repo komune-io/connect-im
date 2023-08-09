@@ -1,6 +1,7 @@
 package im.script.function.config.config
 
 import i2.keycloak.f2.client.domain.ClientIdentifier
+import im.script.function.core.model.AppClient
 
 class KeycloakConfigProperties (
     val appClients: List<AppClient>,
@@ -22,11 +23,4 @@ class KeycloakUserConfig(
 class WebClient (
     val clientId: ClientIdentifier,
     val webUrl: String
-)
-
-class AppClient (
-    val clientId: ClientIdentifier,
-    val clientSecret: String?,
-    val roles: Array<String>?,
-    val realmManagementRoles: Array<String>?
 )

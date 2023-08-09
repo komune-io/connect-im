@@ -2,11 +2,11 @@ package im.script.function.init
 
 import city.smartb.im.commons.utils.ParserUtils
 import im.script.function.init.config.AdminUserData
-import im.script.function.init.config.AppClient
 import im.script.function.init.config.KeycloakInitProperties
 import im.script.function.init.service.InitService
-import im.script.function.init.service.InitFinderService
 import i2.keycloak.master.domain.AuthRealm
+import im.script.function.core.service.ClientInitService
+import im.script.function.core.service.ScriptFinderService
 import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
@@ -17,7 +17,8 @@ const val SUPER_ADMIN_ROLE = "super_admin"
 @Service
 class KeycloakInitScript(
     private val keycloakAggregateService: InitService,
-    private val keycloakFinderService: InitFinderService,
+    private val clientInitService: ClientInitService,
+    private val scriptFinderService: ScriptFinderService,
 ) {
     private val logger = LoggerFactory.getLogger(KeycloakInitScript::class.java)
 
@@ -59,61 +60,34 @@ class KeycloakInitScript(
     }
 
     private suspend fun KeycloakInitScript.initAdminClient(authRealm: AuthRealm, properties: KeycloakInitProperties) {
-        properties.adminClient.forEach { appClient ->
+
+        properties.adminClient.map { appClient ->
             logger.info("Initializing Clients [${appClient.clientId}]...")
-            properties.initAdminClient(authRealm, appClient)
+            val realmManagementRoles = appClient.realmManagementRoles ?: listOf(
+                "create-client",
+                "manage-clients",
+                "manage-users",
+                "manage-realm",
+                "view-clients",
+                "view-users"
+            )
+            appClient.copy(realmManagementRoles = realmManagementRoles)
+        }.forEach { appClient ->
+            clientInitService.initAppClient(authRealm, appClient)
             logger.info("Initialized Client")
         }
     }
 
     private suspend fun initRealm(authRealm: AuthRealm, properties: KeycloakInitProperties) {
         val realmId = properties.realm
-        keycloakFinderService.getRealm(authRealm, realmId)?.let {
+        scriptFinderService.getRealm(authRealm, realmId)?.let {
           logger.info("Realm already created")
         } ?: keycloakAggregateService.createRealm(authRealm, realmId, properties.theme, properties.smtp)
     }
 
-    private suspend fun KeycloakInitProperties.initAdminClient(
-        authRealm: AuthRealm, properties: AppClient
-    ) = createClientIfNotExists(authRealm, properties) { clientId ->
-        val secret = properties.clientSecret ?: UUID.randomUUID().toString()
-        logger.info("Creating admin client with secret: $secret")
-        keycloakAggregateService.createClient(
-            authRealm = authRealm,
-            identifier = clientId,
-            secret = secret,
-            isPublic = false,
-            realm = realm
-        ).let {
-            keycloakAggregateService.grantClient(
-                authRealm = authRealm,
-                id = clientId,
-                realm = realm,
-                roles = listOf(
-                    "create-client",
-                    "manage-clients",
-                    "manage-users",
-                    "manage-realm",
-                    "view-clients",
-                    "view-users"
-                )
-            )
-        }
-    }
-
-    private suspend fun KeycloakInitProperties.createClientIfNotExists(
-        authRealm: AuthRealm, properties: AppClient, createClient: suspend (id: String) -> Unit
-    ) {
-        properties.clientId.let {
-            keycloakFinderService.getClient(authRealm, properties.clientId, realm)?.let {
-                logger.info("Client already created")
-            } ?: createClient(properties.clientId)
-        }
-    }
-
     private suspend fun KeycloakInitProperties.initAdmin(authRealm: AuthRealm, properties: AdminUserData) {
         properties.email.let { email ->
-            if (keycloakFinderService.getUser(authRealm, email, realm) != null) {
+            if (scriptFinderService.getUser(authRealm, email, realm) != null) {
                 logger.info("User admin already created")
             } else {
                 val password = properties.password ?: UUID.randomUUID().toString()
@@ -150,7 +124,7 @@ class KeycloakInitScript(
     private suspend fun initBaseRoles(authRealm: AuthRealm, properties: KeycloakInitProperties) {
         val roles = properties.baseRoles
         roles.forEach { role ->
-            keycloakFinderService.getRole(authRealm, role, properties.realm)
+            scriptFinderService.getRole(authRealm, role, properties.realm)
                 ?: keycloakAggregateService.createRole(authRealm, role, "Role created with i2-init", emptyList(), properties.realm)
         }
     }

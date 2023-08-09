@@ -100,4 +100,5 @@ include(
 
     "im-script:im-script-function-init",
     "im-script:im-script-function-config",
+    "im-script:im-script-function-core",
 )

@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.Script.imKeycloakF2ScriptConfigCommand))
+    implementation(project(Modules.Script.imScriptFunctionConfig))
     Dependencies.Jvm.f2(::implementation)
     Dependencies.Jvm.slf4j(::implementation)
 }

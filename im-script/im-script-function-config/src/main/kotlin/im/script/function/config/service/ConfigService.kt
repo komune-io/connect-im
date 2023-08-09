@@ -25,45 +25,11 @@ import org.springframework.stereotype.Service
 
 @Service
 class ConfigService(
-    private val clientCreateFunction: ClientCreateFunction,
     private val roleAddCompositesFunction: RoleAddCompositesFunction,
     private val roleCreateFunction: RoleCreateFunction,
     private val userCreateFunction: UserCreateFunction,
     private val userRolesGrantFunction: UserRolesGrantFunction,
-    private val clientServiceAccountRolesGrantFunction: ClientServiceAccountRolesGrantFunction,
-    private val clientRealmManagementRolesGrantFunction: ClientRealmManagementRolesGrantFunction,
 ) {
-
-    suspend fun createClient(
-        authRealm: AuthRealm,
-        identifier: ClientIdentifier,
-        secret: String? = null,
-        isPublic: Boolean = true,
-        isDirectAccessGrantsEnabled: Boolean = true,
-        isServiceAccountsEnabled: Boolean = true,
-        authorizationServicesEnabled: Boolean = false,
-        isStandardFlowEnabled: Boolean = false,
-        baseUrl: String? = null,
-        protocolMappers: Map<String, String> = emptyMap(),
-    ): ClientId {
-        return ClientCreateCommand(
-            auth = authRealm,
-            realmId = authRealm.realmId,
-            clientIdentifier = identifier,
-            secret = secret,
-            isPublicClient = isPublic,
-            isDirectAccessGrantsEnabled = isDirectAccessGrantsEnabled,
-            isServiceAccountsEnabled = isServiceAccountsEnabled,
-            authorizationServicesEnabled = authorizationServicesEnabled,
-            isStandardFlowEnabled = isStandardFlowEnabled,
-            rootUrl = baseUrl,
-            redirectUris = listOfNotNull(baseUrl),
-            baseUrl = baseUrl ?: "",
-            adminUrl = baseUrl ?: "",
-            webOrigins = listOfNotNull(baseUrl),
-            protocolMappers = protocolMappers,
-        ).invokeWith(clientCreateFunction).id
-    }
 
     suspend fun createRole(authRealm: AuthRealm, name: RoleName): RoleId {
         return RoleCreateCommand(
@@ -116,23 +82,5 @@ class ConfigService(
             auth = authRealm,
             realmId = authRealm.realmId
         ).invokeWith(userRolesGrantFunction)
-    }
-
-    suspend fun grantClient(authRealm: AuthRealm, id: ClientId, roles: List<RoleName>) {
-        ClientServiceAccountRolesGrantCommand(
-            id = id,
-            roles = roles,
-            auth = authRealm,
-            realmId = authRealm.realmId
-        ).invokeWith(clientServiceAccountRolesGrantFunction)
-    }
-
-    suspend fun grantRealmManagementClient(authRealm: AuthRealm, id: ClientId, roles: List<RoleName>) {
-        ClientRealmManagementRolesGrantCommand(
-            id = id,
-            roles = roles,
-            auth = authRealm,
-            realmId = authRealm.realmId
-        ).invokeWith(clientRealmManagementRolesGrantFunction)
     }
 }

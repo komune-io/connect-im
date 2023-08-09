@@ -7,8 +7,8 @@ plugins {
 
 dependencies {
     implementation(project(Modules.Script.imScriptConfig))
-    implementation(project(Modules.Script.imKeycloakF2ScriptConfigCommand))
-    implementation(project(Modules.Script.imKeycloakF2ScriptInitCommand))
+    implementation(project(Modules.Script.imScriptFunctionConfig))
+    implementation(project(Modules.Script.imScriptFunctionInit))
 
 
     Dependencies.Jvm.f2(::implementation)

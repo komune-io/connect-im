@@ -1,6 +1,6 @@
 package im.script.function.init.config
 
-import i2.keycloak.f2.client.domain.ClientIdentifier
+import im.script.function.core.model.AppClient
 
 data class KeycloakInitProperties(
     val realm: String,
@@ -9,14 +9,6 @@ data class KeycloakInitProperties(
     val adminUser: List<AdminUserData>,
     val adminClient: List<AppClient>,
     val baseRoles: List<String>
-)
-
-// TODO Use class than keyclock config
-data class AppClient (
-    val clientId: ClientIdentifier,
-    val clientSecret: String?,
-    val roles: Array<String>?,
-    val realmManagementRoles: Array<String>?
 )
 
 data class AdminUserData(

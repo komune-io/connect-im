@@ -25,11 +25,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class InitService(
-    private val clientCreateFunction: ClientCreateFunction,
     private val realmCreateFunction: RealmCreateFunction,
     private val userCreateFunction: UserCreateFunction,
     private val userRolesGrantFunction: UserRolesGrantFunction,
-    private val clientRealmManagementRolesGrantFunction: ClientRealmManagementRolesGrantFunction,
     private val roleCreateFunction: RoleCreateFunction,
     private val roleAddCompositesFunction: RoleAddCompositesFunction
 ) {
@@ -42,39 +40,6 @@ class InitService(
             smtpServer = smtpConfig,
             masterRealmAuth = authRealm,
         ).invokeWith(realmCreateFunction).id
-    }
-
-    suspend fun createClient(
-        authRealm: AuthRealm,
-        identifier: ClientIdentifier,
-        realm: String,
-        secret: String? = null,
-        isPublic: Boolean = true,
-        isDirectAccessGrantsEnabled: Boolean = true,
-        isServiceAccountsEnabled: Boolean = true,
-        authorizationServicesEnabled: Boolean = false,
-        isStandardFlowEnabled: Boolean = false,
-        baseUrl: String? = null,
-        localhostUrl: String? = null,
-        protocolMappers: Map<String, String> = emptyMap(),
-    ): ClientId {
-        return ClientCreateCommand(
-            auth = authRealm,
-            realmId = realm,
-            clientIdentifier = identifier,
-            secret = secret,
-            isPublicClient = isPublic,
-            isDirectAccessGrantsEnabled = isDirectAccessGrantsEnabled,
-            isServiceAccountsEnabled = isServiceAccountsEnabled,
-            authorizationServicesEnabled = authorizationServicesEnabled,
-            isStandardFlowEnabled = isStandardFlowEnabled,
-            rootUrl = baseUrl,
-            redirectUris = listOfNotNull(baseUrl, localhostUrl),
-            baseUrl = baseUrl ?: "",
-            adminUrl = baseUrl ?: "",
-            webOrigins = listOfNotNull(baseUrl, localhostUrl),
-            protocolMappers = protocolMappers,
-        ).invokeWith(clientCreateFunction).id
     }
 
     suspend fun createUser(
@@ -110,15 +75,6 @@ class InitService(
             realmId = realm,
             clientId = clientId
         ).invokeWith(userRolesGrantFunction)
-    }
-
-    suspend fun grantClient(authRealm: AuthRealm, id: ClientId, realm: String, roles: List<RoleName>) {
-        ClientRealmManagementRolesGrantCommand(
-            id = id,
-            roles = roles,
-            auth = authRealm,
-            realmId = realm
-        ).invokeWith(clientRealmManagementRolesGrantFunction)
     }
 
     suspend fun createRole(authRealm: AuthRealm, roleName: RoleName, description: String?, composites: List<String>, realm: String) {

@@ -156,8 +156,9 @@ object Modules {
 		val imScriptGateway = ":im-script:im-script-gateway"
 		val imScriptConfig = ":im-script:im-script-gateway-configuration"
 
-		val imKeycloakF2ScriptConfigCommand = ":im-script:im-script-function-config"
-		val imKeycloakF2ScriptInitCommand = ":im-script:im-script-function-init"
+		val imScriptFunctionConfig = ":im-script:im-script-function-config"
+		val imScriptFunctionCore = ":im-script:im-script-function-core"
+		val imScriptFunctionInit = ":im-script:im-script-function-init"
 	}
 
 	val imCommonsApi = ":im-commons:im-commons-api"

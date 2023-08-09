@@ -1,18 +1,17 @@
 package im.script.function.config
 
 import city.smartb.im.commons.exception.NotFoundException
-import im.script.function.config.config.AppClient
 import im.script.function.config.config.KeycloakConfigParser
 import im.script.function.config.config.KeycloakConfigProperties
 import im.script.function.config.config.KeycloakUserConfig
 import im.script.function.config.config.WebClient
 import im.script.function.config.service.ConfigService
-import im.script.function.config.service.ConfigFinderService
 import i2.keycloak.f2.client.domain.ClientId
 import i2.keycloak.f2.role.domain.RoleName
 import i2.keycloak.master.domain.AuthRealm
 import i2.keycloak.master.domain.RealmId
-import java.util.UUID
+import im.script.function.core.service.ClientInitService
+import im.script.function.core.service.ScriptFinderService
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -23,7 +22,8 @@ const val ORGANIZATION_ID_CLAIM_NAME = "memberOf"
 @Service
 class KeycloakConfigScript (
     private val keycloakAggregateService: ConfigService,
-    private val keycloakFinderService: ConfigFinderService
+    private val clientInitService: ClientInitService,
+    private val scriptFinderService: ScriptFinderService
 ) {
     private val logger = LoggerFactory.getLogger(KeycloakConfigScript::class.java)
 
@@ -41,7 +41,7 @@ class KeycloakConfigScript (
 
         logger.info("Initializing Clients...")
         config.webClients.forEach { initWebClient(authRealm, it) }
-        config.appClients.forEach { initAppClient(authRealm, it) }
+        config.appClients.forEach { clientInitService.initAppClient(authRealm, it) }
         logger.info("Initialized Client")
 
         logger.info("Initializing Users...")
@@ -50,7 +50,7 @@ class KeycloakConfigScript (
     }
 
     private suspend fun checkIfExists(authRealm: AuthRealm, clientId: ClientId): Boolean {
-        return if (keycloakFinderService.getClient(authRealm, clientId) != null) {
+        return if (scriptFinderService.getClient(authRealm, clientId) != null) {
             logger.info("Client [$clientId] already exists.")
             true
         } else {
@@ -58,40 +58,9 @@ class KeycloakConfigScript (
         }
     }
 
-    private suspend fun initAppClient(authRealm: AuthRealm, appClient: AppClient) {
-        if (!checkIfExists(authRealm, appClient.clientId)) {
-            val secret = appClient.clientSecret ?: UUID.randomUUID().toString()
-            keycloakAggregateService.createClient(
-                authRealm = authRealm,
-                identifier = appClient.clientId,
-                secret = secret,
-                isPublic = false,
-                isServiceAccountsEnabled = true,
-                isDirectAccessGrantsEnabled = false,
-                isStandardFlowEnabled = false
-            ).let { clientId ->
-                appClient.roles?.toList()?.let { list ->
-                    keycloakAggregateService.grantClient(
-                        authRealm = authRealm,
-                        id = clientId,
-                        roles = list
-                    )
-                }
-                appClient.realmManagementRoles?.toList()?.let { list ->
-                    keycloakAggregateService.grantRealmManagementClient(
-                        authRealm = authRealm,
-                        id = appClient.clientId,
-                        roles = list,
-                    )
-                }
-            }
-            logger.info("App secret: $secret")
-        }
-    }
-
     private suspend fun initWebClient(authRealm: AuthRealm, webClient: WebClient) {
         if (!checkIfExists(authRealm, webClient.clientId)) {
-            keycloakAggregateService.createClient(
+            clientInitService.createClient(
                 authRealm = authRealm,
                 identifier = webClient.clientId,
                 baseUrl = webClient.webUrl,
@@ -120,10 +89,10 @@ class KeycloakConfigScript (
     }
 
     private suspend fun verifyRealm(authRealm: AuthRealm, realmId: RealmId) {
-        keycloakFinderService.getRealm(authRealm, realmId) ?: throw NotFoundException("Realm", realmId)
+        scriptFinderService.getRealm(authRealm, realmId) ?: throw NotFoundException("Realm", realmId)
     }
     private suspend fun initRoleWithComposites(authRealm: AuthRealm, role: RoleName, composites: List<RoleName> = emptyList()) {
-        keycloakFinderService.getRole(authRealm, role)
+        scriptFinderService.getRole(authRealm, role, authRealm.realmId)
             ?: keycloakAggregateService.createRole(authRealm, role)
 
         if (composites.isNotEmpty()) {
@@ -142,7 +111,7 @@ class KeycloakConfigScript (
     }
 
     private suspend fun initUser(authRealm: AuthRealm, user: KeycloakUserConfig) {
-        keycloakFinderService.getUser(authRealm, user.email)
+        scriptFinderService.getUser(authRealm, user.email, authRealm.realmId)
             ?: keycloakAggregateService.createUser(
                 authRealm = authRealm,
                 username = user.username,

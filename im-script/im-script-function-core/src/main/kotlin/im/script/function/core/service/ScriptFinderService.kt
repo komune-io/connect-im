@@ -1,10 +1,11 @@
-package im.script.function.init.service
+package im.script.function.core.service
 
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.ClientIdentifier
 import i2.keycloak.f2.client.domain.ClientModel
 import i2.keycloak.f2.client.domain.features.query.ClientGetByClientIdentifierFunction
 import i2.keycloak.f2.client.domain.features.query.ClientGetByClientIdentifierQuery
+import i2.keycloak.f2.realm.domain.RealmId
 import i2.keycloak.f2.realm.domain.RealmModel
 import i2.keycloak.f2.realm.domain.features.query.RealmGetFunction
 import i2.keycloak.f2.realm.domain.features.query.RealmGetQuery
@@ -16,29 +17,37 @@ import i2.keycloak.f2.user.domain.features.query.UserGetByEmailFunction
 import i2.keycloak.f2.user.domain.features.query.UserGetByEmailQuery
 import i2.keycloak.f2.user.domain.model.UserModel
 import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
 import org.springframework.stereotype.Service
 
 @Service
-class InitFinderService(
+class ScriptFinderService(
+    private val realmGetFunction: RealmGetFunction,
     private val clientGetByClientIdentifierQueryFunction: ClientGetByClientIdentifierFunction,
-    private val realmGetOneQueryFunction: RealmGetFunction,
-    private val userGetByEmailQueryFunction: UserGetByEmailFunction,
     private val roleGetByNameQueryFunction: RoleGetByNameQueryFunction,
+    private val userGetByEmailQueryFunction: UserGetByEmailFunction,
 ) {
-    suspend fun getRealm(authRealm: AuthRealm, id: RealmId): RealmModel? {
-        return RealmGetQuery(
-            id = id,
+
+    suspend fun getRealm(authRealm: AuthRealm, realmId: RealmId): RealmModel? {
+        return  RealmGetQuery(
+            id = realmId,
             authRealm = authRealm
-        ).invokeWith(realmGetOneQueryFunction).item
+        ).invokeWith(realmGetFunction).item
     }
 
-    suspend fun getClient(authRealm: AuthRealm, id: ClientIdentifier, realmId: RealmId): ClientModel? {
+    suspend fun getClient(authRealm: AuthRealm, id: ClientIdentifier): ClientModel? {
         return ClientGetByClientIdentifierQuery(
             clientIdentifier = id,
-            realmId = realmId,
+            realmId = authRealm.realmId,
             auth = authRealm
         ).invokeWith(clientGetByClientIdentifierQueryFunction).item
+    }
+
+    suspend fun getRole(authRealm: AuthRealm, name: RoleName, realmId: String): RoleModel? {
+        return RoleGetByNameQuery(
+            name = name,
+            realmId = realmId,
+            auth = authRealm
+        ).invokeWith(roleGetByNameQueryFunction).item
     }
 
     suspend fun getUser(authRealm: AuthRealm, email: String, realmId: RealmId): UserModel? {
@@ -47,13 +56,5 @@ class InitFinderService(
             realmId = realmId,
             auth = authRealm
         ).invokeWith(userGetByEmailQueryFunction).item
-    }
-
-    suspend fun getRole(authRealm: AuthRealm, name: RoleName, realm: RealmId): RoleModel? {
-        return RoleGetByNameQuery(
-            name = name,
-            realmId = realm,
-            auth = authRealm
-        ).invokeWith(roleGetByNameQueryFunction).item
     }
 }
