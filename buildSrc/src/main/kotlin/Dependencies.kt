@@ -31,7 +31,7 @@ object Versions {
 
 	const val kdatetime = "0.1.1"
 	// Come from gradle.properties
-	val keycloak = System.getenv("KEYCLOAK_VERSION").also { version ->
+	val keycloak = System.getProperty("KEYCLOAK_VERSION").also { version ->
 		println("Keycloak version: $version")
 	}
 
@@ -205,7 +205,4 @@ object Modules {
 
 	val keycloakTestBdd = ":im-keycloak:keycloak-test:test-bdd"
 	val keycloakTestIt = ":im-keycloak:keycloak-test:test-it"
-
 }
-
-
