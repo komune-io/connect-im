@@ -32,11 +32,9 @@ object Versions {
 	const val kdatetime = "0.1.1"
 
 	// Come from gradle.properties
-	val keycloak by lazy {
-    System.getProperty("KEYCLOAK_VERSION").also { version ->
-      println("Keycloak version: $version")
+	fun keycloak() = System.getProperty("KEYCLOAK_VERSION").also { version ->
+        println("Keycloak version: $version")
     }
-  }
 
 	const val mockito = "4.6.1"
 	const val testcontainers = "1.18.0"
@@ -48,9 +46,21 @@ object Dependencies {
 	object Jvm {
 
 		object Keycloak {
-			fun adminClient(scope: Scope) = scope.add(
-				"org.keycloak:keycloak-admin-client:${Versions.keycloak}"
-			)
+            fun adminClient(scope: Scope) = scope.add(
+                "org.keycloak:keycloak-admin-client:${Versions.keycloak()}"
+            )
+
+            fun serverSpiPrivate(scope: Scope)  = scope.add(
+            "org.keycloak:keycloak-server-spi-private:${Versions.keycloak()}",
+            )
+
+            fun all(scope: Scope)  = scope.add(
+              "org.keycloak:keycloak-core:${Versions.keycloak()}",
+              "org.keycloak:keycloak-server-spi:${Versions.keycloak()}",
+              "org.keycloak:keycloak-server-spi-private:${Versions.keycloak()}",
+              "org.keycloak:keycloak-services:${Versions.keycloak()}",
+              "org.keycloak:keycloak-saml-core-public:${Versions.keycloak()}"
+            )
 		}
 		fun f2(scope: Scope) = scope.add(
 			"city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}"

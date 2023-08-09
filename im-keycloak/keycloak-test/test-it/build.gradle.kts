@@ -8,5 +8,5 @@ dependencies {
     testImplementation(project(Modules.keycloakTestBdd))
     testImplementation(project(":im-keycloak:keycloak-auth:keycloak-auth-client"))
 
-    testImplementation("org.keycloak:keycloak-admin-client:${Versions.keycloak}")
+    Dependencies.Jvm.Keycloak.adminClient(::testImplementation)
 }

@@ -26,11 +26,7 @@ subprojects {
         }
         dependencies {
             val compileOnly by configurations
-            compileOnly("org.keycloak:keycloak-core:${Versions.keycloak}")
-            compileOnly("org.keycloak:keycloak-server-spi:${Versions.keycloak}")
-            compileOnly("org.keycloak:keycloak-server-spi-private:${Versions.keycloak}")
-            compileOnly("org.keycloak:keycloak-services:${Versions.keycloak}")
-            compileOnly("org.keycloak:keycloak-saml-core-public:${Versions.keycloak}")
+            Dependencies.Jvm.Keycloak.all(::compileOnly)
         }
     }
 }
