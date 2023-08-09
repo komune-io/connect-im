@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  im-init:
+  im-config:
     image: smartbcity/im-script:${VERSION_IM}
     network_mode: host
     environment:
