@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  im-init:
+    image: smartbcity/im-script:${VERSION_IM}
+    network_mode: host
+    environment:
+      - im_script_config_auth_serverUrl=${AUTH_HOST_URL}
+      - im_script_config_auth_realm=${KC_REALM}
+      - im_script_config_auth_clientId=${KC_ADMIN_CLIENT_ID}
+      - im_script_config_auth_clientSecret=${KC_ADMIN_CLIENT_SECRET}
+      - im_script_config_json=file:/tmp/config.json
+    volumes:
+      - ./config/config.json:/tmp/config.json

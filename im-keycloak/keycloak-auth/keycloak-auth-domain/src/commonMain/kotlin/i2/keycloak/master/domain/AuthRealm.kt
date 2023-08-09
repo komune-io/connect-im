@@ -1,7 +1,10 @@
 package i2.keycloak.master.domain
 
+import kotlin.js.JsExport
+
 typealias RealmId = String
 
+@JsExport
 sealed class AuthRealm(
     open val serverUrl: String,
     open val realmId: RealmId,
@@ -9,6 +12,7 @@ sealed class AuthRealm(
     open val redirectUrl: String?,
 )
 
+@JsExport
 class AuthRealmPassword(
     override val serverUrl: String,
     override val realmId: RealmId,
@@ -18,6 +22,7 @@ class AuthRealmPassword(
     val password: String,
 ): AuthRealm(serverUrl, realmId, clientId, redirectUrl)
 
+@JsExport
 class AuthRealmClientSecret(
     override val serverUrl: String,
     override val realmId: RealmId,

@@ -1,10 +1,4 @@
 {
-  "webClients": [
-    {
-      "clientId": "im-test-web",
-      "webUrl": "http://localhost:3000"
-    }
-  ],
   "appClients": [
     {
       "clientId": "im-test-api",
@@ -16,6 +10,12 @@
         "query-groups",
         "manage-realm"
       ]
+    }
+  ],
+  "webClients": [
+    {
+      "clientId": "im-test-web",
+      "webUrl": "http://localhost:3000"
     }
   ],
   "users": [],

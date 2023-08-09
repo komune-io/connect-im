@@ -72,9 +72,6 @@ include(
     "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-command",
     "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-query",
 
-    "im-keycloak:keycloak-f2:init:im-init-command",
-    "im-keycloak:keycloak-f2:config:im-keycloak-f2-config-command",
-
     "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-domain",
     "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-command",
     "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-query",
@@ -94,9 +91,13 @@ include(
     "im-keycloak:keycloak-plugin:keycloak-plugin-domain",
 
     "im-keycloak:keycloak-test:test-bdd",
-    "im-keycloak:keycloak-test:test-it",
+    "im-keycloak:keycloak-test:test-it"
+)
 
-    "im-keycloak:keycloak-app:core",
-    "im-keycloak:keycloak-app:init:app-init-gateway",
-    "im-keycloak:keycloak-app:config:app-config-gateway"
+include(
+    "im-script:im-script-gateway-configuration",
+    "im-script:im-script-gateway",
+
+    "im-script:im-script-function-init",
+    "im-script:im-script-function-config",
 )

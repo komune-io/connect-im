@@ -4,11 +4,11 @@
     "theme": "im",
     "smtp": {
       "host": "me-email",
-      "port": 1025,
+      "port": "1025",
       "from": "noreply@smartb.city",
-      "ssl": false,
-      "starttls": false,
-      "auth": false
+      "ssl": "false",
+      "starttls": "false",
+      "auth": "false"
     },
     "adminUser": [{
       "username": "admin",

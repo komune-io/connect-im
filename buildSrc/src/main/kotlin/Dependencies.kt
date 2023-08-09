@@ -152,6 +152,14 @@ object Modules {
 		val imRoleClient = ":im-s2:im-role:role-client"
 	}
 
+	object Script {
+		val imScriptGateway = ":im-script:im-script-gateway"
+		val imScriptConfig = ":im-script:im-script-gateway-configuration"
+
+		val imKeycloakF2ScriptConfigCommand = ":im-script:im-script-function-config"
+		val imKeycloakF2ScriptInitCommand = ":im-script:im-script-function-init"
+	}
+
 	val imCommonsApi = ":im-commons:im-commons-api"
 	val imCommonsAuth = ":im-commons:im-commons-auth"
 	val imCommonsDomain = ":im-commons:im-commons-domain"
@@ -171,9 +179,6 @@ object Modules {
 	val imKeycloakF2GroupDomain = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-domain"
 	val imKeycloakF2GroupCommand = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-command"
 	val imKeycloakF2GroupQuery = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-query"
-
-	val imKeycloakF2InitCommand = ":im-keycloak:keycloak-f2:init:im-keycloak-f2-init-command"
-	val imKeycloakF2ConfigCommand = ":im-keycloak:keycloak-f2:config:im-keycloak-f2-config-command"
 
 	val imKeycloakF2RealmDomain = ":im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-domain"
 	val imKeycloakF2RealmCommand = ":im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-command"
@@ -196,9 +201,6 @@ object Modules {
 	val keycloakTestBdd = ":im-keycloak:keycloak-test:test-bdd"
 	val keycloakTestIt = ":im-keycloak:keycloak-test:test-it"
 
-	val keycloakAppCore = ":im-keycloak:keycloak-app:core"
-	val keycloakAppInitGateway = ":im-keycloak:keycloak-app:init:app-init-gateway"
-	val keycloakAppConfigGateway = ":im-keycloak:keycloak-app:config:app-config-gateway"
 }
 
 

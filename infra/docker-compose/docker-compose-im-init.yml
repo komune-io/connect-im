@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  im-init:
+    image: smartbcity/im-script:${VERSION_IM}
+    network_mode: host
+    environment:
+      - im_script_init_auth_serverUrl=${AUTH_HOST_URL}
+      - im_script_init_auth_username=${KC_ROOT_PASS}
+      - im_script_init_auth_password=${KC_ROOT_USER}
+      - im_script_init_json=file:/tmp/init.json
+    volumes:
+      - ./config/init.json:/tmp/init.json
+

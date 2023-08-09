@@ -1,4 +1,4 @@
-DOCKER_COMPOSE_FILE = keycloak smtp realm-init realm-config
+DOCKER_COMPOSE_FILE = keycloak smtp im-init im-config
 DOCKER_COMPOSE_PATH = infra/docker-compose
 DOCKER_COMPOSE_ENV = $(DOCKER_COMPOSE_PATH)/.env_dev
 .PHONY: $(DOCKER_COMPOSE_FILE)

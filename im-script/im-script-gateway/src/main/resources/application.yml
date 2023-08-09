@@ -1,0 +1,44 @@
+spring:
+  main:
+    web-application-type: none
+
+im:
+  script:
+    retry:
+      max: 5
+      delayMillis: 10000
+    config:
+      auth:
+        serverUrl: http://keycloak-it:8080
+        realm: im-test
+        clientId: im-test-client
+        client-Secret: secret
+      retry:
+        max: ${im.script.retry.max}
+        delayMillis: ${im.script.retry.delayMillis}
+#      json: file:./infra/docker-compose/config/config.json
+    init:
+      auth:
+        serverUrl: http://keycloak-it:8080
+        username: root
+        password: root
+        realm: master
+        clientId: admin-cli
+      retry:
+        max: ${im.script.retry.max}
+        delayMillis: ${im.script.retry.delayMillis}
+#      json: file:./infra/docker-compose/config/init.json
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+im:
+  script:
+    config:
+      json: file:./infra/docker-compose/config/config.json
+    init:
+      json: file:./infra/docker-compose/config/init.json
