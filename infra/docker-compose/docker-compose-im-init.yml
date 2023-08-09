@@ -9,5 +9,5 @@ services:
       - im_script_init_auth_password=${KC_ROOT_USER}
       - im_script_init_json=file:/tmp/init.json
     volumes:
-      - ./config/init.json:/tmp/init.json
+      - ./config/build/init.json:/tmp/init.json
 

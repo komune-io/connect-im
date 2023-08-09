@@ -4,13 +4,19 @@ DOCKER_COMPOSE_ENV = $(DOCKER_COMPOSE_PATH)/.env_dev
 .PHONY: $(DOCKER_COMPOSE_FILE)
 ACTIONS = up down logs
 
--include $(DOCKER_COMPOSE_ENV)
+include $(DOCKER_COMPOSE_ENV)
+export
 
 dev:
 	$(eval ACTION := $(filter $(ACTIONS),$(MAKECMDGOALS)))
 	$(eval SERVICE := $(filter $(DOCKER_COMPOSE_FILE),$(MAKECMDGOALS)))
 	@if ! docker network ls | grep -q $(DOCKER_NETWORK); then \
 		docker network create $(DOCKER_NETWORK); \
+	fi
+	@if [ "$(ACTION)" = "up" ]; then \
+		 $(MAKE) --no-print-directory dev-envsubst; \
+	elif [ "$(ACTION)" = "down" ]; then \
+		$(MAKE) --no-print-directory dev-envsubst-clean; \
 	fi
 	@if [ "$(SERVICE)" = "" ]; then \
 		for service in $(DOCKER_COMPOSE_FILE); do \
@@ -34,6 +40,14 @@ dev-service-action:
 		echo '  down  - Stop the service.'; \
 		echo '  logs  - Show logs for the service.'; \
 	fi
+
+dev-envsubst:
+	mkdir -p $(DOCKER_COMPOSE_PATH)/config/build
+	envsubst < $(DOCKER_COMPOSE_PATH)/config/init.json > $(DOCKER_COMPOSE_PATH)/config/build/init.json
+	envsubst < $(DOCKER_COMPOSE_PATH)/config/config.json > $(DOCKER_COMPOSE_PATH)/config/build/config.json
+
+dev-envsubst-clean:
+	rm -fr $(DOCKER_COMPOSE_PATH)/config/build
 
 dev-help:
 	@echo 'To operate on all services [$(DOCKER_COMPOSE_FILE)]:'

@@ -11,4 +11,4 @@ services:
       - im_script_config_auth_clientSecret=${KC_ADMIN_CLIENT_SECRET}
       - im_script_config_json=file:/tmp/config.json
     volumes:
-      - ./config/config.json:/tmp/config.json
+      - ./config/build/config.json:/tmp/config.json

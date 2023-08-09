@@ -1,11 +1,11 @@
 version: "3.7"
 
 services:
-  smtp:
-    container_name: connect-fake-smtp
+  connect-fake-smtp:
+    container_name: ${SMTP_HOST}
     image: reachfive/fake-smtp-server:latest
     ports:
-      - "1025:1025"
+      - "${SMTP_POST}:1025"
       - "1080:1080"
     networks:
       - net
