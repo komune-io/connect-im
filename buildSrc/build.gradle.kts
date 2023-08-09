@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     `kotlin-dsl`
 }
@@ -13,14 +11,4 @@ repositories {
 
 dependencies {
     implementation("city.smartb.fixers.gradle:dependencies:0.16.0")
-}
-
-loadGradleProperties()
-fun Project.loadGradleProperties() {
-  File("${project.rootProject.rootDir}/../gradle.properties").inputStream().use { stream ->
-    val props = Properties()
-    props.forEach {
-      System.setProperty(it.key.toString(), it.value.toString())
-    }
-  }
 }
