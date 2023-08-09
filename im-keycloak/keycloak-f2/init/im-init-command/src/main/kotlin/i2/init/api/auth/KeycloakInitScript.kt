@@ -1,5 +1,10 @@
 package i2.init.api.auth
 
+import city.smartb.im.commons.utils.ParserUtils
+import i2.init.api.auth.config.AdminUserData
+import i2.init.api.auth.config.AppClient
+import i2.init.api.auth.config.KeycloakInitParser
+import i2.init.api.auth.config.KeycloakInitProperties
 import i2.init.api.auth.service.KeycloakAggregateService
 import i2.init.api.auth.service.KeycloakFinderService
 import java.util.UUID
@@ -10,20 +15,30 @@ import org.springframework.stereotype.Service
 const val SUPER_ADMIN_ROLE = "super_admin"
 
 @Service
-class KeycloakInitService(
+class KeycloakInitScript(
     private val keycloakAggregateService: KeycloakAggregateService,
     private val keycloakFinderService: KeycloakFinderService,
 ) {
-    private val logger = LoggerFactory.getLogger(KeycloakInitService::class.java)
+    private val logger = LoggerFactory.getLogger(KeycloakInitScript::class.java)
 
-    fun init(properties: KeycloakInitProperties) = runBlocking {
+    fun run(configPath: String) = runBlocking {
+        val config = ParserUtils.getConfiguration(configPath, Array<KeycloakInitProperties>::class.java)
+        run(config)
+    }
+
+    suspend fun run(properties: List<KeycloakInitProperties>) {
+        properties.forEach {
+            runOne(it)
+        }
+    }
+    suspend fun runOne(properties: KeycloakInitProperties) = runBlocking {
         logger.info("Initializing Realm [${properties.realm}]...")
         initRealm(properties)
         logger.info("Initialized Realm")
 
-        logger.info("Initializing Client [${properties.clientId}]...")
+
+        logger.info("Initializing Clients [${properties.adminClient.size}]...")
         initAdminClient(properties)
-        logger.info("Initialized Client")
 
         logger.info("Initializing Base roles...")
         initBaseRoles(properties)
@@ -33,30 +48,43 @@ class KeycloakInitService(
         addCompositesToAdminRole(properties)
         logger.info("Added composite roles for Admin")
 
-        logger.info("Initializing Admin user [${properties.username}]...")
-        initAdmin(properties)
-        logger.info("Initialized Admin")
+
+        properties.adminUser.forEach { adminUser ->
+            logger.info("Initializing Admin user [${adminUser.email}]...")
+            properties.initAdmin(adminUser)
+            logger.info("Initialized Admin")
+        }
+        logger.info("Initialized Admin users")
+
+    }
+
+    private suspend fun KeycloakInitScript.initAdminClient(properties: KeycloakInitProperties) {
+        properties.adminClient.forEach { appClient ->
+            logger.info("Initializing Clients [${appClient.clientId}]...")
+            properties.initAdminClient(appClient)
+            logger.info("Initialized Client")
+        }
     }
 
     private suspend fun initRealm(properties: KeycloakInitProperties) {
         val realmId = properties.realm
         keycloakFinderService.getRealm(realmId)?.let {
           logger.info("Realm already created")
-        } ?: keycloakAggregateService.createRealm(realmId, properties.theme, properties.smtpConfig)
+        } ?: keycloakAggregateService.createRealm(realmId, properties.theme, properties.smtp)
     }
 
-    private suspend fun initAdminClient(properties: KeycloakInitProperties) = createClientIfNotExists(properties) { clientId ->
+    private suspend fun KeycloakInitProperties.initAdminClient(properties: AppClient) = createClientIfNotExists(properties) { clientId ->
         val secret = properties.clientSecret ?: UUID.randomUUID().toString()
         logger.info("Creating admin client with secret: $secret")
         keycloakAggregateService.createClient(
             identifier = clientId,
             secret = secret,
             isPublic = false,
-            realm = properties.realm
+            realm = realm
         ).let {
             keycloakAggregateService.grantClient(
                 id = clientId,
-                realm = properties.realm,
+                realm = realm,
                 roles = listOf(
                     "create-client",
                     "manage-clients",
@@ -69,17 +97,17 @@ class KeycloakInitService(
         }
     }
 
-    private suspend fun createClientIfNotExists(properties: KeycloakInitProperties, createClient: suspend (id: String) -> Unit) {
-        properties.clientId?.let {
-            keycloakFinderService.getClient(properties.clientId, properties.realm)?.let {
+    private suspend fun KeycloakInitProperties.createClientIfNotExists(properties: AppClient, createClient: suspend (id: String) -> Unit) {
+        properties.clientId.let {
+            keycloakFinderService.getClient(properties.clientId, realm)?.let {
                 logger.info("Client already created")
             } ?: createClient(properties.clientId)
         }
     }
 
-    private suspend fun initAdmin(properties: KeycloakInitProperties) {
-        properties.email?.let { email ->
-            if (keycloakFinderService.getUser(email, properties.realm) != null) {
+    private suspend fun KeycloakInitProperties.initAdmin(properties: AdminUserData) {
+        properties.email.let { email ->
+            if (keycloakFinderService.getUser(email, realm) != null) {
                 logger.info("User admin already created")
             } else {
                 val password = properties.password ?: UUID.randomUUID().toString()
@@ -87,21 +115,21 @@ class KeycloakInitService(
                 keycloakAggregateService.createUser(
                     username = properties.username ?: email,
                     email = email,
-                    firstname = properties.firstname ?: "",
-                    lastname = properties.lastname ?: "",
+                    firstname = properties.firstName ?: "",
+                    lastname = properties.lastName ?: "",
                     isEnable = true,
                     password = password,
-                    realm = properties.realm
+                    realm = realm
                 ).let { userId ->
                     keycloakAggregateService.grantUser(
                         id = userId,
-                        realm = properties.realm,
+                        realm = realm,
                         clientId = "realm-management",
                         "realm-admin"
                     )
                     keycloakAggregateService.grantUser(
                         id = userId,
-                        realm = properties.realm,
+                        realm = realm,
                         clientId = null,
                         SUPER_ADMIN_ROLE
                     )

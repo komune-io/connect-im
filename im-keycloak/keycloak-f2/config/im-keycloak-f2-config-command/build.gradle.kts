@@ -6,6 +6,8 @@ plugins {
 dependencies {
     api(project(":im-keycloak:keycloak-auth:keycloak-auth-client"))
 
+    api(project(Modules.imCommonsApi))
+
     api(project(Modules.imKeycloakF2ClientDomain))
     implementation(project(Modules.imKeycloakF2ClientCommand))
     implementation(project(Modules.imKeycloakF2ClientQuery))

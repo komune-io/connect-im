@@ -1,0 +1,37 @@
+[
+  {
+    "realm": "im-test",
+    "theme": "im",
+    "smtp": {
+      "host": "me-email",
+      "port": 1025,
+      "from": "noreply@smartb.city",
+      "ssl": false,
+      "starttls": false,
+      "auth": false
+    },
+    "adminUser": [{
+      "username": "admin",
+      "password": "!tesTTest!",
+      "email": "admin@admin.com",
+      "firstName": "admin",
+      "lastName": "im"
+    }],
+    "adminClient": [{
+      "clientId": "im-test-client",
+      "clientSecret": "secret"
+    }],
+    "baseRoles": [
+      "super_admin",
+      "im_read_user",
+      "im_write_user",
+      "im_write_organization",
+      "im_read_organization",
+      "im_read_role",
+      "im_write_role",
+      "im_write_my_organization",
+      "admin",
+      "user"
+    ]
+  }
+]

@@ -35,7 +35,7 @@ class KeycloakAggregateService(
     private val roleAddCompositesFunction: RoleAddCompositesFunction
 ) {
 
-    suspend fun createRealm(id: RealmId, theme: String?, smtpConfig: Map<String, String>): RealmId {
+    suspend fun createRealm(id: RealmId, theme: String?, smtpConfig: Map<String, String>?): RealmId {
         return RealmCreateCommand(
             id = id,
             theme = theme,

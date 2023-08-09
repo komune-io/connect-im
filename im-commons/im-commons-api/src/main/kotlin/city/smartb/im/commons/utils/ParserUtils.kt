@@ -23,6 +23,16 @@ object ParserUtils {
             exitProcess(-1)
         }
     }
+    fun <T> getConfiguration(configPath: String, clazz: Class<Array<T>>): List<T> {
+
+        try {
+            logger.info("Loading configuration from json file [$configPath]...")
+            return getFile(configPath).readText().parseJsonTo(clazz)
+        } catch (e: Exception) {
+            logger.error("Error configuration from json file [${configPath}]", e)
+            exitProcess(-1)
+        }
+    }
 
     @Throws(MalformedURLException::class)
     private fun getFile(filename: String): File {

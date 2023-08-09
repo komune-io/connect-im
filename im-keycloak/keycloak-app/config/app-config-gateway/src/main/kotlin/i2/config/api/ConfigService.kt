@@ -1,7 +1,7 @@
 package i2.config.api
 
 import i2.app.core.retryWithExceptions
-import i2.config.api.auth.KeycloakConfigService
+import i2.config.api.auth.KeycloakConfigScript
 import i2.config.api.config.KcConfigProperties
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 @Service
 class ConfigService(
     private val context: ConfigurableApplicationContext,
-    private val keycloakConfigService: KeycloakConfigService,
+    private val keycloakConfigService: KeycloakConfigScript,
     private val keycloakConfig: KcConfigProperties
 ) : CommandLineRunner {
 

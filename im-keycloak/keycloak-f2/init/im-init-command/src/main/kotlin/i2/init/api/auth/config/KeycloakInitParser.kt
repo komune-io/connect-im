@@ -10,11 +10,10 @@ import java.net.URL
 import kotlin.system.exitProcess
 import org.slf4j.LoggerFactory
 
-const val FILE = "file:"
+class KeycloakInitParser {
+    private val logger = LoggerFactory.getLogger(KeycloakInitParser::class.java)
 
-class KeycloakConfigParser {
-    private val logger = LoggerFactory.getLogger(KeycloakConfigParser::class.java)
-
-    fun getConfiguration(configPath: String) = ParserUtils.getConfiguration(configPath, KeycloakInitProperties::class.java)
+     fun getConfigurations(configPath: String): List<KeycloakInitProperties>
+        = ParserUtils.getConfiguration(configPath, Array<KeycloakInitProperties>::class.java)
 
 }

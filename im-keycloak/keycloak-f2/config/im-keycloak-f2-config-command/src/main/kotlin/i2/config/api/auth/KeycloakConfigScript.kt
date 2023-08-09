@@ -21,12 +21,12 @@ const val SUPER_ADMIN_ROLE = "super_admin"
 const val ORGANIZATION_ID_CLAIM_NAME = "memberOf"
 
 @Service
-class KeycloakConfigService (
+class KeycloakConfigScript (
     private val authRealm: AuthRealm,
     private val keycloakAggregateService: KeycloakAggregateService,
     private val keycloakFinderService: KeycloakFinderService
 ) {
-    private val logger = LoggerFactory.getLogger(KeycloakConfigService::class.java)
+    private val logger = LoggerFactory.getLogger(KeycloakConfigScript::class.java)
 
     fun run(configPath: String) {
         val config = KeycloakConfigParser().getConfiguration(configPath)

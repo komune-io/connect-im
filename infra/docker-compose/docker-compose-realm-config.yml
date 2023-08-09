@@ -10,7 +10,5 @@ services:
       - im_keycloak_clientId=${KC_ADMIN_CLIENT_ID}
       - im_keycloak_clientSecret=${KC_ADMIN_CLIENT_SECRET}
       - im_config_json=file:/tmp/config.json
-    ports:
-      - "8083:8083"
     volumes:
-      - ./config.json:/tmp/config.json
+      - ./config/config.json:/tmp/config.json
