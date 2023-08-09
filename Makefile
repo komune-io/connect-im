@@ -1,3 +1,5 @@
+include ./gradle.properties
+
 STORYBOOK_DOCKERFILE	:= infra/docker/storybook/Dockerfile
 STORYBOOK_NAME	   	 	:= smartbcity/im-storybook
 STORYBOOK_IMG	    	:= ${STORYBOOK_NAME}:${VERSION}
@@ -53,14 +55,14 @@ docker-script-push:
 ## Keycloak
 docker-keycloak-build:
 	./gradlew im-keycloak:keycloak-plugin:shadowJar
-	@docker build --no-cache --build-arg KC_HTTP_RELATIVE_PATH=/ -f ${KEYCLOAK_DOCKERFILE} -t ${KEYCLOAK_IMG} .
+	@docker build --no-cache --build-arg KC_HTTP_RELATIVE_PATH=/  --build-arg KEYCLOAK_VERSION=${KEYCLOAK_VERSION} -f ${KEYCLOAK_DOCKERFILE} -t ${KEYCLOAK_IMG} .
 
 docker-keycloak-push:
 	@docker push ${KEYCLOAK_IMG}
 
 docker-keycloak-auth-build:
 	./gradlew im-keycloak:keycloak-plugin:shadowJar
-	@docker build --no-cache --progress=plain --build-arg KC_HTTP_RELATIVE_PATH=/auth -f ${KEYCLOAK_DOCKERFILE} -t ${KEYCLOAK_AUTH_IMG} .
+	@docker build --no-cache --progress=plain --build-arg KC_HTTP_RELATIVE_PATH=/auth --build-arg KEYCLOAK_VERSION=${KEYCLOAK_VERSION} -f ${KEYCLOAK_DOCKERFILE} -t ${KEYCLOAK_AUTH_IMG} .
 
 docker-keycloak-auth-push:
 	@docker push ${KEYCLOAK_AUTH_IMG}

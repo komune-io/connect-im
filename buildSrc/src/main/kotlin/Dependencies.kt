@@ -30,7 +30,11 @@ object Versions {
 	const val springData = FixersVersions.Spring.data
 
 	const val kdatetime = "0.1.1"
-	const val keycloak = "18.0.0"
+	// Come from gradle.properties
+	val keycloak = System.getenv("KEYCLOAK_VERSION").also { version ->
+		println("Keycloak version: $version")
+	}
+
 	const val mockito = "4.6.1"
 	const val testcontainers = "1.18.0"
 
