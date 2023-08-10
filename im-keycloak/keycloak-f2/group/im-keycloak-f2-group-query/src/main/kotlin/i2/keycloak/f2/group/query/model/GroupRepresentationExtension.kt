@@ -1,12 +1,9 @@
 package i2.keycloak.f2.group.query.model
 
 import i2.keycloak.f2.group.domain.model.GroupModel
+import i2.keycloak.f2.group.domain.model.HiddenGroupAttributes
 import i2.keycloak.f2.role.domain.RolesCompositesModel
 import org.keycloak.representations.idm.GroupRepresentation
-
-val i2GroupAttributes = setOf(
-    GroupModel::enabled.name
-)
 
 fun GroupRepresentation.asModel(getComposites: (roleName: String) -> List<String>): GroupModel {
     val parsedAttributes = attributes.parseAttributes()
@@ -14,7 +11,7 @@ fun GroupRepresentation.asModel(getComposites: (roleName: String) -> List<String
     return GroupModel(
         id = id,
         name = name,
-        attributes = parsedAttributes.filterKeys { it !in i2GroupAttributes },
+        attributes = parsedAttributes.filterKeys { it !in HiddenGroupAttributes },
         roles = RolesCompositesModel(
             assignedRoles = realmRoles.orEmpty(),
             effectiveRoles = composites

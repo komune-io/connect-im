@@ -5,7 +5,7 @@ import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.asI2Exception
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdatedEvent
-import i2.keycloak.f2.group.domain.model.GroupModel
+import i2.keycloak.f2.group.domain.model.HiddenGroupAttributes
 import i2.keycloak.realm.client.config.AuthRealmClient
 import org.keycloak.admin.client.resource.GroupResource
 import org.springframework.context.annotation.Bean
@@ -23,9 +23,10 @@ class GroupUpdateFunctionImpl {
 
 			groupResource.toRepresentation().apply {
 				name = cmd.name
-                val enabled = attributes[GroupModel::enabled.name]
-				attributes = cmd.attributes.mapValues { (_, value) -> listOfNotNull(value) }
-                attributes[GroupModel::enabled.name] = enabled
+                val mergedAttrs = attributes.filter { it.key in HiddenGroupAttributes }
+                val cmdAttrs = cmd.attributes.mapValues { (_, value) -> listOfNotNull(value) }
+				attributes = mergedAttrs + cmdAttrs
+
 			}.let(groupResource::update)
 
 			GroupUpdatedEvent(cmd.id)

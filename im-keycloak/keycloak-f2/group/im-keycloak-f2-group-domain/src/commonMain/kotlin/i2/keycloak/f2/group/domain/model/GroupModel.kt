@@ -11,3 +11,7 @@ data class GroupModel(
     val roles: RolesCompositesModel,
     val enabled: Boolean
 )
+
+val HiddenGroupAttributes = setOf(
+    GroupModel::enabled.name
+)
