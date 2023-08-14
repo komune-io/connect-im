@@ -40,7 +40,7 @@ data class OrganizationCreateCommand(
      * Siret number of the organization.
      * @example [city.smartb.im.organization.domain.model.Organization.siret]
      */
-    override val siret: String?,
+    override val siret: String? = null,
 
     /**
      * Official name of the organization.
@@ -52,24 +52,24 @@ data class OrganizationCreateCommand(
      * Description of the organization.
      * @example [city.smartb.im.organization.domain.model.Organization.description]
      */
-    override val description: String?,
+    override val description: String? = null,
 
     /**
      * Address of the organization.
      */
-    override val address: Address?,
+    override val address: Address? = null,
 
     /**
      * Website of the organization.
      * @example [city.smartb.im.organization.domain.model.Organization.website]
      */
-    override val website: String?,
+    override val website: String? = null,
 
     /**
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
      * @example [city.smartb.im.organization.domain.model.Organization.roles]
      */
-    override val roles: List<String>?,
+    override val roles: List<String>? = null,
 
     /**
      * The identifier of a larger organization that this organization is a subOrganization of, if any.
@@ -80,7 +80,7 @@ data class OrganizationCreateCommand(
      * Additional arbitrary attributes assigned to the organization.
      * @example [city.smartb.im.organization.domain.model.Organization.attributes]
      */
-    override val attributes: Map<String, String>?,
+    override val attributes: Map<String, String>? = null,
 
     /**
      * Whether to create a default API key for the new organization.

@@ -1,6 +1,8 @@
 package city.smartb.im.organization.client
 
+import city.smartb.im.commons.http.ClientBuilder
 import city.smartb.im.commons.http.ClientJvm
+import city.smartb.im.commons.http.HttpClientBuilderJvm
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.features.command.OrganizationCreatedEvent
 import city.smartb.im.organization.domain.features.command.OrganizationUpdateCommand
@@ -17,8 +19,9 @@ import city.smartb.im.organization.domain.model.OrganizationDTO
 
 class OrganizationClient<MODEL: OrganizationDTO>(
     url: String,
+    httpClientBuilder: ClientBuilder = HttpClientBuilderJvm,
     generateBearerToken: suspend () -> String? = { null }
-): ClientJvm(url, generateBearerToken) {
+): ClientJvm(url, httpClientBuilder, generateBearerToken) {
 
     suspend inline fun <reified OUT : MODEL> organizationGet(queries: List<OrganizationGetQuery>):
             List<OrganizationGetResult<OUT>> = post("organizationGet",  queries)

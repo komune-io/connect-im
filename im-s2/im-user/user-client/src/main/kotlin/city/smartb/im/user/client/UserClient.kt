@@ -1,6 +1,8 @@
 package city.smartb.im.user.client
 
+import city.smartb.im.commons.http.ClientBuilder
 import city.smartb.im.commons.http.ClientJvm
+import city.smartb.im.commons.http.HttpClientBuilderJvm
 import city.smartb.im.user.domain.features.command.UserCreateCommand
 import city.smartb.im.user.domain.features.command.UserCreatedEvent
 import city.smartb.im.user.domain.features.command.UserUpdateCommand
@@ -14,8 +16,9 @@ import city.smartb.im.user.domain.features.query.UserPageResult
 
 class UserClient(
     url: String,
+    httpClientBuilder: ClientBuilder = HttpClientBuilderJvm,
     generateBearerToken: suspend () -> String? = { null }
-): ClientJvm(url, generateBearerToken) {
+): ClientJvm(url, httpClientBuilder, generateBearerToken) {
 
     suspend fun userGet(queries: List<UserGetQuery>):
             List<UserGetResult> = post("userGet", queries)

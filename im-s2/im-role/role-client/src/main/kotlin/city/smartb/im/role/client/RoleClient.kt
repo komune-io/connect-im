@@ -1,6 +1,8 @@
 package city.smartb.im.role.client
 
+import city.smartb.im.commons.http.ClientBuilder
 import city.smartb.im.commons.http.ClientJvm
+import city.smartb.im.commons.http.HttpClientBuilderJvm
 import city.smartb.im.role.domain.features.command.RoleAddCompositesCommand
 import city.smartb.im.role.domain.features.command.RoleAddedCompositesEvent
 import city.smartb.im.role.domain.features.command.RoleCreateCommand
@@ -13,8 +15,9 @@ import city.smartb.im.role.domain.features.query.RoleGetByNameResult
 
 class RoleClient(
     url: String,
+    httpClientBuilder: ClientBuilder = HttpClientBuilderJvm,
     generateBearerToken: suspend () -> String? = { null }
-): ClientJvm(url, generateBearerToken) {
+): ClientJvm(url, httpClientBuilder, generateBearerToken) {
 
     suspend fun roleAddComposites(commands: List<RoleAddCompositesCommand>):
             List<RoleAddedCompositesEvent> = post("roleAddComposites", commands)
