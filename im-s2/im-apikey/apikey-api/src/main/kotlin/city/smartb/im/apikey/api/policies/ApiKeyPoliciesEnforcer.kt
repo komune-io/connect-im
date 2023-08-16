@@ -4,6 +4,7 @@ import city.smartb.im.apikey.domain.features.query.ApiKeyPageQuery
 import city.smartb.im.apikey.domain.model.ApiKeyId
 import city.smartb.im.apikey.domain.policies.ApiKeyPolicies
 import city.smartb.im.commons.auth.Role
+import city.smartb.im.commons.auth.hasOneOfRoles
 import city.smartb.im.commons.auth.hasRole
 import city.smartb.im.commons.auth.policies.PolicyEnforcer
 import org.springframework.stereotype.Service
@@ -19,7 +20,7 @@ class ApiKeyPoliciesEnforcer: PolicyEnforcer() {
         check("page apikey") {
             ApiKeyPolicies.canPage(authedUser)
         }
-        if(authedUser.hasRole(Role.SUPER_ADMIN)) {
+        if(authedUser.hasOneOfRoles(Role.SUPER_ADMIN, Role.ORCHESTRATOR) ) {
             query
         } else {
             query.copy(

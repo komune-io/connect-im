@@ -26,8 +26,8 @@ object UserPolicies {
      */
     fun canPage(authedUser: AuthedUserDTO): Boolean {
         return authedUser.hasOneOfRoles(Role.IM_USER_READ)
-//        return authedUser.hasOneOfRoles(Role.IM_USER_READ, Role.IM_MY_ORGANIZATION_WRITE)
     }
+
 
     /**
      * User can list users ref

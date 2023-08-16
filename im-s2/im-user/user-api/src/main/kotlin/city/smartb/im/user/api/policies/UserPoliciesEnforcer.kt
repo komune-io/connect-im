@@ -1,5 +1,9 @@
 package city.smartb.im.user.api.policies
 
+import city.smartb.im.commons.auth.Role
+import city.smartb.im.commons.auth.exception.ForbiddenAccessException
+import city.smartb.im.commons.auth.hasOneOfRoles
+import city.smartb.im.commons.auth.hasRole
 import city.smartb.im.commons.auth.policies.PolicyEnforcer
 import city.smartb.im.user.domain.features.query.UserPageQuery
 import city.smartb.im.user.domain.model.UserDTO
@@ -16,7 +20,10 @@ class UserPoliciesEnforcer: PolicyEnforcer() {
 
 
     suspend fun enforcePage(query: UserPageQuery): UserPageQuery = enforce { authedUser ->
-        if(UserPolicies.canPage(authedUser)) {
+        if(!UserPolicies.canPage(authedUser)) {
+            throw ForbiddenAccessException("page user")
+        }
+        if(authedUser.hasOneOfRoles(Role.SUPER_ADMIN, Role.ORCHESTRATOR)) {
             query
         } else {
             query.copy(

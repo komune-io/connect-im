@@ -2,6 +2,7 @@ package city.smartb.im.commons.auth
 
 enum class Role(val value: String) {
     SUPER_ADMIN("super_admin"),
+    ORCHESTRATOR("tr_orchestrator"),
 
     IM_USER_READ("im_read_user"),
     IM_USER_WRITE("im_write_user"),
