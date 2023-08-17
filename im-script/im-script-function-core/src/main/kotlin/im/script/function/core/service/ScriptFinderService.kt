@@ -34,10 +34,10 @@ class ScriptFinderService(
         ).invokeWith(realmGetFunction).item
     }
 
-    suspend fun getClient(authRealm: AuthRealm, id: ClientIdentifier): ClientModel? {
+    suspend fun getClient(authRealm: AuthRealm, realmId: RealmId, id: ClientIdentifier): ClientModel? {
         return ClientGetByClientIdentifierQuery(
             clientIdentifier = id,
-            realmId = authRealm.realmId,
+            realmId = realmId,
             auth = authRealm
         ).invokeWith(clientGetByClientIdentifierQueryFunction).item
     }

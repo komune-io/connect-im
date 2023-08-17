@@ -10,7 +10,7 @@ im:
     config:
       auth:
         serverUrl: http://keycloak-it:8080
-        realm: im-test
+        realmId: im-test
         clientId: im-test-client
         client-Secret: secret
       retry:
@@ -22,7 +22,7 @@ im:
         serverUrl: http://keycloak-it:8080
         username: root
         password: root
-        realm: master
+        realmId: master
         clientId: admin-cli
       retry:
         max: ${im.script.retry.max}
@@ -39,6 +39,6 @@ spring:
 im:
   script:
     config:
-      json: file:./infra/docker-compose/config/config.json
+      json: file:./infra/docker-compose/config/build/config.json
     init:
-      json: file:./infra/docker-compose/config/init.json
+      json: file:./infra/docker-compose/config/build/init.json

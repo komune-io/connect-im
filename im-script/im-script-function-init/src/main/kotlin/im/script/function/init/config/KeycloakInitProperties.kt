@@ -1,9 +1,10 @@
 package im.script.function.init.config
 
+import i2.keycloak.f2.realm.domain.RealmId
 import im.script.function.core.model.AppClient
 
 data class KeycloakInitProperties(
-    val realm: String,
+    val realmId: RealmId,
     val theme: String?,
     val smtp: Map<String, String>?,
     val adminUser: List<AdminUserData>,

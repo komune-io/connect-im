@@ -9,6 +9,7 @@ import i2.keycloak.f2.client.domain.features.command.ClientRealmManagementRolesG
 import i2.keycloak.f2.client.domain.features.command.ClientRealmManagementRolesGrantFunction
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantCommand
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction
+import i2.keycloak.f2.realm.domain.RealmId
 import i2.keycloak.f2.role.domain.RoleName
 import i2.keycloak.master.domain.AuthRealm
 import im.script.function.core.model.AppClient
@@ -26,11 +27,12 @@ class ClientInitService(
 
     private val logger = LoggerFactory.getLogger(ClientInitService::class.java)
 
-    suspend fun initAppClient(authRealm: AuthRealm, appClient: AppClient) {
-        if (!checkIfExists(authRealm, appClient.clientId)) {
+    suspend fun initAppClient(authRealm: AuthRealm, realmId: RealmId, appClient: AppClient) {
+        if (!checkIfExists(authRealm, realmId, appClient.clientId)) {
             val secret = appClient.clientSecret ?: UUID.randomUUID().toString()
             createClient(
                 authRealm = authRealm,
+                realmId = realmId,
                 identifier = appClient.clientId,
                 secret = secret,
                 isPublic = false,
@@ -41,6 +43,7 @@ class ClientInitService(
                 appClient.roles?.toList()?.let { list ->
                     grantClient(
                         authRealm = authRealm,
+                        realmId = realmId,
                         id = clientId,
                         roles = list
                     )
@@ -48,6 +51,7 @@ class ClientInitService(
                 appClient.realmManagementRoles?.toList()?.let { list ->
                     grantRealmManagementClient(
                         authRealm = authRealm,
+                        realmId = realmId,
                         id = appClient.clientId,
                         roles = list,
                     )
@@ -58,26 +62,27 @@ class ClientInitService(
     }
 
 
-    suspend fun grantClient(authRealm: AuthRealm, id: ClientId, roles: List<RoleName>) {
+    suspend fun grantClient(authRealm: AuthRealm, realmId: RealmId, id: ClientId, roles: List<RoleName>) {
         ClientServiceAccountRolesGrantCommand(
             id = id,
             roles = roles,
             auth = authRealm,
-            realmId = authRealm.realmId
+            realmId = realmId
         ).invokeWith(clientServiceAccountRolesGrantFunction)
     }
 
-    suspend fun grantRealmManagementClient(authRealm: AuthRealm, id: ClientId, roles: List<RoleName>) {
+    suspend fun grantRealmManagementClient(authRealm: AuthRealm, realmId: RealmId, id: ClientId, roles: List<RoleName>) {
         ClientRealmManagementRolesGrantCommand(
             id = id,
             roles = roles,
             auth = authRealm,
-            realmId = authRealm.realmId
+            realmId = realmId
         ).invokeWith(clientRealmManagementRolesGrantFunction)
     }
 
     suspend fun createClient(
         authRealm: AuthRealm,
+        realmId: RealmId,
         identifier: ClientIdentifier,
         secret: String? = null,
         isPublic: Boolean = true,
@@ -90,7 +95,7 @@ class ClientInitService(
     ): ClientId {
         return ClientCreateCommand(
             auth = authRealm,
-            realmId = authRealm.realmId,
+            realmId = realmId,
             clientIdentifier = identifier,
             secret = secret,
             isPublicClient = isPublic,
@@ -107,8 +112,8 @@ class ClientInitService(
         ).invokeWith(clientCreateFunction).id
     }
 
-    private suspend fun checkIfExists(authRealm: AuthRealm, clientId: ClientId): Boolean {
-        return if (scriptFinderService.getClient(authRealm, clientId) != null) {
+    private suspend fun checkIfExists(authRealm: AuthRealm, realmId: RealmId, clientId: ClientId): Boolean {
+        return if (scriptFinderService.getClient(authRealm, realmId, clientId) != null) {
             logger.info("Client [$clientId] already exists.")
             true
         } else {

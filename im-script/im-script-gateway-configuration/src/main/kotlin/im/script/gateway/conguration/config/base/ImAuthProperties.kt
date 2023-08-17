@@ -6,7 +6,7 @@ import i2.keycloak.master.domain.AuthRealmPassword
 
 data class ImAuthProperties(
     val serverUrl: String,
-    val realm: String,
+    val realmId: String,
     val clientId: String,
     val clientSecret: String? = null,
     val username: String? = null,
@@ -17,7 +17,7 @@ fun ImAuthProperties.toAuthRealm(): AuthRealm {
     return if (clientSecret != null) {
             AuthRealmClientSecret(
                 serverUrl = serverUrl,
-                realmId = realm,
+                realmId = realmId,
                 clientId = clientId,
                 clientSecret = clientSecret,
                 redirectUrl = null
@@ -25,7 +25,7 @@ fun ImAuthProperties.toAuthRealm(): AuthRealm {
         } else if (username != null && password != null) {
             AuthRealmPassword(
                 serverUrl = serverUrl,
-                realmId = realm,
+                realmId = realmId,
                 clientId = clientId,
                 username = username,
                 password = password,

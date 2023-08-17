@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Configuration
 
 @Configuration(proxyBeanMethods = false)
-@SpringBootApplication(scanBasePackages = ["im.script", "im.f2.script"])
+@SpringBootApplication(scanBasePackages = ["im.script"])
 class ScriptApplication
 
 fun main(args: Array<String>) {

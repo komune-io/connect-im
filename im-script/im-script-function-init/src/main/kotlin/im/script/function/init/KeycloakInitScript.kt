@@ -33,10 +33,9 @@ class KeycloakInitScript(
         }
     }
     suspend fun runOne(authRealm: AuthRealm, properties: KeycloakInitProperties) = runBlocking {
-        logger.info("Initializing Realm [${properties.realm}]...")
+        logger.info("Initializing Realm [${properties.realmId}]...")
         initRealm(authRealm, properties)
         logger.info("Initialized Realm")
-
 
         logger.info("Initializing Clients [${properties.adminClient.size}]...")
         initAdminClient(authRealm, properties)
@@ -59,8 +58,7 @@ class KeycloakInitScript(
 
     }
 
-    private suspend fun KeycloakInitScript.initAdminClient(authRealm: AuthRealm, properties: KeycloakInitProperties) {
-
+    private suspend fun initAdminClient(authRealm: AuthRealm, properties: KeycloakInitProperties) {
         properties.adminClient.map { appClient ->
             logger.info("Initializing Clients [${appClient.clientId}]...")
             val realmManagementRoles = appClient.realmManagementRoles ?: listOf(
@@ -73,13 +71,13 @@ class KeycloakInitScript(
             )
             appClient.copy(realmManagementRoles = realmManagementRoles)
         }.forEach { appClient ->
-            clientInitService.initAppClient(authRealm, appClient)
+            clientInitService.initAppClient(authRealm, properties.realmId, appClient)
             logger.info("Initialized Client")
         }
     }
 
     private suspend fun initRealm(authRealm: AuthRealm, properties: KeycloakInitProperties) {
-        val realmId = properties.realm
+        val realmId = properties.realmId
         scriptFinderService.getRealm(authRealm, realmId)?.let {
           logger.info("Realm already created")
         } ?: keycloakAggregateService.createRealm(authRealm, realmId, properties.theme, properties.smtp)
@@ -87,7 +85,7 @@ class KeycloakInitScript(
 
     private suspend fun KeycloakInitProperties.initAdmin(authRealm: AuthRealm, properties: AdminUserData) {
         properties.email.let { email ->
-            if (scriptFinderService.getUser(authRealm, email, realm) != null) {
+            if (scriptFinderService.getUser(authRealm, email, realmId) != null) {
                 logger.info("User admin already created")
             } else {
                 val password = properties.password ?: UUID.randomUUID().toString()
@@ -100,19 +98,19 @@ class KeycloakInitScript(
                     lastname = properties.lastName ?: "",
                     isEnable = true,
                     password = password,
-                    realm = realm
+                    realm = realmId
                 ).let { userId ->
                     keycloakAggregateService.grantUser(
                         authRealm = authRealm,
                         id = userId,
-                        realm = realm,
+                        realm = realmId,
                         clientId = "realm-management",
                         "realm-admin"
                     )
                     keycloakAggregateService.grantUser(
                         authRealm = authRealm,
                         id = userId,
-                        realm = realm,
+                        realm = realmId,
                         clientId = null,
                         im.script.function.init.SUPER_ADMIN_ROLE
                     )
@@ -124,13 +122,13 @@ class KeycloakInitScript(
     private suspend fun initBaseRoles(authRealm: AuthRealm, properties: KeycloakInitProperties) {
         val roles = properties.baseRoles
         roles.forEach { role ->
-            scriptFinderService.getRole(authRealm, role, properties.realm)
-                ?: keycloakAggregateService.createRole(authRealm, role, "Role created with i2-init", emptyList(), properties.realm)
+            scriptFinderService.getRole(authRealm, role, properties.realmId)
+                ?: keycloakAggregateService.createRole(authRealm, role, "Role created with i2-init", emptyList(), properties.realmId)
         }
     }
 
     private suspend fun addCompositesToAdminRole(authRealm: AuthRealm, properties: KeycloakInitProperties) {
         val composites = properties.baseRoles.filter { it != SUPER_ADMIN_ROLE }
-        keycloakAggregateService.roleAddComposites(authRealm, SUPER_ADMIN_ROLE, composites, properties.realm)
+        keycloakAggregateService.roleAddComposites(authRealm, SUPER_ADMIN_ROLE, composites, properties.realmId)
     }
 }

@@ -41,7 +41,7 @@ class KeycloakConfigScript (
 
         logger.info("Initializing Clients...")
         config.webClients.forEach { initWebClient(authRealm, it) }
-        config.appClients.forEach { clientInitService.initAppClient(authRealm, it) }
+        config.appClients.forEach { clientInitService.initAppClient(authRealm, authRealm.realmId, it) }
         logger.info("Initialized Client")
 
         logger.info("Initializing Users...")
@@ -50,7 +50,7 @@ class KeycloakConfigScript (
     }
 
     private suspend fun checkIfExists(authRealm: AuthRealm, clientId: ClientId): Boolean {
-        return if (scriptFinderService.getClient(authRealm, clientId) != null) {
+        return if (scriptFinderService.getClient(authRealm, authRealm.realmId, clientId) != null) {
             logger.info("Client [$clientId] already exists.")
             true
         } else {
@@ -62,6 +62,7 @@ class KeycloakConfigScript (
         if (!checkIfExists(authRealm, webClient.clientId)) {
             clientInitService.createClient(
                 authRealm = authRealm,
+                realmId = authRealm.realmId,
                 identifier = webClient.clientId,
                 baseUrl = webClient.webUrl,
                 isStandardFlowEnabled = true,

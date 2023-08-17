@@ -2,11 +2,6 @@ package im.script.function.init.service
 
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.ClientId
-import i2.keycloak.f2.client.domain.ClientIdentifier
-import i2.keycloak.f2.client.domain.features.command.ClientCreateCommand
-import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
-import i2.keycloak.f2.client.domain.features.command.ClientRealmManagementRolesGrantCommand
-import i2.keycloak.f2.client.domain.features.command.ClientRealmManagementRolesGrantFunction
 import i2.keycloak.f2.realm.domain.features.command.RealmCreateCommand
 import i2.keycloak.f2.realm.domain.features.command.RealmCreateFunction
 import i2.keycloak.f2.role.domain.RoleName

@@ -1,6 +1,6 @@
 [
   {
-    "realm": "${KC_REALM}",
+    "realmId": "${KC_REALM}",
     "theme": "${KC_REALM_THEME}",
     "smtp": {
       "host": "${SMTP_HOST}",
