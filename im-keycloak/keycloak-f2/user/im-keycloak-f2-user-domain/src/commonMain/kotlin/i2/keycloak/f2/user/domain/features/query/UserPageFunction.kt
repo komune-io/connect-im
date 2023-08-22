@@ -1,13 +1,13 @@
 package i2.keycloak.f2.user.domain.features.query
 
+import city.smartb.im.commons.auth.RealmId
+import city.smartb.im.infra.keycloak.AuthRealm
 import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.page.Page
 import f2.dsl.cqrs.page.PagePagination
 import f2.dsl.fnc.F2Function
 import i2.keycloak.f2.commons.domain.KeycloakF2Query
 import i2.keycloak.f2.user.domain.model.UserModel
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
 import kotlin.js.JsExport
 import kotlin.js.JsName
 

@@ -1,4 +1,4 @@
-package i2.keycloak.master.domain
+package city.smartb.im.infra.keycloak
 
 import kotlin.js.JsExport
 
@@ -13,7 +13,7 @@ sealed class AuthRealm(
 )
 
 @JsExport
-class AuthRealmPassword(
+data class AuthRealmPassword(
     override val serverUrl: String,
     override val realmId: RealmId,
     override val redirectUrl: String,
@@ -23,7 +23,7 @@ class AuthRealmPassword(
 ): AuthRealm(serverUrl, realmId, clientId, redirectUrl)
 
 @JsExport
-class AuthRealmClientSecret(
+data class AuthRealmClientSecret(
     override val serverUrl: String,
     override val realmId: RealmId,
     override val clientId: String,

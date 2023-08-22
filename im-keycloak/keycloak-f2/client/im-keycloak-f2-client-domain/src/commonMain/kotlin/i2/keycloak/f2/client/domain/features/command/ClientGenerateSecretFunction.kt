@@ -1,9 +1,9 @@
 package i2.keycloak.f2.client.domain.features.command
 
+import city.smartb.im.commons.auth.RealmId
+import city.smartb.im.infra.keycloak.AuthRealm
 import f2.dsl.fnc.F2Function
 import i2.keycloak.f2.client.domain.ClientId
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
 import kotlin.js.JsExport
 import kotlin.js.JsName
 

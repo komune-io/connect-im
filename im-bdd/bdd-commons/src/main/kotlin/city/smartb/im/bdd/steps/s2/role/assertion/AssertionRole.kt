@@ -2,11 +2,10 @@ package city.smartb.im.bdd.steps.s2.role.assertion
 
 import city.smartb.im.bdd.assertion.AssertionBdd
 import city.smartb.im.role.api.RoleQueryApi
-import city.smartb.im.role.domain.features.query.RoleGetByIdQuery
 import city.smartb.im.role.domain.model.RoleId
 import city.smartb.im.role.domain.model.RoleModel
+import city.smartb.im.role.domain.query.RoleGetByIdQuery
 import f2.dsl.fnc.invoke
-import i2.keycloak.master.domain.RealmId
 import org.assertj.core.api.Assertions
 
 fun AssertionBdd.role(api: RoleQueryApi) = AssertionRole(api)

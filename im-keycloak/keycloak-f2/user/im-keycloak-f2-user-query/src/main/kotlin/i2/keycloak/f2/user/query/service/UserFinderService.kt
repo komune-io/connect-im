@@ -1,10 +1,10 @@
 package i2.keycloak.f2.user.query.service
 
+import city.smartb.im.infra.keycloak.RealmId
 import i2.keycloak.f2.role.domain.RolesCompositesModel
 import i2.keycloak.f2.role.domain.features.query.RoleCompositeObjType
 import i2.keycloak.f2.role.query.service.RolesFinderService
 import i2.keycloak.f2.user.domain.model.UserId
-import i2.keycloak.master.domain.RealmId
 import i2.keycloak.realm.client.config.AuthRealmClient
 import org.springframework.stereotype.Service
 

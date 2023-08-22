@@ -26,41 +26,32 @@ include(
 )
 
 include(
-    "im-infra:infra-redis"
+    "im-infra:infra-redis",
+    "im-infra:keycloak"
 )
 
 include(
     "im-s2:im-organization:organization-api",
     "im-s2:im-organization:organization-domain",
     "im-s2:im-organization:organization-client",
-    "im-s2:im-organization:organization-lib"
-)
+    "im-s2:im-organization:organization-lib",
 
-include(
     "im-s2:im-user:user-api",
     "im-s2:im-user:user-domain",
     "im-s2:im-user:user-client",
-    "im-s2:im-user:user-lib"
-)
+    "im-s2:im-user:user-lib",
 
-include(
     "im-s2:im-apikey:apikey-api",
     "im-s2:im-apikey:apikey-domain",
     "im-s2:im-apikey:apikey-client",
-    "im-s2:im-apikey:apikey-lib"
-)
+    "im-s2:im-apikey:apikey-lib",
 
-include(
     "im-s2:im-role:role-api",
     "im-s2:im-role:role-domain",
     "im-s2:im-role:role-client"
 )
 
 include(
-    "im-keycloak:keycloak-auth:keycloak-auth-client",
-    "im-keycloak:keycloak-auth:keycloak-auth-domain",
-    "im-keycloak:keycloak-utils",
-
     "im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-api",
     "im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-domain",
 

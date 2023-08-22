@@ -1,11 +1,11 @@
 package i2.test.bdd.assertion
 
+import city.smartb.im.infra.keycloak.RealmId
 import i2.keycloak.f2.group.domain.model.GroupId
-import i2.keycloak.master.domain.RealmId
-import javax.ws.rs.NotFoundException
 import org.assertj.core.api.Assertions
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.representations.idm.GroupRepresentation
+import javax.ws.rs.NotFoundException
 
 
 fun AssertionKC.group(keycloak: Keycloak): AssertionGroup = AssertionGroup(keycloak)

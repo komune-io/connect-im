@@ -1,13 +1,13 @@
 package i2.test.bdd.assertion
 
+import city.smartb.im.infra.keycloak.RealmId
 import i2.keycloak.f2.role.domain.RoleId
 import i2.keycloak.f2.role.domain.RoleName
-import i2.keycloak.master.domain.RealmId
-import javax.ws.rs.NotFoundException
 import org.assertj.core.api.Assertions
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.resource.RoleResource
 import org.keycloak.representations.idm.RoleRepresentation
+import javax.ws.rs.NotFoundException
 
 
 fun AssertionKC.role(keycloak: Keycloak): AssertionRole = AssertionRole(keycloak)

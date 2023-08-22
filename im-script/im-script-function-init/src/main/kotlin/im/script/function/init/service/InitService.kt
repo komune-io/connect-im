@@ -1,5 +1,7 @@
 package im.script.function.init.service
 
+import city.smartb.im.infra.keycloak.AuthRealm
+import city.smartb.im.infra.keycloak.RealmId
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.ClientId
 import i2.keycloak.f2.realm.domain.features.command.RealmCreateCommand
@@ -14,8 +16,6 @@ import i2.keycloak.f2.user.domain.features.command.UserCreateFunction
 import i2.keycloak.f2.user.domain.features.command.UserRolesGrantCommand
 import i2.keycloak.f2.user.domain.features.command.UserRolesGrantFunction
 import i2.keycloak.f2.user.domain.model.UserId
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
 import org.springframework.stereotype.Service
 
 @Service

@@ -36,6 +36,7 @@ fun <T, R> verifyAfter(fnc: F2Function<T, R>, enforce: suspend (t: R) -> Unit) :
         it
     }
 }
+
 fun <T, R> verify(fnc: F2Function<T, R>, enforce: suspend (t: T) -> Unit) : F2Function<T, R> = F2Function { msg ->
     msg.map { value ->
         enforce(value)

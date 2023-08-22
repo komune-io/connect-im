@@ -1,18 +1,18 @@
 package i2.keycloak.f2.role.command
 
+import city.smartb.im.infra.keycloak.RealmId
 import i2.keycloak.f2.commons.app.asI2Exception
 import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.role.domain.RoleName
 import i2.keycloak.f2.role.domain.features.command.RoleCreateCommand
 import i2.keycloak.f2.role.domain.features.command.RoleCreateFunction
 import i2.keycloak.f2.role.domain.features.command.RoleCreatedEvent
-import i2.keycloak.master.domain.RealmId
 import i2.keycloak.realm.client.config.AuthRealmClient
-import javax.ws.rs.ClientErrorException
 import org.apache.http.HttpStatus
 import org.keycloak.representations.idm.RoleRepresentation
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import javax.ws.rs.ClientErrorException
 
 @Configuration
 class RoleCreateFunctionImpl {

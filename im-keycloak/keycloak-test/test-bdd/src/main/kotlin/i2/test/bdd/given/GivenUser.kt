@@ -1,10 +1,10 @@
 package i2.test.bdd.given
 
+import city.smartb.im.infra.keycloak.RealmId
 import f2.dsl.fnc.invoke
 import i2.keycloak.f2.user.command.UserCreateFunctionImpl
 import i2.keycloak.f2.user.domain.features.command.UserCreateCommand
 import i2.keycloak.f2.user.domain.model.UserId
-import i2.keycloak.master.domain.RealmId
 import i2.keycloak.realm.client.config.AuthRealmClient
 import i2.test.bdd.data.DataTest
 import i2.test.bdd.data.user.userCreateCommand

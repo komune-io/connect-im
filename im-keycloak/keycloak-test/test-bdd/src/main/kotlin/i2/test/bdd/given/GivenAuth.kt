@@ -1,8 +1,8 @@
 package i2.test.bdd.given
 
-import i2.keycloak.master.domain.AuthRealmClientSecret
-import i2.keycloak.master.domain.AuthRealmPassword
-import i2.keycloak.master.domain.RealmId
+import city.smartb.im.infra.keycloak.AuthRealmClientSecret
+import city.smartb.im.infra.keycloak.AuthRealmPassword
+import city.smartb.im.infra.keycloak.RealmId
 import i2.keycloak.realm.client.config.AuthRealmClient
 import i2.keycloak.realm.client.config.AuthRealmClientBuilder
 import i2.test.bdd.config.KeycloakConfig

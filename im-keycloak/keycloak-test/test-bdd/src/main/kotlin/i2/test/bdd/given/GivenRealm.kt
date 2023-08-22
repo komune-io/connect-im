@@ -1,12 +1,12 @@
 package i2.test.bdd.given
 
-import i2.keycloak.master.domain.RealmId
+import city.smartb.im.infra.keycloak.RealmId
 import i2.keycloak.realm.client.config.AuthRealmClient
 import i2.keycloak.realm.client.config.buildRealmRepresentation
 import i2.keycloak.realm.client.config.realmsResource
-import javax.ws.rs.NotFoundException
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.RealmRepresentation
+import javax.ws.rs.NotFoundException
 
 class GivenRealm(
 	val client: AuthRealmClient

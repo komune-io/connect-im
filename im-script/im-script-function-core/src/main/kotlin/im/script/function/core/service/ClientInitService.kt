@@ -1,5 +1,6 @@
 package im.script.function.core.service
 
+import city.smartb.im.infra.keycloak.AuthRealm
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.ClientId
 import i2.keycloak.f2.client.domain.ClientIdentifier
@@ -11,11 +12,10 @@ import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGr
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction
 import i2.keycloak.f2.realm.domain.RealmId
 import i2.keycloak.f2.role.domain.RoleName
-import i2.keycloak.master.domain.AuthRealm
 import im.script.function.core.model.AppClient
-import java.util.UUID
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class ClientInitService(

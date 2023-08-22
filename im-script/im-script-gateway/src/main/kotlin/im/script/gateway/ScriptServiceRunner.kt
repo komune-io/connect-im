@@ -1,12 +1,12 @@
 package im.script.gateway
 
+import city.smartb.im.infra.keycloak.AuthRealm
+import im.script.function.config.KeycloakConfigScript
+import im.script.function.init.KeycloakInitScript
 import im.script.gateway.conguration.config.ImScriptConfigProperties
-import im.script.gateway.conguration.retryWithExceptions
 import im.script.gateway.conguration.config.ImScriptInitProperties
 import im.script.gateway.conguration.config.base.toAuthRealm
-import im.script.function.init.KeycloakInitScript
-import i2.keycloak.master.domain.AuthRealm
-import im.script.function.config.KeycloakConfigScript
+import im.script.gateway.conguration.retryWithExceptions
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner

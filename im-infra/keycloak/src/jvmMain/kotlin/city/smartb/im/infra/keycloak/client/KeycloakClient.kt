@@ -1,7 +1,7 @@
-package i2.keycloak.realm.client.config
+package city.smartb.im.infra.keycloak.client
 
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
+import city.smartb.im.infra.keycloak.AuthRealm
+import city.smartb.im.infra.keycloak.RealmId
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.resource.ClientResource
 import org.keycloak.admin.client.resource.ClientsResource
@@ -14,7 +14,7 @@ import org.keycloak.admin.client.resource.UserResource
 import org.keycloak.admin.client.resource.UsersResource
 import org.keycloak.representations.idm.ClientRepresentation
 
-class AuthRealmClient(
+class KeycloakClient(
 	val keycloak: Keycloak,
 	val realm: RealmResource,
 	val auth: AuthRealm

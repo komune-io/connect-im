@@ -1,3 +1,3 @@
-package i2.keycloak.master.domain
+package city.smartb.im.infra.keycloak
 
 class AuthRealmException(message: String): RuntimeException(message)

@@ -22,11 +22,11 @@ class I2Config {
     fun imAuthenticationProvider(imProperties: I2Properties): ImAuthenticationProvider {
         return ImAuthenticationProviderImpl(imProperties)
     }
+
     @Bean
     fun authRealmJacksonDeserializer(): ObjectMapper = jacksonObjectMapper().also { mapper ->
         val module = SimpleModule()
         module.addDeserializer(AuthRealm::class.java, AuthRealmDeserializer())
         mapper.registerModule(module)
     }
-
 }

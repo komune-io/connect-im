@@ -1,16 +1,16 @@
 package im.script.function.init
 
 import city.smartb.im.commons.utils.ParserUtils
+import city.smartb.im.infra.keycloak.AuthRealm
+import im.script.function.core.service.ClientInitService
+import im.script.function.core.service.ScriptFinderService
 import im.script.function.init.config.AdminUserData
 import im.script.function.init.config.KeycloakInitProperties
 import im.script.function.init.service.InitService
-import i2.keycloak.master.domain.AuthRealm
-import im.script.function.core.service.ClientInitService
-import im.script.function.core.service.ScriptFinderService
-import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 const val SUPER_ADMIN_ROLE = "super_admin"
 

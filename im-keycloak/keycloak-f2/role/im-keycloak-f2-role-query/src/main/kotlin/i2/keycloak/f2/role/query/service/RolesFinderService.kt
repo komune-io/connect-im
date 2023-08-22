@@ -1,10 +1,10 @@
 package i2.keycloak.f2.role.query.service
 
+import city.smartb.im.infra.keycloak.RealmId
 import i2.keycloak.f2.role.domain.RoleCompositesModel
 import i2.keycloak.f2.role.domain.RolesCompositesModel
 import i2.keycloak.f2.role.domain.defaultRealmRole
 import i2.keycloak.f2.role.domain.features.query.RoleCompositeObjType
-import i2.keycloak.master.domain.RealmId
 import i2.keycloak.realm.client.config.AuthRealmClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

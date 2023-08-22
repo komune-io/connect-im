@@ -1,20 +1,17 @@
-package i2.keycloak.realm.client.config
+package city.smartb.im.infra.keycloak.client
 
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.AuthRealmClientSecret
-import i2.keycloak.master.domain.AuthRealmException
-import i2.keycloak.master.domain.AuthRealmPassword
+import city.smartb.im.infra.keycloak.AuthRealm
+import city.smartb.im.infra.keycloak.AuthRealmClientSecret
+import city.smartb.im.infra.keycloak.AuthRealmException
+import city.smartb.im.infra.keycloak.AuthRealmPassword
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder
 import org.keycloak.OAuth2Constants
 import org.keycloak.admin.client.KeycloakBuilder
 
-class AuthRealmClientBuilder {
+object KeycloakClientBuilder {
+    private const val CONNECTION_POOL_SIZE = 10
 
-	companion object {
-		const val CONNECTION_POOL_SIZE = 10
-	}
-
-	fun build(auth: AuthRealm): AuthRealmClient {
+	fun build(auth: AuthRealm): KeycloakClient {
 		return when (auth) {
 			is AuthRealmPassword -> init(auth)
 			is AuthRealmClientSecret -> init(auth)
@@ -22,7 +19,7 @@ class AuthRealmClientBuilder {
 		}
 	}
 
-	private fun init(auth: AuthRealmClientSecret): AuthRealmClient {
+	private fun init(auth: AuthRealmClientSecret): KeycloakClient {
 		val keycloak = KeycloakBuilder.builder()
 			.serverUrl(auth.serverUrl)
 			.grantType(OAuth2Constants.CLIENT_CREDENTIALS)
@@ -32,10 +29,10 @@ class AuthRealmClientBuilder {
 			.resteasyClient(ResteasyClientBuilder().connectionPoolSize(CONNECTION_POOL_SIZE).build())
 			.build()
 		val realm = keycloak.realm(auth.realmId)
-		return AuthRealmClient(keycloak, realm, auth)
+		return KeycloakClient(keycloak, realm, auth)
 	}
 
-	private fun init(auth: AuthRealmPassword): AuthRealmClient {
+	private fun init(auth: AuthRealmPassword): KeycloakClient {
 		val keycloak = KeycloakBuilder.builder()
 			.serverUrl(auth.serverUrl)
 			.grantType(OAuth2Constants.PASSWORD)
@@ -46,6 +43,6 @@ class AuthRealmClientBuilder {
 			.resteasyClient(ResteasyClientBuilder().connectionPoolSize(CONNECTION_POOL_SIZE).build())
 			.build()
 		val realm = keycloak.realm(auth.realmId)
-		return AuthRealmClient(keycloak, realm, auth)
+		return KeycloakClient(keycloak, realm, auth)
 	}
 }

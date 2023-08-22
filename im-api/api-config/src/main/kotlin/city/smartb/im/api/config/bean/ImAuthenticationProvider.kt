@@ -1,8 +1,7 @@
 package city.smartb.im.api.config.bean
 
-import i2.keycloak.master.domain.AuthRealm
+import city.smartb.im.infra.keycloak.AuthRealm
 
 interface ImAuthenticationProvider  {
-
     suspend fun getAuth(): AuthRealm
 }

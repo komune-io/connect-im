@@ -1,15 +1,15 @@
 package im.script.function.config
 
 import city.smartb.im.commons.exception.NotFoundException
+import city.smartb.im.infra.keycloak.AuthRealm
+import city.smartb.im.infra.keycloak.RealmId
+import i2.keycloak.f2.client.domain.ClientId
+import i2.keycloak.f2.role.domain.RoleName
 import im.script.function.config.config.KeycloakConfigParser
 import im.script.function.config.config.KeycloakConfigProperties
 import im.script.function.config.config.KeycloakUserConfig
 import im.script.function.config.config.WebClient
 import im.script.function.config.service.ConfigService
-import i2.keycloak.f2.client.domain.ClientId
-import i2.keycloak.f2.role.domain.RoleName
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
 import im.script.function.core.service.ClientInitService
 import im.script.function.core.service.ScriptFinderService
 import kotlinx.coroutines.runBlocking

@@ -1,10 +1,10 @@
 package i2.keycloak.f2.role.domain.features.query
 
+import city.smartb.im.commons.auth.RealmId
+import city.smartb.im.infra.keycloak.AuthRealm
 import f2.dsl.fnc.F2Function
 import i2.keycloak.f2.commons.domain.KeycloakF2Command
 import i2.keycloak.f2.role.domain.RolesCompositesModel
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
 import kotlin.js.JsExport
 import kotlin.js.JsName
 

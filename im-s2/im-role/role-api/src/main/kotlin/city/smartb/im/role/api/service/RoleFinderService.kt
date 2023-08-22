@@ -2,17 +2,17 @@ package city.smartb.im.role.api.service
 
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.commons.error.RoleFetchingError
-import city.smartb.im.role.domain.features.query.RoleGetByIdQuery
-import city.smartb.im.role.domain.features.query.RoleGetByIdResult
-import city.smartb.im.role.domain.features.query.RoleGetByNameQuery
-import city.smartb.im.role.domain.features.query.RoleGetByNameResult
+import city.smartb.im.role.domain.query.RoleGetByIdQuery
+import city.smartb.im.role.domain.query.RoleGetByIdResult
+import city.smartb.im.role.domain.query.RoleGetByNameQuery
+import city.smartb.im.role.domain.query.RoleGetByNameResult
 import f2.dsl.cqrs.error.asException
 import i2.keycloak.f2.role.domain.RoleModel
 import i2.keycloak.realm.client.config.AuthRealmClientBuilder
-import javax.ws.rs.NotFoundException
 import org.keycloak.representations.idm.RoleRepresentation
 import org.springframework.stereotype.Service
 import s2.spring.utils.logger.Logger
+import javax.ws.rs.NotFoundException
 
 @Service
 class RoleFinderService(
@@ -62,4 +62,3 @@ class RoleFinderService(
         isClientRole = clientRole
     )
 }
-

@@ -1,9 +1,9 @@
 package i2.test.bdd.data.group
 
+import city.smartb.im.infra.keycloak.AuthRealm
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.model.GroupId
 import i2.keycloak.f2.realm.domain.RealmId
-import i2.keycloak.master.domain.AuthRealm
 import i2.test.bdd.data.DataTest
 import java.util.UUID
 

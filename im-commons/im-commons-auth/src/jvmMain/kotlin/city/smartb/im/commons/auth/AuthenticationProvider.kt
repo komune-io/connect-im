@@ -28,6 +28,10 @@ object AuthenticationProvider {
 		return getAuthentication()?.principal as Jwt?
 	}
 
+    suspend fun getIssuer(): String {
+        return getPrincipal()?.issuer.toString()
+    }
+
 	suspend fun verify(): RoleVerifier {
 		return RoleVerifier(getAuthentication())
 	}

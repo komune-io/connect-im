@@ -1,9 +1,9 @@
 package i2.keycloak.f2.realm.domain.features.command
 
+import city.smartb.im.infra.keycloak.AuthRealm
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
-import i2.keycloak.master.domain.AuthRealm
 import kotlin.js.JsExport
 import kotlin.js.JsName
 

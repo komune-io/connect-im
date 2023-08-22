@@ -1,5 +1,6 @@
 package im.script.function.core.service
 
+import city.smartb.im.infra.keycloak.AuthRealm
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.ClientIdentifier
 import i2.keycloak.f2.client.domain.ClientModel
@@ -16,7 +17,6 @@ import i2.keycloak.f2.role.domain.features.query.RoleGetByNameQueryFunction
 import i2.keycloak.f2.user.domain.features.query.UserGetByEmailFunction
 import i2.keycloak.f2.user.domain.features.query.UserGetByEmailQuery
 import i2.keycloak.f2.user.domain.model.UserModel
-import i2.keycloak.master.domain.AuthRealm
 import org.springframework.stereotype.Service
 
 @Service

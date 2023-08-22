@@ -21,8 +21,6 @@ dependencies {
     api(project(Modules.imKeycloakF2UserQuery))
     api(project(Modules.imKeycloakF2UserCommand))
 
-    api(project(":im-keycloak:keycloak-auth:keycloak-auth-client"))
-
     api("org.testcontainers:junit-jupiter:${Versions.testcontainers}")
     implementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
 }
