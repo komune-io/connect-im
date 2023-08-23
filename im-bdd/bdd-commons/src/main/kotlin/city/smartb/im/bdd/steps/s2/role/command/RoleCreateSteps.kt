@@ -21,7 +21,7 @@ class RoleCreateSteps: En, CucumberStepsDefinition() {
     @Autowired
     private lateinit var roleQueryApi: RoleQueryApi
 
-    private lateinit var command: RoleCreateCommand
+    private lateinit var command: RoleDefineCommand
 
     init {
         DataTableType(::roleInitParams)
@@ -70,13 +70,13 @@ class RoleCreateSteps: En, CucumberStepsDefinition() {
     }
 
     private suspend fun createRole(params: RoleInitParams) = context.roleIds.register(params.identifier) {
-        command = RoleCreateCommand(
+        command = RoleDefineCommand(
             name = params.name,
             description = params.description,
             isClientRole = params.isClientRole,
             composites = params.composites,
         )
-        roleAggregateService.create(command).id
+        privilegeAggregateService.define(command).id
     }
 
     private fun roleInitParams(entry: Map<String, String>?): RoleInitParams {

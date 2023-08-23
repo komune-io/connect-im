@@ -15,8 +15,8 @@ import javax.annotation.security.RolesAllowed
  */
 @Configuration
 class RoleQueryApi(
-    private val roleQueryService: RoleFinderService
-): RoleQueryFeatures {
+    private val roleQueryService: PrivilegeFinderService
+): RoleQueryApi {
     /**
      * Fetch a role by its id.
      */

@@ -3,8 +3,8 @@ package i2.keycloak.f2.role.domain.features.query
 import city.smartb.im.commons.auth.RealmId
 import city.smartb.im.infra.keycloak.AuthRealm
 import f2.dsl.fnc.F2Function
+import i2.keycloak.f2.role.domain.Role
 import i2.keycloak.f2.role.domain.RoleId
-import i2.keycloak.f2.role.domain.RoleModel
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
@@ -21,5 +21,5 @@ class RoleGetByIdQuery(
 @JsExport
 @JsName("RoleGetByIdResult")
 class RoleGetByIdResult(
-    val item: RoleModel?
+    val item: Role?
 )

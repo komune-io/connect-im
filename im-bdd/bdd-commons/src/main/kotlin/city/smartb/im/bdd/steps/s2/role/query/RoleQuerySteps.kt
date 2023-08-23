@@ -16,7 +16,7 @@ class RoleQuerySteps : En, CucumberStepsDefinition() {
     @Autowired
     private lateinit var privilegeFinderService: PrivilegeFinderService
 
-    private var role: RoleModel? = null
+    private var role: Role? = null
 
     init {
         DataTableType(::roleCheckParams)
@@ -34,9 +34,9 @@ class RoleQuerySteps : En, CucumberStepsDefinition() {
 
     private suspend fun checkRole(params: RoleCheckParams) {
         if (params.id != null) {
-            role = roleFinderService.getById(RoleGetByIdQuery(params.id)).item
+            role = privilegeFinderService.getById(RoleGetByIdQuery(params.id)).item
         } else if (params.name != null) {
-            role = roleFinderService.getByName(RoleGetByNameQuery(params.name)).item
+            role = privilegeFinderService.getByName(RoleGetByNameQuery(params.name)).item
         }
     }
 

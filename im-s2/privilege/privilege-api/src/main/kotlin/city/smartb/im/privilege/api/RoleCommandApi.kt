@@ -24,7 +24,7 @@ class RoleCommandApi(
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
     override fun roleAddComposites(): RoleAddCompositesFunction = f2Function { cmd ->
-        roleAggregateService.roleAddComposites(cmd)
+        privilegeAggregateService.roleAddComposites(cmd)
     }
 
     /**
@@ -33,7 +33,7 @@ class RoleCommandApi(
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
     override fun roleCreate(): RoleCreateFunction = f2Function { cmd ->
-        roleAggregateService.roleCreate(cmd)
+        privilegeAggregateService.define(cmd)
     }
 
     /**
@@ -42,6 +42,6 @@ class RoleCommandApi(
     @Bean
     @RolesAllowed(SUPER_ADMIN_ROLE)
     override fun roleUpdate(): RoleUpdateFunction = f2Function { cmd ->
-        roleAggregateService.roleUpdate(cmd)
+        privilegeAggregateService.roleUpdate(cmd)
     }
 }

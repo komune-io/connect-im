@@ -15,47 +15,37 @@ import org.springframework.stereotype.Service
 class PrivilegeFinderService(
     private val keycloakClientProvider: KeycloakClientProvider
 ) {
+    suspend fun getPrivilegeOrNull(identifier: PrivilegeIdentifier): Privilege? {
+        val client = keycloakClientProvider.get()
 
-    private val logger by Logger()
-
-    suspend fun getById(cmd: RoleGetByIdQuery): RoleGetByIdResult {
-        val auth = authenticationResolver.getAuth()
-        val realmClient = AuthRealmClientBuilder().build(auth)
         return try {
-            realmClient.getRoleResource(cmd.id)
+            client.getRoleResource(identifier)
                 .toRepresentation()
-                .asModel()
-                .let(::RoleGetByIdResult)
-        } catch (e: NotFoundException) {
-            RoleGetByIdResult(null)
-        } catch (e: Exception) {
-            val msg = "Error fetching role with id[${cmd.id}]"
-            logger.error(msg, e)
-            throw RoleFetchingError(msg).asException(e)
+                .toPrivilege()
+        } catch (e: javax.ws.rs.NotFoundException) {
+            null
         }
     }
 
-    suspend fun getByName(query: RoleGetByNameQuery): RoleGetByNameResult {
-        val auth = authenticationResolver.getAuth()
-        val realmClient = AuthRealmClientBuilder().build(auth)
-        return try {
-            realmClient.getRoleResource(auth.realmId, query.name)
-                .toRepresentation()
-                .asModel()
-                .let(::RoleGetByNameResult)
-        } catch (e: NotFoundException) {
-            RoleGetByNameResult(null)
-        } catch (e: Exception) {
-            val msg = "Error fetching role with name[${query.name}]"
-            logger.error(msg, e)
-            throw RoleFetchingError(msg).asException(e)
-        }
+    suspend fun getPrivilege(identifier: PrivilegeIdentifier): Privilege {
+        return getPrivilegeOrNull(identifier) ?: throw NotFoundException("Privilege", identifier)
     }
 
-    fun RoleRepresentation.asModel() = RoleModel(
-        id = id,
-        name = name,
-        description = description,
-        isClientRole = clientRole
-    )
+    suspend fun getRoleOrNull(identifier: RoleIdentifier): Role? {
+        return getPrivilegeOrNull(identifier)
+            ?.takeIf { it is Role } as Role?
+    }
+
+    suspend fun getRole(identifier: RoleIdentifier): Role {
+        return getRoleOrNull(identifier) ?: throw NotFoundException("Role", identifier)
+    }
+
+    suspend fun getPermissionOrNull(identifier: PermissionIdentifier): Permission? {
+        return getPrivilegeOrNull(identifier)
+            ?.takeIf { it is Permission } as Permission?
+    }
+
+    suspend fun getPermission(identifier: PermissionIdentifier): Permission {
+        return getPermissionOrNull(identifier) ?: throw NotFoundException("Permission", identifier)
+    }
 }

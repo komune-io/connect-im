@@ -1,8 +1,8 @@
 package city.smartb.im.privilege.domain.role.query
 
 import f2.dsl.fnc.F2Function
+import i2.keycloak.f2.role.domain.Role
 import i2.keycloak.f2.role.domain.RoleId
-import i2.keycloak.f2.role.domain.RoleModel
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
@@ -22,10 +22,10 @@ class RoleGetByIdQuery(
 @JsExport
 @JsName("RoleGetByIdResultDTO")
 interface RoleGetByIdResultDTO {
-    val item: RoleModel?
+    val item: Role?
 }
 
 @JsName("RoleGetByIdResult")
 class RoleGetByIdResult(
-    override val item: RoleModel?,
+    override val item: Role?,
 ): RoleGetByIdResultDTO

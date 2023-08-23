@@ -65,12 +65,12 @@ class KeycloakClient(
 		return getRealmResource(realmId).roles()
 	}
 
-	fun getRoleResource(id: String): RoleResource {
-		return roles().get(id)
+	fun getRoleResource(identifier: String): RoleResource {
+		return roles().get(identifier)
 	}
 
-	fun getRoleResource(realmId: RealmId, id: String): RoleResource {
-		return roles(realmId).get(id)!!
+	fun getRoleResource(realmId: RealmId, identifier: String): RoleResource {
+		return roles(realmId).get(identifier)!!
 	}
 
 	/* Group */

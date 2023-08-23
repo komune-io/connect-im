@@ -5,7 +5,7 @@ import city.smartb.im.infra.keycloak.AuthRealm
 import f2.dsl.cqrs.page.Page
 import f2.dsl.cqrs.page.PagePagination
 import f2.dsl.fnc.F2Function
-import i2.keycloak.f2.role.domain.RoleModel
+import i2.keycloak.f2.role.domain.Role
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
@@ -22,5 +22,5 @@ class RolePageQuery(
 @JsExport
 @JsName("RolePageResult")
 class RolePageResult(
-    val page: Page<RoleModel>
+    val page: Page<Role>
 )

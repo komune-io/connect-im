@@ -10,7 +10,7 @@ import i2.keycloak.f2.realm.domain.RealmId
 import i2.keycloak.f2.realm.domain.RealmModel
 import i2.keycloak.f2.realm.domain.features.query.RealmGetFunction
 import i2.keycloak.f2.realm.domain.features.query.RealmGetQuery
-import i2.keycloak.f2.role.domain.RoleModel
+import i2.keycloak.f2.role.domain.Role
 import i2.keycloak.f2.role.domain.RoleName
 import i2.keycloak.f2.role.domain.features.query.RoleGetByNameQuery
 import i2.keycloak.f2.role.domain.features.query.RoleGetByNameQueryFunction
@@ -42,7 +42,7 @@ class ScriptFinderService(
         ).invokeWith(clientGetByClientIdentifierQueryFunction).item
     }
 
-    suspend fun getRole(authRealm: AuthRealm, name: RoleName, realmId: String): RoleModel? {
+    suspend fun getRole(authRealm: AuthRealm, name: RoleName, realmId: String): Role? {
         return RoleGetByNameQuery(
             name = name,
             realmId = realmId,

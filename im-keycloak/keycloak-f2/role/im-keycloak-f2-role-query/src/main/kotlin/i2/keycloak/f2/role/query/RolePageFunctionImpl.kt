@@ -2,7 +2,7 @@ package i2.keycloak.f2.role.query
 
 import f2.dsl.cqrs.page.Page
 import f2.dsl.fnc.f2Function
-import i2.keycloak.f2.role.domain.RoleModel
+import i2.keycloak.f2.role.domain.Role
 import i2.keycloak.f2.role.domain.features.query.RolePageFunction
 import i2.keycloak.f2.role.domain.features.query.RolePageResult
 import i2.keycloak.realm.client.config.AuthRealmClientBuilder
@@ -31,7 +31,7 @@ class RolePageFunctionImpl {
 			.asResult(roles.size)
 	}
 
-	private fun List<RoleModel>.asResult(total: Int): RolePageResult {
+	private fun List<Role>.asResult(total: Int): RolePageResult {
 		return RolePageResult(
 			Page(
 				total = total,
