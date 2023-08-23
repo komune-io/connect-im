@@ -78,34 +78,34 @@ class RoleVerifier(
 ) {
 
 	fun hasUserReadPermission(): Boolean {
-		return hasPermission(Role.IM_USER_READ)
+		return hasPermission(Roles.IM_USER_READ)
 	}
 
 	fun hasUserWritePermission(): Boolean {
-		return hasPermission(Role.IM_USER_WRITE)
+		return hasPermission(Roles.IM_USER_WRITE)
 	}
 
 	fun hasOrganizationReadPermission(): Boolean {
-		return hasPermission(Role.IM_ORGANIZATION_READ)
+		return hasPermission(Roles.IM_ORGANIZATION_READ)
 	}
 
 	fun hasOrganizationWritePermission(): Boolean {
-		return hasPermission(Role.IM_ORGANIZATION_WRITE)
+		return hasPermission(Roles.IM_ORGANIZATION_WRITE)
 	}
 
 	fun hasRoleReadPermission(): Boolean {
-		return hasPermission(Role.IM_ROLE_READ)
+		return hasPermission(Roles.IM_ROLE_READ)
 	}
 
 	fun hasRoleWritePermission(): Boolean {
-		return hasPermission(Role.IM_ROLE_WRITE)
+		return hasPermission(Roles.IM_ROLE_WRITE)
 	}
 
 	fun isAnonymous() = token == null
 
 	fun isNotAnonymous() = !isAnonymous()
 
-	fun hasPermission(role: Role): Boolean {
+	fun hasPermission(role: Roles): Boolean {
 		return token?.authorities?.contains(SimpleGrantedAuthority("ROLE_${role.name}")) ?: false
 	}
 }

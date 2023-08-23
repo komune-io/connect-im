@@ -3,8 +3,8 @@ package city.smartb.im.privilege.api.service
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import city.smartb.im.privilege.api.model.toRoleRepresentation
-import city.smartb.im.privilege.domain.role.command.RoleCreatedEvent
 import city.smartb.im.privilege.domain.role.command.RoleDefineCommand
+import city.smartb.im.privilege.domain.role.command.RoleDefinedEvent
 import city.smartb.im.privilege.domain.role.model.Role
 import org.springframework.stereotype.Service
 
@@ -14,7 +14,7 @@ class PrivilegeAggregateService(
     private val keycloakClientProvider: KeycloakClientProvider
 ) {
 
-    suspend fun define(command: RoleDefineCommand): RoleCreatedEvent {
+    suspend fun define(command: RoleDefineCommand): RoleDefinedEvent {
         val client = keycloakClientProvider.get()
 
         val newRole = Role(
@@ -33,7 +33,7 @@ class PrivilegeAggregateService(
             client.updateRole(existingRole, newRole)
         }
 
-        return RoleCreatedEvent(command.identifier)
+        return RoleDefinedEvent(command.identifier)
     }
 
     private suspend fun KeycloakClient.createRole(role: Role) {

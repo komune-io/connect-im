@@ -5,7 +5,6 @@ import city.smartb.im.bdd.assertion.AssertionBdd
 import city.smartb.im.bdd.data.TestContextKey
 import city.smartb.im.bdd.data.parser.extractList
 import city.smartb.im.bdd.steps.s2.role.assertion.role
-import city.smartb.im.privilege.api.RoleQueryApi
 import city.smartb.im.privilege.api.service.PrivilegeAggregateService
 import city.smartb.im.privilege.domain.role.command.RoleUpdateCommand
 import io.cucumber.datatable.DataTable

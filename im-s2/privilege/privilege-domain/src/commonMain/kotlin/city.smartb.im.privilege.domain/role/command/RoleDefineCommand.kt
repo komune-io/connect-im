@@ -10,16 +10,16 @@ import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
 
 /**
- * Create a new role.
+ * Create or update a role.
  * @d2 function
  * @parent [city.smartb.im.privilege.domain.D2RolePage]
  * @order 10
  */
-typealias RoleCreateFunction = F2Function<RoleDefineCommand, RoleCreatedEvent>
+typealias RoleDefineFunction = F2Function<RoleDefineCommand, RoleDefinedEvent>
 
 /**
  * @d2 command
- * @parent [RoleCreateFunction]
+ * @parent [RoleDefineFunction]
  */
 @JsExport
 interface RoleDefineCommandDTO: Command {
@@ -69,10 +69,10 @@ data class RoleDefineCommand(
 
 /**
  * @d2 event
- * @parent [RoleCreateFunction]
+ * @parent [RoleDefineFunction]
  */
 @JsExport
-interface RoleCreatedEventDTO: Event {
+interface RoleDefinedEventDTO: Event {
     /**
      * Identifier of the created role.
      */
@@ -83,6 +83,6 @@ interface RoleCreatedEventDTO: Event {
  * @d2 inherit
  */
 @Serializable
-data class RoleCreatedEvent(
+data class RoleDefinedEvent(
     override val identifier: RoleIdentifier
-): RoleCreatedEventDTO
+): RoleDefinedEventDTO

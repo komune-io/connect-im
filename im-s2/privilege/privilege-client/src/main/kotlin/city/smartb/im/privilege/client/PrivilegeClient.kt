@@ -5,8 +5,8 @@ import city.smartb.im.commons.http.ClientJvm
 import city.smartb.im.commons.http.HttpClientBuilderJvm
 import city.smartb.im.privilege.domain.role.command.RoleAddCompositesCommand
 import city.smartb.im.privilege.domain.role.command.RoleAddedCompositesEvent
-import city.smartb.im.privilege.domain.role.command.RoleCreatedEvent
 import city.smartb.im.privilege.domain.role.command.RoleDefineCommand
+import city.smartb.im.privilege.domain.role.command.RoleDefinedEvent
 import city.smartb.im.privilege.domain.role.command.RoleUpdateCommand
 import city.smartb.im.privilege.domain.role.command.RoleUpdatedEvent
 import city.smartb.im.privilege.domain.role.query.RoleGetByIdQuery
@@ -23,7 +23,7 @@ class PrivilegeClient(
             List<RoleAddedCompositesEvent> = post("roleAddComposites", commands)
 
     suspend fun roleCreate(commands: List<RoleDefineCommand>):
-            List<RoleCreatedEvent> = post("roleCreate", commands)
+            List<RoleDefinedEvent> = post("roleCreate", commands)
 
     suspend fun roleUpdate(commands: List<RoleUpdateCommand>):
             List<RoleUpdatedEvent> = post("roleUpdate", commands)

@@ -2,7 +2,7 @@ package city.smartb.im.bdd.steps.s2.auth
 
 import city.smartb.im.bdd.CucumberStepsDefinition
 import city.smartb.im.commons.auth.AuthedUser
-import city.smartb.im.commons.auth.Role
+import city.smartb.im.commons.auth.Roles
 import io.cucumber.java8.En
 
 class AuthSteps: En, CucumberStepsDefinition() {
@@ -12,7 +12,7 @@ class AuthSteps: En, CucumberStepsDefinition() {
             step {
                 context.authedUser = AuthedUser(
                     id = "admin",
-                    roles = Role.values().map { it.value }.toTypedArray(),
+                    roles = Roles.values().map { it.value }.toTypedArray(),
                     memberOf = null
                 )
             }

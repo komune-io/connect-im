@@ -1,7 +1,6 @@
 package city.smartb.im.bdd.steps.s2.role.assertion
 
 import city.smartb.im.bdd.assertion.AssertionBdd
-import city.smartb.im.privilege.api.RoleQueryApi
 import city.smartb.im.privilege.domain.RoleId
 import city.smartb.im.privilege.domain.role.model.Role
 import city.smartb.im.privilege.domain.role.query.RoleGetByIdQuery

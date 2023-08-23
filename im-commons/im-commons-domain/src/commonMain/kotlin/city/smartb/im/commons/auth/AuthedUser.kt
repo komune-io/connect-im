@@ -4,15 +4,13 @@ import kotlin.js.JsExport
 import kotlin.js.JsName
 
 /**
- * Identifier of an organization
- * @d2 model
+ * @d2 hidden
  * @visual json "c790642c-4ed2-4cfc-bc45-905a39006e99"
  */
 typealias OrganizationId = String
 
 /**
- * Identifier of a user
- * @d2 model
+ * @d2 hidden
  * @visual json "ad4adcc1-2633-4f2b-8b66-aaca39f45146"
  */
 typealias UserId = String
@@ -32,8 +30,5 @@ data class AuthedUser(
 ): AuthedUserDTO
 
 fun AuthedUserDTO.hasRole(role: String) = role in roles
-fun AuthedUserDTO.hasRole(role: Role) = role.value in roles
 fun AuthedUserDTO.hasRoles(vararg roles: String) = roles.all(this.roles::contains)
-fun AuthedUserDTO.hasRoles(vararg roles: Role) = roles.map(Role::value).all(this.roles::contains)
-fun AuthedUserDTO.hasOneOfRoles(vararg roles: Role) = roles.map(Role::value).any(this.roles::contains)
 fun AuthedUserDTO.hasOneOfRoles(vararg roles: String) = roles.any(this.roles::contains)
