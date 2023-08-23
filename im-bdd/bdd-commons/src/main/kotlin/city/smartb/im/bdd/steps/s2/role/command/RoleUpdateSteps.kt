@@ -5,9 +5,9 @@ import city.smartb.im.bdd.assertion.AssertionBdd
 import city.smartb.im.bdd.data.TestContextKey
 import city.smartb.im.bdd.data.parser.extractList
 import city.smartb.im.bdd.steps.s2.role.assertion.role
-import city.smartb.im.role.api.RoleQueryApi
-import city.smartb.im.role.api.service.RoleAggregateService
-import city.smartb.im.role.domain.features.command.RoleUpdateCommand
+import city.smartb.im.privilege.api.RoleQueryApi
+import city.smartb.im.privilege.api.service.PrivilegeAggregateService
+import city.smartb.im.privilege.domain.role.command.RoleUpdateCommand
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 class RoleUpdateSteps: En, CucumberStepsDefinition() {
 
     @Autowired
-    private lateinit var roleAggregateService: RoleAggregateService
+    private lateinit var privilegeAggregateService: PrivilegeAggregateService
 
     @Autowired
     private lateinit var roleQueryApi: RoleQueryApi
@@ -75,7 +75,7 @@ class RoleUpdateSteps: En, CucumberStepsDefinition() {
             description = params.description,
             isClientRole = params.isClientRole
         )
-        roleAggregateService.roleUpdate(command).id
+        privilegeAggregateService.roleUpdate(command).id
     }
 
     private fun roleUpdateParams(entry: Map<String, String>?) = RoleUpdateParams(

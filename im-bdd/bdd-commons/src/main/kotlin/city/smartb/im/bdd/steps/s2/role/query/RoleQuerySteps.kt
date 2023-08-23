@@ -1,12 +1,12 @@
 package city.smartb.im.bdd.steps.s2.role.query
 
 import city.smartb.im.bdd.CucumberStepsDefinition
-import city.smartb.im.role.api.service.RoleFinderService
-import city.smartb.im.role.domain.features.query.RoleGetByIdQuery
-import city.smartb.im.role.domain.features.query.RoleGetByNameQuery
-import city.smartb.im.role.domain.model.RoleId
-import city.smartb.im.role.domain.model.RoleModel
-import city.smartb.im.role.domain.model.RoleName
+import city.smartb.im.privilege.api.service.PrivilegeFinderService
+import city.smartb.im.privilege.domain.RoleId
+import city.smartb.im.privilege.domain.RoleName
+import city.smartb.im.privilege.domain.role.model.Role
+import city.smartb.im.privilege.domain.role.query.RoleGetByIdQuery
+import city.smartb.im.privilege.domain.role.query.RoleGetByNameQuery
 import io.cucumber.java8.En
 import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 class RoleQuerySteps : En, CucumberStepsDefinition() {
 
     @Autowired
-    private lateinit var roleFinderService: RoleFinderService
+    private lateinit var privilegeFinderService: PrivilegeFinderService
 
     private var role: RoleModel? = null
 

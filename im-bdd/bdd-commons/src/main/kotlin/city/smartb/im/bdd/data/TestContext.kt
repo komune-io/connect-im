@@ -2,7 +2,7 @@ package city.smartb.im.bdd.data
 
 import city.smartb.im.commons.auth.AuthedUser
 import city.smartb.im.organization.domain.model.OrganizationId
-import city.smartb.im.role.domain.model.RoleId
+import city.smartb.im.privilege.domain.RoleId
 import city.smartb.im.user.domain.model.UserId
 import f2.dsl.cqrs.Event
 import org.springframework.stereotype.Component

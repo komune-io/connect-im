@@ -156,24 +156,26 @@ object Modules {
     }
 
 	object S2 {
-		const val imOrganizationApi = ":im-s2:im-organization:organization-api"
-		const val imOrganizationDomain = ":im-s2:im-organization:organization-domain"
-		const val imOrganizationClient = ":im-s2:im-organization:organization-client"
-		const val imOrganizationLib = ":im-s2:im-organization:organization-lib"
+        private const val BASE = ":im-s2"
+		const val imOrganizationApi = "$BASE:im-organization:organization-api"
+		const val imOrganizationDomain = "$BASE:im-organization:organization-domain"
+		const val imOrganizationClient = "$BASE:im-organization:organization-client"
+		const val imOrganizationLib = "$BASE:im-organization:organization-lib"
 
-		const val imUserApi = ":im-s2:im-user:user-api"
-		const val imUserDomain = ":im-s2:im-user:user-domain"
-		const val imUserClient = ":im-s2:im-user:user-client"
-		const val imUserLib = ":im-s2:im-user:user-lib"
+		const val imUserApi = "$BASE:im-user:user-api"
+		const val imUserDomain = "$BASE:im-user:user-domain"
+		const val imUserClient = "$BASE:im-user:user-client"
+		const val imUserLib = "$BASE:im-user:user-lib"
 
-		const val imApikeyApi = ":im-s2:im-apikey:apikey-api"
-		const val imApikeyDomain = ":im-s2:im-apikey:apikey-domain"
-		const val imApikeyClient = ":im-s2:im-apikey:apikey-client"
-		const val imApikeyLib = ":im-s2:im-apikey:apikey-lib"
+		const val imApikeyApi = "$BASE:im-apikey:apikey-api"
+		const val imApikeyDomain = "$BASE:im-apikey:apikey-domain"
+		const val imApikeyClient = "$BASE:im-apikey:apikey-client"
+		const val imApikeyLib = "$BASE:im-apikey:apikey-lib"
 
-		const val imRoleApi = ":im-s2:im-role:role-api"
-		const val imRoleDomain = ":im-s2:im-role:role-domain"
-		const val imRoleClient = ":im-s2:im-role:role-client"
+        private const val PRIVILEGE = "$BASE:privilege:privilege"
+		const val privilegeApi = "$PRIVILEGE-api"
+        const val privilegeClient = "$PRIVILEGE-client"
+        const val privilegeDomain = "$PRIVILEGE-domain"
 	}
 
 	object Script {

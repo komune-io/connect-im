@@ -1,9 +1,9 @@
 package i2.test.bdd.data.role
 
+import city.smartb.im.infra.keycloak.AuthRealm
+import city.smartb.im.infra.keycloak.RealmId
 import i2.keycloak.f2.role.domain.RoleName
 import i2.keycloak.f2.role.domain.features.command.RoleAddCompositesCommand
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
 import i2.test.bdd.data.DataTest
 import java.util.UUID
 

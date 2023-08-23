@@ -46,9 +46,9 @@ include(
     "im-s2:im-apikey:apikey-client",
     "im-s2:im-apikey:apikey-lib",
 
-    "im-s2:im-role:role-api",
-    "im-s2:im-role:role-domain",
-    "im-s2:im-role:role-client"
+    "im-s2:privilege:privilege-api",
+    "im-s2:privilege:privilege-domain",
+    "im-s2:privilege:privilege-client"
 )
 
 include(

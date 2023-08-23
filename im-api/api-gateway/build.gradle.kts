@@ -10,7 +10,7 @@ dependencies {
 
 	implementation(project(Modules.S2.imApikeyApi))
 	implementation(project(Modules.S2.imOrganizationApi))
-	implementation(project(Modules.S2.imRoleApi))
+	implementation(project(Modules.S2.privilegeApi))
 	implementation(project(Modules.S2.imUserApi))
 
 	implementation("city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}")

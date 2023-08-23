@@ -1,10 +1,10 @@
 package city.smartb.im.bdd.steps.s2.role.assertion
 
 import city.smartb.im.bdd.assertion.AssertionBdd
-import city.smartb.im.role.api.RoleQueryApi
-import city.smartb.im.role.domain.model.RoleId
-import city.smartb.im.role.domain.model.RoleModel
-import city.smartb.im.role.domain.query.RoleGetByIdQuery
+import city.smartb.im.privilege.api.RoleQueryApi
+import city.smartb.im.privilege.domain.RoleId
+import city.smartb.im.privilege.domain.role.model.Role
+import city.smartb.im.privilege.domain.role.query.RoleGetByIdQuery
 import f2.dsl.fnc.invoke
 import org.assertj.core.api.Assertions
 
@@ -17,10 +17,10 @@ class AssertionRole(
         val role = api.roleGetById().invoke(RoleGetByIdQuery(id = id)).item!!
         return assertThat(role)
     }
-    fun assertThat(entity: RoleModel) = RoleAssert(entity)
+    fun assertThat(entity: Role) = RoleAssert(entity)
 
     inner class RoleAssert(
-        private val role: RoleModel
+        private val role: Role
     ) {
         fun hasFields(
             id: RoleId = role.id,

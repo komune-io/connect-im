@@ -10,11 +10,11 @@ dependencies {
 	implementation(project(Modules.S2.imApikeyLib))
 
 	implementation(project(Modules.S2.imOrganizationApi))
-	implementation(project(Modules.S2.imRoleApi))
+	implementation(project(Modules.S2.privilegeApi))
 
 	implementation(project(Modules.S2.imUserApi))
 	implementation(project(Modules.S2.imUserLib))
-	implementation(project(Modules.S2.imRoleApi))
+	implementation(project(Modules.S2.privilegeApi))
 	implementation(project(Modules.imCommonsDomain))
 
 	Dependencies.Jvm.f2(::implementation)
