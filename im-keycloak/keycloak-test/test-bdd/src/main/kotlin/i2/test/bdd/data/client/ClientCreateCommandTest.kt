@@ -1,7 +1,7 @@
 package i2.test.bdd.data.client
 
-import city.smartb.im.infra.keycloak.AuthRealm
-import city.smartb.im.infra.keycloak.RealmId
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.commons.model.RealmId
 import i2.keycloak.f2.client.domain.ClientIdentifier
 import i2.keycloak.f2.client.domain.features.command.ClientCreateCommand
 import i2.test.bdd.data.DataTest

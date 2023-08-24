@@ -103,7 +103,7 @@ class OrganizationUpdateSteps: En, CucumberStepsDefinition() {
                 postalCode = entry?.get("postalCode") ?: organization.address!!.postalCode,
             ),
             website = entry?.get("website"),
-            roles = listOfNotNull(context.roleIds.lastUsedOrNull),
+            roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
             attributes = organizationAttributesParams(entry)
         )
     }

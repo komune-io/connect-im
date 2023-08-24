@@ -47,8 +47,10 @@ include(
     "im-s2:im-apikey:apikey-lib",
 
     "im-s2:privilege:privilege-api",
+    "im-s2:privilege:privilege-client",
+    "im-s2:privilege:privilege-core",
     "im-s2:privilege:privilege-domain",
-    "im-s2:privilege:privilege-client"
+    "im-s2:privilege:privilege-lib"
 )
 
 include(

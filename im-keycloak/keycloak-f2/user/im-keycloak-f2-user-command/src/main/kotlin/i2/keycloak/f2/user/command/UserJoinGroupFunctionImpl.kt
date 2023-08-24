@@ -15,16 +15,14 @@ class UserJoinGroupFunctionImpl {
 	fun userJoinGroupFunction(): UserJoinGroupFunction = keycloakF2Function { cmd, client ->
 		try {
 			val groupsLeft = if (cmd.leaveOtherGroups == true) {
-				client.getUserResource(cmd.realmId, cmd.id)
+				client.user(cmd.id)
 					.groups().map { group ->
-						client.getUserResource(cmd.realmId, cmd.id)
-							.leaveGroup(group.id)
+						client.user(cmd.id).leaveGroup(group.id)
 						group.id
 					}
 			} else emptyList()
 
-			client.getUserResource(cmd.realmId, cmd.id)
-				.joinGroup(cmd.groupId)
+			client.user(cmd.id).joinGroup(cmd.groupId)
 
 			UserJoinedGroupEvent(cmd.id, cmd.groupId, groupsLeft = groupsLeft)
 		} catch (e: Exception) {

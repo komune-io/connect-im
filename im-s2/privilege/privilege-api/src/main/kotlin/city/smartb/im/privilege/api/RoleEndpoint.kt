@@ -2,10 +2,10 @@ package city.smartb.im.privilege.api
 
 import city.smartb.im.commons.auth.Roles
 import city.smartb.im.commons.auth.policies.f2Function
-import city.smartb.im.privilege.api.service.PrivilegeAggregateService
-import city.smartb.im.privilege.api.service.PrivilegeFinderService
 import city.smartb.im.privilege.domain.RoleApi
 import city.smartb.im.privilege.domain.role.command.RoleDefineFunction
+import city.smartb.im.privilege.lib.PrivilegeAggregateService
+import city.smartb.im.privilege.lib.PrivilegeFinderService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import s2.spring.utils.logger.Logger

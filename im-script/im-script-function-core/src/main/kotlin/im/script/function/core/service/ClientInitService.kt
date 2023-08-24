@@ -1,6 +1,7 @@
 package im.script.function.core.service
 
-import city.smartb.im.infra.keycloak.AuthRealm
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.privilege.domain.role.model.RoleIdentifier
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.ClientId
 import i2.keycloak.f2.client.domain.ClientIdentifier
@@ -11,7 +12,6 @@ import i2.keycloak.f2.client.domain.features.command.ClientRealmManagementRolesG
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantCommand
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction
 import i2.keycloak.f2.realm.domain.RealmId
-import i2.keycloak.f2.role.domain.RoleName
 import im.script.function.core.model.AppClient
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -62,7 +62,7 @@ class ClientInitService(
     }
 
 
-    suspend fun grantClient(authRealm: AuthRealm, realmId: RealmId, id: ClientId, roles: List<RoleName>) {
+    suspend fun grantClient(authRealm: AuthRealm, realmId: RealmId, id: ClientId, roles: List<RoleIdentifier>) {
         ClientServiceAccountRolesGrantCommand(
             id = id,
             roles = roles,
@@ -71,7 +71,7 @@ class ClientInitService(
         ).invokeWith(clientServiceAccountRolesGrantFunction)
     }
 
-    suspend fun grantRealmManagementClient(authRealm: AuthRealm, realmId: RealmId, id: ClientId, roles: List<RoleName>) {
+    suspend fun grantRealmManagementClient(authRealm: AuthRealm, realmId: RealmId, id: ClientId, roles: List<RoleIdentifier>) {
         ClientRealmManagementRolesGrantCommand(
             id = id,
             roles = roles,

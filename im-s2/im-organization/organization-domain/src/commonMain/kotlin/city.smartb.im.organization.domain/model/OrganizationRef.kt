@@ -1,6 +1,6 @@
 package city.smartb.im.organization.domain.model
 
-import i2.keycloak.f2.role.domain.RoleName
+import city.smartb.im.privilege.domain.role.model.RoleIdentifier
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
@@ -34,5 +34,5 @@ data class OrganizationRef(
      * Assigned and effective roles of the organization.
      * @example [Organization.roles]
      */
-    override val roles: List<RoleName>
+    override val roles: List<RoleIdentifier>
 ): OrganizationRefDTO

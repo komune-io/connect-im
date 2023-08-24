@@ -2,8 +2,8 @@ package city.smartb.im.organization.domain.model
 
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.AddressDTO
+import city.smartb.im.privilege.domain.role.model.RoleIdentifier
 import i2.keycloak.f2.group.domain.model.GroupId
-import i2.keycloak.f2.role.domain.RoleName
 import i2.keycloak.f2.role.domain.RolesCompositesModel
 import kotlin.js.JsExport
 import kotlin.js.JsName
@@ -27,7 +27,7 @@ interface OrganizationDTO {
     val address: AddressDTO?
     val website: String?
     val attributes: Map<String, String>
-    val roles: List<RoleName>
+    val roles: List<RoleIdentifier>
     val rolesComposites: RolesCompositesModel
     val enabled: Boolean
     val disabledBy: OrganizationId?
@@ -85,7 +85,7 @@ data class Organization(
     /**
      * Roles of the organization.
      */
-    override val roles: List<RoleName>,
+    override val roles: List<RoleIdentifier>,
 
     /**
      * All composite roles of the organization.

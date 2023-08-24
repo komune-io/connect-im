@@ -12,7 +12,7 @@ class AuthSteps: En, CucumberStepsDefinition() {
             step {
                 context.authedUser = AuthedUser(
                     id = "admin",
-                    roles = Roles.values().map { it.value }.toTypedArray(),
+                    roles = arrayOf(Roles.SUPER_ADMIN),
                     memberOf = null
                 )
             }

@@ -14,7 +14,7 @@ class UserSetAttributesFunctionImpl {
 	@Bean
 	fun userSetAttributesFunction(): UserSetAttributesFunction = keycloakF2Function { cmd, client ->
 		try {
-			val userResource = client.getUserResource(cmd.realmId, cmd.id)
+			val userResource = client.user(cmd.id)
 
 			val userRepresentation = userResource.toRepresentation().apply {
 				cmd.attributes.forEach { (key, value) -> singleAttribute(key, value) }

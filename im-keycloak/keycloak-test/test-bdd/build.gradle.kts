@@ -6,21 +6,25 @@ plugins {
 
 dependencies {
 
-    api(project(Modules.imKeycloakF2ClientQuery))
-    api(project(Modules.imKeycloakF2ClientCommand))
+    implementation(project(Modules.S2.privilegeLib))
 
-    api(project(Modules.imKeycloakF2GroupQuery))
-    api(project(Modules.imKeycloakF2GroupCommand))
+    implementation(project(Modules.imKeycloakF2ClientQuery))
+    implementation(project(Modules.imKeycloakF2ClientCommand))
 
-    api(project(Modules.imKeycloakF2RealmQuery))
-    api(project(Modules.imKeycloakF2RealmCommand))
+    implementation(project(Modules.imKeycloakF2GroupQuery))
+    implementation(project(Modules.imKeycloakF2GroupCommand))
 
-    api(project(Modules.imKeycloakF2RoleQuery))
-    api(project(Modules.imKeycloakF2RoleCommand))
+    implementation(project(Modules.imKeycloakF2RealmQuery))
+    implementation(project(Modules.imKeycloakF2RealmCommand))
 
-    api(project(Modules.imKeycloakF2UserQuery))
-    api(project(Modules.imKeycloakF2UserCommand))
+    implementation(project(Modules.imKeycloakF2RoleQuery))
+    implementation(project(Modules.imKeycloakF2RoleCommand))
 
-    api("org.testcontainers:junit-jupiter:${Versions.testcontainers}")
+    implementation(project(Modules.imKeycloakF2UserQuery))
+    implementation(project(Modules.imKeycloakF2UserCommand))
+
+    implementation(project(Modules.Infra.keycloak))
+
+    implementation("org.testcontainers:junit-jupiter:${Versions.testcontainers}")
     implementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
 }

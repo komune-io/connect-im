@@ -1,6 +1,6 @@
 package i2.test.bdd.data.user
 
-import city.smartb.im.infra.keycloak.AuthRealm
+import city.smartb.im.commons.model.AuthRealm
 import i2.keycloak.f2.realm.domain.RealmId
 import i2.keycloak.f2.user.domain.features.command.UserUpdateCommand
 import i2.keycloak.f2.user.domain.model.UserId

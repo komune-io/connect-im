@@ -1,6 +1,6 @@
 package i2.test.bdd.data.group
 
-import city.smartb.im.infra.keycloak.AuthRealm
+import city.smartb.im.commons.model.AuthRealm
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.model.GroupId
 import i2.keycloak.f2.realm.domain.RealmId

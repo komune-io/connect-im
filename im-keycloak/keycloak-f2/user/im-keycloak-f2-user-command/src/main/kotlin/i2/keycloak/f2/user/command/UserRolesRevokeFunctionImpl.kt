@@ -1,13 +1,11 @@
 package i2.keycloak.f2.user.command
 
-import city.smartb.im.infra.keycloak.RealmId
+import city.smartb.im.infra.keycloak.client.KeycloakClient
 import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.role.domain.defaultRealmRole
 import i2.keycloak.f2.user.domain.features.command.UserRolesRevokeFunction
 import i2.keycloak.f2.user.domain.features.command.UserRolesRevokedEvent
 import i2.keycloak.f2.user.domain.model.UserId
-import i2.keycloak.realm.client.config.AuthRealmClient
-import i2.keycloak.realm.client.config.realmsResource
 import org.keycloak.admin.client.resource.RoleScopeResource
 import org.keycloak.representations.idm.RoleRepresentation
 import org.springframework.context.annotation.Bean
@@ -26,22 +24,22 @@ class UserRolesRevokeFunctionImpl {
 			return@keycloakF2Function UserRolesRevokedEvent(cmd.id)
 		}
 
-		client.removeUserRole(cmd.id, rolesToRevoke, cmd.realmId)
+		client.removeUserRole(cmd.id, rolesToRevoke)
 		UserRolesRevokedEvent(cmd.id)
 	}
 
-	fun AuthRealmClient.removeUserRole(userId: UserId, roles: List<String>, realmId: RealmId) {
+	fun KeycloakClient.removeUserRole(userId: UserId, roles: List<String>) {
 		val roleRepresentations = roles.map { role ->
-			getRoleRepresentation(role, realmId)
+			getRoleRepresentation(role)
 		}
-		getUserRealmRolesResource(userId, realmId).remove(roleRepresentations)
+		getUserRealmRolesResource(userId).remove(roleRepresentations)
 	}
 
-	fun AuthRealmClient.getRoleRepresentation(role: String, realmId: RealmId): RoleRepresentation {
-		return realmsResource(realmId).roles().get(role).toRepresentation()
+	fun KeycloakClient.getRoleRepresentation(role: String): RoleRepresentation {
+		return role(role).toRepresentation()
 	}
 
-	private fun AuthRealmClient.getUserRealmRolesResource(userId: String, realmId: RealmId): RoleScopeResource {
-		return getUserResource(realmId, userId).roles().realmLevel()
+	private fun KeycloakClient.getUserRealmRolesResource(userId: String): RoleScopeResource {
+		return user(userId).roles().realmLevel()
 	}
 }

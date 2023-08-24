@@ -15,6 +15,7 @@ dependencies {
 	implementation(project(Modules.S2.imUserApi))
 	implementation(project(Modules.S2.imUserLib))
 	implementation(project(Modules.S2.privilegeApi))
+	implementation(project(Modules.S2.privilegeLib))
 	implementation(project(Modules.imCommonsDomain))
 
 	Dependencies.Jvm.f2(::implementation)

@@ -12,9 +12,9 @@ import f2.dsl.fnc.invoke
 import i2.keycloak.f2.commons.domain.error.I2Exception
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import java.util.UUID
 import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.UUID
 
 class OrganizationCreateSteps: En, CucumberStepsDefinition() {
     @Autowired
@@ -105,7 +105,7 @@ class OrganizationCreateSteps: En, CucumberStepsDefinition() {
                 city = "city"
             ),
             website = entry?.get("website") ?: "https://smartb.network",
-            roles = listOfNotNull(context.roleIds.lastUsedOrNull),
+            roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
             parentOrganizationId = entry?.get("parentOrganizationId"),
             attributes = organizationAttributesParams(entry)
         )

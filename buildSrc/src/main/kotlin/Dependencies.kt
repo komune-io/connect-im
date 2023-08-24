@@ -176,6 +176,7 @@ object Modules {
 		const val privilegeApi = "$PRIVILEGE-api"
         const val privilegeClient = "$PRIVILEGE-client"
         const val privilegeDomain = "$PRIVILEGE-domain"
+        const val privilegeLib = "$PRIVILEGE-lib"
 	}
 
 	object Script {

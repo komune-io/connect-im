@@ -7,4 +7,5 @@ plugins {
 dependencies {
     api(project(Modules.imKeycloakF2RoleDomain))
     api(project(Modules.imKeycloakF2CommonsApi))
+    api(project(Modules.Infra.keycloak))
 }

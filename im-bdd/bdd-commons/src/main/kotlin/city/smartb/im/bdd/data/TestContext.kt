@@ -1,8 +1,9 @@
 package city.smartb.im.bdd.data
 
+import city.smartb.im.apikey.domain.model.ApiKeyId
 import city.smartb.im.commons.auth.AuthedUser
 import city.smartb.im.organization.domain.model.OrganizationId
-import city.smartb.im.privilege.domain.RoleId
+import city.smartb.im.privilege.domain.role.model.RoleIdentifier
 import city.smartb.im.user.domain.model.UserId
 import f2.dsl.cqrs.Event
 import org.springframework.stereotype.Component
@@ -13,8 +14,8 @@ typealias TestContextKey = String
 class TestContext {
     private val entityLists = mutableListOf<TestEntities<*, *>>()
     val realmId = "im-test"
-    val apikeyIds = testEntities<String, RoleId>("Role")
-    val roleIds = testEntities<String, RoleId>("Role")
+    val apikeyIds = testEntities<String, ApiKeyId>("ApiKey")
+    val roleIdentifiers = testEntities<String, RoleIdentifier>("Role")
     val organizationIds = testEntities<String, OrganizationId>("Organization")
     val userIds = testEntities<String, UserId>("User")
     var authedUser: AuthedUser? = null

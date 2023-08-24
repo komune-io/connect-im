@@ -19,10 +19,10 @@ class UserPoliciesEnforcer: PolicyEnforcer() {
 
 
     suspend fun enforcePage(query: UserPageQuery): UserPageQuery = enforce { authedUser ->
-        if(!UserPolicies.canPage(authedUser)) {
+        if (authedUser == null || !UserPolicies.canPage(authedUser)) {
             throw ForbiddenAccessException("page user")
         }
-        if(authedUser.hasOneOfRoles(Roles.SUPER_ADMIN, Roles.ORCHESTRATOR)) {
+        if (authedUser.hasOneOfRoles(Roles.SUPER_ADMIN, Roles.ORCHESTRATOR)) {
             query
         } else {
             query.copy(

@@ -1,12 +1,11 @@
 package i2.keycloak.f2.user.command
 
-import f2.dsl.fnc.f2Function
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.asI2Exception
 import i2.keycloak.f2.user.domain.features.command.UserUpdateCommand
 import i2.keycloak.f2.user.domain.features.command.UserUpdateFunction
 import i2.keycloak.f2.user.domain.features.command.UserUpdatedEvent
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
 import org.keycloak.representations.idm.UserRepresentation
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,10 +14,9 @@ import org.springframework.context.annotation.Configuration
 class UserUpdateFunctionImpl {
 
 	@Bean
-	fun userUpdateFunction(): UserUpdateFunction = f2Function { cmd ->
+	fun userUpdateFunction(): UserUpdateFunction = keycloakF2Function { cmd, client ->
 		try {
-			val realmClient = AuthRealmClientBuilder().build(cmd.auth)
-			val userResource = realmClient.getUserResource(cmd.realmId, cmd.userId)
+			val userResource = client.user(cmd.userId)
 
 			val userRepresentation = userResource.toRepresentation().apply {
 				update(cmd)

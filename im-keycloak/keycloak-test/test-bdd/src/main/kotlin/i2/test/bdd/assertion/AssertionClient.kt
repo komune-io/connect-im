@@ -1,6 +1,6 @@
 package i2.test.bdd.assertion
 
-import city.smartb.im.infra.keycloak.RealmId
+import city.smartb.im.commons.model.RealmId
 import i2.keycloak.f2.client.domain.ClientId
 import i2.keycloak.f2.client.domain.ClientIdentifier
 import org.assertj.core.api.Assertions

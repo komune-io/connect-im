@@ -1,8 +1,8 @@
 package im.script.gateway.conguration.config.base
 
-import city.smartb.im.infra.keycloak.AuthRealm
-import city.smartb.im.infra.keycloak.AuthRealmClientSecret
-import city.smartb.im.infra.keycloak.AuthRealmPassword
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.commons.model.AuthRealmClientSecret
+import city.smartb.im.commons.model.AuthRealmPassword
 
 data class ImAuthProperties(
     val serverUrl: String,

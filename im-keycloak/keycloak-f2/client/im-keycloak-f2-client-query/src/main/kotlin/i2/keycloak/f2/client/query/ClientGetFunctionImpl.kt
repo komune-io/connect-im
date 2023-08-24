@@ -1,25 +1,23 @@
 package i2.keycloak.f2.client.query
 
-import f2.dsl.fnc.f2Function
 import i2.keycloak.f2.client.domain.ClientModel
 import i2.keycloak.f2.client.domain.features.query.ClientGetFunction
 import i2.keycloak.f2.client.domain.features.query.ClientGetResult
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.asI2Exception
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
-import javax.ws.rs.NotFoundException
 import org.keycloak.representations.idm.ClientRepresentation
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
+import javax.ws.rs.NotFoundException
 
 class ClientGetFunctionImpl {
     private val logger = LoggerFactory.getLogger(ClientGetFunctionImpl::class.java)
 
     @Bean
-    fun clientGetFunction(): ClientGetFunction = f2Function { cmd ->
-        val realmClient = AuthRealmClientBuilder().build(cmd.auth)
+    fun clientGetFunction(): ClientGetFunction = keycloakF2Function { cmd, keycloakClient ->
         try {
-            realmClient.getClientResource(cmd.realmId, cmd.id)
+            keycloakClient.client(cmd.id)
                 .toRepresentation()
                 .asModel()
                 .asResult()

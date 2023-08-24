@@ -1,7 +1,7 @@
 package city.smartb.im.api.config.properties
 
-import city.smartb.im.infra.keycloak.AuthRealm
-import city.smartb.im.infra.keycloak.AuthRealmClientSecret
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.commons.model.AuthRealmClientSecret
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "i2")

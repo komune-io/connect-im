@@ -1,18 +1,18 @@
 package i2.test.bdd.given
 
-import city.smartb.im.infra.keycloak.RealmId
+import city.smartb.im.commons.model.RealmId
+import city.smartb.im.infra.keycloak.client.KeycloakClient
 import f2.dsl.fnc.invoke
 import i2.keycloak.f2.group.command.GroupCreateFunctionImpl
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.model.GroupId
 import i2.keycloak.f2.user.domain.model.UserId
-import i2.keycloak.realm.client.config.AuthRealmClient
 import i2.test.bdd.data.DataTest
 import i2.test.bdd.data.group.groupCreateCommand
 import kotlinx.coroutines.runBlocking
 
 class GivenGroup(
-	private val client: AuthRealmClient
+	private val client: KeycloakClient
 ) {
 	fun withGroup(realmId: RealmId, groupName: String): GroupId = withGroup(
 		DataTest.groupCreateCommand(

@@ -17,9 +17,9 @@ class ApiKeyPoliciesEnforcer: PolicyEnforcer() {
 
     suspend fun enforcePage(query: ApiKeyPageQuery): ApiKeyPageQuery = enforce { authedUser ->
         check("page apikey") {
-            ApiKeyPolicies.canPage(authedUser)
+            ApiKeyPolicies.canPage(it)
         }
-        if(authedUser.hasOneOfRoles(Roles.SUPER_ADMIN, Roles.ORCHESTRATOR) ) {
+        if (authedUser!!.hasOneOfRoles(Roles.SUPER_ADMIN, Roles.ORCHESTRATOR) ) {
             query
         } else {
             query.copy(

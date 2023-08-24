@@ -1,7 +1,7 @@
 package im.script.function.init
 
+import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.utils.ParserUtils
-import city.smartb.im.infra.keycloak.AuthRealm
 import im.script.function.core.service.ClientInitService
 import im.script.function.core.service.ScriptFinderService
 import im.script.function.init.config.AdminUserData

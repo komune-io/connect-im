@@ -1,11 +1,10 @@
 package i2.keycloak.f2.client.command
 
-import f2.dsl.fnc.f2Function
 import i2.keycloak.f2.client.domain.features.command.ClientDeleteFunction
 import i2.keycloak.f2.client.domain.features.command.ClientDeletedEvent
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.asI2Exception
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -13,10 +12,9 @@ import org.springframework.context.annotation.Configuration
 class ClientDeleteFunctionImpl {
 
     @Bean
-    fun clientDeleteFunction(): ClientDeleteFunction = f2Function { cmd ->
+    fun clientDeleteFunction(): ClientDeleteFunction = keycloakF2Function { cmd, keycloakClient ->
         try {
-            val realmClient = AuthRealmClientBuilder().build(cmd.auth)
-            realmClient.getClientResource(cmd.realmId, cmd.id).remove()
+            keycloakClient.client(cmd.id).remove()
             ClientDeletedEvent(cmd.id)
         } catch (e: Exception) {
             throw I2ApiError(

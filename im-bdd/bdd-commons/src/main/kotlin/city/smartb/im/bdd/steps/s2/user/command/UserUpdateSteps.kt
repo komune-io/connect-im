@@ -106,7 +106,7 @@ class UserUpdateSteps: En, CucumberStepsDefinition() {
                 city = entry?.get("city") ?: "city"
             ),
             phone = entry?.get("phone") ?: "0600000000",
-            roles = listOfNotNull(context.roleIds.lastUsedOrNull),
+            roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
             memberOf = entry?.get("memberOf").parseNullableOrDefault(context.organizationIds.lastUsedOrNull),
             attributes = userAttributesParams(entry),
         )

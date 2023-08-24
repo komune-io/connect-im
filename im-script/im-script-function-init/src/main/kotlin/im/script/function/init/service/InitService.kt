@@ -1,16 +1,12 @@
 package im.script.function.init.service
 
-import city.smartb.im.infra.keycloak.AuthRealm
-import city.smartb.im.infra.keycloak.RealmId
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.commons.model.RealmId
+import city.smartb.im.privilege.domain.role.model.RoleIdentifier
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.ClientId
 import i2.keycloak.f2.realm.domain.features.command.RealmCreateCommand
 import i2.keycloak.f2.realm.domain.features.command.RealmCreateFunction
-import i2.keycloak.f2.role.domain.RoleName
-import i2.keycloak.f2.role.domain.features.command.RoleAddCompositesCommand
-import i2.keycloak.f2.role.domain.features.command.RoleAddCompositesFunction
-import i2.keycloak.f2.role.domain.features.command.RoleCreateCommand
-import i2.keycloak.f2.role.domain.features.command.RoleCreateFunction
 import i2.keycloak.f2.user.domain.features.command.UserCreateCommand
 import i2.keycloak.f2.user.domain.features.command.UserCreateFunction
 import i2.keycloak.f2.user.domain.features.command.UserRolesGrantCommand
@@ -23,8 +19,8 @@ class InitService(
     private val realmCreateFunction: RealmCreateFunction,
     private val userCreateFunction: UserCreateFunction,
     private val userRolesGrantFunction: UserRolesGrantFunction,
-    private val roleCreateFunction: RoleCreateFunction,
-    private val roleAddCompositesFunction: RoleAddCompositesFunction
+//    private val roleCreateFunction: RoleCreateFunction,
+//    private val roleAddCompositesFunction: RoleAddCompositesFunction
 ) {
 
     suspend fun createRealm(authRealm: AuthRealm, id: RealmId, theme: String?, smtpConfig: Map<String, String>?): RealmId {
@@ -62,7 +58,7 @@ class InitService(
         ).invokeWith(userCreateFunction).id
     }
 
-    suspend fun grantUser(authRealm: AuthRealm, id: UserId, realm: String, clientId: ClientId?, vararg roles: RoleName) {
+    suspend fun grantUser(authRealm: AuthRealm, id: UserId, realm: String, clientId: ClientId?, vararg roles: RoleIdentifier) {
         UserRolesGrantCommand(
             id = id,
             roles = roles.toList(),
@@ -72,23 +68,25 @@ class InitService(
         ).invokeWith(userRolesGrantFunction)
     }
 
-    suspend fun createRole(authRealm: AuthRealm, roleName: RoleName, description: String?, composites: List<String>, realm: String) {
-        RoleCreateCommand(
-            name = roleName,
-            description = description,
-            isClientRole = false,
-            composites = composites,
-            auth = authRealm,
-            realmId = realm
-        ).invokeWith(roleCreateFunction)
+    suspend fun createRole(authRealm: AuthRealm, roleName: RoleIdentifier, description: String?, composites: List<String>, realm: String) {
+//        RoleCreateCommand(
+//            name = roleName,
+//            description = description,
+//            isClientRole = false,
+//            composites = composites,
+//            auth = authRealm,
+//            realmId = realm
+//        ).invokeWith(roleCreateFunction)
+        TODO()
     }
 
-    suspend fun roleAddComposites(authRealm: AuthRealm, roleName: RoleName, composites: List<String>, realm: String) {
-        RoleAddCompositesCommand(
-            roleName = roleName,
-            composites = composites,
-            auth = authRealm,
-            realmId = realm
-        ).invokeWith(roleAddCompositesFunction)
+    suspend fun roleAddComposites(authRealm: AuthRealm, roleName: RoleIdentifier, composites: List<String>, realm: String) {
+//        RoleAddCompositesCommand(
+//            roleName = roleName,
+//            composites = composites,
+//            auth = authRealm,
+//            realmId = realm
+//        ).invokeWith(roleAddCompositesFunction)
+        TODO()
     }
 }

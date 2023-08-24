@@ -1,14 +1,14 @@
 package i2.keycloak.f2.user.query
 
+import city.smartb.im.infra.keycloak.client.KeycloakClient
 import f2.dsl.cqrs.page.Page
 import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.group.domain.model.GroupId
-import i2.keycloak.f2.user.query.model.asModels
-import i2.keycloak.f2.user.query.service.UserFinderService
 import i2.keycloak.f2.user.domain.features.query.UserPageFunction
 import i2.keycloak.f2.user.domain.features.query.UserPageResult
 import i2.keycloak.f2.user.domain.model.UserModel
-import i2.keycloak.realm.client.config.AuthRealmClient
+import i2.keycloak.f2.user.query.model.asModels
+import i2.keycloak.f2.user.query.service.UserFinderService
 import org.keycloak.representations.idm.UserRepresentation
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -17,15 +17,15 @@ import org.springframework.context.annotation.Configuration
 class UserPageFunctionImpl {
 
 	@Bean
-	fun userPageFunction(userFinderService: UserFinderService): UserPageFunction = keycloakF2Function { query, realmClient ->
+	fun userPageFunction(userFinderService: UserFinderService): UserPageFunction = keycloakF2Function { query, client ->
 		val userRepresentations = if (query.groupId == null) {
-			listUsers(realmClient, query.realmId)
+			listUsers(client)
 		} else {
-			listUsersOfGroup(realmClient, query.realmId, query.groupId!!)
+			listUsersOfGroup(client, query.groupId!!)
 		}
 
 		var users = userRepresentations.asModels { userId ->
-			userFinderService.getRolesComposition(userId, query.realmId, realmClient)
+			userFinderService.getRolesComposition(userId, client)
 		}.asSequence()
 
 		if (!query.withDisabled) {
@@ -71,11 +71,11 @@ class UserPageFunctionImpl {
 		)
 	}
 
-	private fun listUsers(client: AuthRealmClient, realmId: String): List<UserRepresentation> {
-		return client.users(realmId).list()
+	private fun listUsers(client: KeycloakClient): List<UserRepresentation> {
+		return client.users().list()
 	}
 
-	private fun listUsersOfGroup(client: AuthRealmClient, realmId: String, groupId: GroupId): List<UserRepresentation> {
-		return client.getGroupResource(realmId, groupId).members()
+	private fun listUsersOfGroup(client: KeycloakClient, groupId: GroupId): List<UserRepresentation> {
+		return client.group(groupId).members()
 	}
 }

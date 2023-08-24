@@ -1,13 +1,15 @@
 package im.script.gateway
 
-import city.smartb.im.infra.keycloak.AuthRealm
+import city.smartb.im.commons.model.AuthRealm
 import im.script.function.config.KeycloakConfigScript
+import im.script.function.core.model.AuthContext
 import im.script.function.init.KeycloakInitScript
 import im.script.gateway.conguration.config.ImScriptConfigProperties
 import im.script.gateway.conguration.config.ImScriptInitProperties
 import im.script.gateway.conguration.config.base.toAuthRealm
 import im.script.gateway.conguration.retryWithExceptions
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.ConfigurableApplicationContext
@@ -27,11 +29,15 @@ class ScriptServiceRunner(
     override fun run(vararg args: String?) = runBlocking {
         imScriptInitProperties.json?.let { json ->
             val auth = imScriptInitProperties.auth.toAuthRealm()
-            runInit(auth, json)
+            withContext(AuthContext(auth)) {
+                runInit(auth, json)
+            }
         }
         imScriptConfigProperties.json?.let { json ->
             val auth = imScriptConfigProperties.auth.toAuthRealm()
-            runConfig(auth, json)
+            withContext(AuthContext(auth)) {
+                runConfig(auth, json)
+            }
         }
         context.close()
     }

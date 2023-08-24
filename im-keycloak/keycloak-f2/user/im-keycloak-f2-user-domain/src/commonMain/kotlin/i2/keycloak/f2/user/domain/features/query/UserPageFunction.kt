@@ -1,7 +1,7 @@
 package i2.keycloak.f2.user.domain.features.query
 
-import city.smartb.im.commons.auth.RealmId
-import city.smartb.im.infra.keycloak.AuthRealm
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.commons.model.RealmId
 import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.page.Page
 import f2.dsl.cqrs.page.PagePagination

@@ -5,8 +5,5 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.imApiConfig))
-    api(project(Modules.S2.privilegeDomain))
-
-    implementation(project(Modules.imKeycloakF2RoleCommand))
+    api(project(Modules.S2.privilegeLib))
 }

@@ -1,9 +1,9 @@
 package city.smartb.im.privilege.domain.role.command
 
+import city.smartb.im.commons.model.ImCommand
 import city.smartb.im.privilege.domain.permission.model.PermissionIdentifier
 import city.smartb.im.privilege.domain.role.model.RoleIdentifier
 import city.smartb.im.privilege.domain.role.model.RoleTarget
-import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlinx.serialization.Serializable
@@ -22,7 +22,7 @@ typealias RoleDefineFunction = F2Function<RoleDefineCommand, RoleDefinedEvent>
  * @parent [RoleDefineFunction]
  */
 @JsExport
-interface RoleDefineCommandDTO: Command {
+interface RoleDefineCommandDTO: ImCommand {
     /**
      * @ref [city.smartb.im.privilege.domain.role.model.Role.identifier]
      */
@@ -59,6 +59,7 @@ interface RoleDefineCommandDTO: Command {
  */
 @Serializable
 data class RoleDefineCommand(
+    override val realmId: String? = null,
     override val identifier: RoleIdentifier,
     override val description: String,
     override val targets: List<RoleTarget>,

@@ -2,7 +2,6 @@ package city.smartb.im.commons.auth
 
 import kotlinx.coroutines.reactor.ReactorContext
 import kotlinx.coroutines.reactor.awaitSingleOrNull
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
@@ -32,13 +31,19 @@ object AuthenticationProvider {
         return getPrincipal()?.issuer.toString()
     }
 
-	suspend fun verify(): RoleVerifier {
-		return RoleVerifier(getAuthentication())
-	}
-
 	suspend fun info(): TokenInfo {
 		return TokenInfo(getAuthentication())
 	}
+
+    suspend fun getAuthedUser(): AuthedUser? = getPrincipal()?.let {
+        AuthedUser(
+            id = getPrincipal()!!.subject.orEmpty(),
+            memberOf = info().getOrganizationId(),
+            roles = getAuthentication()!!.authorities
+                .map { it.authority.removePrefix("ROLE_") }
+                .toTypedArray()
+        )
+    }
 }
 
 class TokenInfo(private val authentication: JwtAuthenticationToken?) {
@@ -70,51 +75,4 @@ class TokenInfo(private val authentication: JwtAuthenticationToken?) {
 	fun getUserId(): String? {
 		return authentication?.token?.getClaimAsString("preferred_username")
 	}
-
 }
-
-class RoleVerifier(
-	private val token: JwtAuthenticationToken?
-) {
-
-	fun hasUserReadPermission(): Boolean {
-		return hasPermission(Roles.IM_USER_READ)
-	}
-
-	fun hasUserWritePermission(): Boolean {
-		return hasPermission(Roles.IM_USER_WRITE)
-	}
-
-	fun hasOrganizationReadPermission(): Boolean {
-		return hasPermission(Roles.IM_ORGANIZATION_READ)
-	}
-
-	fun hasOrganizationWritePermission(): Boolean {
-		return hasPermission(Roles.IM_ORGANIZATION_WRITE)
-	}
-
-	fun hasRoleReadPermission(): Boolean {
-		return hasPermission(Roles.IM_ROLE_READ)
-	}
-
-	fun hasRoleWritePermission(): Boolean {
-		return hasPermission(Roles.IM_ROLE_WRITE)
-	}
-
-	fun isAnonymous() = token == null
-
-	fun isNotAnonymous() = !isAnonymous()
-
-	fun hasPermission(role: Roles): Boolean {
-		return token?.authorities?.contains(SimpleGrantedAuthority("ROLE_${role.name}")) ?: false
-	}
-}
-
-suspend fun AuthenticationProvider.getAuthedUser() = AuthedUser(
-	id = getPrincipal()?.subject.orEmpty(),
-	memberOf = info().getOrganizationId(),
-	roles = getAuthentication()?.authorities
-		?.map { it.authority.removePrefix("ROLE_") }
-		.orEmpty()
-		.toTypedArray()
-)

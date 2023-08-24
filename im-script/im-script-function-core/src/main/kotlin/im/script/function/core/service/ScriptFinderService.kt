@@ -1,6 +1,9 @@
 package im.script.function.core.service
 
-import city.smartb.im.infra.keycloak.AuthRealm
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.privilege.domain.role.model.Role
+import city.smartb.im.privilege.domain.role.model.RoleIdentifier
+import city.smartb.im.privilege.lib.PrivilegeFinderService
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.ClientIdentifier
 import i2.keycloak.f2.client.domain.ClientModel
@@ -10,10 +13,6 @@ import i2.keycloak.f2.realm.domain.RealmId
 import i2.keycloak.f2.realm.domain.RealmModel
 import i2.keycloak.f2.realm.domain.features.query.RealmGetFunction
 import i2.keycloak.f2.realm.domain.features.query.RealmGetQuery
-import i2.keycloak.f2.role.domain.Role
-import i2.keycloak.f2.role.domain.RoleName
-import i2.keycloak.f2.role.domain.features.query.RoleGetByNameQuery
-import i2.keycloak.f2.role.domain.features.query.RoleGetByNameQueryFunction
 import i2.keycloak.f2.user.domain.features.query.UserGetByEmailFunction
 import i2.keycloak.f2.user.domain.features.query.UserGetByEmailQuery
 import i2.keycloak.f2.user.domain.model.UserModel
@@ -23,14 +22,14 @@ import org.springframework.stereotype.Service
 class ScriptFinderService(
     private val realmGetFunction: RealmGetFunction,
     private val clientGetByClientIdentifierQueryFunction: ClientGetByClientIdentifierFunction,
-    private val roleGetByNameQueryFunction: RoleGetByNameQueryFunction,
+    private val privilegeFinderService: PrivilegeFinderService,
     private val userGetByEmailQueryFunction: UserGetByEmailFunction,
 ) {
 
     suspend fun getRealm(authRealm: AuthRealm, realmId: RealmId): RealmModel? {
         return  RealmGetQuery(
             id = realmId,
-            authRealm = authRealm
+            auth = authRealm
         ).invokeWith(realmGetFunction).item
     }
 
@@ -42,12 +41,13 @@ class ScriptFinderService(
         ).invokeWith(clientGetByClientIdentifierQueryFunction).item
     }
 
-    suspend fun getRole(authRealm: AuthRealm, name: RoleName, realmId: String): Role? {
-        return RoleGetByNameQuery(
-            name = name,
-            realmId = realmId,
-            auth = authRealm
-        ).invokeWith(roleGetByNameQueryFunction).item
+    suspend fun getRole(authRealm: AuthRealm, identifier: RoleIdentifier, realmId: String): Role? {
+        return privilegeFinderService.getRoleOrNull(realmId, identifier)
+//        return RoleGetByNameQuery(
+//            name = name,
+//            realmId = realmId,
+//            auth = authRealm
+//        ).invokeWith(roleGetByNameQueryFunction).item
     }
 
     suspend fun getUser(authRealm: AuthRealm, email: String, realmId: RealmId): UserModel? {

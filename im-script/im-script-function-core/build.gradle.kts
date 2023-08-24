@@ -1,12 +1,14 @@
 plugins {
     id("city.smartb.fixers.gradle.kotlin.jvm")
     kotlin("plugin.spring")
+    kotlin("kapt")
 }
 
 dependencies {
-    api(project(Modules.Infra.keycloak))
-
     api(project(Modules.imCommonsApi))
+
+    implementation(project(Modules.Infra.keycloak))
+    api(project(Modules.S2.privilegeLib))
 
     api(project(Modules.imKeycloakF2ClientDomain))
     implementation(project(Modules.imKeycloakF2ClientCommand))
@@ -15,9 +17,9 @@ dependencies {
     api(project(Modules.imKeycloakF2RealmQuery))
     api(project(Modules.imKeycloakF2RealmDomain))
 
-    api(project(Modules.imKeycloakF2RoleDomain))
-    implementation(project(Modules.imKeycloakF2RoleCommand))
-    implementation(project(Modules.imKeycloakF2RoleQuery))
+//    api(project(Modules.imKeycloakF2RoleDomain))
+//    implementation(project(Modules.imKeycloakF2RoleCommand))
+//    implementation(project(Modules.imKeycloakF2RoleQuery))
 
     api(project(Modules.imKeycloakF2UserDomain))
     implementation(project(Modules.imKeycloakF2UserCommand))

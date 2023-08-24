@@ -3,11 +3,11 @@ package i2.keycloak.f2.user.query
 import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.asI2Exception
-import i2.keycloak.f2.user.query.model.asModel
-import i2.keycloak.f2.user.query.service.UserFinderService
 import i2.keycloak.f2.user.domain.features.query.UserGetByUsernameFunction
 import i2.keycloak.f2.user.domain.features.query.UserGetByUsernameResult
 import i2.keycloak.f2.user.domain.model.UserModel
+import i2.keycloak.f2.user.query.model.asModel
+import i2.keycloak.f2.user.query.service.UserFinderService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -24,10 +24,10 @@ class UserGetByUsernameFunctionImpl {
 	@Bean
 	fun userGetByUsernameQueryFunction(): UserGetByUsernameFunction = keycloakF2Function { query, client ->
 		try {
-			client.users(query.realmId)
+			client.users()
 				.search(query.username)
 				.firstOrNull()
-				?.asModel { userId -> userFinderService.getRolesComposition(userId, query.realmId, client) }
+				?.asModel { userId -> userFinderService.getRolesComposition(userId, client) }
 				.asResult()
 		} catch (e: NoSuchElementException) {
 			UserGetByUsernameResult(null)

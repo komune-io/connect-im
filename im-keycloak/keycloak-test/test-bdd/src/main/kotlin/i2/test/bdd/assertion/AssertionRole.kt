@@ -1,8 +1,7 @@
 package i2.test.bdd.assertion
 
-import city.smartb.im.infra.keycloak.RealmId
-import i2.keycloak.f2.role.domain.RoleId
-import i2.keycloak.f2.role.domain.RoleName
+import city.smartb.im.commons.model.RealmId
+import city.smartb.im.privilege.domain.role.model.RoleIdentifier
 import org.assertj.core.api.Assertions
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.resource.RoleResource
@@ -17,7 +16,7 @@ class AssertionRole(
 ) {
 	companion object
 
-	fun exists(realmId: RealmId, roleName: RoleName) {
+	fun exists(realmId: RealmId, roleName: RoleIdentifier) {
 		try {
 			val role = getRoleRepresentation(realmId, roleName)
 			Assertions.assertThat(role).isNotNull
@@ -26,7 +25,7 @@ class AssertionRole(
 		}
 	}
 
-	fun notExists(realmId: RealmId, roleName: RoleName) {
+	fun notExists(realmId: RealmId, roleName: RoleIdentifier) {
 		try {
 			getRoleRepresentation(realmId, roleName)
 			Assertions.fail("Role[${roleName} exists]")
@@ -35,7 +34,7 @@ class AssertionRole(
 		}
 	}
 
-	fun assertThat(realmId: RealmId, roleName: RoleName): RoleAssert {
+	fun assertThat(realmId: RealmId, roleName: RoleIdentifier): RoleAssert {
 		exists(realmId, roleName)
 		val roleResource = getRoleResource(realmId, roleName)
 		return RoleAssert(
@@ -44,11 +43,11 @@ class AssertionRole(
 		)
 	}
 
-	private fun getRoleRepresentation(realmId: String, roleName: RoleName): RoleRepresentation {
+	private fun getRoleRepresentation(realmId: String, roleName: RoleIdentifier): RoleRepresentation {
 		return getRoleResource(realmId, roleName).toRepresentation()
 	}
 
-	private fun getRoleResource(realmId: RealmId, roleName: RoleName): RoleResource {
+	private fun getRoleResource(realmId: RealmId, roleName: RoleIdentifier): RoleResource {
 		return keycloak.realm(realmId).roles().get(roleName)
 	}
 
@@ -57,11 +56,11 @@ class AssertionRole(
 		private val roleComposites: Set<RoleRepresentation>
 	) {
 		fun hasFields(
-			id: RoleId = role.id,
-			name: RoleName = role.name,
+			id: String = role.id,
+			name: RoleIdentifier = role.name,
 			description: String? = role.description,
 			isClientRole: Boolean = role.clientRole,
-			composites: Iterable<RoleName> = role.composites?.realm ?: emptyList(),
+			composites: Iterable<RoleIdentifier> = role.composites?.realm ?: emptyList(),
 		) {
 			Assertions.assertThat(id).isEqualTo(role.id)
 			Assertions.assertThat(name).isEqualTo(role.name)

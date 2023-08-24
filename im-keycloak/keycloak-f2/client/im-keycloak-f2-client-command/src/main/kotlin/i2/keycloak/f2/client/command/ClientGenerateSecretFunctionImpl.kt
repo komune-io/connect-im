@@ -1,11 +1,10 @@
 package i2.keycloak.f2.client.command
 
-import f2.dsl.fnc.f2Function
 import i2.keycloak.f2.client.domain.features.command.ClientGenerateSecretFunction
 import i2.keycloak.f2.client.domain.features.command.ClientGeneratedSecretEvent
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.asI2Exception
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -13,10 +12,9 @@ import org.springframework.context.annotation.Configuration
 class ClientGenerateSecretFunctionImpl {
 
     @Bean
-    fun clientGenerateSecretFunction(): ClientGenerateSecretFunction = f2Function { cmd ->
+    fun clientGenerateSecretFunction(): ClientGenerateSecretFunction = keycloakF2Function { cmd, keycloakClient ->
         try {
-            val realmClient = AuthRealmClientBuilder().build(cmd.auth)
-            val newSecret = realmClient.getClientResource(cmd.realmId, cmd.id)
+            val newSecret = keycloakClient.client(cmd.id)
                     .generateNewSecret()
 
             ClientGeneratedSecretEvent(newSecret.value)

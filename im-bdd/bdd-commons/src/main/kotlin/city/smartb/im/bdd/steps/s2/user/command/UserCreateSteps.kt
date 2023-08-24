@@ -111,7 +111,7 @@ class UserCreateSteps: En, CucumberStepsDefinition() {
                 city = "city"
             ),
             phone = entry?.get("phone") ?: "0600000000",
-            roles = listOfNotNull(context.roleIds.lastUsedOrNull),
+            roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
             sendEmailLink = false,
             memberOf = entry?.get("memberOf").parseNullableOrDefault(context.organizationIds.lastUsedOrNull),
             attributes = userAttributesParams(entry),

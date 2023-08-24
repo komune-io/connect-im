@@ -1,10 +1,9 @@
 package i2.keycloak.f2.client.command
 
-import f2.dsl.fnc.f2Function
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantedEvent
 import i2.keycloak.f2.commons.app.asI2Exception
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -12,16 +11,13 @@ import org.springframework.context.annotation.Configuration
 class ClientServiceAccountRolesGrantFunctionImpl {
 
     @Bean
-    fun clientServiceAccountRolesGrantFunction(): ClientServiceAccountRolesGrantFunction = f2Function { cmd ->
+    fun clientServiceAccountRolesGrantFunction(): ClientServiceAccountRolesGrantFunction = keycloakF2Function { cmd, keycloakClient ->
         try {
-            val realmClient = AuthRealmClientBuilder().build(cmd.auth)
-
-            val targetClientResource = realmClient.getClientResource(cmd.realmId, cmd.id)
+            val targetClientResource = keycloakClient.client(cmd.id)
             val rolesToAdd = cmd.roles.map { role ->
-                realmClient.roles().get(role).toRepresentation()
+                keycloakClient.role(role).toRepresentation()
             }
-            realmClient
-                .getUserResource(cmd.realmId, targetClientResource.serviceAccountUser.id)
+            keycloakClient.user(targetClientResource.serviceAccountUser.id)
                 .roles()
                 .realmLevel()
                 .add(rolesToAdd)

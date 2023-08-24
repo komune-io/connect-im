@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
     api(project(Modules.imKeycloakF2CommonsDomain))
-
+    implementation(project(Modules.Infra.keycloak))
 
     Dependencies.Jvm.f2Function(::api)
     Dependencies.Jvm.slf4j(::api)
