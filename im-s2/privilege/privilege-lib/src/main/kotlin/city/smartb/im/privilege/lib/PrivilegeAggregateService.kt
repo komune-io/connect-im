@@ -20,7 +20,10 @@ class PrivilegeAggregateService(
     suspend fun define(command: RoleDefineCommand): RoleDefinedEvent {
         val client = keycloakClientProvider.getFor(command)
 
+        val existingRole = privilegeFinderService.getRoleOrNull(command.realmId, command.identifier)
+
         val newRole = Role(
+            id = existingRole?.id.orEmpty(),
             identifier = command.identifier,
             description = command.description,
             targets = command.targets,
@@ -29,7 +32,6 @@ class PrivilegeAggregateService(
             permissions = command.permissions.orEmpty()
         )
 
-        val existingRole = privilegeFinderService.getRoleOrNull(command.realmId, command.identifier)
         if (existingRole == null) {
             client.createRole(newRole)
         } else {
@@ -42,16 +44,18 @@ class PrivilegeAggregateService(
     suspend fun define(command: PermissionDefineCommand): PermissionDefinedEvent {
         val client = keycloakClientProvider.getFor(command)
 
-        val permission = Permission(
+        val existingPermission = privilegeFinderService.getPermissionOrNull(command.realmId, command.identifier)
+
+        val newPermission = Permission(
+            id = existingPermission?.id.orEmpty(),
             identifier = command.identifier,
             description = command.description,
         )
 
-        val existingPermission = privilegeFinderService.getPermissionOrNull(command.realmId, command.identifier)
         if (existingPermission == null) {
-            client.roles().create(permission.toRoleRepresentation())
+            client.roles().create(newPermission.toRoleRepresentation())
         } else {
-            client.role(permission.identifier).update(permission.toRoleRepresentation())
+            client.role(newPermission.identifier).update(newPermission.toRoleRepresentation())
         }
 
         return PermissionDefinedEvent(command.identifier)

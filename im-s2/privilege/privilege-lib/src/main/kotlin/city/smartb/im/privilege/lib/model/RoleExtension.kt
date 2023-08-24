@@ -9,6 +9,7 @@ import city.smartb.im.privilege.domain.role.model.RoleTarget
 import org.keycloak.representations.idm.RoleRepresentation
 
 fun RoleRepresentation.toRole() = Role(
+    id = id,
     identifier = name,
     description = description,
     targets = attributes[Role::targets.name].orEmpty().map { RoleTarget.valueOf(it) },
@@ -18,6 +19,7 @@ fun RoleRepresentation.toRole() = Role(
 )
 
 fun Role.toRoleRepresentation() = RoleRepresentation().also {
+    it.id = id.ifEmpty { null }
     it.name = identifier
     it.description = description
     it.clientRole = false

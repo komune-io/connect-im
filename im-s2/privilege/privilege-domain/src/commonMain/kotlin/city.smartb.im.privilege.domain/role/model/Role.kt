@@ -9,6 +9,12 @@ import kotlin.js.JsExport
 
 /**
  * @d2 hidden
+ * @visual json "a0c76771-c5f9-4bde-8c30-901a22f570ba"
+ */
+typealias RoleId = String
+
+/**
+ * @d2 hidden
  */
 typealias RoleIdentifier = PrivilegeIdentifier
 
@@ -20,6 +26,11 @@ typealias RoleIdentifier = PrivilegeIdentifier
  */
 @JsExport
 interface RoleDTO {
+    /**
+     * Generated id of the role.
+     */
+    val id: RoleId
+
     /**
      * Identifier of the role. Must be unique within a realm.
      * @example "tr_orchestrator"
@@ -68,6 +79,7 @@ interface RoleDTO {
  */
 @Serializable
 data class Role(
+    override val id: RoleId,
     override val identifier: RoleIdentifier,
     override val description: String,
     override val targets: List<RoleTarget>,

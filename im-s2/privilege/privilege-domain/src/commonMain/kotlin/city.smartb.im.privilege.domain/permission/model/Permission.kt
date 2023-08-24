@@ -8,6 +8,12 @@ import kotlin.js.JsExport
 
 /**
  * @d2 hidden
+ * @visual json "868044f8-1852-43eb-897d-067bc4631396"
+ */
+typealias PermissionId = String
+
+/**
+ * @d2 hidden
  */
 typealias PermissionIdentifier = PrivilegeIdentifier
 
@@ -19,6 +25,11 @@ typealias PermissionIdentifier = PrivilegeIdentifier
  */
 @JsExport
 interface PermissionDTO {
+    /**
+     * Generated id of the permission.
+     */
+    val id: PermissionId
+
     /**
      * Identifier of the permission. Must be unique within a realm.
      * @example "im_organization_write"
@@ -37,6 +48,7 @@ interface PermissionDTO {
  */
 @Serializable
 data class Permission(
+    override val id: PermissionId,
     override val identifier: PermissionIdentifier,
     override val description: String
 ): PermissionDTO, Privilege {

@@ -6,10 +6,10 @@ import city.smartb.im.privilege.domain.permission.model.Permission
 import city.smartb.im.privilege.domain.role.model.Role
 import org.keycloak.representations.idm.RoleRepresentation
 
-fun RoleRepresentation.toPrivilege(): Privilege? = when (attributes[Privilege::type.name]?.firstOrNull()) {
-    PrivilegeType.PERMISSION.name -> toPermission()
+fun RoleRepresentation.toPrivilege(): Privilege = when (attributes[Privilege::type.name]?.firstOrNull()) {
     PrivilegeType.ROLE.name -> toRole()
-    else -> null
+    PrivilegeType.PERMISSION.name -> toPermission()
+    else -> toPermission()
 }
 
 fun Privilege.toRoleRepresentation(): RoleRepresentation = when (this) {
