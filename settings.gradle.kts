@@ -12,11 +12,8 @@ rootProject.name = "im"
 
 include(
     "im-api:api-config",
-    "im-api:api-gateway"
-)
-
-include(
-    "im-bdd:bdd-commons"
+    "im-api:api-gateway",
+    "im-bdd"
 )
 
 include(
