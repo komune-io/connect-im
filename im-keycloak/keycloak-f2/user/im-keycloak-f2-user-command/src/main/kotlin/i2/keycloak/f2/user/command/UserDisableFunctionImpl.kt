@@ -1,11 +1,10 @@
 package i2.keycloak.f2.user.command
 
-import f2.dsl.fnc.f2Function
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.asI2Exception
 import i2.keycloak.f2.user.domain.features.command.UserDisableFunction
 import i2.keycloak.f2.user.domain.features.command.UserDisabledEvent
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -13,10 +12,9 @@ import org.springframework.context.annotation.Configuration
 class UserDisableFunctionImpl {
 
 	@Bean
-	fun userDisableFunction(): UserDisableFunction = f2Function { cmd ->
+	fun userDisableFunction(): UserDisableFunction = keycloakF2Function { cmd, client ->
 		try {
-			val realmClient = AuthRealmClientBuilder().build(cmd.auth)
-			val userResource = realmClient.getUserResource(cmd.realmId, cmd.id)
+			val userResource = client.user(cmd.id)
 
 			val representation = userResource.toRepresentation().apply {
 				isEnabled = false

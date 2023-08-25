@@ -1,5 +1,6 @@
 package i2.keycloak.f2.realm.query
 
+import city.smartb.im.infra.keycloak.client.KeycloakClientBuilder
 import f2.dsl.fnc.f2Function
 import i2.keycloak.f2.commons.app.handleNotFoundCause
 import i2.keycloak.f2.commons.domain.error.I2ApiError
@@ -7,13 +8,12 @@ import i2.keycloak.f2.commons.domain.error.asI2Exception
 import i2.keycloak.f2.realm.domain.RealmModel
 import i2.keycloak.f2.realm.domain.features.query.RealmGetFunction
 import i2.keycloak.f2.realm.domain.features.query.RealmGetResult
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
-import javax.ws.rs.NotFoundException
-import javax.ws.rs.ProcessingException
 import org.keycloak.representations.idm.RealmRepresentation
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import javax.ws.rs.NotFoundException
+import javax.ws.rs.ProcessingException
 
 @Configuration
 class RealmGetFunctionImpl {
@@ -23,8 +23,8 @@ class RealmGetFunctionImpl {
 	@Bean
 	fun realmGetFunction(): RealmGetFunction = f2Function { cmd ->
 		try {
-			val masterRealm = AuthRealmClientBuilder().build(cmd.authRealm)
-			val model = masterRealm.keycloak.realm(cmd.id).toRepresentation().asRealmModel()
+            val client = KeycloakClientBuilder.openConnection(cmd.auth).forAuthedRealm()
+			val model = client.realm(cmd.id).toRepresentation().asRealmModel()
 			RealmGetResult(model)
 		} catch (e: ProcessingException) {
 			e.handleNotFoundCause("Error fetching realm with id[${cmd.id}]") {

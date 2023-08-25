@@ -4,7 +4,6 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(Modules.imKeycloakAuthDomain))
     commonMainApi(project(Modules.imKeycloakF2CommonsDomain))
 
     Dependencies.Mpp.f2(::commonMainApi)

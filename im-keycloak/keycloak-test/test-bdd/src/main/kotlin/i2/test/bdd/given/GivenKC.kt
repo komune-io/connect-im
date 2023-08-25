@@ -1,9 +1,9 @@
 package i2.test.bdd.given
 
-import i2.keycloak.realm.client.config.AuthRealmClient
+import city.smartb.im.infra.keycloak.client.KeycloakClient
 
 class GivenKC(
-	val client: AuthRealmClient = GivenAuth().withMasterRealmClient(),
+    val client: KeycloakClient = GivenAuth().withMasterRealmClient(),
 ) {
 	companion object
 }

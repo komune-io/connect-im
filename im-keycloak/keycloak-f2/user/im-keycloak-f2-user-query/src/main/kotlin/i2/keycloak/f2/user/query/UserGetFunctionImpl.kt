@@ -3,16 +3,16 @@ package i2.keycloak.f2.user.query
 import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.asI2Exception
-import i2.keycloak.f2.user.query.model.asModel
-import i2.keycloak.f2.user.query.service.UserFinderService
 import i2.keycloak.f2.user.domain.features.query.UserGetFunction
 import i2.keycloak.f2.user.domain.features.query.UserGetResult
 import i2.keycloak.f2.user.domain.model.UserModel
-import javax.ws.rs.NotFoundException
+import i2.keycloak.f2.user.query.model.asModel
+import i2.keycloak.f2.user.query.service.UserFinderService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import javax.ws.rs.NotFoundException
 
 @Configuration
 class UserGetFunctionImpl {
@@ -25,9 +25,9 @@ class UserGetFunctionImpl {
 	@Bean
 	fun userGetByIdQueryFunction(): UserGetFunction = keycloakF2Function { query, client ->
 		try {
-			client.getUserResource(query.realmId, query.id)
+			client.user(query.id)
 				.toRepresentation()
-				.asModel { userId -> userFinderService.getRolesComposition(userId, query.realmId, client) }
+				.asModel { userId -> userFinderService.getRolesComposition(userId, client) }
 				.asResult()
 		} catch (e: NotFoundException) {
 			UserGetResult(null)

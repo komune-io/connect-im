@@ -6,7 +6,6 @@ plugins {
 
 dependencies {
     testImplementation(project(Modules.keycloakTestBdd))
-    testImplementation(project(":im-keycloak:keycloak-auth:keycloak-auth-client"))
 
     Dependencies.Jvm.Keycloak.adminClient(::testImplementation)
 }

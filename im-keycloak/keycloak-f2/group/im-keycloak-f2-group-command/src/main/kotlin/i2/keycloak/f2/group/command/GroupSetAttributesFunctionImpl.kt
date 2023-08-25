@@ -14,7 +14,7 @@ class GroupSetAttributesFunctionImpl {
 	@Bean
 	fun groupSetAttributesFunction(): GroupSetAttributesFunction = keycloakF2Function { cmd, client ->
 		try {
-			val groupResource = client.getGroupResource(cmd.realmId, cmd.id)
+			val groupResource = client.group(cmd.id)
 
 			val groupRepresentation = groupResource.toRepresentation().apply {
 				cmd.attributes.forEach { (key, value) -> singleAttribute(key, value) }

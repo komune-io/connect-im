@@ -1,15 +1,15 @@
 package i2.test.bdd.given
 
-import i2.keycloak.master.domain.AuthRealmClientSecret
-import i2.keycloak.master.domain.AuthRealmPassword
-import i2.keycloak.master.domain.RealmId
-import i2.keycloak.realm.client.config.AuthRealmClient
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
+import city.smartb.im.commons.model.AuthRealmClientSecret
+import city.smartb.im.commons.model.AuthRealmPassword
+import city.smartb.im.commons.model.RealmId
+import city.smartb.im.infra.keycloak.client.KeycloakClient
+import city.smartb.im.infra.keycloak.client.KeycloakClientBuilder
 import i2.test.bdd.config.KeycloakConfig
 
 class GivenAuth {
 
-	fun withMasterRealmClient(realm: RealmId = "master"): AuthRealmClient {
+	fun withMasterRealmClient(realm: RealmId = "master"): KeycloakClient {
 		val auth = AuthRealmPassword(
 			serverUrl = KeycloakConfig.url,
 			clientId = KeycloakConfig.Admin.clientId,
@@ -18,10 +18,10 @@ class GivenAuth {
 			realmId = realm,
 			redirectUrl = "http://localhost:3000",
 		)
-		return AuthRealmClientBuilder().build(auth)
+		return KeycloakClientBuilder.openConnection(auth).forRealm(realm)
 	}
 
-	fun withRealmClient(realm: RealmId): AuthRealmClient {
+	fun withRealmClient(realm: RealmId): KeycloakClient {
 		val auth = AuthRealmClientSecret(
 			serverUrl = KeycloakConfig.url,
 			clientId = "admin-cli",
@@ -29,7 +29,7 @@ class GivenAuth {
 			realmId = realm,
 			redirectUrl = "http://localhost:3000",
 		)
-		return AuthRealmClientBuilder().build(auth)
+		return KeycloakClientBuilder.openConnection(auth).forRealm(realm)
 	}
 }
 

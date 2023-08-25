@@ -1,11 +1,10 @@
 package i2.keycloak.f2.client.query
 
 import f2.dsl.cqrs.page.Page
-import f2.dsl.fnc.f2Function
 import i2.keycloak.f2.client.domain.ClientModel
 import i2.keycloak.f2.client.domain.features.query.ClientPageFunction
 import i2.keycloak.f2.client.domain.features.query.ClientPageResult
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -18,12 +17,10 @@ class ClientPageFunctionImpl {
 	}
 
 	@Bean
-	fun clientPageFunction(): ClientPageFunction = f2Function { cmd ->
-		val realmClient = AuthRealmClientBuilder().build(cmd.auth)
+	fun clientPageFunction(): ClientPageFunction = keycloakF2Function { cmd, keycloakClient ->
 		val size = cmd.page.size ?: PAGE_SIZE
 		val page = cmd.page.page ?: PAGE_NUMBER
- 		val clients = realmClient.clients(cmd.realmId)
-			.findAll()
+ 		val clients = keycloakClient.clients().findAll()
 
 		clients.chunked(size)
 			.getOrElse(page) { emptyList() }

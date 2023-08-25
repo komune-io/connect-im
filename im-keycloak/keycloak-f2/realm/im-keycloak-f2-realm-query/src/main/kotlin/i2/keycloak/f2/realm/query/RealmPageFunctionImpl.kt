@@ -1,13 +1,14 @@
 package i2.keycloak.f2.realm.query
 
+import city.smartb.im.infra.keycloak.client.KeycloakClientBuilder
 import f2.dsl.fnc.f2Function
 import i2.keycloak.f2.commons.app.handleNotFoundCause
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.asI2Exception
 import i2.keycloak.f2.realm.domain.RealmModel
 import i2.keycloak.f2.realm.domain.features.query.RealmListFunction
 import i2.keycloak.f2.realm.domain.features.query.RealmListResult
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
 import javax.ws.rs.ProcessingException
 import org.keycloak.representations.idm.RealmRepresentation
 import org.slf4j.LoggerFactory
@@ -22,7 +23,7 @@ class RealmPageFunctionImpl {
 	@Bean
 	fun realmListFunction(): RealmListFunction = f2Function { cmd ->
 		try {
-			val masterRealm = AuthRealmClientBuilder().build(cmd.authRealm)
+			val masterRealm = KeycloakClientBuilder.openConnection(cmd.auth).forRealm("master")
 			val items = masterRealm.keycloak.realms().findAll().map {
                 it.asRealmModel()
             }

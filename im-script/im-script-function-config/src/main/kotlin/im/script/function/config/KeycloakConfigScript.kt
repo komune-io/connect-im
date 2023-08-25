@@ -1,15 +1,15 @@
 package im.script.function.config
 
-import city.smartb.im.commons.exception.NotFoundException
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.commons.model.RealmId
+import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
+import f2.spring.exception.NotFoundException
+import i2.keycloak.f2.client.domain.ClientId
 import im.script.function.config.config.KeycloakConfigParser
 import im.script.function.config.config.KeycloakConfigProperties
 import im.script.function.config.config.KeycloakUserConfig
 import im.script.function.config.config.WebClient
 import im.script.function.config.service.ConfigService
-import i2.keycloak.f2.client.domain.ClientId
-import i2.keycloak.f2.role.domain.RoleName
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
 import im.script.function.core.service.ClientInitService
 import im.script.function.core.service.ScriptFinderService
 import kotlinx.coroutines.runBlocking
@@ -74,7 +74,9 @@ class KeycloakConfigScript (
         }
     }
 
-    private suspend fun initRoles(authRealm: AuthRealm, roles: List<RoleName>?, roleComposites: Map<RoleName, List<RoleName>>?) {
+    private suspend fun initRoles(
+        authRealm: AuthRealm, roles: List<RoleIdentifier>?, roleComposites: Map<RoleIdentifier, List<RoleIdentifier>>?
+    ) {
         roles?.let {
             roles.forEach { role ->
                 initRoleWithComposites(authRealm, role)
@@ -92,7 +94,7 @@ class KeycloakConfigScript (
     private suspend fun verifyRealm(authRealm: AuthRealm, realmId: RealmId) {
         scriptFinderService.getRealm(authRealm, realmId) ?: throw NotFoundException("Realm", realmId)
     }
-    private suspend fun initRoleWithComposites(authRealm: AuthRealm, role: RoleName, composites: List<RoleName> = emptyList()) {
+    private suspend fun initRoleWithComposites(authRealm: AuthRealm, role: RoleIdentifier, composites: List<RoleIdentifier> = emptyList()) {
         scriptFinderService.getRole(authRealm, role, authRealm.realmId)
             ?: keycloakAggregateService.createRole(authRealm, role)
 
@@ -101,7 +103,7 @@ class KeycloakConfigScript (
         }
     }
 
-    private suspend fun addCompositesToAdmin(authRealm: AuthRealm, composites: List<RoleName>) {
+    private suspend fun addCompositesToAdmin(authRealm: AuthRealm, composites: List<RoleIdentifier>) {
         keycloakAggregateService.addRoleComposites(authRealm, SUPER_ADMIN_ROLE, composites)
     }
 

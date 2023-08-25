@@ -1,12 +1,12 @@
 package i2.keycloak.f2.group.command
 
+import city.smartb.im.infra.keycloak.client.KeycloakClient
 import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.asI2Exception
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdatedEvent
 import i2.keycloak.f2.group.domain.model.HiddenGroupAttributes
-import i2.keycloak.realm.client.config.AuthRealmClient
 import org.keycloak.admin.client.resource.GroupResource
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,7 +16,7 @@ class GroupUpdateFunctionImpl {
 	@Bean
 	fun groupUpdateFunction(): GroupUpdateFunction = keycloakF2Function { cmd, client ->
 		try {
-			val groupResource = client.getGroupResource(cmd.realmId, cmd.id)
+			val groupResource = client.group(cmd.id)
 
 			groupResource.removeAllRoles()
 			groupResource.setRoles(client, cmd.roles)
@@ -43,10 +43,10 @@ class GroupUpdateFunctionImpl {
 		this.roles().realmLevel().remove(this.roles().realmLevel().listAll())
 	}
 
-	private fun GroupResource.setRoles(client: AuthRealmClient, roles: List<String>) {
+	private fun GroupResource.setRoles(client: KeycloakClient, roles: List<String>) {
 		val roleRepresentations = roles.map { role ->
-			client.realm.roles()[role].toRepresentation()
+			client.role(role).toRepresentation()
 		}
-		this.roles().realmLevel().add(roleRepresentations)
+		roles().realmLevel().add(roleRepresentations)
 	}
 }

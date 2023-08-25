@@ -1,0 +1,94 @@
+server:
+  port: 8009
+
+spring:
+  main:
+    web-application-type: reactive
+#  data:
+#     redis:
+#      password: redis
+  cache:
+    cache-names: "organization, user"
+  application:
+      name: im-gateway
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}] tenantId=%X{tenantId:-}"
+
+multitenancy:
+    http:
+        header-name: X-TenantId
+    security:
+        issuer-base-uri: http://localhost:8080/realms/
+
+
+#i2:
+#  issuers:
+#    -
+#      name: master
+#      authUrl: http://keycloak-it:8080
+#      realm: master
+#      im:
+#        clientId: im-root
+#        clientSecret: 6FvV3OotnIUj0BdZKpTDbEmK9jKi0yI3
+
+f2:
+  tenant:
+    issuer-base-uri: http://keycloak-it:8080
+
+connect:
+  fs: http://fs:8090
+  im:
+    keycloak:
+        url: http://keycloak-it:8080
+        realm: master
+        clientId: im-root
+        clientSecret: 6FvV3OotnIUj0BdZKpTDbEmK9jKi0yI3
+    user:
+      action:
+        useJwtClientId: true
+    organization:
+      insee:
+        token: ${INSEE_TOKEN}
+        sireneApi: https://api.insee.fr/entreprises/sirene/V3
+    smtp:
+        host: connect-fake-smtp,
+        port: 1025,
+        from: noreply@smartb.city,
+        ssl: false,
+        starttls: false,
+        auth: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+i2:
+  issuers:
+    -
+      name: test
+      authUrl: http://localhost:8080
+      realm: im-test
+      im:
+        clientId: im-test-client
+        clientSecret: secret
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+i2:
+  issuers:
+    -
+      name: local
+      authUrl: http://localhost:8080
+      realm: im-local
+      im:
+        clientId: im-client
+        clientSecret: secret

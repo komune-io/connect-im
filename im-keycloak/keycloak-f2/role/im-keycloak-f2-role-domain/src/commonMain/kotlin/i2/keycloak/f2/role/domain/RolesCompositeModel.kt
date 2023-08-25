@@ -24,3 +24,7 @@ class RolesCompositesModel(
      */
     val effectiveRoles: List<String>
 )
+
+enum class RoleCompositeObjType {
+    USER, GROUP
+}

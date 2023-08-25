@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":im-keycloak:keycloak-auth:keycloak-auth-client"))
+    api(project(Modules.Infra.keycloak))
 
     api(project(Modules.imCommonsApi))
 

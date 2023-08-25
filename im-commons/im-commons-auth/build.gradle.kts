@@ -11,4 +11,5 @@ dependencies {
     jvmMainImplementation(project(":im-api:f2-spring-boot-starter-auth-tenant"))
 
     jvmMainImplementation("city.smartb.f2:f2-dsl-function:${Versions.f2}")
+    jvmMainApi("city.smartb.f2:f2-spring-boot-exception-http:${Versions.f2}")
 }

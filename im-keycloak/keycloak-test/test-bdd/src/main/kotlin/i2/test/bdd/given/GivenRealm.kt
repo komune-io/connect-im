@@ -1,15 +1,14 @@
 package i2.test.bdd.given
 
-import i2.keycloak.master.domain.RealmId
-import i2.keycloak.realm.client.config.AuthRealmClient
-import i2.keycloak.realm.client.config.buildRealmRepresentation
-import i2.keycloak.realm.client.config.realmsResource
-import javax.ws.rs.NotFoundException
+import city.smartb.im.commons.model.RealmId
+import city.smartb.im.infra.keycloak.client.KeycloakClient
+import city.smartb.im.infra.keycloak.client.buildRealmRepresentation
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.RealmRepresentation
+import javax.ws.rs.NotFoundException
 
 class GivenRealm(
-	val client: AuthRealmClient
+	val client: KeycloakClient
 ) {
 
 	companion object {
@@ -35,7 +34,7 @@ class GivenRealm(
 			val realm = client.buildRealmRepresentation(
 				realm = id
 			)
-			client.realmsResource().create(realm)
+			client.realms().create(realm)
 			getRealmRepresentation(id)
 		} catch (e: NotFoundException) {
 			Assertions.fail("Error initializing realm [${id}]")

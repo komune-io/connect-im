@@ -4,7 +4,6 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(Modules.imKeycloakAuthDomain))
     commonMainApi(project(Modules.imKeycloakF2RoleDomain))
     commonMainApi(project(Modules.imKeycloakF2UserDomain))
 

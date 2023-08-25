@@ -1,8 +1,8 @@
 package city.smartb.im.api.config.properties
 
 import city.smartb.f2.spring.boot.auth.AuthenticationProvider
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.AuthRealmClientSecret
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.commons.model.AuthRealmClientSecret
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "connect.im")

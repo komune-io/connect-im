@@ -1,23 +1,25 @@
 package i2.test.bdd.data.role
 
-import i2.keycloak.f2.role.domain.RoleName
-import i2.keycloak.f2.role.domain.features.command.RoleCreateCommand
-import i2.keycloak.master.domain.AuthRealm
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import i2.test.bdd.data.DataTest
 import java.util.UUID
 
 fun DataTest.roleCreateCommand(
     auth: AuthRealm,
-    realmId: RoleName,
-    name: RoleName = UUID.randomUUID().toString(),
+    realmId: RoleIdentifier,
+    name: RoleIdentifier = UUID.randomUUID().toString(),
     description: String? = null,
     isClientRole: Boolean = false,
-    composites: List<RoleName> = emptyList(),
-) = RoleCreateCommand(
-    name = name,
-    description = description,
-    isClientRole = isClientRole,
-    composites = composites,
-    auth = auth,
-    realmId = realmId
-)
+    composites: List<RoleIdentifier> = emptyList(),
+) {
+    TODO()
+//    RoleCreateCommand(
+//        name = name,
+//        description = description,
+//        isClientRole = isClientRole,
+//        composites = composites,
+//        auth = auth,
+//        realmId = realmId
+//    )
+}

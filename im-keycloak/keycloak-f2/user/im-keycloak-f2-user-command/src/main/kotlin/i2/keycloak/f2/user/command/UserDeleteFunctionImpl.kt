@@ -14,7 +14,7 @@ class UserDeleteFunctionImpl {
 	@Bean
 	fun userDeleteFunction(): UserDeleteFunction = keycloakF2Function { cmd, client ->
 		try {
-			client.getUserResource(cmd.realmId, cmd.id).remove()
+			client.user(cmd.id).remove()
 			UserDeletedEvent(cmd.id)
 		} catch (e: Exception) {
 			throw I2ApiError(
