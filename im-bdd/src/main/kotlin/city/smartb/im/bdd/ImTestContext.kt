@@ -3,9 +3,9 @@ package city.smartb.im.bdd
 import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.domain.model.ApiKeyId
 import city.smartb.im.commons.model.RealmId
-import city.smartb.im.f2.privilege.domain.permission.model.Permission
+import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
-import city.smartb.im.f2.privilege.domain.role.model.Role
+import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import city.smartb.im.organization.domain.model.Organization
@@ -42,8 +42,8 @@ class ImTestContext(
     class FetchContext {
         lateinit var apikeys: List<ApiKey>
         lateinit var organizations: List<Organization>
-        lateinit var permissions: List<Permission>
-        lateinit var roles: List<Role>
+        lateinit var permissions: List<PermissionDTOBase>
+        lateinit var roles: List<RoleDTOBase>
         lateinit var users: List<User>
     }
 }

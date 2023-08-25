@@ -4,11 +4,11 @@ import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.privilege.role.data.extractRoleTargetList
 import city.smartb.im.bdd.core.privilege.role.data.role
 import city.smartb.im.commons.utils.parseJsonTo
+import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.f2.privilege.api.RoleEndpoint
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
-import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommand
+import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommandDTOBase
 import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
-import city.smartb.im.f2.privilege.domain.role.model.RoleTarget
 import f2.dsl.fnc.invokeWith
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -22,7 +22,7 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var roleEndpoint: RoleEndpoint
 
-    private lateinit var command: RoleDefineCommand
+    private lateinit var command: RoleDefineCommandDTOBase
 
     init {
         DataTableType(::roleDefineParams)
@@ -63,9 +63,9 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
                 AssertionBdd.role(context.keycloakClient()).assertThatId(command.identifier).hasFields(
                     identifier = command.identifier,
                     description = command.description,
-                    targets = command.targets,
+                    targets = command.targets.map { RoleTarget.valueOf(it) },
                     locale = command.locale,
-                    bindings = command.bindings.orEmpty(),
+                    bindings = command.bindings.orEmpty().mapKeys { (target) -> RoleTarget.valueOf(target) },
                     permissions = command.permissions.orEmpty()
                 )
             }
@@ -73,13 +73,13 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun defineRole(params: RoleDefineParams) = context.roleIdentifiers.register(params.identifier) {
-        command = RoleDefineCommand(
+        command = RoleDefineCommandDTOBase(
             realmId = context.realmId,
             identifier = params.identifier,
             description = params.description,
-            targets = params.targets,
+            targets = params.targets.map { it.name },
             locale = params.locale,
-            bindings = params.bindings,
+            bindings = params.bindings?.mapKeys { (target) -> target.name },
             permissions = params.permissions
         )
         command.invokeWith(roleEndpoint.roleDefine()).identifier

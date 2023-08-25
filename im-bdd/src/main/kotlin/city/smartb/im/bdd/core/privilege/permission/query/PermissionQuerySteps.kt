@@ -2,7 +2,7 @@ package city.smartb.im.bdd.core.privilege.permission.query
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.privilege.permission.data.permission
-import city.smartb.im.f2.privilege.domain.permission.model.Permission
+import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import kotlinx.coroutines.async
@@ -39,7 +39,7 @@ class PermissionQuerySteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun assertFetchedPermissions(identifiers: List<TestContextKey>) = coroutineScope {
-        val fetchedIdentifiers = context.fetched.permissions.map(Permission::identifier)
+        val fetchedIdentifiers = context.fetched.permissions.map(PermissionDTOBase::identifier)
         val expectedIdentifiers = identifiers.map(context.permissionIdentifiers::safeGet)
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 

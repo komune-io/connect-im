@@ -21,6 +21,8 @@ dependencies {
     implementation(project(Modules.F2.privilegeApi))
     implementation(project(Modules.F2.privilegeLib))
 
+    implementation(project(Modules.Core.privilegeApi))
+
 	Dependencies.Jvm.f2(::implementation)
 	Dependencies.Mpp.f2(::implementation)
 	Dependencies.Mpp.s2(::implementation)

@@ -3,7 +3,6 @@ package city.smartb.im.f2.privilege.domain.role.command
 import city.smartb.im.commons.model.ImCommand
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
-import city.smartb.im.f2.privilege.domain.role.model.RoleTarget
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlinx.serialization.Serializable
@@ -12,10 +11,10 @@ import kotlin.js.JsExport
 /**
  * Create or update a role.
  * @d2 function
- * @parent [city.smartb.im.privilege.domain.D2RolePage]
+ * @parent [city.smartb.im.f2.privilege.domain.D2RolePage]
  * @order 10
  */
-typealias RoleDefineFunction = F2Function<RoleDefineCommand, RoleDefinedEvent>
+typealias RoleDefineFunction = F2Function<RoleDefineCommandDTOBase, RoleDefinedEventDTOBase>
 
 /**
  * @d2 command
@@ -24,32 +23,32 @@ typealias RoleDefineFunction = F2Function<RoleDefineCommand, RoleDefinedEvent>
 @JsExport
 interface RoleDefineCommandDTO: ImCommand {
     /**
-     * @ref [city.smartb.im.privilege.domain.role.model.Role.identifier]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.identifier]
      */
     val identifier: RoleIdentifier
 
     /**
-     * @ref [city.smartb.im.privilege.domain.role.model.Role.description]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.description]
      */
     val description: String
 
     /**
-     * @ref [city.smartb.im.privilege.domain.role.model.Role.targets]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.targets]
      */
-    val targets: List<RoleTarget>
+    val targets: List<String>
 
     /**
-     * @ref [city.smartb.im.privilege.domain.role.model.Role.locale]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.locale]
      */
     val locale: Map<String, String>
 
     /**
-     * @ref [city.smartb.im.privilege.domain.role.model.Role.bindings]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.bindings]
      */
-    val bindings: Map<RoleTarget, List<RoleIdentifier>>?
+    val bindings: Map<String, List<RoleIdentifier>>?
 
     /**
-     * @ref [city.smartb.im.privilege.domain.role.model.Role.permissions]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.permissions]
      */
     val permissions: List<PermissionIdentifier>?
 }
@@ -58,13 +57,13 @@ interface RoleDefineCommandDTO: ImCommand {
  * @d2 inherit
  */
 @Serializable
-data class RoleDefineCommand(
+data class RoleDefineCommandDTOBase(
     override val realmId: String? = null,
     override val identifier: RoleIdentifier,
     override val description: String,
-    override val targets: List<RoleTarget>,
+    override val targets: List<String>,
     override val locale: Map<String, String>,
-    override val bindings: Map<RoleTarget, List<RoleIdentifier>>?,
+    override val bindings: Map<String, List<RoleIdentifier>>?,
     override val permissions: List<PermissionIdentifier>?
 ): RoleDefineCommandDTO
 
@@ -84,6 +83,6 @@ interface RoleDefinedEventDTO: Event {
  * @d2 inherit
  */
 @Serializable
-data class RoleDefinedEvent(
+data class RoleDefinedEventDTOBase(
     override val identifier: RoleIdentifier
 ): RoleDefinedEventDTO

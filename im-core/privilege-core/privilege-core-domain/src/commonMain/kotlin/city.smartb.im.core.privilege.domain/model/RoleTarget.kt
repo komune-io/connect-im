@@ -1,9 +1,8 @@
-package city.smartb.im.f2.privilege.domain.role.model
+package city.smartb.im.core.privilege.domain.model
 
 /**
  * Entities that roles can apply to.
  * @d2 model
- * @parent [city.smartb.im.privilege.domain.D2RolePage]
  * @order 20
  */
 enum class RoleTarget {

@@ -5,8 +5,8 @@ plugins {
 }
 
 dependencies {
+    commonMainApi(project(Modules.Core.privilegeDomain))
     commonMainApi(project(Modules.imCommonsDomain))
 
-    commonMainApi(project(Modules.imKeycloakF2RoleDomain))
     Dependencies.Mpp.f2(::commonMainApi)
 }

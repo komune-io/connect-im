@@ -1,52 +1,44 @@
 package city.smartb.im.f2.privilege.lib
 
 import city.smartb.im.commons.model.RealmId
-import city.smartb.im.f2.privilege.domain.model.Privilege
+import city.smartb.im.core.privilege.api.PrivilegeCoreFinderService
+import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.domain.model.PrivilegeIdentifier
-import city.smartb.im.f2.privilege.domain.permission.model.Permission
+import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
-import city.smartb.im.f2.privilege.domain.role.model.Role
+import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
-import city.smartb.im.f2.privilege.lib.model.toPrivilege
-import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
+import city.smartb.im.f2.privilege.lib.model.toDTO
 import f2.spring.exception.NotFoundException
 import org.springframework.stereotype.Service
 
 @Service
 class PrivilegeFinderService(
-    private val keycloakClientProvider: KeycloakClientProvider
+    private val privilegeCoreFinderService: PrivilegeCoreFinderService
 ) {
-    suspend fun getPrivilegeOrNull(realmId: RealmId?, identifier: PrivilegeIdentifier): Privilege? {
-        val client = keycloakClientProvider.getFor(realmId)
-
-        return try {
-            client.role(identifier)
-                .toRepresentation()
-                .toPrivilege()
-        } catch (e: javax.ws.rs.NotFoundException) {
-            null
-        }
+    suspend fun getPrivilegeOrNull(realmId: RealmId?, identifier: PrivilegeIdentifier): PrivilegeDTO? {
+        return privilegeCoreFinderService.getPrivilegeOrNull(realmId, identifier)?.toDTO()
     }
 
-    suspend fun getPrivilege(realmId: RealmId?, identifier: PrivilegeIdentifier): Privilege {
-        return getPrivilegeOrNull(realmId, identifier) ?: throw NotFoundException("Privilege", identifier)
+    suspend fun getPrivilege(realmId: RealmId?, identifier: PrivilegeIdentifier): PrivilegeDTO {
+        return privilegeCoreFinderService.getPrivilege(realmId, identifier).toDTO()
     }
 
-    suspend fun getRoleOrNull(realmId: RealmId?, identifier: RoleIdentifier): Role? {
+    suspend fun getRoleOrNull(realmId: RealmId?, identifier: RoleIdentifier): RoleDTOBase? {
         return getPrivilegeOrNull(realmId, identifier)
-            ?.takeIf { it is Role } as Role?
+            ?.takeIf { it is RoleDTOBase } as RoleDTOBase?
     }
 
-    suspend fun getRole(realmId: RealmId?, identifier: RoleIdentifier): Role {
+    suspend fun getRole(realmId: RealmId?, identifier: RoleIdentifier): RoleDTOBase {
         return getRoleOrNull(realmId, identifier) ?: throw NotFoundException("Role", identifier)
     }
 
-    suspend fun getPermissionOrNull(realmId: RealmId?, identifier: PermissionIdentifier): Permission? {
+    suspend fun getPermissionOrNull(realmId: RealmId?, identifier: PermissionIdentifier): PermissionDTOBase? {
         return getPrivilegeOrNull(realmId, identifier)
-            ?.takeIf { it is Permission } as Permission?
+            ?.takeIf { it is PermissionDTOBase } as PermissionDTOBase?
     }
 
-    suspend fun getPermission(realmId: RealmId?, identifier: PermissionIdentifier): Permission {
+    suspend fun getPermission(realmId: RealmId?, identifier: PermissionIdentifier): PermissionDTOBase {
         return getPermissionOrNull(realmId, identifier) ?: throw NotFoundException("Permission", identifier)
     }
 }

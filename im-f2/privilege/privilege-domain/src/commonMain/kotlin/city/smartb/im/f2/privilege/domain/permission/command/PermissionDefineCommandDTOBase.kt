@@ -10,10 +10,10 @@ import kotlin.js.JsExport
 /**
  * Create or update a permission.
  * @d2 function
- * @parent [city.smartb.im.privilege.domain.D2PermissionPage]
+ * @parent [city.smartb.im.f2.privilege.domain.D2PermissionPage]
  * @order 10
  */
-typealias PermissionDefineFunction = F2Function<PermissionDefineCommand, PermissionDefinedEvent>
+typealias PermissionDefineFunction = F2Function<PermissionDefineCommandDTOBase, PermissionDefinedEventDTOBase>
 
 /**
  * @d2 command
@@ -22,12 +22,12 @@ typealias PermissionDefineFunction = F2Function<PermissionDefineCommand, Permiss
 @JsExport
 interface PermissionDefineCommandDTO: ImCommand {
     /**
-     * @ref [city.smartb.im.privilege.domain.permission.model.Permission.identifier]
+     * @ref [city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase.identifier]
      */
     val identifier: PermissionIdentifier
 
     /**
-     * @ref [city.smartb.im.privilege.domain.permission.model.Permission.description]
+     * @ref [city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase.description]
      */
     val description: String
 }
@@ -36,7 +36,7 @@ interface PermissionDefineCommandDTO: ImCommand {
  * @d2 inherit
  */
 @Serializable
-data class PermissionDefineCommand(
+data class PermissionDefineCommandDTOBase(
     override val realmId: String? = null,
     override val identifier: PermissionIdentifier,
     override val description: String,
@@ -58,6 +58,6 @@ interface PermissionDefinedEventDTO: Event {
  * @d2 inherit
  */
 @Serializable
-data class PermissionDefinedEvent(
+data class PermissionDefinedEventDTOBase(
     override val identifier: PermissionIdentifier
 ): PermissionDefinedEventDTO

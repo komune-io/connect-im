@@ -1,93 +1,44 @@
 package city.smartb.im.f2.privilege.lib
 
-import city.smartb.im.f2.privilege.domain.permission.command.PermissionDefineCommand
-import city.smartb.im.f2.privilege.domain.permission.command.PermissionDefinedEvent
-import city.smartb.im.f2.privilege.domain.permission.model.Permission
-import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommand
-import city.smartb.im.f2.privilege.domain.role.command.RoleDefinedEvent
-import city.smartb.im.f2.privilege.domain.role.model.Role
-import city.smartb.im.f2.privilege.lib.model.toRoleRepresentation
-import city.smartb.im.infra.keycloak.client.KeycloakClient
-import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
+import city.smartb.im.core.privilege.api.PrivilegeCoreAggregateService
+import city.smartb.im.core.privilege.domain.command.PermissionDefineCommand
+import city.smartb.im.core.privilege.domain.command.RoleDefineCommand
+import city.smartb.im.core.privilege.domain.model.RoleTarget
+import city.smartb.im.f2.privilege.domain.permission.command.PermissionDefineCommandDTOBase
+import city.smartb.im.f2.privilege.domain.permission.command.PermissionDefinedEventDTOBase
+import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommandDTOBase
+import city.smartb.im.f2.privilege.domain.role.command.RoleDefinedEventDTOBase
 import org.springframework.stereotype.Service
 
 @Service
 class PrivilegeAggregateService(
-    private val privilegeFinderService: PrivilegeFinderService,
-    private val keycloakClientProvider: KeycloakClientProvider
+    private val privilegeCoreAggregateService: PrivilegeCoreAggregateService,
 ) {
-
-    suspend fun define(command: RoleDefineCommand): RoleDefinedEvent {
-        val client = keycloakClientProvider.getFor(command)
-
-        val existingRole = privilegeFinderService.getRoleOrNull(command.realmId, command.identifier)
-
-        val newRole = Role(
-            id = existingRole?.id.orEmpty(),
-            identifier = command.identifier,
-            description = command.description,
-            targets = command.targets,
-            locale = command.locale,
-            bindings = command.bindings.orEmpty(),
-            permissions = command.permissions.orEmpty()
+    suspend fun define(command: RoleDefineCommandDTOBase): RoleDefinedEventDTOBase {
+        val event = privilegeCoreAggregateService.define(
+            RoleDefineCommand(
+                realmId = command.realmId,
+                identifier = command.identifier,
+                description = command.description,
+                targets = command.targets.map(RoleTarget::valueOf),
+                locale = command.locale,
+                bindings = command.bindings?.mapKeys { (target) -> RoleTarget.valueOf(target) },
+                permissions = command.permissions
+            )
         )
 
-        if (existingRole == null) {
-            client.createRole(newRole)
-        } else {
-            client.updateRole(existingRole, newRole)
-        }
-
-        return RoleDefinedEvent(command.identifier)
+        return RoleDefinedEventDTOBase(event.identifier)
     }
 
-    suspend fun define(command: PermissionDefineCommand): PermissionDefinedEvent {
-        val client = keycloakClientProvider.getFor(command)
-
-        val existingPermission = privilegeFinderService.getPermissionOrNull(command.realmId, command.identifier)
-
-        val newPermission = Permission(
-            id = existingPermission?.id.orEmpty(),
-            identifier = command.identifier,
-            description = command.description,
+    suspend fun define(command: PermissionDefineCommandDTOBase): PermissionDefinedEventDTOBase {
+        val event = privilegeCoreAggregateService.define(
+            PermissionDefineCommand(
+                realmId = command.realmId,
+                identifier = command.identifier,
+                description = command.description,
+            )
         )
 
-        if (existingPermission == null) {
-            client.roles().create(newPermission.toRoleRepresentation())
-        } else {
-            client.role(newPermission.identifier).update(newPermission.toRoleRepresentation())
-        }
-
-        return PermissionDefinedEvent(command.identifier)
-    }
-
-    private suspend fun KeycloakClient.createRole(role: Role) {
-        val permissions = role.permissions.map { permission ->
-            privilegeFinderService.getPrivilege(realmId, permission).toRoleRepresentation()
-        }
-
-        roles().create(role.toRoleRepresentation())
-        if (permissions.isNotEmpty()) {
-            role(role.identifier).addComposites(permissions)
-        }
-    }
-
-    private suspend fun KeycloakClient.updateRole(oldRole: Role, newRole: Role) {
-        val newPermissions = newRole.permissions.filter { it !in oldRole.permissions }
-            .map { privilegeFinderService.getPrivilege(realmId, it).toRoleRepresentation() }
-
-        val removedPermissions = oldRole.permissions.filter { it !in newRole.permissions }
-            .map { privilegeFinderService.getPrivilege(realmId, it).toRoleRepresentation() }
-
-
-        role(newRole.identifier).update(newRole.toRoleRepresentation())
-
-        if (newPermissions.isNotEmpty()) {
-            role(newRole.identifier).addComposites(newPermissions)
-        }
-
-        if (removedPermissions.isNotEmpty()) {
-            role(newRole.identifier).deleteComposites(removedPermissions)
-        }
+        return PermissionDefinedEventDTOBase(event.identifier)
     }
 }

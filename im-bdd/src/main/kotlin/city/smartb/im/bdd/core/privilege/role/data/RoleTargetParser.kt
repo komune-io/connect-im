@@ -1,6 +1,6 @@
 package city.smartb.im.bdd.core.privilege.role.data
 
-import city.smartb.im.f2.privilege.domain.role.model.RoleTarget
+import city.smartb.im.core.privilege.domain.model.RoleTarget
 import s2.bdd.data.parser.EntryParser
 import kotlin.reflect.jvm.jvmName
 

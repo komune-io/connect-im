@@ -1,8 +1,10 @@
 package city.smartb.im.f2.privilege.domain.permission.model
 
-import city.smartb.im.f2.privilege.domain.model.Privilege
+import city.smartb.im.core.privilege.domain.model.PermissionId
+import city.smartb.im.core.privilege.domain.model.PermissionIdentifier
+import city.smartb.im.core.privilege.domain.model.PrivilegeType
+import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.domain.model.PrivilegeIdentifier
-import city.smartb.im.f2.privilege.domain.model.PrivilegeType
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
 
@@ -24,33 +26,39 @@ typealias PermissionIdentifier = PrivilegeIdentifier
  * @order 10
  */
 @JsExport
-interface PermissionDTO {
+interface PermissionDTO: PrivilegeDTO {
     /**
      * Generated id of the permission.
      */
-    val id: PermissionId
+    override val id: PermissionId
+
+    /**
+     * @ref [PrivilegeDTO.type]
+     * @example "PERMISSION"
+     */
+    override val type: String
 
     /**
      * Identifier of the permission. Must be unique within a realm.
      * @example "im_organization_write"
      */
-    val identifier: PermissionIdentifier
+    override val identifier: PermissionIdentifier
 
     /**
      * Description of the permission.
      * @example "Ability to modify organization data"
      */
-    val description: String
+    override val description: String
 }
 
 /**
  * @d2 inherit
  */
 @Serializable
-data class Permission(
+data class PermissionDTOBase(
     override val id: PermissionId,
     override val identifier: PermissionIdentifier,
     override val description: String
-): PermissionDTO, Privilege {
-    override val type = PrivilegeType.PERMISSION
+): PermissionDTO {
+    override val type = PrivilegeType.PERMISSION.name
 }

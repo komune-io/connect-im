@@ -5,7 +5,7 @@ import city.smartb.im.f2.privilege.api.service.PrivilegePoliciesEnforcer
 import city.smartb.im.f2.privilege.domain.PermissionApi
 import city.smartb.im.f2.privilege.domain.permission.command.PermissionDefineFunction
 import city.smartb.im.f2.privilege.domain.permission.query.PermissionGetFunction
-import city.smartb.im.f2.privilege.domain.permission.query.PermissionGetResult
+import city.smartb.im.f2.privilege.domain.permission.query.PermissionGetResultDTOBase
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import org.springframework.context.annotation.Bean
@@ -25,7 +25,7 @@ class PermissionEndpoint(
         logger.info("permissionGet: $query")
         privilegePoliciesEnforcer.checkGet()
         privilegeFinderService.getPermissionOrNull(query.realmId, query.identifier)
-            .let(::PermissionGetResult)
+            .let(::PermissionGetResultDTOBase)
     }
 
     @Bean
