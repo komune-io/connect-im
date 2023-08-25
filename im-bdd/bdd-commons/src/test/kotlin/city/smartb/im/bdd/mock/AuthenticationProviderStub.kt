@@ -1,7 +1,8 @@
 package city.smartb.im.bdd.mock
 
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
-import city.smartb.im.api.config.properties.I2Properties
+import city.smartb.im.api.config.properties.IMProperties
+import city.smartb.im.api.config.properties.toAuthRealm
 import i2.keycloak.master.domain.AuthRealm
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -11,10 +12,10 @@ import org.springframework.context.annotation.Primary
 class AuthenticationProviderStub {
     @Bean
     @Primary
-    fun imAuthenticationProvider(imProperties: I2Properties): ImAuthenticationProvider {
+    fun imAuthenticationProvider(imProperties: IMProperties): ImAuthenticationProvider {
         return object: ImAuthenticationProvider {
             override suspend fun getAuth(): AuthRealm {
-                return imProperties.getAuthRealm().associateBy { it.realmId }["im-test"]!!
+                return imProperties.keycloak.toAuthRealm()
             }
         }
     }

@@ -10,18 +10,17 @@ spring:
   cache:
     cache-names: "organization, user"
 
-i2:
-  issuers:
-    -
-      name: im-test
-      authUrl: http://keycloak-it:8080
-      realm: im-test
-      im:
-        clientId: im-test-client
-        clientSecret: secret
+f2:
+  tenant:
+    issuer-base-uri: http://keycloak-it:8080
 
 connect:
   im:
+    keycloak:
+      url: http://keycloak-it:8080
+      realm: master
+      clientId: im-root
+      clientSecret: 6FvV3OotnIUj0BdZKpTDbEmK9jKi0yI3
     organization:
       insee:
         token: ${INSEE_TOKEN}

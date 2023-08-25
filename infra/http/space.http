@@ -12,6 +12,6 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "name": "space2",
+    "name": "space2"
 }
 

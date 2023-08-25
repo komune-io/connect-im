@@ -6,6 +6,9 @@ plugins {
 dependencies {
     commonMainApi(project(Modules.imCommonsDomain))
 
-    jvmMainImplementation("city.smartb.i2:i2-spring-boot-starter-auth:${Versions.i2}")
+    //    Dependencies.Jvm.f2Auth(::jvmMainImplementation)
+    //TODO replace f2-spring-boot-starter-auth-tenant by  Dependencies.Jvm.f2Auth(::api)
+    jvmMainImplementation(project(":im-api:f2-spring-boot-starter-auth-tenant"))
+
     jvmMainImplementation("city.smartb.f2:f2-dsl-function:${Versions.f2}")
 }

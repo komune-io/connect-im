@@ -1,8 +1,8 @@
 package city.smartb.im.user.lib.service
 
+import city.smartb.f2.spring.boot.auth.AuthenticationProvider
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
-import city.smartb.i2.spring.boot.auth.AuthenticationProvider
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.api.config.properties.IMProperties
 import city.smartb.im.commons.exception.NotFoundException

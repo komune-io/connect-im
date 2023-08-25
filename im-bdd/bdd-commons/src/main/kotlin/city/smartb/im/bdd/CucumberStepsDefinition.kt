@@ -1,6 +1,6 @@
 package city.smartb.im.bdd
 
-import city.smartb.i2.spring.boot.auth.config.WebSecurityConfig
+import city.smartb.f2.spring.boot.auth.config.WebSecurityConfig
 import city.smartb.im.bdd.data.TestContext
 import city.smartb.im.commons.exception.ImException
 import i2.keycloak.f2.commons.domain.error.I2Exception

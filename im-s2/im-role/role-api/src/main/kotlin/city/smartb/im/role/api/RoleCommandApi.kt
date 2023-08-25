@@ -1,6 +1,6 @@
 package city.smartb.im.role.api
 
-import city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE
+import city.smartb.f2.spring.boot.auth.SUPER_ADMIN_ROLE
 import city.smartb.im.role.api.service.RoleAggregateService
 import city.smartb.im.role.domain.RoleCommandFeatures
 import city.smartb.im.role.domain.features.command.RoleAddCompositesFunction

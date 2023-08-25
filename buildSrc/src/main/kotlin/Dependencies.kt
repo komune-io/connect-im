@@ -28,6 +28,7 @@ object Versions {
 
 	const val springBoot = PluginVersions.springBoot
 	const val springData = FixersVersions.Spring.data
+	const val springSecurity = "6.1.3"
 
 	const val kdatetime = "0.1.1"
 
@@ -80,8 +81,8 @@ object Dependencies {
 			)
 		}
 
-		fun i2Auth(scope: Scope) = scope.add(
-			"city.smartb.i2:i2-spring-boot-starter-auth:${Versions.i2}"
+		fun f2Auth(scope: Scope) = scope.add(
+//			"city.smartb.i2:i2-spring-boot-starter-auth:${Versions.i2}"
 		)
 
 		fun i2AuthClient(scope: Scope) = scope.add(

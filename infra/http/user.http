@@ -1,0 +1,18 @@
+### OAuth2 Token
+POST http://keycloak-it:8080/realms/im-test/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id=im-test-client&client_secret=secret
+
+> {% client.global.set("accessToken", response.body.access_token); %}
+
+### Create Organization
+POST http://localhost:8009/organizationCreate
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "name": "Organization 1",
+    "withApiKey": true
+}
+

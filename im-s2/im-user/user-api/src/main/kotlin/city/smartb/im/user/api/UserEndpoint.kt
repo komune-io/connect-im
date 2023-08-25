@@ -1,6 +1,6 @@
 package city.smartb.im.user.api
 
-import city.smartb.i2.spring.boot.auth.SUPER_ADMIN_ROLE
+import city.smartb.f2.spring.boot.auth.SUPER_ADMIN_ROLE
 import city.smartb.im.commons.auth.policies.enforce
 import city.smartb.im.commons.auth.policies.verify
 import city.smartb.im.commons.auth.policies.verifyAfter
