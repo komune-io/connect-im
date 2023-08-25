@@ -1,7 +1,6 @@
 package city.smartb.im.user.api.policies
 
 import city.smartb.im.commons.auth.Roles
-import city.smartb.im.commons.auth.exception.ForbiddenAccessException
 import city.smartb.im.commons.auth.hasOneOfRoles
 import city.smartb.im.commons.auth.policies.PolicyEnforcer
 import city.smartb.im.user.domain.features.query.UserPageQuery
@@ -13,15 +12,37 @@ import org.springframework.stereotype.Service
 @Service
 class UserPoliciesEnforcer: PolicyEnforcer() {
 
-    suspend fun checkGet(user: UserDTO? = null) = check("get user") { authedUser ->
+    suspend fun checkGet(user: UserDTO? = null) = checkAuthed("get user") { authedUser ->
         UserPolicies.canGet(authedUser, user)
     }
 
+    suspend fun checkPage() = checkAuthed("page users") { authedUser ->
+        UserPolicies.canPage(authedUser)
+    }
 
-    suspend fun enforcePage(query: UserPageQuery): UserPageQuery = enforce { authedUser ->
-        if (authedUser == null || !UserPolicies.canPage(authedUser)) {
-            throw ForbiddenAccessException("page user")
-        }
+    suspend fun checkRefList() = checkAuthed("list user refs") { authedUser ->
+        UserPolicies.checkRefList(authedUser)
+    }
+
+    suspend fun checkCreate() = checkAuthed("create an user") { authedUser ->
+        UserPolicies.canCreate(authedUser)
+    }
+
+    suspend fun checkUpdate(userId: UserId) = checkAuthed("update an user") { authedUser ->
+        UserPolicies.canUpdate(authedUser, userId)
+    }
+
+    suspend fun checkDisable(userId: UserId) = checkAuthed("disable an user") { authedUser ->
+        UserPolicies.canDisable(authedUser, userId)
+    }
+
+    suspend fun checkDelete(userId: UserId) = checkAuthed("delete an user") { authedUser ->
+        UserPolicies.canDisable(authedUser, userId)
+    }
+
+    suspend fun enforcePage(query: UserPageQuery): UserPageQuery = enforceAuthed { authedUser ->
+        checkPage()
+
         if (authedUser.hasOneOfRoles(Roles.SUPER_ADMIN, Roles.ORCHESTRATOR)) {
             query
         } else {
@@ -30,25 +51,4 @@ class UserPoliciesEnforcer: PolicyEnforcer() {
             )
         }
     }
-
-    suspend fun checkRefList() = check("list user refs") { authedUser ->
-        UserPolicies.checkRefList(authedUser)
-    }
-
-    suspend fun checkCreate() = check("create an user") { authedUser ->
-        UserPolicies.canCreate(authedUser)
-    }
-
-    suspend fun checkUpdate(userId: UserId) = check("update an user") { authedUser ->
-        UserPolicies.canUpdate(authedUser, userId)
-    }
-
-    suspend fun checkDisable(userId: UserId) = check("disable an user") { authedUser ->
-        UserPolicies.canDisable(authedUser, userId)
-    }
-
-    suspend fun checkDelete(userId: UserId) = check("delete an user") { authedUser ->
-        UserPolicies.canDisable(authedUser, userId)
-    }
-
 }

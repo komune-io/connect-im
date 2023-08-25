@@ -1,6 +1,6 @@
 Feature: UserDelete
   Background:
-    Given I am logged in as an admin
+    Given I am authenticated as admin
   Scenario: I want to delete a user
     Given A user is created:
       | memberOf |

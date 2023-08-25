@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-	implementation(project(":im-api:api-config"))
+	implementation(project(Modules.imApiConfig))
 	implementation(project(Modules.S2.imApikeyApi))
 	implementation(project(Modules.S2.imApikeyLib))
 
@@ -24,7 +24,6 @@ dependencies {
 	Dependencies.Jvm.cucumber(::implementation)
 	Dependencies.Jvm.i2AuthClient(::implementation)
 
-	Dependencies.Jvm.testcontainers(::testImplementation)
 	Dependencies.Jvm.testcontainers(::testImplementation)
 
 	implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")

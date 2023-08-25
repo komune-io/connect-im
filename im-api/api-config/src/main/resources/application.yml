@@ -1,0 +1,66 @@
+server:
+  port: 8009
+
+spring:
+  main:
+    web-application-type: reactive
+#  data:
+#     redis:
+#      password: redis
+  cache:
+    cache-names: "organization, user"
+
+
+i2:
+  issuers:
+    -
+      name: auth-test
+      authUrl: http://keycloak-it:8080/auth
+      realm: im-test
+      im:
+        clientId: im-test-client
+        clientSecret: secret
+
+connect:
+  fs: http://fs:8090
+  im:
+    user:
+      action:
+        useJwtClientId: true
+    organization:
+      insee:
+        token: ${INSEE_TOKEN}
+        sireneApi: https://api.insee.fr/entreprises/sirene/V3
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+i2:
+  issuers:
+    -
+      name: test
+      authUrl: http://localhost:8080
+      realm: im-test
+      im:
+        clientId: im-test-client
+        clientSecret: secret
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+i2:
+  issuers:
+    -
+      name: local
+      authUrl: http://localhost:8080
+      realm: im-local
+      im:
+        clientId: im-client
+        clientSecret: secret

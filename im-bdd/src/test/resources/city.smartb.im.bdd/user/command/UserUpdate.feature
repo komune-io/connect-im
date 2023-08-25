@@ -1,6 +1,6 @@
 Feature: UserUpdate
   Background:
-    Given I am logged in as an admin
+    Given I am authenticated as admin
   Scenario: I want to update a user with an existing organization
     Given An organization is created
     Given A user is created

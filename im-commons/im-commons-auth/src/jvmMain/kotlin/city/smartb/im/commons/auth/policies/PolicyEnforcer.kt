@@ -8,14 +8,23 @@ import kotlinx.coroutines.flow.map
 
 open class PolicyEnforcer {
 
-    protected suspend fun check(action: String, hasAccess: suspend (AuthedUser) -> Boolean) = enforce { authedUser ->
-        if (authedUser == null || !hasAccess(authedUser)) {
+    protected suspend fun check(action: String, hasAccess: suspend (AuthedUser?) -> Boolean) = enforce { authedUser ->
+        if (!hasAccess(authedUser)) {
             throw ForbiddenAccessException(action)
         }
     }
 
+    protected suspend fun checkAuthed(action: String, hasAccess: suspend (AuthedUser) -> Boolean = { true }) = check(action) { authedUser ->
+        authedUser != null && hasAccess(authedUser)
+    }
+
     protected suspend fun <R> enforce(block: suspend (AuthedUser?) -> R): R {
         return block(AuthenticationProvider.getAuthedUser())
+    }
+
+    protected suspend fun <R> enforceAuthed(block: suspend (AuthedUser) -> R): R = enforce { authedUser ->
+        checkAuthed("")
+        block(AuthenticationProvider.getAuthedUser()!!)
     }
 }
 

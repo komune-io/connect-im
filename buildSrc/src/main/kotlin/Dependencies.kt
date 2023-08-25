@@ -98,6 +98,7 @@ object Dependencies {
 
 		fun cucumber(scope: Scope) = FixersDependencies.Jvm.Test.cucumber(scope)
 			.add(
+                "city.smartb.s2:s2-test-bdd:${Versions.s2}",
 				"io.cucumber:cucumber-spring:${FixersVersions.Test.cucumber}",
 				"org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}"
 			)

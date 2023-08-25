@@ -11,15 +11,26 @@ import org.springframework.stereotype.Service
 @Service
 class ApiKeyPoliciesEnforcer: PolicyEnforcer() {
 
-    suspend fun checkGet(apikeyId: ApiKeyId) = check("get apikey") { authedUser ->
+    suspend fun checkGet(apikeyId: ApiKeyId) = checkAuthed("get apikey") { authedUser ->
         ApiKeyPolicies.canGet(authedUser, apikeyId)
     }
 
-    suspend fun enforcePage(query: ApiKeyPageQuery): ApiKeyPageQuery = enforce { authedUser ->
-        check("page apikey") {
-            ApiKeyPolicies.canPage(it)
-        }
-        if (authedUser!!.hasOneOfRoles(Roles.SUPER_ADMIN, Roles.ORCHESTRATOR) ) {
+    suspend fun checkPage() = checkAuthed("page apikeys") { authedUser ->
+        ApiKeyPolicies.canPage(authedUser)
+    }
+
+    suspend fun checkCreate() = checkAuthed("create an apikey") { authedUser ->
+        ApiKeyPolicies.canCreate(authedUser)
+    }
+
+    suspend fun apiKeyRemove(apikeyId: ApiKeyId) = checkAuthed("delete an apikey") { authedUser ->
+        ApiKeyPolicies.canDelete(authedUser)
+    }
+
+    suspend fun enforcePage(query: ApiKeyPageQuery): ApiKeyPageQuery = enforceAuthed { authedUser ->
+        checkPage()
+
+        if (authedUser.hasOneOfRoles(Roles.SUPER_ADMIN, Roles.ORCHESTRATOR) ) {
             query
         } else {
             query.copy(
@@ -27,14 +38,4 @@ class ApiKeyPoliciesEnforcer: PolicyEnforcer() {
             )
         }
     }
-
-
-    suspend fun checkCreate() = check("create an apikey") { authedUser ->
-        ApiKeyPolicies.canCreate(authedUser)
-    }
-
-    suspend fun apiKeyRemove(apikeyId: ApiKeyId) = check("delete an apikey") { authedUser ->
-        ApiKeyPolicies.canDelete(authedUser)
-    }
-
 }
