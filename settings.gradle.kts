@@ -28,26 +28,31 @@ include(
 )
 
 include(
-    "im-s2:im-organization:organization-api",
-    "im-s2:im-organization:organization-domain",
-    "im-s2:im-organization:organization-client",
-    "im-s2:im-organization:organization-lib",
+    "im-core:privilege-core:privilege-core-api",
+    "im-core:privilege-core:privilege-core-domain",
+)
 
-    "im-s2:im-user:user-api",
-    "im-s2:im-user:user-domain",
-    "im-s2:im-user:user-client",
-    "im-s2:im-user:user-lib",
+include(
+    "im-f2:im-organization:organization-api",
+    "im-f2:im-organization:organization-domain",
+    "im-f2:im-organization:organization-client",
+    "im-f2:im-organization:organization-lib",
 
-    "im-s2:im-apikey:apikey-api",
-    "im-s2:im-apikey:apikey-domain",
-    "im-s2:im-apikey:apikey-client",
-    "im-s2:im-apikey:apikey-lib",
+    "im-f2:im-user:user-api",
+    "im-f2:im-user:user-domain",
+    "im-f2:im-user:user-client",
+    "im-f2:im-user:user-lib",
 
-    "im-s2:privilege:privilege-api",
-    "im-s2:privilege:privilege-client",
-    "im-s2:privilege:privilege-core",
-    "im-s2:privilege:privilege-domain",
-    "im-s2:privilege:privilege-lib"
+    "im-f2:im-apikey:apikey-api",
+    "im-f2:im-apikey:apikey-domain",
+    "im-f2:im-apikey:apikey-client",
+    "im-f2:im-apikey:apikey-lib",
+
+    "im-f2:privilege:privilege-api",
+    "im-f2:privilege:privilege-client",
+    "im-f2:privilege:privilege-core",
+    "im-f2:privilege:privilege-domain",
+    "im-f2:privilege:privilege-lib"
 )
 
 include(

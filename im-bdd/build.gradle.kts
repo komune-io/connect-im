@@ -9,17 +9,17 @@ dependencies {
     implementation(project(Modules.imCommonsApi))
     implementation(project(Modules.Infra.keycloak))
 
-    implementation(project(Modules.S2.imApikeyApi))
-    implementation(project(Modules.S2.imApikeyLib))
+    implementation(project(Modules.F2.imApikeyApi))
+    implementation(project(Modules.F2.imApikeyLib))
 
-    implementation(project(Modules.S2.imOrganizationApi))
-    implementation(project(Modules.S2.imOrganizationLib))
+    implementation(project(Modules.F2.imOrganizationApi))
+    implementation(project(Modules.F2.imOrganizationLib))
 
-    implementation(project(Modules.S2.imUserApi))
-    implementation(project(Modules.S2.imUserLib))
+    implementation(project(Modules.F2.imUserApi))
+    implementation(project(Modules.F2.imUserLib))
 
-    implementation(project(Modules.S2.privilegeApi))
-    implementation(project(Modules.S2.privilegeLib))
+    implementation(project(Modules.F2.privilegeApi))
+    implementation(project(Modules.F2.privilegeLib))
 
 	Dependencies.Jvm.f2(::implementation)
 	Dependencies.Mpp.f2(::implementation)

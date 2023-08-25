@@ -2,7 +2,7 @@ package city.smartb.im.bdd.core.privilege.role.query
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.privilege.role.data.role
-import city.smartb.im.privilege.domain.role.model.Role
+import city.smartb.im.f2.privilege.domain.role.model.Role
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import kotlinx.coroutines.async

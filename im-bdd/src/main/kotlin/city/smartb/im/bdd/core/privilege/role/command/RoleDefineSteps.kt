@@ -4,11 +4,11 @@ import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.privilege.role.data.extractRoleTargetList
 import city.smartb.im.bdd.core.privilege.role.data.role
 import city.smartb.im.commons.utils.parseJsonTo
-import city.smartb.im.privilege.api.RoleEndpoint
-import city.smartb.im.privilege.domain.permission.model.PermissionIdentifier
-import city.smartb.im.privilege.domain.role.command.RoleDefineCommand
-import city.smartb.im.privilege.domain.role.model.RoleIdentifier
-import city.smartb.im.privilege.domain.role.model.RoleTarget
+import city.smartb.im.f2.privilege.api.RoleEndpoint
+import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
+import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommand
+import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
+import city.smartb.im.f2.privilege.domain.role.model.RoleTarget
 import f2.dsl.fnc.invokeWith
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En

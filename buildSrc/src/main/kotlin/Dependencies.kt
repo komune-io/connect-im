@@ -161,8 +161,16 @@ object Modules {
         const val redis = "$BASE:infra-redis"
     }
 
-	object S2 {
-        private const val BASE = ":im-s2"
+    object Core {
+        private const val BASE = ":im-core"
+
+        private const val PRIVILEGE = "$BASE:privilege-core:privilege-core"
+        const val privilegeApi = "$PRIVILEGE-api"
+        const val privilegeDomain = "$PRIVILEGE-domain"
+    }
+
+	object F2 {
+        private const val BASE = ":im-f2"
 		const val imOrganizationApi = "$BASE:im-organization:organization-api"
 		const val imOrganizationDomain = "$BASE:im-organization:organization-domain"
 		const val imOrganizationClient = "$BASE:im-organization:organization-client"

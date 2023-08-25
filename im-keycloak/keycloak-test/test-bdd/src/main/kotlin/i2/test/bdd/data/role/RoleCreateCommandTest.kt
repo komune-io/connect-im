@@ -1,7 +1,7 @@
 package i2.test.bdd.data.role
 
 import city.smartb.im.commons.model.AuthRealm
-import city.smartb.im.privilege.domain.role.model.RoleIdentifier
+import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import i2.test.bdd.data.DataTest
 import java.util.UUID
 

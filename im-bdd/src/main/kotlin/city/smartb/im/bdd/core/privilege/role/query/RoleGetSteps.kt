@@ -1,8 +1,8 @@
 package city.smartb.im.bdd.core.privilege.role.query
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
-import city.smartb.im.privilege.api.RoleEndpoint
-import city.smartb.im.privilege.domain.role.query.RoleGetQuery
+import city.smartb.im.f2.privilege.api.RoleEndpoint
+import city.smartb.im.f2.privilege.domain.role.query.RoleGetQuery
 import f2.dsl.fnc.invokeWith
 import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired

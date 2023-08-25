@@ -2,7 +2,7 @@ package im.script.function.config
 
 import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.model.RealmId
-import city.smartb.im.privilege.domain.role.model.RoleIdentifier
+import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import f2.spring.exception.NotFoundException
 import i2.keycloak.f2.client.domain.ClientId
 import im.script.function.config.config.KeycloakConfigParser

@@ -8,7 +8,7 @@ dependencies {
     api(project(Modules.imCommonsApi))
 
     implementation(project(Modules.Infra.keycloak))
-    api(project(Modules.S2.privilegeLib))
+    api(project(Modules.F2.privilegeLib))
 
     api(project(Modules.imKeycloakF2ClientDomain))
     implementation(project(Modules.imKeycloakF2ClientCommand))

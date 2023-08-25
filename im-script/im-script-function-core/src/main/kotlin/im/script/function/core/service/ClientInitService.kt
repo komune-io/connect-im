@@ -1,7 +1,7 @@
 package im.script.function.core.service
 
 import city.smartb.im.commons.model.AuthRealm
-import city.smartb.im.privilege.domain.role.model.RoleIdentifier
+import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.ClientId
 import i2.keycloak.f2.client.domain.ClientIdentifier

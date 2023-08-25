@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
 
-    implementation(project(Modules.S2.privilegeLib))
+    implementation(project(Modules.F2.privilegeLib))
 
     implementation(project(Modules.imKeycloakF2ClientQuery))
     implementation(project(Modules.imKeycloakF2ClientCommand))

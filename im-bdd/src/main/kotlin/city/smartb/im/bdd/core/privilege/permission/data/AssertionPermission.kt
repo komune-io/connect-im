@@ -1,10 +1,10 @@
 package city.smartb.im.bdd.core.privilege.permission.data
 
+import city.smartb.im.f2.privilege.domain.model.PrivilegeType
+import city.smartb.im.f2.privilege.domain.permission.model.Permission
+import city.smartb.im.f2.privilege.domain.permission.model.PermissionId
+import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClient
-import city.smartb.im.privilege.domain.model.PrivilegeType
-import city.smartb.im.privilege.domain.permission.model.Permission
-import city.smartb.im.privilege.domain.permission.model.PermissionId
-import city.smartb.im.privilege.domain.permission.model.PermissionIdentifier
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.RoleRepresentation
 import s2.bdd.assertion.AssertionBdd

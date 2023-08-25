@@ -1,7 +1,7 @@
 package i2.test.bdd.assertion
 
 import city.smartb.im.commons.model.RealmId
-import city.smartb.im.privilege.domain.role.model.RoleIdentifier
+import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import org.assertj.core.api.Assertions
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.resource.RoleResource
@@ -56,11 +56,11 @@ class AssertionRole(
 		private val roleComposites: Set<RoleRepresentation>
 	) {
 		fun hasFields(
-			id: String = role.id,
-			name: RoleIdentifier = role.name,
-			description: String? = role.description,
-			isClientRole: Boolean = role.clientRole,
-			composites: Iterable<RoleIdentifier> = role.composites?.realm ?: emptyList(),
+            id: String = role.id,
+            name: RoleIdentifier = role.name,
+            description: String? = role.description,
+            isClientRole: Boolean = role.clientRole,
+            composites: Iterable<RoleIdentifier> = role.composites?.realm ?: emptyList(),
 		) {
 			Assertions.assertThat(id).isEqualTo(role.id)
 			Assertions.assertThat(name).isEqualTo(role.name)

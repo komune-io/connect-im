@@ -3,13 +3,13 @@ package city.smartb.im.bdd
 import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.domain.model.ApiKeyId
 import city.smartb.im.commons.model.RealmId
+import city.smartb.im.f2.privilege.domain.permission.model.Permission
+import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
+import city.smartb.im.f2.privilege.domain.role.model.Role
+import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationId
-import city.smartb.im.privilege.domain.permission.model.Permission
-import city.smartb.im.privilege.domain.permission.model.PermissionIdentifier
-import city.smartb.im.privilege.domain.role.model.Role
-import city.smartb.im.privilege.domain.role.model.RoleIdentifier
 import city.smartb.im.user.domain.model.User
 import city.smartb.im.user.domain.model.UserId
 import org.springframework.stereotype.Component

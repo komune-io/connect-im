@@ -1,8 +1,8 @@
 package im.script.function.config.service
 
 import city.smartb.im.commons.model.AuthRealm
-import city.smartb.im.privilege.domain.role.model.RoleIdentifier
-import city.smartb.im.privilege.lib.PrivilegeAggregateService
+import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
+import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.command.UserCreateCommand
 import i2.keycloak.f2.user.domain.features.command.UserCreateFunction
