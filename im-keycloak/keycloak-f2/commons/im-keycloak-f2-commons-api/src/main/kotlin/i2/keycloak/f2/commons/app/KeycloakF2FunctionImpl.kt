@@ -7,6 +7,7 @@ import city.smartb.im.infra.keycloak.client.KeycloakClientBuilder
 import f2.dsl.fnc.F2Function
 import f2.dsl.fnc.f2Function
 import i2.keycloak.f2.commons.domain.KeycloakF2Message
+import i2.keycloak.f2.commons.domain.error.I2Exception
 
 fun <C: KeycloakF2Message, R: Any> keycloakF2Function(
     fcn: suspend (C, KeycloakClient) -> R
@@ -16,8 +17,10 @@ fun <C: KeycloakF2Message, R: Any> keycloakF2Function(
             // tmp fix
             val realmId = cmd.toJson().parseJsonTo<Map<String, Any>>()["realmId"] as String?
 
-			val client = KeycloakClientBuilder.openConnection(cmd.auth).forRealm(realmId)
-			fcn(cmd, client)
+            val client = KeycloakClientBuilder.openConnection(cmd.auth).forRealm(realmId)
+            fcn(cmd, client)
+        } catch (e: I2Exception) {
+            throw e.from ?: e
 		} catch (e: Exception) {
 			throw e.asI2Exception(e.message ?: "Internal Server Error")
 		}

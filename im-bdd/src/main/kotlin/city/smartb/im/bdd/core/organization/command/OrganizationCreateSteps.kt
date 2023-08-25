@@ -7,10 +7,8 @@ import city.smartb.im.organization.api.OrganizationEndpoint
 import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
 import city.smartb.im.organization.domain.model.OrganizationId
 import f2.dsl.fnc.invoke
-import i2.keycloak.f2.commons.domain.error.I2Exception
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
@@ -68,12 +66,6 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
                     roles = command.roles,
                     attributes = command.attributes ?: emptyMap()
                 )
-            }
-        }
-
-        Then("The creation has thrown an error") {
-            step {
-                Assertions.assertThat(context.errors.lastOfType(I2Exception::class)).isNotNull()
             }
         }
     }

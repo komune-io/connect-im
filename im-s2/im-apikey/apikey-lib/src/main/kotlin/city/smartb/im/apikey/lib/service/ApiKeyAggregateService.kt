@@ -7,13 +7,12 @@ import city.smartb.im.apikey.domain.features.command.ApikeyRemoveCommand
 import city.smartb.im.apikey.domain.features.command.ApikeyRemoveEvent
 import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.domain.model.ApiKeyDTO
-import city.smartb.im.commons.exception.NotFoundException
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.infra.redis.RedisCache
-import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationId
 import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
+import f2.spring.exception.NotFoundException
 import i2.keycloak.f2.client.domain.features.command.ClientCreateCommand
 import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
 import i2.keycloak.f2.client.domain.features.command.ClientDeleteCommand
@@ -29,9 +28,9 @@ import i2.keycloak.f2.group.domain.features.query.GroupGetQuery
 import i2.keycloak.f2.group.domain.model.GroupModel
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
+import org.slf4j.LoggerFactory
 import java.text.Normalizer
 import java.util.UUID
-import org.slf4j.LoggerFactory
 
 open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
     private val authenticationResolver: ImAuthenticationProvider,

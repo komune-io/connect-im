@@ -6,7 +6,6 @@ import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddKeyCommand
 import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.lib.service.ApiKeyAggregateService
-import city.smartb.im.commons.exception.NotFoundException
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.toJson
@@ -34,6 +33,7 @@ import city.smartb.im.user.lib.service.UserAggregateService
 import city.smartb.im.user.lib.service.UserFinderService
 import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
+import f2.spring.exception.NotFoundException
 import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
 import i2.keycloak.f2.client.domain.features.command.ClientDeleteFunction
 import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction

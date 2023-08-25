@@ -11,9 +11,9 @@ Feature: OrganizationUpdate
     Then The organization should be updated
 
   Scenario: I want to update the role of an organization
-    Given A role is created
+    Given A role is defined
     And An organization is created
-    When A role is created
+    When A role is defined
     And I update an organization
     Then The organization should be updated
 

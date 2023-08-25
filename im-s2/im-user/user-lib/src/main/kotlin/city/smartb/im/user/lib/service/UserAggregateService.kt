@@ -5,7 +5,6 @@ import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.i2.spring.boot.auth.AuthenticationProvider
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.api.config.properties.IMProperties
-import city.smartb.im.commons.exception.NotFoundException
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.toJson
@@ -45,6 +44,7 @@ import city.smartb.im.user.domain.model.User
 import city.smartb.im.user.domain.model.UserId
 import city.smartb.im.user.lib.config.UserFsConfig
 import f2.dsl.fnc.invokeWith
+import f2.spring.exception.NotFoundException
 import i2.keycloak.f2.group.domain.features.query.GroupGetFunction
 import i2.keycloak.f2.group.domain.features.query.GroupGetQuery
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsCommand
@@ -55,10 +55,10 @@ import i2.keycloak.f2.user.domain.features.command.UserRolesSetCommand
 import i2.keycloak.f2.user.domain.features.command.UserRolesSetFunction
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.UUID
-import org.slf4j.LoggerFactory
 
 @Service
 class UserAggregateService(

@@ -17,3 +17,6 @@ Feature: UserCreate
       | memberOf   |
       | notARealId |
     Then The user should not be created
+    And An exception should be thrown:
+      | code |
+      | 404  |

@@ -1,16 +1,16 @@
 package city.smartb.im.bdd.exception
 
+import city.smartb.im.bdd.ImCucumberStepsDefinition
 import f2.spring.exception.ConflictException
 import f2.spring.exception.ForbiddenAccessException
 import f2.spring.exception.MessageConverterException
 import f2.spring.exception.NotFoundException
 import io.cucumber.java8.En
-import s2.bdd.S2CucumberStepsDefinition
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.assertion.exceptions
 import s2.bdd.data.parser.safeExtract
 
-class ExceptionAssertionSteps: En, S2CucumberStepsDefinition()  {
+class ExceptionAssertionSteps: En, ImCucumberStepsDefinition()  {
     init {
         DataTableType(::exceptionAssertionParams)
 

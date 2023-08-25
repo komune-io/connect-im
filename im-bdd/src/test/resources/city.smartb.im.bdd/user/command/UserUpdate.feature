@@ -26,11 +26,11 @@ Feature: UserUpdate
     Then The user should be updated
 
   Scenario: I want to update the role of a user
-    Given A role is created
+    Given A role is defined
     And A user is created:
       | memberOf |
       | null     |
-    When A role is created
+    When A role is defined
     And I update a user:
       | memberOf |
       | null     |
