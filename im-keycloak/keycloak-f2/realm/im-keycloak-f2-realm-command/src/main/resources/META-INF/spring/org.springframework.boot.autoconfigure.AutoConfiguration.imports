@@ -1,1 +1,2 @@
 i2.keycloak.f2.realm.command.RealmCreateFunctionImpl
+i2.keycloak.f2.realm.command.RealmDeleteFunctionImpl

@@ -1,1 +1,2 @@
 i2.keycloak.f2.realm.query.RealmGetFunctionImpl
+i2.keycloak.f2.realm.query.RealmPageFunctionImpl

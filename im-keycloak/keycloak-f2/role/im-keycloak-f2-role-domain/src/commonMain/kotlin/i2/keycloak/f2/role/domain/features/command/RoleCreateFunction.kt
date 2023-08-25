@@ -19,6 +19,7 @@ class RoleCreateCommand(
 	val description: String?,
 	val isClientRole: Boolean,
 	val composites: List<RoleName>,
+    val attributes: Map<String, List<String>>? = null,
 	override val auth: AuthRealm,
 	val realmId: RealmId
 ): KeycloakF2Command

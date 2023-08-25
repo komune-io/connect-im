@@ -27,7 +27,7 @@ class RoleCreateFunctionImpl {
 		val compositeRoles = cmd.composites.map { role ->
 			getOrCreateRole(cmd, role)
 		}
-		createRole(cmd.realmId, cmd.name, cmd.description, cmd.isClientRole)
+		createRole(cmd.realmId, cmd.name, cmd.description, cmd.isClientRole, cmd.attributes)
 		getRoleResource(cmd.realmId, cmd.name).addComposites(compositeRoles)
 	}
 
@@ -37,7 +37,7 @@ class RoleCreateFunctionImpl {
 			getRoleResource(cmd.realmId, roleName).toRepresentation()
 		} catch (e: ClientErrorException) {
 			if(e.response.status == HttpStatus.SC_NOT_FOUND) {
-				createRole(cmd.realmId, roleName, null, cmd.isClientRole)
+				createRole(cmd.realmId, roleName, null, cmd.isClientRole, cmd.attributes)
 			}
 			throw  e.asI2Exception("Error trying to fetch $roleName")
 		} catch (e: Exception) {
@@ -46,11 +46,17 @@ class RoleCreateFunctionImpl {
 
 	}
 
-	private fun AuthRealmClient.createRole(realmId: RealmId, role: RoleName, description: String?, isClientRole: Boolean): RoleRepresentation {
+	private fun AuthRealmClient.createRole(
+        realmId: RealmId,
+        role: RoleName,
+        description: String?,
+        isClientRole: Boolean,
+        attributes: Map<String, List<String>>?): RoleRepresentation {
 		return RoleRepresentation().apply {
 			this.name = role
 			this.description = description
 			this.clientRole = isClientRole
+            this.attributes = attributes ?: emptyMap()
 		}.also { roleRepresentation ->
 			roles(realmId).create(roleRepresentation)
 		}

@@ -13,6 +13,9 @@ enum class Role(val value: String) {
     IM_APIKEY_READ("im_read_apikey"),
     IM_APIKEY_WRITE("im_write_apikey"),
 
+    IM_SPACE_READ("im_space_read"),
+    IM_SPACE_WRITE("im_space_write"),
+
     IM_ROLE_READ("im_read_role"),
     IM_ROLE_WRITE("im_write_role"),
 

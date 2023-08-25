@@ -8,20 +8,17 @@ import i2.keycloak.master.domain.RealmId
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
-typealias RealmCreateFunction = F2Function<RealmCreateCommand, RealmCreatedEvent>
+typealias RealmDeleteFunction = F2Function<RealmDeleteCommand, RealmDeletedEvent>
 
 @JsExport
-@JsName("RealmCreateCommand")
-class RealmCreateCommand(
+@JsName("RealmDeleteCommand")
+class RealmDeleteCommand(
 	val id: RealmId,
-	val theme: String?,
-	val locale: String?,
-	val smtpServer: Map<String, String>?,
-	val masterRealmAuth: AuthRealm
+    val masterRealmAuth: AuthRealm
 ): Command
 
 @JsExport
-@JsName("RealmCreatedEvent")
-class RealmCreatedEvent(
-	val id: RealmId
+@JsName("RealmDeletedEvent")
+class RealmDeletedEvent(
+	val id: RealmId,
 ): Event

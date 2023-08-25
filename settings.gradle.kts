@@ -57,6 +57,13 @@ include(
 )
 
 include(
+    "im-s2:im-space:space-api",
+    "im-s2:im-space:space-client",
+    "im-s2:im-space:space-domain",
+    "im-s2:im-space:space-lib"
+)
+
+include(
     "im-keycloak:keycloak-auth:keycloak-auth-client",
     "im-keycloak:keycloak-auth:keycloak-auth-domain",
     "im-keycloak:keycloak-utils",

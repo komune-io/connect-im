@@ -167,7 +167,12 @@ object Modules {
 		val imRoleApi = ":im-s2:im-role:role-api"
 		val imRoleDomain = ":im-s2:im-role:role-domain"
 		val imRoleClient = ":im-s2:im-role:role-client"
-	}
+        
+        val imSpaceApi = ":im-s2:im-space:space-api"
+        val imSpaceDomain = ":im-s2:im-space:space-domain"
+        val imSpaceClient = ":im-s2:im-space:space-client"
+        val imSpaceLib = ":im-s2:im-space:space-lib"
+    }
 
 	object Script {
 		val imScriptGateway = ":im-script:im-script-gateway"
