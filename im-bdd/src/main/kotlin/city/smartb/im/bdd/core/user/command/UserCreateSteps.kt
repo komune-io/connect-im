@@ -12,6 +12,7 @@ import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
+import s2.bdd.data.parser.extractList
 import java.util.UUID
 
 class UserCreateSteps: En, ImCucumberStepsDefinition() {
@@ -110,7 +111,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
                 city = "city"
             ),
             phone = entry?.get("phone") ?: "0600000000",
-            roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
+            roles = entry?.extractList("roles")?.map { context.roleIdentifiers[it] ?: it }.orEmpty(),
             sendEmailLink = false,
             memberOf = entry?.get("memberOf").parseNullableOrDefault(context.organizationIds.lastUsedOrNull),
             attributes = userAttributesParams(entry),

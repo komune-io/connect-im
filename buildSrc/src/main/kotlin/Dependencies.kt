@@ -134,6 +134,11 @@ object Dependencies {
 			"city.smartb.f2:f2-dsl-function:${Versions.f2}"
 		)
 
+        fun f2Client(scope: Scope) = scope.add(
+            "city.smartb.f2:f2-client-ktor:${Versions.f2}",
+            "io.ktor:ktor-client-auth:${Versions.ktor}"
+        )
+
 		fun datetime(scope: Scope) = scope.add(
 			"org.jetbrains.kotlinx:kotlinx-datetime:${Versions.kdatetime}"
 		)

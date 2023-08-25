@@ -65,7 +65,7 @@ interface RoleDTO {
      *   "API_KEY": ["tr_orchestrator_user", "tr_orchestrator_admin"]
      * }
      */
-    val bindings: Map<RoleTarget, RoleIdentifier>
+    val bindings: Map<RoleTarget, List<RoleIdentifier>>
 
     /**
      * Permissions granted to the role.
@@ -84,7 +84,7 @@ data class Role(
     override val description: String,
     override val targets: List<RoleTarget>,
     override val locale: Map<String, String>,
-    override val bindings: Map<RoleTarget, RoleIdentifier>,
+    override val bindings: Map<RoleTarget, List<RoleIdentifier>>,
     override val permissions: List<PermissionIdentifier>
 ): RoleDTO, Privilege {
     override val type = PrivilegeType.ROLE

@@ -6,17 +6,20 @@ plugins {
 
 dependencies {
 	implementation(project(Modules.imApiConfig))
-	implementation(project(Modules.S2.imApikeyApi))
-	implementation(project(Modules.S2.imApikeyLib))
+    implementation(project(Modules.imCommonsApi))
+    implementation(project(Modules.Infra.keycloak))
 
-	implementation(project(Modules.S2.imOrganizationApi))
-	implementation(project(Modules.S2.privilegeApi))
+    implementation(project(Modules.S2.imApikeyApi))
+    implementation(project(Modules.S2.imApikeyLib))
 
-	implementation(project(Modules.S2.imUserApi))
-	implementation(project(Modules.S2.imUserLib))
-	implementation(project(Modules.S2.privilegeApi))
-	implementation(project(Modules.S2.privilegeLib))
-	implementation(project(Modules.imCommonsDomain))
+    implementation(project(Modules.S2.imOrganizationApi))
+    implementation(project(Modules.S2.imOrganizationLib))
+
+    implementation(project(Modules.S2.imUserApi))
+    implementation(project(Modules.S2.imUserLib))
+
+    implementation(project(Modules.S2.privilegeApi))
+    implementation(project(Modules.S2.privilegeLib))
 
 	Dependencies.Jvm.f2(::implementation)
 	Dependencies.Mpp.f2(::implementation)

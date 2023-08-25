@@ -2,8 +2,8 @@ package city.smartb.im.commons.auth.policies
 
 import city.smartb.im.commons.auth.AuthedUser
 import city.smartb.im.commons.auth.AuthenticationProvider
-import city.smartb.im.commons.auth.exception.ForbiddenAccessException
 import f2.dsl.fnc.F2Function
+import f2.spring.exception.ForbiddenAccessException
 import kotlinx.coroutines.flow.map
 
 open class PolicyEnforcer {
@@ -24,7 +24,7 @@ open class PolicyEnforcer {
 
     protected suspend fun <R> enforceAuthed(block: suspend (AuthedUser) -> R): R = enforce { authedUser ->
         checkAuthed("")
-        block(AuthenticationProvider.getAuthedUser()!!)
+        block(authedUser!!)
     }
 }
 

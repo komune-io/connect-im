@@ -46,7 +46,7 @@ interface RoleDefineCommandDTO: ImCommand {
     /**
      * @ref [city.smartb.im.privilege.domain.role.model.Role.bindings]
      */
-    val bindings: Map<RoleTarget, RoleIdentifier>?
+    val bindings: Map<RoleTarget, List<RoleIdentifier>>?
 
     /**
      * @ref [city.smartb.im.privilege.domain.role.model.Role.permissions]
@@ -64,7 +64,7 @@ data class RoleDefineCommand(
     override val description: String,
     override val targets: List<RoleTarget>,
     override val locale: Map<String, String>,
-    override val bindings: Map<RoleTarget, RoleIdentifier>?,
+    override val bindings: Map<RoleTarget, List<RoleIdentifier>>?,
     override val permissions: List<PermissionIdentifier>?
 ): RoleDefineCommandDTO
 

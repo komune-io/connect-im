@@ -1,7 +1,8 @@
 package city.smartb.im.bdd
 
-import city.smartb.im.commons.auth.Roles
 import io.cucumber.java8.En
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import s2.bdd.auth.AuthedUser
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.safeExtract
@@ -13,16 +14,26 @@ class AuthenticationSteps: En, ImCucumberStepsDefinition() {
 
         Given("I am authenticated as:") { params: AuthenticationParams ->
             step {
-//                context.authedUser = context.users.safeGet(params.identifier)
-                TODO()
+                coroutineScope {
+                    val userId = context.userIds.safeGet(params.identifier)
+                    val userResource = context.keycloakClient().user(userId)
+                    val user = async { userResource.toRepresentation() }
+                    val userRoles = async { userResource.roles().realmLevel().listEffective() }
+                    context.authedUser = AuthedUser(
+                        id = userId,
+                        memberOf = user.await().attributes["memberOf"]?.firstOrNull(),
+                        roles = userRoles.await().map { it.name }.toTypedArray()
+                    )
+                }
             }
         }
 
         Given("I am authenticated as admin") {
             step {
+                val allRoles = context.keycloakClient().roles().list().map { it.name }
                 context.authedUser = AuthedUser(
                     id = "admin",
-                    roles = arrayOf(Roles.SUPER_ADMIN),
+                    roles = allRoles.toTypedArray(),
                     memberOf = null
                 )
             }

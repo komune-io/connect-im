@@ -1,20 +1,14 @@
 package city.smartb.im.bdd
 
-import city.smartb.im.organization.domain.features.command.OrganizationDeleteCommand
-import city.smartb.im.organization.domain.features.query.OrganizationPageQuery
-import city.smartb.im.organization.domain.model.Organization
-import city.smartb.im.organization.lib.OrganizationFeaturesImpl
-import city.smartb.im.user.domain.features.command.UserDeleteCommand
-import city.smartb.im.user.domain.features.query.UserPageQuery
-import city.smartb.im.user.lib.UserFeaturesImpl
-import f2.dsl.fnc.invokeWith
+import city.smartb.im.commons.auth.ImRole
 import io.cucumber.java8.En
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 
 class EnvironmentCleanerSteps(
     private val context: ImTestContext,
-    private val organizationEndpoint: OrganizationFeaturesImpl<Organization>,
-    private val userEndpoint: UserFeaturesImpl
 ): En {
     init {
         Before { _ ->
@@ -26,32 +20,34 @@ class EnvironmentCleanerSteps(
     private fun cleanKeycloak() = runBlocking {
         cleanKeycloakUsers()
         cleanKeycloakOrganizations()
+        cleanKeycloakRoles()
     }
 
-    private suspend fun cleanKeycloakOrganizations() {
-        OrganizationPageQuery(
-            page = 0,
-            size = Int.MAX_VALUE,
-            search = null,
-            attributes = null,
-            role = null,
-            withDisabled = true
-        ).invokeWith(organizationEndpoint.organizationPage())
-            .items
-            .map { OrganizationDeleteCommand(it.id).invokeWith(organizationEndpoint.organizationDelete()) }
+    private suspend fun cleanKeycloakUsers() = coroutineScope {
+        context.keycloakClient().users().list().map { user ->
+            async { context.keycloakClient().user(user.id).remove() }
+        }.awaitAll()
     }
 
-    private suspend fun cleanKeycloakUsers() {
-        UserPageQuery(
-            page = 0,
-            size = Int.MAX_VALUE,
-            organizationId = null,
-            search = null,
-            attributes = null,
-            role = null,
-            withDisabled = true
-        ).invokeWith(userEndpoint.userPage())
-            .items
-            .map { UserDeleteCommand(it.id).invokeWith(userEndpoint.userDelete()) }
+    private suspend fun cleanKeycloakOrganizations() = coroutineScope {
+        context.keycloakClient().groups().groups().map { group ->
+            async { context.keycloakClient().group(group.id).remove() }
+        }.awaitAll()
+    }
+
+    private suspend fun cleanKeycloakRoles() = coroutineScope {
+        val permanentRoles = ImRole.values()
+            .asSequence()
+            .map(ImRole::identifier)
+            .plus("default-roles-${context.keycloakClient().realmId}")
+            .plus("uma_authorization")
+            .plus("offline_access")
+            .toSet()
+
+        context.keycloakClient().roles().list().filter { role ->
+            role.name !in permanentRoles
+        }.map { role ->
+            async { context.keycloakClient().role(role.name).remove() }
+        }.awaitAll()
     }
 }
