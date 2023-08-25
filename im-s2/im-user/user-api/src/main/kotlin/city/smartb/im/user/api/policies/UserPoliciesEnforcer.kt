@@ -1,6 +1,6 @@
 package city.smartb.im.user.api.policies
 
-import city.smartb.im.commons.auth.Roles
+import city.smartb.im.commons.auth.ImRole
 import city.smartb.im.commons.auth.hasOneOfRoles
 import city.smartb.im.commons.auth.policies.PolicyEnforcer
 import city.smartb.im.user.domain.features.query.UserPageQuery
@@ -43,7 +43,7 @@ class UserPoliciesEnforcer: PolicyEnforcer() {
     suspend fun enforcePage(query: UserPageQuery): UserPageQuery = enforceAuthed { authedUser ->
         checkPage()
 
-        if (authedUser.hasOneOfRoles(Roles.SUPER_ADMIN, Roles.ORCHESTRATOR)) {
+        if (authedUser.hasOneOfRoles(ImRole.SUPER_ADMIN, ImRole.ORCHESTRATOR)) {
             query
         } else {
             query.copy(

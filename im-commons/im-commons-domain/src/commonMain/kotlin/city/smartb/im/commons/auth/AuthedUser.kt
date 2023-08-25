@@ -30,5 +30,8 @@ data class AuthedUser(
 ): AuthedUserDTO
 
 fun AuthedUserDTO.hasRole(role: String) = role in roles
+fun AuthedUserDTO.hasRole(role: ImRole) = hasRole(role.identifier)
 fun AuthedUserDTO.hasRoles(vararg roles: String) = roles.all(this.roles::contains)
+fun AuthedUserDTO.hasRoles(vararg roles: ImRole) = hasRoles(*roles.map(ImRole::identifier).toTypedArray())
 fun AuthedUserDTO.hasOneOfRoles(vararg roles: String) = roles.any(this.roles::contains)
+fun AuthedUserDTO.hasOneOfRoles(vararg roles: ImRole) = hasOneOfRoles(*roles.map(ImRole::identifier).toTypedArray())
