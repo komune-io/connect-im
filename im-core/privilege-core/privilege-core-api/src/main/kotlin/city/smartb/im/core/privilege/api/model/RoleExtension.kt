@@ -15,7 +15,10 @@ fun RoleRepresentation.toRole() = Role(
     identifier = name,
     description = description,
     targets = attributes[Role::targets.name].orEmpty().map { RoleTarget.valueOf(it) },
-    bindings = attributes[Role::bindings.name]?.firstOrNull()?.parseJsonTo<Map<RoleTarget, List<RoleIdentifier>>>().orEmpty(),
+    bindings = attributes[Role::bindings.name]?.firstOrNull()
+        ?.parseJsonTo<Map<String, List<RoleIdentifier>>>()
+        ?.mapKeys { (target) -> RoleTarget.valueOf(target) }
+        .orEmpty(),
     locale = attributes[Role::locale.name]?.firstOrNull()?.parseJsonTo<Map<String, String>>().orEmpty(),
     permissions = attributes[Role::permissions.name].orEmpty()
 )

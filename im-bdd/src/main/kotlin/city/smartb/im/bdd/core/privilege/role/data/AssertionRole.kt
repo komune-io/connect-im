@@ -8,6 +8,9 @@ import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import city.smartb.im.f2.privilege.domain.role.model.RoleId
 import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClient
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.RoleRepresentation
 import s2.bdd.assertion.AssertionBdd
@@ -30,8 +33,9 @@ class AssertionRole(
 
         private val roleBindings: Map<RoleTarget, List<RoleIdentifier>> = role.attributes[RoleDTOBase::bindings.name]
             ?.firstOrNull()
-            ?.parseJsonTo()
-            ?: emptyMap()
+            ?.parseJsonTo<Map<String, List<RoleIdentifier>>>()
+            ?.mapKeys { (target) -> RoleTarget.valueOf(target) }
+            .orEmpty()
 
         private val roleLocale: Map<String, String> = role.attributes[RoleDTOBase::locale.name]
             ?.firstOrNull()
@@ -60,15 +64,23 @@ class AssertionRole(
             hasExactlyPermissions(permissions.toSet())
         }
 
-        fun matches(role: RoleDTOBase) = hasFields(
-            id = role.id,
-            identifier = role.identifier,
-            description = role.description,
-            targets = role.targets.map { RoleTarget.valueOf(it) },
-            locale = role.locale,
-            bindings = role.bindings.mapKeys { (target) -> RoleTarget.valueOf(target) },
-            permissions = role.permissions
-        )
+        suspend fun matches(role: RoleDTOBase): Unit = coroutineScope {
+            hasFields(
+                id = role.id,
+                identifier = role.identifier,
+                description = role.description,
+                targets = role.targets.map { RoleTarget.valueOf(it) },
+                locale = role.locale,
+                bindings = role.bindings
+                    .mapKeys { (target) -> RoleTarget.valueOf(target) }
+                    .mapValues { (_, roles) -> roles.map(RoleDTOBase::identifier) },
+                permissions = role.permissions
+            )
+
+            role.bindings.values.flatten().map { role ->
+                async { assertThatId(role.identifier).matches(role) }
+            }.awaitAll()
+        }
 
         fun hasExactlyBindings(bindings: Map<RoleTarget, List<RoleIdentifier>>) {
             Assertions.assertThat(roleBindings).hasSameSizeAs(bindings)

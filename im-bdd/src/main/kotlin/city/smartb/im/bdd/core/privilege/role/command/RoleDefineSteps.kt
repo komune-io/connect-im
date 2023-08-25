@@ -91,7 +91,9 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
             description = entry?.get("description") ?: UUID.randomUUID().toString(),
             targets = entry?.extractRoleTargetList("targets").orEmpty(),
             locale = entry?.get("locale")?.parseJsonTo() ?: emptyMap(),
-            bindings = entry?.get("bindings")?.parseJsonTo(),
+            bindings = entry?.get("bindings")
+                ?.parseJsonTo<Map<String, List<RoleIdentifier>>>()
+                ?.mapKeys { (key) -> RoleTarget.valueOf(key) },
             permissions = entry?.extractList("permissions")
         )
     }

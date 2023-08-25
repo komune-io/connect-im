@@ -7,24 +7,43 @@ import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
+import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
-fun Privilege.toDTO(): PrivilegeDTO = when (this) {
+suspend fun Privilege.toDTO(
+    getRole: suspend (RoleIdentifier) -> RoleDTOBase
+): PrivilegeDTO = when (this) {
     is Permission -> toDTO()
-    is Role -> toDTO()
+    is Role -> toDTO(getRole)
 }
 
-fun Permission.toDTO() = PermissionDTOBase(
+suspend fun Permission.toDTO() = PermissionDTOBase(
     id = id,
     identifier = identifier,
     description = description,
 )
 
-fun Role.toDTO() = RoleDTOBase(
-    id = id,
-    identifier = identifier,
-    description = description,
-    targets = targets.map(RoleTarget::name),
-    bindings = bindings.mapKeys { (target) -> target.name },
-    locale = locale,
-    permissions = permissions,
-)
+suspend fun Role.toDTO(
+    getRole: suspend (RoleIdentifier) -> RoleDTOBase
+) = coroutineScope {
+    RoleDTOBase(
+        id = id,
+        identifier = identifier,
+        description = description,
+        targets = targets.map(RoleTarget::name),
+        bindings = bindings.mapKeys { (target) -> target.name }
+            .mapValues { (_, roles) ->
+                roles.map { async {
+                    if (it != identifier) { // prevents infinite loop on self-bind
+                        getRole(it)
+                    } else {
+                        null
+                    }
+                } }.awaitAll().filterNotNull()
+            },
+        locale = locale,
+        permissions = permissions,
+    )
+}

@@ -4,7 +4,13 @@ Feature: RoleGet
     Given I am authenticated as admin
 
   Scenario: I want to get a role
-    Given A role is defined
+    Given Some roles are defined:
+      | identifier |
+      | r1         |
+      | r2         |
+    Given A role is defined:
+      | identifier | targets      | bindings                                      |
+      | r3         | ORGANIZATION | { "USER": ["r1", "r2"], "API_KEY": ["r1", "r2"] } |
     When I get the role
     Then I should receive the role
 
