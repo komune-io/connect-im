@@ -29,6 +29,7 @@ class TrustedIssuerJwtAuthenticationManagerResolver(
 
     override fun resolve(issuer: String): Mono<ReactiveAuthenticationManager> {
         if (!issuer.startsWith(trustedIssuersConfig.issuerBaseUri)) return Mono.empty()
+        //TODO VERIFY the realm exists
         return this.authenticationManagers.computeIfAbsent(issuer) {
             buildAuthenticationManager(issuer).subscribeOn(Schedulers.boundedElastic())
                 .cache(

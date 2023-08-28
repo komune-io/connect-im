@@ -43,7 +43,7 @@ object KeycloakClientBuilder {
         val keycloak: Keycloak,
         val auth: AuthRealm
     ) {
-        fun forRealm(realmId: RealmId?) = KeycloakClient(keycloak, auth, realmId ?: auth.realmId)
+        fun forRealm(realmId: RealmId?) = KeycloakClient(keycloak, auth, realmId ?: auth.space)
         fun forAuthedRealm() = forRealm(null)
     }
 }

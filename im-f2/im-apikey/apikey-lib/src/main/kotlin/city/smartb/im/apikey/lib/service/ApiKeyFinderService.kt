@@ -74,7 +74,7 @@ open class ApiKeyFinderService<MODEL : ApiKeyDTO>(
                 page = page,
                 size = size
             ),
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         )
     }
@@ -83,8 +83,7 @@ open class ApiKeyFinderService<MODEL : ApiKeyDTO>(
         val auth = authenticationResolver.getAuth()
         return GroupGetQuery(
             id = organizationId,
-
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         )
     }

@@ -88,7 +88,7 @@ open class OrganizationFinderService<MODEL : OrganizationDTO>(
                 page = null,
                 size = null
             ),
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         )
     }
@@ -108,7 +108,7 @@ open class OrganizationFinderService<MODEL : OrganizationDTO>(
                 page = page,
                 size = size
             ),
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         )
     }
@@ -117,7 +117,7 @@ open class OrganizationFinderService<MODEL : OrganizationDTO>(
         val auth = authenticationResolver.getAuth()
         return GroupGetQuery(
             id = id,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         )
     }

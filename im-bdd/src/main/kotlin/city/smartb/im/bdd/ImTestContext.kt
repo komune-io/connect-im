@@ -27,7 +27,7 @@ class ImTestContext(
     val roleIdentifiers = testEntities<TestContextKey, RoleIdentifier>("Role")
     val userIds = testEntities<TestContextKey, UserId>("User")
 
-    var realmId: RealmId? = null
+    var realmId: RealmId? = "im-test"
     suspend fun keycloakClient() = keycloakClientProvider.getFor(realmId)
 
     final var fetched = FetchContext()
@@ -35,7 +35,7 @@ class ImTestContext(
 
     override fun resetEnv() {
         fetched = FetchContext()
-        realmId = null
+        realmId = "im-test"
         authedUser = null
     }
 

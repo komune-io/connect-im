@@ -17,6 +17,7 @@ class GivenAuth {
 			password = KeycloakConfig.Admin.password,
 			realmId = realm,
 			redirectUrl = "http://localhost:3000",
+			space = realm
 		)
 		return KeycloakClientBuilder.openConnection(auth).forRealm(realm)
 	}
@@ -28,6 +29,7 @@ class GivenAuth {
 			clientSecret = "test",
 			realmId = realm,
 			redirectUrl = "http://localhost:3000",
+			space = realm
 		)
 		return KeycloakClientBuilder.openConnection(auth).forRealm(realm)
 	}

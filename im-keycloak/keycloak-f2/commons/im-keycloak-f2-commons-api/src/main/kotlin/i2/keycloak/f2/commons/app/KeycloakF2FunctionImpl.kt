@@ -1,7 +1,5 @@
 package i2.keycloak.f2.commons.app
 
-import city.smartb.im.commons.utils.parseJsonTo
-import city.smartb.im.commons.utils.toJson
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import city.smartb.im.infra.keycloak.client.KeycloakClientBuilder
 import f2.dsl.fnc.F2Function
@@ -14,10 +12,7 @@ fun <C: KeycloakF2Message, R: Any> keycloakF2Function(
 ): F2Function<C, R> =
 	f2Function { cmd ->
 		try {
-            // tmp fix
-            val realmId = cmd.toJson().parseJsonTo<Map<String, Any>>()["realmId"] as String?
-
-            val client = KeycloakClientBuilder.openConnection(cmd.auth).forRealm(realmId)
+            val client = KeycloakClientBuilder.openConnection(cmd.auth).forRealm(cmd.auth.space)
             fcn(cmd, client)
         } catch (e: I2Exception) {
             throw e.from ?: e

@@ -40,9 +40,10 @@ suspend fun KeycloakProperties.toAuthRealm(): AuthRealm {
     val realmId = AuthenticationProvider.getIssuer().split("/").last()
     return AuthRealmClientSecret(
         serverUrl = url,
-        realmId   = realmId,
+        realmId   = "master",
         clientId = clientId,
         clientSecret = clientSecret,
-        redirectUrl = null
+        redirectUrl = null,
+        space = realmId
     )
 }

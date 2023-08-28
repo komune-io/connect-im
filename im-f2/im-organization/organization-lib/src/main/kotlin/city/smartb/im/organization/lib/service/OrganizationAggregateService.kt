@@ -129,7 +129,7 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
 
         val event = GroupDisableCommand(
             id = command.id,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(groupDisableFunction)
 
@@ -181,7 +181,7 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
 
         val event = GroupDeleteCommand(
             id = command.id,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(groupDeleteFunction)
 
@@ -195,7 +195,7 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
         GroupSetAttributesCommand(
             id = id,
             attributes = attributes,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(groupSetAttributesFunction)
     }
@@ -212,7 +212,7 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
                 Organization::creationDate.name to System.currentTimeMillis().toString()
             ).toMap().plus(attributes.orEmpty()),
             roles = roles ?: emptyList(),
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth,
             parentGroupId = parentOrganizationId
         )
@@ -231,7 +231,7 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
                 Organization::creationDate.name to organization.creationDate.toString()
             ).toMap().plus(attributes.orEmpty()),
             roles = roles ?: emptyList(),
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         )
     }

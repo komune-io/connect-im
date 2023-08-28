@@ -17,7 +17,7 @@ class UserRolesSetCommand(
     val id: UserId,
     val roles: List<String>,
     override val auth: AuthRealm,
-    val realmId: RealmId = auth.realmId,
+    val realmId: RealmId = auth.space,
 ): KeycloakF2Command
 
 @JsExport

@@ -113,7 +113,7 @@ class UserAggregateService(
         KeycloakUserUpdatePasswordCommand(
             userId = command.id,
             password = command.password,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(keycloakUserUpdatePasswordFunction)
         return UserUpdatedPasswordEvent(command.id)
@@ -148,7 +148,7 @@ class UserAggregateService(
             UserSetAttributesCommand(
                 id = command.id,
                 attributes = mapOf("logo" to event.url),
-                realmId = auth.realmId,
+                realmId = auth.space,
                 auth = auth
             ).invokeWith(userSetAttributesFunction)
 
@@ -167,7 +167,7 @@ class UserAggregateService(
                 sendVerificationEmail = command.sendVerificationEmail,
                 clientId = auth.clientId.takeUnless { auth.redirectUrl?.isBlank() ?: false },
                 redirectUri = auth.redirectUrl?.ifBlank { null },
-                realmId = auth.realmId,
+                realmId = auth.space,
                 auth = auth
             ).invokeWith(keycloakUserUpdateEmailFunction)
 
@@ -185,7 +185,7 @@ class UserAggregateService(
 
             val event = KeycloakUserDisableCommand(
                 id = command.id,
-                realmId = auth.realmId,
+                realmId = auth.space,
                 auth = auth
             ).invokeWith(keycloakUserDisableFunction)
 
@@ -224,7 +224,7 @@ class UserAggregateService(
 
             val event = KeycloakUserDeleteCommand(
                 id = command.id,
-                realmId = auth.realmId,
+                realmId = auth.space,
                 auth = auth
             ).invokeWith(keycloakUserDeleteFunction)
 
@@ -238,7 +238,7 @@ class UserAggregateService(
         val auth = authenticationResolver.getAuth()
         GroupGetQuery(
             id = organizationId,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(groupGetFunction).item
             ?: throw NotFoundException("Organization", organizationId)
@@ -250,7 +250,7 @@ class UserAggregateService(
             UserJoinGroupCommand(
                 id = userId,
                 groupId = organizationId,
-                realmId = auth.realmId,
+                realmId = auth.space,
                 auth = auth,
                 leaveOtherGroups = true
             ).invokeWith(userJoinGroupFunction)
@@ -263,7 +263,7 @@ class UserAggregateService(
             id = userId,
             roles = roles,
             auth = auth,
-            realmId = auth.realmId
+            realmId = auth.space
         ).invokeWith(userRolesSetFunction)
     }
 
@@ -274,7 +274,7 @@ class UserAggregateService(
         } ?: auth.clientId.takeUnless { auth.redirectUrl?.isBlank() ?: true }
         val redirectUri = auth.redirectUrl?.ifBlank { null }
         logger.debug("sendAction[${actions.joinToString(", ")}] " +
-                "realmId[${auth.realmId}] " +
+                "realmId[${auth.space}] " +
                 "userId[${userId}] " +
                 "clientId[${clientId}] " +
                 "redirectUri[${redirectUri}]"
@@ -285,7 +285,7 @@ class UserAggregateService(
                 clientId = clientId,
                 redirectUri = redirectUri,
                 actions = actions.toList(),
-                realmId = auth.realmId,
+                realmId = auth.space,
                 auth = auth
             ).invokeWith(userEmailSendActionsFunction)
         } catch (e: Exception) {
@@ -306,7 +306,7 @@ class UserAggregateService(
                 phone?.let { ::phone.name to it },
                 memberOf?.let { ::memberOf.name to it }
             )).toMap(),
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         )
     }
@@ -327,7 +327,7 @@ class UserAggregateService(
                 phone?.let { ::phone.name to it },
                 memberOf?.let { ::memberOf.name to it }
             )).toMap(),
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         )
     }

@@ -20,7 +20,8 @@ fun ImAuthProperties.toAuthRealm(): AuthRealm {
                 realmId = realmId,
                 clientId = clientId,
                 clientSecret = clientSecret,
-                redirectUrl = null
+                redirectUrl = null,
+                space = realmId
             )
         } else if (username != null && password != null) {
             AuthRealmPassword(
@@ -29,7 +30,8 @@ fun ImAuthProperties.toAuthRealm(): AuthRealm {
                 clientId = clientId,
                 username = username,
                 password = password,
-                redirectUrl = ""
+                redirectUrl = "",
+                space = realmId
             )
 
         } else {

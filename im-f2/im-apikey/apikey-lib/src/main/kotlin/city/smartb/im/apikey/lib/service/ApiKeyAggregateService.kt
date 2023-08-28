@@ -68,7 +68,7 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
             authorizationServicesEnabled = false,
             isStandardFlowEnabled = false,
             protocolMappers = mapOf("memberOf" to command.organizationId),
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(clientCreateFunction).id
 
@@ -88,14 +88,14 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
             ClientServiceAccountRolesGrantCommand(
                 id = clientId,
                 roles = group.roles.assignedRoles,
-                realmId = auth.realmId,
+                realmId = auth.space,
                 auth = auth
             ).invokeWith(clientServiceAccountRolesGrantFunction)
         }
 
         val serviceAccountUser = ClientGetServiceAccountQuery(
             id = clientId,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(clientGetServiceAccountFunction).item!!
 
@@ -105,7 +105,7 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
                 "memberOf" to command.organizationId,
                 "display_name" to command.name
             ),
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(userSetAttributesFunction)
 
@@ -130,7 +130,7 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
         val group = getOrganization(command.organizationId)
         ClientGetServiceAccountQuery(
             id = command.id,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(clientGetServiceAccountFunction)
             .item
@@ -139,7 +139,7 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
         try {
             ClientDeleteCommand(
                 id = command.id,
-                realmId = auth.realmId,
+                realmId = auth.space,
                 auth = auth
             ).invokeWith(clientDeleteFunction)
         } catch (e: NotFoundException) {
@@ -164,7 +164,7 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
         GroupSetAttributesCommand(
             id = id,
             attributes = attributes,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(groupSetAttributesFunction)
 
@@ -173,7 +173,7 @@ open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
         val auth = authenticationResolver.getAuth()
         return GroupGetQuery(
             id = organizationId,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         )
     }

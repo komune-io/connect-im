@@ -21,7 +21,7 @@ class UserTransformer(
 		val auth = authenticationResolver.getAuth()
 		val group = UserGetGroupsQuery(
 			userId = user.id,
-			realmId =  auth.realmId,
+			realmId =  auth.space,
 			auth = auth
 		).invokeWith(userGetGroupsQueryFunction).items.firstOrNull()?.let { group ->
 			OrganizationRef(

@@ -30,7 +30,7 @@ class UserFinderService(
         val auth = authenticationResolver.getAuth()
         KeycloakUserGetQuery(
             id = query.id,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(keycloakUserGetFunction)
             .item
@@ -42,7 +42,7 @@ class UserFinderService(
         val auth = authenticationResolver.getAuth()
         return KeycloakUserGetByEmailQuery(
             email = email,
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         ).invokeWith(keycloakUserGetByEmailFunction)
             .item
@@ -76,7 +76,7 @@ class UserFinderService(
                 page = page,
                 size = size
             ),
-            realmId = auth.realmId,
+            realmId = auth.space,
             auth = auth
         )
     }
