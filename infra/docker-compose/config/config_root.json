@@ -1,0 +1,24 @@
+{
+  "appClients": [
+    {
+      "clientId": "im-root-plateform",
+      "clientSecret": "secret",
+      "roles": ["im_space_write", "im_space_read"],
+      "realmManagementRoles": [
+        "manage-users",
+        "view-users",
+        "query-groups",
+        "manage-realm"
+      ]
+    }
+  ],
+  "webClients": [],
+  "users": [],
+  "roles": [
+    "im_space_write",
+    "im_space_read"
+  ],
+  "roleComposites": {
+      "im_space_write": ["create_realm"]
+  }
+}
