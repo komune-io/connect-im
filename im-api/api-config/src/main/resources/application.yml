@@ -43,8 +43,8 @@ connect:
     keycloak:
         url: http://keycloak-it:8080
         realm: master
-        clientId: im-root
-        clientSecret: 6FvV3OotnIUj0BdZKpTDbEmK9jKi0yI3
+        clientId: im-root-plateform
+        clientSecret: secret
     user:
       action:
         useJwtClientId: true

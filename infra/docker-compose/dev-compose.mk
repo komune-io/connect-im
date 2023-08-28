@@ -1,4 +1,4 @@
-DOCKER_COMPOSE_FILE = keycloak smtp im-init im-config
+DOCKER_COMPOSE_FILE = keycloak smtp im-root-config im-init im-config
 DOCKER_COMPOSE_PATH = infra/docker-compose
 DOCKER_COMPOSE_ENV = $(DOCKER_COMPOSE_PATH)/.env_dev
 .PHONY: $(DOCKER_COMPOSE_FILE)
@@ -43,6 +43,7 @@ dev-service-action:
 
 dev-envsubst:
 	mkdir -p $(DOCKER_COMPOSE_PATH)/config/build
+	envsubst < $(DOCKER_COMPOSE_PATH)/config/config_root.json > $(DOCKER_COMPOSE_PATH)/config/build/config_root.json
 	envsubst < $(DOCKER_COMPOSE_PATH)/config/init.json > $(DOCKER_COMPOSE_PATH)/config/build/init.json
 	envsubst < $(DOCKER_COMPOSE_PATH)/config/config.json > $(DOCKER_COMPOSE_PATH)/config/build/config.json
 
