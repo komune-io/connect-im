@@ -1,6 +1,5 @@
-spring:
-  main:
-    web-application-type: none
+server:
+  port: 1000
 
 im:
   script:
@@ -29,6 +28,8 @@ im:
         delayMillis: ${im.script.retry.delayMillis}
 #      json: file:./infra/docker-compose/config/init.json
 
+i2:
+  issuers:
 
 ---
 spring:
@@ -42,3 +43,5 @@ im:
       json: file:./infra/docker-compose/config/build/config.json
     init:
       json: file:./infra/docker-compose/config/build/init.json
+      auth:
+        serverUrl: http://localhost:8080
