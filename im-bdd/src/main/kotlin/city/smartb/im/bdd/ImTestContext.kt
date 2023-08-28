@@ -2,6 +2,7 @@ package city.smartb.im.bdd
 
 import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.domain.model.ApiKeyId
+import city.smartb.im.commons.auth.ImRole
 import city.smartb.im.commons.model.RealmId
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
@@ -29,6 +30,15 @@ class ImTestContext(
 
     var realmId: RealmId? = null
     suspend fun keycloakClient() = keycloakClientProvider.getFor(realmId)
+
+    private val permanentRoles = ImRole.values()
+        .asSequence()
+        .map(ImRole::identifier)
+        .plus("uma_authorization")
+        .plus("offline_access")
+        .toSet()
+
+    suspend fun permanentRoles() = permanentRoles + "default-roles-${keycloakClient().realmId}"
 
     final var fetched = FetchContext()
         private set

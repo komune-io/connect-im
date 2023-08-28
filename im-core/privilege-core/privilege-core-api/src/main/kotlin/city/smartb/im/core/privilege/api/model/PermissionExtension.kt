@@ -9,7 +9,7 @@ import org.keycloak.representations.idm.RoleRepresentation
 fun RoleRepresentation.toPermission() = Permission(
     id = id,
     identifier = name,
-    description = description,
+    description = description.orEmpty(),
 )
 
 fun Permission.toRoleRepresentation() = RoleRepresentation().also {

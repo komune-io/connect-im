@@ -2,6 +2,7 @@ package city.smartb.im.f2.privilege.domain
 
 import city.smartb.im.f2.privilege.domain.permission.command.PermissionDefineFunction
 import city.smartb.im.f2.privilege.domain.permission.query.PermissionGetFunction
+import city.smartb.im.f2.privilege.domain.permission.query.PermissionListFunction
 
 /**
  * @d2 api
@@ -17,4 +18,6 @@ interface PermissionCommandApi {
 interface PermissionQueryApi {
     /** Get a permission by identifier */
     fun permissionGet(): PermissionGetFunction
+    /** Get a list of permissions */
+    fun permissionList(): PermissionListFunction
 }

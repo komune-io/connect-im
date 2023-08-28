@@ -13,7 +13,7 @@ import org.keycloak.representations.idm.RoleRepresentation
 fun RoleRepresentation.toRole() = Role(
     id = id,
     identifier = name,
-    description = description,
+    description = description.orEmpty(),
     targets = attributes[Role::targets.name].orEmpty().map { RoleTarget.valueOf(it) },
     bindings = attributes[Role::bindings.name]?.firstOrNull()
         ?.parseJsonTo<Map<String, List<RoleIdentifier>>>()

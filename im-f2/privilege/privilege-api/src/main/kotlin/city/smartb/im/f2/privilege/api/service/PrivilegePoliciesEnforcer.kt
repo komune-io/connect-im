@@ -10,6 +10,10 @@ class PrivilegePoliciesEnforcer: PolicyEnforcer() {
         PrivilegePolicies.canGet(authedUser)
     }
 
+    suspend fun checkList() = checkAuthed("list privileges") { authedUser ->
+        PrivilegePolicies.canList(authedUser)
+    }
+
     suspend fun checkDefine() = checkAuthed("define a privilege") { authedUser ->
         PrivilegePolicies.canDefine(authedUser)
     }

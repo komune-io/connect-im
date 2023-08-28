@@ -29,6 +29,12 @@ class RoleQuerySteps: En, ImCucumberStepsDefinition() {
             }
         }
 
+        Then("I should receive an empty list of roles") {
+            step {
+                assertFetchedRoles(emptyList())
+            }
+        }
+
         Then("I should receive a list of roles:") { dataTable: DataTable ->
             step {
                 dataTable.asList(RoleFetchedParams::class.java)
@@ -40,7 +46,7 @@ class RoleQuerySteps: En, ImCucumberStepsDefinition() {
 
     private suspend fun assertFetchedRoles(identifiers: List<TestContextKey>) = coroutineScope {
         val fetchedIdentifiers = context.fetched.roles.map(RoleDTOBase::identifier)
-        val expectedIdentifiers = identifiers.map(context.roleIdentifiers::safeGet)
+        val expectedIdentifiers = identifiers.map { context.roleIdentifiers[it] ?: it }
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 
         val roleAsserter = AssertionBdd.role(context.keycloakClient())

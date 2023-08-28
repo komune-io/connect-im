@@ -31,8 +31,11 @@ interface RoleGetQueryDTO: ImQuery {
     val identifier: RoleIdentifier
 }
 
+/**
+ * @d2 inherit
+ */
 @Serializable
-class RoleGetQueryDTOBase(
+data class RoleGetQueryDTOBase(
     override val realmId: String? = null,
     override val identifier: RoleIdentifier
 ): RoleGetQueryDTO
