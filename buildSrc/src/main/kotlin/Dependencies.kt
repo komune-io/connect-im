@@ -195,10 +195,10 @@ object Modules {
 	}
 
 	object S2 {
-		val imSpaceApi = ":im-s2:im-space:space-api"
-		val imSpaceDomain = ":im-s2:im-space:space-domain"
-		val imSpaceClient = ":im-s2:im-space:space-client"
-		val imSpaceLib = ":im-s2:im-space:space-lib"
+		val imSpaceApi = ":im-f2:space:space-api"
+		val imSpaceDomain = ":im-f2:space:space-domain"
+		val imSpaceClient = ":im-f2:space:space-client"
+		val imSpaceLib = ":im-f2:space:space-lib"
 	}
 
 	object Script {

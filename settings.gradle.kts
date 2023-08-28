@@ -56,14 +56,12 @@ include(
     "im-f2:privilege:privilege-client",
     "im-f2:privilege:privilege-core",
     "im-f2:privilege:privilege-domain",
-    "im-f2:privilege:privilege-lib"
-)
+    "im-f2:privilege:privilege-lib",
 
-include(
-    "im-s2:im-space:space-api",
-    "im-s2:im-space:space-client",
-    "im-s2:im-space:space-domain",
-    "im-s2:im-space:space-lib"
+    "im-f2:space:space-api",
+    "im-f2:space:space-client",
+    "im-f2:space:space-domain",
+    "im-f2:space:space-lib"
 )
 
 include(
