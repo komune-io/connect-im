@@ -1,8 +1,12 @@
 package im.script.function.config
 
+import city.smartb.im.commons.auth.ImRole
 import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.model.RealmId
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
+import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommandDTOBase
+import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
+import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
+import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import f2.spring.exception.NotFoundException
 import i2.keycloak.f2.client.domain.ClientId
 import im.script.function.config.config.KeycloakConfigParser
@@ -10,19 +14,26 @@ import im.script.function.config.config.KeycloakConfigProperties
 import im.script.function.config.config.KeycloakUserConfig
 import im.script.function.config.config.WebClient
 import im.script.function.config.service.ConfigService
+import im.script.function.core.model.AuthContext
+import im.script.function.core.model.PermissionData
+import im.script.function.core.model.RoleData
 import im.script.function.core.service.ClientInitService
 import im.script.function.core.service.ScriptFinderService
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
-const val SUPER_ADMIN_ROLE = "super_admin"
 const val ORGANIZATION_ID_CLAIM_NAME = "memberOf"
 
 @Service
 class KeycloakConfigScript (
-    private val keycloakAggregateService: ConfigService,
     private val clientInitService: ClientInitService,
+    private val configService: ConfigService,
+    private val privilegeAggregateService: PrivilegeAggregateService,
+    private val privilegeFinderService: PrivilegeFinderService,
     private val scriptFinderService: ScriptFinderService
 ) {
     private val logger = LoggerFactory.getLogger(KeycloakConfigScript::class.java)
@@ -32,12 +43,13 @@ class KeycloakConfigScript (
         run(authRealm, config)
     }
 
-    fun run(authRealm: AuthRealm, config: KeycloakConfigProperties) = runBlocking {
+    fun run(authRealm: AuthRealm, config: KeycloakConfigProperties) = runBlocking(AuthContext(authRealm)) {
         logger.info("Verify Realm[${authRealm.realmId}] exists...")
         verifyRealm(authRealm, authRealm.realmId)
-        logger.info("Initializing Roles...")
-        initRoles(authRealm, config.roles, config.roleComposites)
-        logger.info("Initialized Roles")
+
+        logger.info("Initializing Privileges...")
+        initPrivileges(config.permissions, config.roles)
+        logger.info("Initialized Privileges")
 
         logger.info("Initializing Clients...")
         config.webClients.forEach { initWebClient(authRealm, it) }
@@ -74,35 +86,50 @@ class KeycloakConfigScript (
         }
     }
 
-    private suspend fun initRoles(authRealm: AuthRealm, roles: List<RoleIdentifier>?, roleComposites: Map<RoleIdentifier, List<RoleIdentifier>>?) {
-        roles?.let {
-            roles.forEach { role ->
-                initRoleWithComposites(authRealm, role)
-            }
-            addCompositesToAdmin(authRealm, roles.filter { it != SUPER_ADMIN_ROLE })
+    private suspend fun initPrivileges(permissions: List<PermissionData>?, roles: List<RoleData>?) {
+        initPermissions(permissions)
+        initRoles(roles)
+    }
+
+    private suspend fun initPermissions(permissions: List<PermissionData>?) = coroutineScope {
+        if (permissions.isNullOrEmpty()) {
+            return@coroutineScope
         }
 
-        roleComposites?.let {
-            roleComposites.forEach { roleComposite ->
-                initRoleWithComposites(authRealm, roleComposite.key, roleComposite.value)
+        permissions.map { permission ->
+            async {
+                privilegeFinderService.getPrivilegeOrNull(null, permission.name)
+                    ?: privilegeAggregateService.define(permission.toCommand(null))
             }
+        }.awaitAll()
+
+        privilegeFinderService.getRoleOrNull(null, ImRole.SUPER_ADMIN.identifier)?.let { superAdminRole ->
+            RoleDefineCommandDTOBase(
+                identifier = superAdminRole.identifier,
+                description = superAdminRole.description,
+                targets = superAdminRole.targets,
+                locale = superAdminRole.locale,
+                bindings = superAdminRole.bindings.mapValues { (_, roles) -> roles.map(RoleDTOBase::identifier) },
+                permissions = superAdminRole.permissions + permissions.map(PermissionData::name)
+            ).let { privilegeAggregateService.define(it) }
         }
+    }
+
+    private suspend fun initRoles(roles: List<RoleData>?) = coroutineScope {
+        if (roles.isNullOrEmpty()) {
+            return@coroutineScope
+        }
+
+        roles.map { role ->
+            async {
+                privilegeFinderService.getPrivilegeOrNull(null, role.name)
+                    ?: privilegeAggregateService.define(role.toCommand(null))
+            }
+        }.awaitAll()
     }
 
     private suspend fun verifyRealm(authRealm: AuthRealm, realmId: RealmId) {
         scriptFinderService.getRealm(authRealm, realmId) ?: throw NotFoundException("Realm", realmId)
-    }
-    private suspend fun initRoleWithComposites(authRealm: AuthRealm, role: RoleIdentifier, composites: List<RoleIdentifier> = emptyList()) {
-        scriptFinderService.getRole(authRealm, role, authRealm.realmId)
-            ?: keycloakAggregateService.createRole(authRealm, role)
-
-        if (composites.isNotEmpty()) {
-            keycloakAggregateService.addRoleComposites(authRealm, role, composites)
-        }
-    }
-
-    private suspend fun addCompositesToAdmin(authRealm: AuthRealm, composites: List<RoleIdentifier>) {
-        keycloakAggregateService.addRoleComposites(authRealm, SUPER_ADMIN_ROLE, composites)
     }
 
     private suspend fun initUsers(authRealm: AuthRealm, users: List<KeycloakUserConfig>?) {
@@ -113,7 +140,7 @@ class KeycloakConfigScript (
 
     private suspend fun initUser(authRealm: AuthRealm, user: KeycloakUserConfig) {
         scriptFinderService.getUser(authRealm, user.email, authRealm.realmId)
-            ?: keycloakAggregateService.createUser(
+            ?: configService.createUser(
                 authRealm = authRealm,
                 username = user.username,
                 email = user.email,
@@ -122,7 +149,7 @@ class KeycloakConfigScript (
                 isEnable = true,
                 password = user.password
             ).let { userId ->
-                keycloakAggregateService.grantUser(authRealm, userId, user.role)
+                configService.grantUser(authRealm, userId, user.role)
             }
     }
 }

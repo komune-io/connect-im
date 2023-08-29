@@ -41,6 +41,9 @@ im:
   script:
     config:
       json: file:./infra/docker-compose/config/build/config.json
+      auth:
+        serverUrl: http://localhost:8080
+        realmId: im-local
     init:
       json: file:./infra/docker-compose/config/build/init.json
       auth:

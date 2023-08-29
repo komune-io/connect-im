@@ -1,5 +1,6 @@
 package im.script.function.init
 
+import city.smartb.im.commons.auth.ImRole
 import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.utils.ParserUtils
 import city.smartb.im.core.privilege.domain.model.RoleTarget
@@ -21,8 +22,6 @@ import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.UUID
-
-const val SUPER_ADMIN_ROLE = "super_admin"
 
 @Service
 class KeycloakInitScript(
@@ -120,7 +119,7 @@ class KeycloakInitScript(
                         id = userId,
                         realm = realmId,
                         clientId = null,
-                        SUPER_ADMIN_ROLE
+                        ImRole.SUPER_ADMIN.identifier
                     )
                 }
             }

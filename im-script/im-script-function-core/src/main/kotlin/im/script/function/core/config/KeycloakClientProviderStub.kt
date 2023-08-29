@@ -1,24 +1,23 @@
-package city.smartb.im.infra.keycloak.client
+package im.script.function.core.config
 
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
-import city.smartb.im.commons.auth.AuthenticationProvider
-import city.smartb.im.commons.model.ImMessage
 import city.smartb.im.commons.model.RealmId
+import city.smartb.im.infra.keycloak.client.KeycloakClient
+import city.smartb.im.infra.keycloak.client.KeycloakClientBuilder
+import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
+import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 
 @Service
-open class KeycloakClientProvider(
+@Primary
+class KeycloakClientProviderStub(
     private val authenticationResolver: ImAuthenticationProvider
-) {
+): KeycloakClientProvider(authenticationResolver) {
     private val cache = mutableMapOf<String, KeycloakClientCache>()
 
-    open suspend fun getFor(message: ImMessage): KeycloakClient {
-        return getFor(message.realmId)
-    }
-
-    open suspend fun getFor(realmId: RealmId?): KeycloakClient {
-        val issuer = AuthenticationProvider.getIssuer()
-        val clientCache = cache.getOrPut(issuer) {
+    override suspend fun getFor(realmId: RealmId?): KeycloakClient {
+        val auth = authenticationResolver.getAuth()
+        val clientCache = cache.getOrPut("${auth.serverUrl} ${auth.clientId}") {
             KeycloakClientCache(KeycloakClientBuilder.openConnection(authenticationResolver.getAuth()))
         }
         return clientCache.clients.getOrPut(realmId) {
