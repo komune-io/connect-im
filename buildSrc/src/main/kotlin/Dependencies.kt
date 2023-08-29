@@ -158,7 +158,7 @@ object Modules {
         private const val BASE = ":im-infra"
 
         const val keycloak = "$BASE:keycloak"
-        const val redis = "$BASE:infra-redis"
+        const val redis = "$BASE:redis"
     }
 
     object Core {
@@ -171,35 +171,39 @@ object Modules {
 
 	object F2 {
         private const val BASE = ":im-f2"
-		const val imOrganizationApi = "$BASE:im-organization:organization-api"
-		const val imOrganizationDomain = "$BASE:im-organization:organization-domain"
-		const val imOrganizationClient = "$BASE:im-organization:organization-client"
-		const val imOrganizationLib = "$BASE:im-organization:organization-lib"
 
-		const val imUserApi = "$BASE:im-user:user-api"
-		const val imUserDomain = "$BASE:im-user:user-domain"
-		const val imUserClient = "$BASE:im-user:user-client"
-		const val imUserLib = "$BASE:im-user:user-lib"
+        private const val API_KEY = "$BASE:apikey:apikey"
+        const val apikeyApi = "$API_KEY-api"
+        const val apikeyClient = "$API_KEY-client"
+        const val apikeyDomain = "$API_KEY-domain"
+        const val apikeyLib = "$API_KEY-lib"
 
-		const val imApikeyApi = "$BASE:im-apikey:apikey-api"
-		const val imApikeyDomain = "$BASE:im-apikey:apikey-domain"
-		const val imApikeyClient = "$BASE:im-apikey:apikey-client"
-		const val imApikeyLib = "$BASE:im-apikey:apikey-lib"
+        private const val ORGANIZATION = "$BASE:organization:organization"
+		const val organizationApi = "$ORGANIZATION-api"
+        const val organizationClient = "$ORGANIZATION-client"
+        const val organizationDomain = "$ORGANIZATION-domain"
+		const val organizationLib = "$ORGANIZATION-lib"
 
         private const val PRIVILEGE = "$BASE:privilege:privilege"
 		const val privilegeApi = "$PRIVILEGE-api"
         const val privilegeClient = "$PRIVILEGE-client"
         const val privilegeDomain = "$PRIVILEGE-domain"
         const val privilegeLib = "$PRIVILEGE-lib"
+
+        private const val USER = "$BASE:user:user"
+        const val userApi = "$USER-api"
+        const val userClient = "$USER-client"
+        const val userDomain = "$USER-domain"
+        const val userLib = "$USER-lib"
 	}
 
 	object Script {
-		const val imScriptGateway = ":im-script:im-script-gateway"
-		const val imScriptConfig = ":im-script:im-script-gateway-configuration"
+		const val gateway = ":im-script:im-script-gateway"
+		const val config = ":im-script:im-script-gateway-configuration"
 
-		const val imScriptFunctionConfig = ":im-script:im-script-function-config"
-		const val imScriptFunctionCore = ":im-script:im-script-function-core"
-		const val imScriptFunctionInit = ":im-script:im-script-function-init"
+		const val functionConfig = ":im-script:im-script-function-config"
+		const val functionCore = ":im-script:im-script-function-core"
+		const val functionInit = ":im-script:im-script-function-init"
 	}
 
     const val imApiConfig = ":im-api:api-config"

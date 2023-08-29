@@ -12,6 +12,4 @@ dependencies {
 
     Dependencies.Jvm.Fs.client(::api)
     Dependencies.Jvm.i2Auth(::api)
-
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }

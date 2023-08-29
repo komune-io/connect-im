@@ -23,8 +23,8 @@ include(
 )
 
 include(
-    "im-infra:infra-redis",
-    "im-infra:keycloak"
+    "im-infra:keycloak",
+    "im-infra:redis"
 )
 
 include(
@@ -33,26 +33,26 @@ include(
 )
 
 include(
-    "im-f2:im-organization:organization-api",
-    "im-f2:im-organization:organization-domain",
-    "im-f2:im-organization:organization-client",
-    "im-f2:im-organization:organization-lib",
+    "im-f2:apikey:apikey-api",
+    "im-f2:apikey:apikey-domain",
+    "im-f2:apikey:apikey-client",
+    "im-f2:apikey:apikey-lib",
 
-    "im-f2:im-user:user-api",
-    "im-f2:im-user:user-domain",
-    "im-f2:im-user:user-client",
-    "im-f2:im-user:user-lib",
-
-    "im-f2:im-apikey:apikey-api",
-    "im-f2:im-apikey:apikey-domain",
-    "im-f2:im-apikey:apikey-client",
-    "im-f2:im-apikey:apikey-lib",
+    "im-f2:organization:organization-api",
+    "im-f2:organization:organization-domain",
+    "im-f2:organization:organization-client",
+    "im-f2:organization:organization-lib",
 
     "im-f2:privilege:privilege-api",
     "im-f2:privilege:privilege-client",
     "im-f2:privilege:privilege-core",
     "im-f2:privilege:privilege-domain",
-    "im-f2:privilege:privilege-lib"
+    "im-f2:privilege:privilege-lib",
+
+    "im-f2:user:user-api",
+    "im-f2:user:user-domain",
+    "im-f2:user:user-client",
+    "im-f2:user:user-lib",
 )
 
 include(
