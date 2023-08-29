@@ -7,16 +7,16 @@ import city.smartb.im.commons.model.RealmId
 import org.springframework.stereotype.Service
 
 @Service
-class KeycloakClientProvider(
+open class KeycloakClientProvider(
     private val authenticationResolver: ImAuthenticationProvider
 ) {
     private val cache = mutableMapOf<String, KeycloakClientCache>()
 
-    suspend fun getFor(message: ImMessage): KeycloakClient {
+    open suspend fun getFor(message: ImMessage): KeycloakClient {
         return getFor(message.realmId)
     }
 
-    suspend fun getFor(realmId: RealmId?): KeycloakClient {
+    open suspend fun getFor(realmId: RealmId?): KeycloakClient {
         val issuer = AuthenticationProvider.getIssuer()
         val clientCache = cache.getOrPut(issuer) {
             KeycloakClientCache(KeycloakClientBuilder.openConnection(authenticationResolver.getAuth()))

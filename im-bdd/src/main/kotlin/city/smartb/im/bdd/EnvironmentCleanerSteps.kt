@@ -1,6 +1,5 @@
 package city.smartb.im.bdd
 
-import city.smartb.im.commons.auth.ImRole
 import io.cucumber.java8.En
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -36,16 +35,8 @@ class EnvironmentCleanerSteps(
     }
 
     private suspend fun cleanKeycloakRoles() = coroutineScope {
-        val permanentRoles = ImRole.values()
-            .asSequence()
-            .map(ImRole::identifier)
-            .plus("default-roles-${context.keycloakClient().realmId}")
-            .plus("uma_authorization")
-            .plus("offline_access")
-            .toSet()
-
         context.keycloakClient().roles().list().filter { role ->
-            role.name !in permanentRoles
+            role.name !in context.permanentRoles()
         }.map { role ->
             async { context.keycloakClient().role(role.name).remove() }
         }.awaitAll()

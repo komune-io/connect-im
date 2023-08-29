@@ -1,9 +1,6 @@
 package im.script.function.core.service
 
 import city.smartb.im.commons.model.AuthRealm
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
-import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.client.domain.ClientIdentifier
 import i2.keycloak.f2.client.domain.ClientModel
@@ -22,7 +19,6 @@ import org.springframework.stereotype.Service
 class ScriptFinderService(
     private val realmGetFunction: RealmGetFunction,
     private val clientGetByClientIdentifierQueryFunction: ClientGetByClientIdentifierFunction,
-    private val privilegeFinderService: PrivilegeFinderService,
     private val userGetByEmailQueryFunction: UserGetByEmailFunction,
 ) {
 
@@ -39,15 +35,6 @@ class ScriptFinderService(
             realmId = realmId,
             auth = authRealm
         ).invokeWith(clientGetByClientIdentifierQueryFunction).item
-    }
-
-    suspend fun getRole(authRealm: AuthRealm, identifier: RoleIdentifier, realmId: String): RoleDTOBase? {
-        return privilegeFinderService.getRoleOrNull(realmId, identifier)
-//        return RoleGetByNameQuery(
-//            name = name,
-//            realmId = realmId,
-//            auth = authRealm
-//        ).invokeWith(roleGetByNameQueryFunction).item
     }
 
     suspend fun getUser(authRealm: AuthRealm, email: String, realmId: RealmId): UserModel? {

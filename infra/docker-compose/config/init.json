@@ -1,37 +1,29 @@
 [
-  {
-    "realmId": "${KC_REALM}",
-    "theme": "${KC_REALM_THEME}",
-    "smtp": {
-      "host": "${SMTP_HOST}",
-      "port": "${SMTP_POST}",
-      "from": "noreply@smartb.city",
-      "ssl": "false",
-      "starttls": "false",
-      "auth": "false"
-    },
-    "adminUser": [{
-      "username": "${KC_ADMIN_USER}",
-      "password": "${KC_ADMIN_PASS}",
-      "email": "admin@admin.com",
-      "firstName": "admin",
-      "lastName": "im"
-    }],
-    "adminClient": [{
-      "clientId": "${KC_ADMIN_CLIENT_ID}",
-      "clientSecret": "${KC_ADMIN_CLIENT_SECRET}"
-    }],
-    "baseRoles": [
-      "super_admin",
-      "im_read_user",
-      "im_write_user",
-      "im_write_organization",
-      "im_read_organization",
-      "im_read_role",
-      "im_write_role",
-      "im_write_my_organization",
-      "admin",
-      "user"
-    ]
-  }
+    {
+        "realmId": "${KC_REALM}",
+        "theme": "${KC_REALM_THEME}",
+        "smtp": {
+            "host": "${SMTP_HOST}",
+            "port": "${SMTP_POST}",
+            "from": "noreply@smartb.city",
+            "ssl": "false",
+            "starttls": "false",
+            "auth": "false"
+        },
+        "adminUser": [{
+            "username": "${KC_ADMIN_USER}",
+            "password": "${KC_ADMIN_PASS}",
+            "email": "admin@admin.com",
+            "firstName": "admin",
+            "lastName": "im"
+        }],
+        "adminClient": [{
+            "clientId": "${KC_ADMIN_CLIENT_ID}",
+            "clientSecret": "${KC_ADMIN_CLIENT_SECRET}"
+        }],
+        "genericPermissions": {
+            "im": true,
+            "fs": true
+        }
+    }
 ]

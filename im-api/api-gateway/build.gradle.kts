@@ -6,12 +6,12 @@ plugins {
 
 dependencies {
 	implementation(project(":im-api:api-config"))
-	implementation(project(":im-infra:infra-redis"))
+	implementation(project(Modules.Infra.redis))
 
-	implementation(project(Modules.F2.imApikeyApi))
-	implementation(project(Modules.F2.imOrganizationApi))
+	implementation(project(Modules.F2.apikeyApi))
+	implementation(project(Modules.F2.organizationApi))
 	implementation(project(Modules.F2.privilegeApi))
-	implementation(project(Modules.F2.imUserApi))
+	implementation(project(Modules.F2.userApi))
 	implementation(project(Modules.S2.imSpaceApi))
 
 	implementation("city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}")

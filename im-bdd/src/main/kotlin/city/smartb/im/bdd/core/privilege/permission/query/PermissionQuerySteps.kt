@@ -29,6 +29,12 @@ class PermissionQuerySteps: En, ImCucumberStepsDefinition() {
             }
         }
 
+        Then("I should receive an empty list of permissions") {
+            step {
+                assertFetchedPermissions(emptyList())
+            }
+        }
+
         Then("I should receive a list of permissions:") { dataTable: DataTable ->
             step {
                 dataTable.asList(PermissionFetchedParams::class.java)
@@ -39,12 +45,13 @@ class PermissionQuerySteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun assertFetchedPermissions(identifiers: List<TestContextKey>) = coroutineScope {
-        val fetchedIdentifiers = context.fetched.permissions.map(PermissionDTOBase::identifier)
+        val fetchedPermissions = context.fetched.permissions.filter { it.identifier !in context.permanentRoles() }
+        val fetchedIdentifiers = fetchedPermissions.map(PermissionDTOBase::identifier)
         val expectedIdentifiers = identifiers.map(context.permissionIdentifiers::safeGet)
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 
         val permissionAsserter = AssertionBdd.permission(context.keycloakClient())
-        context.fetched.permissions.map { permission ->
+        fetchedPermissions.map { permission ->
             async { permissionAsserter.assertThatId(permission.identifier).matches(permission) }
         }.awaitAll()
     }

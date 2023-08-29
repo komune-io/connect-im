@@ -9,14 +9,14 @@ dependencies {
     implementation(project(Modules.imCommonsApi))
     implementation(project(Modules.Infra.keycloak))
 
-    implementation(project(Modules.F2.imApikeyApi))
-    implementation(project(Modules.F2.imApikeyLib))
+    implementation(project(Modules.F2.apikeyApi))
+    implementation(project(Modules.F2.apikeyLib))
 
-    implementation(project(Modules.F2.imOrganizationApi))
-    implementation(project(Modules.F2.imOrganizationLib))
+    implementation(project(Modules.F2.organizationApi))
+    implementation(project(Modules.F2.organizationLib))
 
-    implementation(project(Modules.F2.imUserApi))
-    implementation(project(Modules.F2.imUserLib))
+    implementation(project(Modules.F2.userApi))
+    implementation(project(Modules.F2.userLib))
 
     implementation(project(Modules.F2.privilegeApi))
     implementation(project(Modules.F2.privilegeLib))

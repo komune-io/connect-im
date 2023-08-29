@@ -11,6 +11,10 @@ object PrivilegePolicies {
         return authedUser.hasRole(ImRole.IM_ROLE_READ)
     }
 
+    fun canList(authedUser: AuthedUserDTO): Boolean {
+        return authedUser.hasRole(ImRole.IM_ROLE_READ)
+    }
+
     fun canDefine(authedUser: AuthedUserDTO): Boolean {
         return authedUser.hasRole(ImRole.IM_ROLE_WRITE)
     }

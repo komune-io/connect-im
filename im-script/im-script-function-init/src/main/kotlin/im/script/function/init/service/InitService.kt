@@ -19,8 +19,6 @@ class InitService(
     private val realmCreateFunction: RealmCreateFunction,
     private val userCreateFunction: UserCreateFunction,
     private val userRolesGrantFunction: UserRolesGrantFunction,
-//    private val roleCreateFunction: RoleCreateFunction,
-//    private val roleAddCompositesFunction: RoleAddCompositesFunction
 ) {
 
     suspend fun createRealm(authRealm: AuthRealm, id: RealmId, theme: String?, smtpConfig: Map<String, String>?): RealmId {
@@ -66,27 +64,5 @@ class InitService(
             realmId = realm,
             clientId = clientId
         ).invokeWith(userRolesGrantFunction)
-    }
-
-    suspend fun createRole(authRealm: AuthRealm, roleName: RoleIdentifier, description: String?, composites: List<String>, realm: String) {
-//        RoleCreateCommand(
-//            name = roleName,
-//            description = description,
-//            isClientRole = false,
-//            composites = composites,
-//            auth = authRealm,
-//            realmId = realm
-//        ).invokeWith(roleCreateFunction)
-        TODO()
-    }
-
-    suspend fun roleAddComposites(authRealm: AuthRealm, roleName: RoleIdentifier, composites: List<String>, realm: String) {
-//        RoleAddCompositesCommand(
-//            roleName = roleName,
-//            composites = composites,
-//            auth = authRealm,
-//            realmId = realm
-//        ).invokeWith(roleAddCompositesFunction)
-        TODO()
     }
 }

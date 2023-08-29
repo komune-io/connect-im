@@ -1,0 +1,51 @@
+{
+    "superAdmin": {
+        "name": "super_admin",
+        "description": "Full access to all resources"
+    },
+    "im": [
+        {
+            "name": "im_user_read",
+            "description": "Ability to view any user data"
+        }, {
+            "name": "im_user_write",
+            "description": "Ability to modify any user data"
+        }, {
+            "name": "im_organization_read",
+            "description": "Ability to view any organization data"
+        }, {
+            "name": "im_organization_write",
+            "description": "Ability to modify any organization data"
+        }, {
+            "name": "im_organization_write_own",
+            "description": "Ability to modify own organization data"
+        }, {
+            "name": "im_role_read",
+            "description": "Ability to view any role data"
+        }, {
+            "name": "im_role_write",
+            "description": "Ability to modify any role data"
+        }, {
+            "name": "im_apikey_read",
+            "description": "Ability to view API keys"
+        }, {
+            "name": "im_apikey_write",
+            "description": "Ability to modify API keys"
+        }
+    ],
+    "fs": [
+        {
+            "name": "fs_file_read",
+            "description": "Ability to view and download files"
+        }, {
+            "name": "fs_file_write",
+            "description": "Ability to upload and modify files"
+        }, {
+            "name": "fs_policy_read",
+            "description": "Ability to view bucket policies"
+        }, {
+            "name": "fs_policy_write",
+            "description": "Ability to modify bucket policies"
+        }
+    ]
+}

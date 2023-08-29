@@ -1,6 +1,5 @@
-spring:
-  main:
-    web-application-type: none
+server:
+  port: 1000
 
 im:
   script:
@@ -19,6 +18,8 @@ im:
         delayMillis: ${im.script.retry.delayMillis}
 #      json: file:./infra/docker-compose/config/init.json
 
+i2:
+  issuers:
 
 ---
 spring:

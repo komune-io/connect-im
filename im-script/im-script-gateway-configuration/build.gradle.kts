@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.Script.imScriptFunctionConfig))
+    implementation(project(Modules.Script.functionConfig))
     Dependencies.Jvm.f2(::implementation)
     Dependencies.Jvm.slf4j(::implementation)
 }

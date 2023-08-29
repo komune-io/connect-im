@@ -9,7 +9,7 @@ data class KeycloakInitProperties(
     val smtp: Map<String, String>?,
     val adminUser: List<AdminUserData>,
     val adminClient: List<AppClient>,
-    val baseRoles: List<String>
+    val genericPermissions: GenericPermissionsSelection
 )
 
 data class AdminUserData(
@@ -23,4 +23,9 @@ data class AdminUserData(
 data class AdminClientData(
     val name: String,
     val secret: String
+)
+
+data class GenericPermissionsSelection(
+    val im: Boolean = true,
+    val fs: Boolean = true
 )
