@@ -128,12 +128,8 @@ class KeycloakInitScript(
 
     private suspend fun initGenericPermissions(properties: KeycloakInitProperties) = coroutineScope {
         val genericPermissions = ParserUtils.getConfiguration("genericPermissions.json", GenericPermissionsProperties::class.java)
-        val permissions = listOfNotNull(
-            genericPermissions.im.takeIf { properties.genericPermissions.im },
-            genericPermissions.fs.takeIf { properties.genericPermissions.fs }
-        ).flatten()
 
-        permissions.map { permission ->
+        genericPermissions.im.map { permission ->
             async {
                 privilegeFinderService.getPrivilegeOrNull(properties.realmId, permission.name)
                     ?: privilegeAggregateService.define(permission.toCommand(properties.realmId))
@@ -147,7 +143,7 @@ class KeycloakInitScript(
             targets = listOf(RoleTarget.USER.name),
             locale = emptyMap(),
             bindings = null,
-            permissions = permissions.map(PermissionData::name)
+            permissions = genericPermissions.im.map(PermissionData::name)
         ).let { privilegeAggregateService.define(it) }
     }
 }

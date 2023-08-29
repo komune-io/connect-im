@@ -32,20 +32,5 @@
             "name": "im_apikey_write",
             "description": "Ability to modify API keys"
         }
-    ],
-    "fs": [
-        {
-            "name": "fs_file_read",
-            "description": "Ability to view and download files"
-        }, {
-            "name": "fs_file_write",
-            "description": "Ability to upload and modify files"
-        }, {
-            "name": "fs_policy_read",
-            "description": "Ability to view bucket policies"
-        }, {
-            "name": "fs_policy_write",
-            "description": "Ability to modify bucket policies"
-        }
     ]
 }

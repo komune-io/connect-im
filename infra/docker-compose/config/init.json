@@ -20,10 +20,6 @@
         "adminClient": [{
             "clientId": "${KC_ADMIN_CLIENT_ID}",
             "clientSecret": "${KC_ADMIN_CLIENT_SECRET}"
-        }],
-        "genericPermissions": {
-            "im": true,
-            "fs": true
-        }
+        }]
     }
 ]
