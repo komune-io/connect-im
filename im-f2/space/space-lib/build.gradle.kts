@@ -11,5 +11,5 @@ dependencies {
     implementation(project(Modules.imKeycloakF2RealmQuery))
 
     implementation(project(":im-api:api-config"))
-    implementation(project(":im-infra:infra-redis"))
+    implementation(project(Modules.Infra.redis))
 }

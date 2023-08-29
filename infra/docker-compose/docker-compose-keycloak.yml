@@ -1,14 +1,15 @@
 version: "3.7"
 
 services:
-  keycloak-it:
-    image: smartbcity/im-keycloak:${VERSION_IM}
+  im-keycloak:
+    image: smartbcity/im-keycloak:next
+    container_name: ${KC_HOSTNAME}
     environment:
-      KC_DB_URL: 'jdbc:postgresql://keycloak-postgres/keycloak-it'
+      KC_DB_URL: 'jdbc:postgresql://im-keycloak-postgres/im-keycloak'
       KC_DB_PASSWORD: admin
       KC_DB_USERNAME: admin
       KC_DB_SCHEMA: public
-      KC_HOSTNAME: ${KC_HOSTNAME}:8080
+      KC_HOSTNAME: localhost:8080
       KEYCLOAK_ADMIN: ${KC_ROOT_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KC_ROOT_PASS}
       PROXY_ADDRESS_FORWARDING: "true"
@@ -19,13 +20,13 @@ services:
     networks:
       - net
     depends_on:
-      - keycloak-postgres-it
+      - im-keycloak-postgres
 
-  keycloak-postgres-it:
+  im-keycloak-postgres:
     image: postgres
-    container_name: keycloak-postgres
+    container_name: im-keycloak-postgres
     environment:
-      POSTGRES_DB: keycloak-it
+      POSTGRES_DB: im-keycloak
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
     networks:

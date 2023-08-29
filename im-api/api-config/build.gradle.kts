@@ -15,5 +15,4 @@ dependencies {
 //    Dependencies.Jvm.f2Auth(::api)
     //TODO replace f2-spring-boot-starter-auth-tenant by  Dependencies.Jvm.f2Auth(::api)
     api(project(":im-api:f2-spring-boot-starter-auth-tenant"))
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }
