@@ -65,7 +65,6 @@ class PermissionDefineSteps: En, ImCucumberStepsDefinition() {
 
     private suspend fun definePermission(params: PermissionDefineParams) = context.permissionIdentifiers.register(params.identifier) {
         command = PermissionDefineCommandDTOBase(
-            realmId = context.realmId,
             identifier = params.identifier,
             description = params.description,
         )

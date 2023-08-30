@@ -74,7 +74,6 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
 
     private suspend fun defineRole(params: RoleDefineParams) = context.roleIdentifiers.register(params.identifier) {
         command = RoleDefineCommandDTOBase(
-            realmId = context.realmId,
             identifier = params.identifier,
             description = params.description,
             targets = params.targets.map { it.name },
