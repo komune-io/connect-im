@@ -31,7 +31,7 @@ class GivenRealm(
 
 	private fun create(id: String): RealmRepresentation? {
 		return try {
-			val realm = client.buildRealmRepresentation(
+			val realm = buildRealmRepresentation(
 				realm = id
 			)
 			client.realms().create(realm)

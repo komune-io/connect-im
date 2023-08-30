@@ -14,9 +14,6 @@ dependencies {
     implementation(project(Modules.imKeycloakF2GroupQuery))
     implementation(project(Modules.imKeycloakF2GroupCommand))
 
-    implementation(project(Modules.imKeycloakF2RealmQuery))
-    implementation(project(Modules.imKeycloakF2RealmCommand))
-
     implementation(project(Modules.imKeycloakF2RoleQuery))
     implementation(project(Modules.imKeycloakF2RoleCommand))
 

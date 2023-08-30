@@ -8,6 +8,9 @@ import city.smartb.im.core.client.domain.command.ClientGrantClientRolesCommand
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
+import city.smartb.im.space.domain.features.command.SpaceCreateCommand
+import city.smartb.im.space.lib.SpaceAggregateService
+import city.smartb.im.space.lib.SpaceFinderService
 import im.script.function.core.model.AppClient
 import im.script.function.core.model.AuthContext
 import im.script.function.core.model.PermissionData
@@ -34,6 +37,8 @@ class KeycloakInitScript(
     private val imScriptInitProperties: ImScriptInitProperties,
     private val initService: InitService,
     private val scriptFinderService: ScriptFinderService,
+    private val spaceAggregateService: SpaceAggregateService,
+    private val spaceFinderService: SpaceFinderService,
     private val privilegeAggregateService: PrivilegeAggregateService,
     private val privilegeFinderService: PrivilegeFinderService
 ) {
@@ -47,8 +52,12 @@ class KeycloakInitScript(
     suspend fun runOne(properties: KeycloakInitProperties) {
         val masterAuth = imScriptInitProperties.auth.toAuthRealm()
         withContext(AuthContext(masterAuth)) {
+            logger.info("Initializing IM client...")
+            initImClient(properties)
+            logger.info("Initialized IM client")
+
             logger.info("Initializing Realm [${properties.realmId}]...")
-            initRealm(masterAuth, properties)
+            initRealm(properties)
             logger.info("Initialized Realm")
         }
 
@@ -79,7 +88,7 @@ class KeycloakInitScript(
             realmManagementRoles = emptyList()
         ).let { clientInitService.initAppClient(it) }
 
-        val realmClientId = clientCoreFinderService.getByIdentifier("${properties.realmId.lowercase()}-realm").id
+        val realmClientId = clientCoreFinderService.getByIdentifier("${properties.realmId}-realm").id
         val realmClientRoles = clientCoreFinderService.listClientRoles(realmClientId)
         ClientGrantClientRolesCommand(
             id = imClientId,
@@ -98,13 +107,12 @@ class KeycloakInitScript(
         }.awaitAll()
     }
 
-    private suspend fun initRealm(authRealm: AuthRealm, properties: KeycloakInitProperties) {
-        val realmId = properties.realmId
-        scriptFinderService.getRealm(authRealm, realmId)
-            ?.let { logger.info("Realm already created") }
-            ?: initService.createRealm(authRealm, realmId, properties.theme, properties.smtp)
-
-        initImClient(properties)
+    private suspend fun initRealm(properties: KeycloakInitProperties) {
+        if (spaceFinderService.getOrNull(properties.realmId) != null) {
+            logger.info("Realm already created")
+        } else {
+            spaceAggregateService.create(SpaceCreateCommand(properties.realmId))
+        }
     }
 
     private suspend fun KeycloakInitProperties.initAdmin(authRealm: AuthRealm, properties: AdminUserData) {

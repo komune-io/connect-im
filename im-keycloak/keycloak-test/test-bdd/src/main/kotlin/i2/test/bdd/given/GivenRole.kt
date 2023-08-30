@@ -1,8 +1,8 @@
 package i2.test.bdd.given
 
+import city.smartb.im.commons.model.RealmId
 import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClient
-import i2.keycloak.f2.realm.domain.RealmId
 import kotlinx.coroutines.runBlocking
 
 class GivenRole(

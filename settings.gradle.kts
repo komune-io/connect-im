@@ -78,10 +78,6 @@ include(
     "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-command",
     "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-query",
 
-    "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-domain",
-    "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-command",
-    "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-query",
-
     "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-domain",
     "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-command",
     "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-query",

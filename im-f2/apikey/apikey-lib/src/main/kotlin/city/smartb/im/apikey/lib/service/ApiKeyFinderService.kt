@@ -29,7 +29,7 @@ open class ApiKeyFinderService<MODEL : ApiKeyDTO>(
     suspend fun apikeyGet(
         query: ApiKeyGetQuery,
         apikeyMapper: ApiKeyMapper<ApiKey, MODEL>,
-    ): ApiKeyGetResult<MODEL> = redisCache.getFormCacheOr(CacheName.Apikey, query.id) {
+    ): ApiKeyGetResult<MODEL> = redisCache.getFromCacheOr(CacheName.Apikey, query.id) {
         groupGetFunction.invoke(query.toGroupGetByIdQuery())
             .item
             ?.let { group -> group.toApiKeys().firstOrNull { it.id == query.id }}

@@ -35,7 +35,7 @@ open class OrganizationFinderService<MODEL : OrganizationDTO>(
     suspend fun organizationGet(
         query: OrganizationGetQuery,
         organizationMapper: OrganizationMapper<Organization, MODEL>,
-    ): OrganizationGetResult<MODEL> = redisCache.getFormCacheOr(CacheName.Organization, query.id) {
+    ): OrganizationGetResult<MODEL> = redisCache.getFromCacheOr(CacheName.Organization, query.id) {
         groupGetFunction.invoke(query.toGroupGetByIdQuery())
             .item
             ?.let { group -> groupMapper.toOrganization(group) }

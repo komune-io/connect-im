@@ -4,6 +4,7 @@ import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.model.RealmId
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
+import city.smartb.im.space.lib.SpaceFinderService
 import f2.spring.exception.NotFoundException
 import im.script.function.config.config.KeycloakConfigParser
 import im.script.function.config.config.KeycloakConfigProperties
@@ -30,7 +31,8 @@ class KeycloakConfigScript (
     private val imScriptConfigProperties: ImScriptConfigProperties,
     private val privilegeAggregateService: PrivilegeAggregateService,
     private val privilegeFinderService: PrivilegeFinderService,
-    private val scriptFinderService: ScriptFinderService
+    private val scriptFinderService: ScriptFinderService,
+    private val spaceFinderService: SpaceFinderService
 ) {
     private val logger = LoggerFactory.getLogger(KeycloakConfigScript::class.java)
 
@@ -44,7 +46,7 @@ class KeycloakConfigScript (
 
     suspend fun run(authRealm: AuthRealm, config: KeycloakConfigProperties) {
         logger.info("Verify Realm[${config.realmId}] exists...")
-        verifyRealm(authRealm, config.realmId)
+        verifyRealm(config.realmId)
 
         logger.info("Initializing Privileges...")
         initPrivileges(config.permissions, config.roles)
@@ -91,8 +93,9 @@ class KeycloakConfigScript (
         }.awaitAll()
     }
 
-    private suspend fun verifyRealm(authRealm: AuthRealm, realmId: RealmId) {
-        scriptFinderService.getRealm(authRealm, realmId) ?: throw NotFoundException("Realm", realmId)
+    private suspend fun verifyRealm(realmId: RealmId) {
+        spaceFinderService.getOrNull(realmId)
+            ?: throw NotFoundException("Realm", realmId)
     }
 
     private suspend fun initUsers(authRealm: AuthRealm, users: List<KeycloakUserConfig>?) {

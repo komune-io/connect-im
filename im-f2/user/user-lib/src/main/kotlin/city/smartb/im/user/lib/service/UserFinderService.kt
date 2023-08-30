@@ -26,7 +26,7 @@ class UserFinderService(
     private val authenticationResolver: ImAuthenticationProvider,
     private val redisCache: RedisCache,
 ) {
-    suspend fun userGet(query: UserGetQuery): User? = redisCache.getFormCacheOr(CacheName.User, query.id) {
+    suspend fun userGet(query: UserGetQuery): User? = redisCache.getFromCacheOr(CacheName.User, query.id) {
         val auth = authenticationResolver.getAuth()
         KeycloakUserGetQuery(
             id = query.id,

@@ -1,7 +1,7 @@
 package im.script.function.init.config
 
+import city.smartb.im.commons.model.RealmId
 import city.smartb.im.core.client.domain.model.ClientIdentifier
-import i2.keycloak.f2.realm.domain.RealmId
 import im.script.function.core.model.AppClient
 
 data class KeycloakInitProperties(

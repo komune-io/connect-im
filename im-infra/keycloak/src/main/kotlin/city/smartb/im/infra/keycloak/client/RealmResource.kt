@@ -1,12 +1,6 @@
 package city.smartb.im.infra.keycloak.client
 
-import city.smartb.im.commons.model.RealmId
-import org.keycloak.admin.client.resource.RealmResource
-import org.keycloak.admin.client.resource.RealmsResource
 import org.keycloak.representations.idm.RealmRepresentation
-
-fun KeycloakClient.realmsResource(): RealmsResource = keycloak.realms()
-fun KeycloakClient.realmsResource(realmId: RealmId): RealmResource = keycloak.realms().realm(realmId)
 
 const val ACCESS_TOKEN_LIFESPAN = 28800
 const val SSO_SESSSION_IDLE_TIMEOUT = 604800
@@ -19,7 +13,7 @@ const val ACCOUNT_THEME = "keycloak"
 const val ADMIN_THEME = "keycloak"
 const val IS_INTERNATIONALIZATION_ENABLED = true
 
-fun KeycloakClient.buildRealmRepresentation(
+fun buildRealmRepresentation(
 	realm: String,
 	smtpServer: Map<String, String>? = null,
 	theme: String? = null,
@@ -27,6 +21,7 @@ fun KeycloakClient.buildRealmRepresentation(
 ): RealmRepresentation {
 	val realms = RealmRepresentation()
 	realms.realm = realm
+	realms.displayName = realm
 	realms.accessTokenLifespan = ACCESS_TOKEN_LIFESPAN
 	realms.ssoSessionIdleTimeout = SSO_SESSSION_IDLE_TIMEOUT
 	realms.ssoSessionMaxLifespan = SSO_SESSION_MAX_LIFESPAN
