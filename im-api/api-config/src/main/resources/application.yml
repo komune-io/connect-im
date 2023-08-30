@@ -83,12 +83,24 @@ spring:
     activate:
       on-profile: local
 
-i2:
-  issuers:
-    -
-      name: local
-      authUrl: http://localhost:8080
-      realm: im-local
-      im:
-        clientId: im-client
-        clientSecret: secret
+f2:
+  tenant:
+    issuer-base-uri: http://localhost:8080
+
+connect:
+  im:
+    keycloak:
+      url: http://localhost:8080
+      realm: master
+      clientId: im-test-client
+      clientSecret: secret
+
+#i2:
+#  issuers:
+#    -
+#      name: local
+#      authUrl: http://localhost:8080
+#      realm: im-local
+#      im:
+#        clientId: im-client
+#        clientSecret: secret

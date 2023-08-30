@@ -2,24 +2,19 @@ package city.smartb.f2.spring.boot.auth.security
 
 import city.smartb.f2.spring.boot.auth.config.F2TrustedIssuersConfig
 import city.smartb.f2.spring.boot.auth.config.WebSecurityConfig
-import java.time.Duration
-import java.util.concurrent.ConcurrentHashMap
-import java.util.function.Function
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.authentication.ReactiveAuthenticationManagerResolver
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
-import org.springframework.security.oauth2.jwt.JwtDecoders
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider
 import org.springframework.security.oauth2.server.resource.authentication.JwtReactiveAuthenticationManager
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
+import java.time.Duration
+import java.util.concurrent.ConcurrentHashMap
 
 class TrustedIssuerJwtAuthenticationManagerResolver(
     val trustedIssuersConfig: F2TrustedIssuersConfig
@@ -33,9 +28,10 @@ class TrustedIssuerJwtAuthenticationManagerResolver(
         return this.authenticationManagers.computeIfAbsent(issuer) {
             buildAuthenticationManager(issuer).subscribeOn(Schedulers.boundedElastic())
                 .cache(
-                    { Duration.ofMillis(Long.MAX_VALUE) },
-                    { ex: Throwable? -> Duration.ZERO }
-                ) { Duration.ZERO }
+                    /* ttlForValue = */ { Duration.ofMillis(Long.MAX_VALUE) },
+                    /* ttlForError = */ { Duration.ZERO },
+                    /* ttlForEmpty = */ { Duration.ZERO }
+                )
         }
     }
 

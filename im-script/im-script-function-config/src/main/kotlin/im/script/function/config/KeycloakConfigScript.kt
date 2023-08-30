@@ -1,10 +1,7 @@
 package im.script.function.config
 
-import city.smartb.im.commons.auth.ImRole
 import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.model.RealmId
-import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommandDTOBase
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import f2.spring.exception.NotFoundException
@@ -19,10 +16,12 @@ import im.script.function.core.model.PermissionData
 import im.script.function.core.model.RoleData
 import im.script.function.core.service.ClientInitService
 import im.script.function.core.service.ScriptFinderService
+import im.script.gateway.conguration.config.ImScriptConfigProperties
+import im.script.gateway.conguration.config.base.toAuthRealm
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -32,18 +31,22 @@ const val ORGANIZATION_ID_CLAIM_NAME = "memberOf"
 class KeycloakConfigScript (
     private val clientInitService: ClientInitService,
     private val configService: ConfigService,
+    private val imScriptConfigProperties: ImScriptConfigProperties,
     private val privilegeAggregateService: PrivilegeAggregateService,
     private val privilegeFinderService: PrivilegeFinderService,
     private val scriptFinderService: ScriptFinderService
 ) {
     private val logger = LoggerFactory.getLogger(KeycloakConfigScript::class.java)
 
-    fun run(authRealm: AuthRealm, configPath: String) {
+    suspend fun run(configPath: String) {
+        val auth = imScriptConfigProperties.auth.toAuthRealm()
         val config = KeycloakConfigParser().getConfiguration(configPath)
-        run(authRealm, config)
+        withContext(AuthContext(auth)) {
+            run(auth, config)
+        }
     }
 
-    fun run(authRealm: AuthRealm, config: KeycloakConfigProperties) = runBlocking(AuthContext(authRealm)) {
+    suspend fun run(authRealm: AuthRealm, config: KeycloakConfigProperties) {
         logger.info("Verify Realm[${authRealm.realmId}] exists...")
         verifyRealm(authRealm, authRealm.realmId)
 
@@ -78,7 +81,7 @@ class KeycloakConfigScript (
                 identifier = webClient.clientId,
                 baseUrl = webClient.webUrl,
                 isStandardFlowEnabled = true,
-                isDirectAccessGrantsEnabled = false,
+                isDirectAccessGrantsEnabled = true,
                 isServiceAccountsEnabled = false,
                 isPublic = true,
                 protocolMappers = mapOf(ORGANIZATION_ID_CLAIM_NAME to ORGANIZATION_ID_CLAIM_NAME),

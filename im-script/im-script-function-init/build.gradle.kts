@@ -8,6 +8,7 @@ dependencies {
 
     api(project(Modules.imCommonsApi))
 
+    api(project(Modules.Script.config))
     api(project(Modules.Script.functionCore))
 
     api(project(Modules.imKeycloakF2ClientDomain))

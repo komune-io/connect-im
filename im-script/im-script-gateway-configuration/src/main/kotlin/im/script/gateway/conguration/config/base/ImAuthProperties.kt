@@ -3,6 +3,7 @@ package im.script.gateway.conguration.config.base
 import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.model.AuthRealmClientSecret
 import city.smartb.im.commons.model.AuthRealmPassword
+import city.smartb.im.commons.model.RealmId
 
 data class ImAuthProperties(
     val serverUrl: String,
@@ -13,7 +14,7 @@ data class ImAuthProperties(
     val password: String? = null,
 )
 
-fun ImAuthProperties.toAuthRealm(): AuthRealm {
+fun ImAuthProperties.toAuthRealm(space: RealmId? = null): AuthRealm {
     return if (clientSecret != null) {
             AuthRealmClientSecret(
                 serverUrl = serverUrl,
@@ -21,7 +22,7 @@ fun ImAuthProperties.toAuthRealm(): AuthRealm {
                 clientId = clientId,
                 clientSecret = clientSecret,
                 redirectUrl = null,
-                space = realmId
+                space = space ?: realmId
             )
         } else if (username != null && password != null) {
             AuthRealmPassword(
@@ -31,7 +32,7 @@ fun ImAuthProperties.toAuthRealm(): AuthRealm {
                 username = username,
                 password = password,
                 redirectUrl = "",
-                space = realmId
+                space = space ?: realmId
             )
 
         } else {

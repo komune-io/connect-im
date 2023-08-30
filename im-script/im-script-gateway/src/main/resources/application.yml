@@ -18,8 +18,17 @@ im:
         delayMillis: ${im.script.retry.delayMillis}
 #      json: file:./infra/docker-compose/config/init.json
 
-i2:
-  issuers:
+f2:
+  tenant:
+    issuerBaseUri: http://localhost:8080
+
+connect:
+  im:
+    keycloak:
+      url: http://localhost:8080
+      realm: master
+      clientId: im-test-client
+      clientSecret: secret
 
 ---
 spring:
@@ -31,14 +40,14 @@ im:
   script:
     config:
         auth:
-            serverUrl: http://keycloak-it:8080
-            realmId: im-test
+            serverUrl: http://localhost:8080
+            realmId: im-local
             clientId: im-test-client
             client-Secret: secret
         json: file:./infra/docker-compose/config/build/config.json
     init:
         auth:
-            serverUrl: http://keycloak-it:8080
+            serverUrl: http://localhost:8080
             username: root
             password: root
             realmId: master

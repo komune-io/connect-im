@@ -1,10 +1,8 @@
 package im.script.function.init
 
-import city.smartb.im.commons.auth.ImRole
 import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.utils.ParserUtils
-import city.smartb.im.core.privilege.domain.model.RoleTarget
-import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommandDTOBase
+import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import im.script.function.core.model.AuthContext
@@ -12,13 +10,14 @@ import im.script.function.core.model.PermissionData
 import im.script.function.core.service.ClientInitService
 import im.script.function.core.service.ScriptFinderService
 import im.script.function.init.config.AdminUserData
-import im.script.function.init.config.GenericPermissionsProperties
 import im.script.function.init.config.KeycloakInitProperties
 import im.script.function.init.service.InitService
+import im.script.gateway.conguration.config.ImScriptInitProperties
+import im.script.gateway.conguration.config.base.toAuthRealm
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -26,6 +25,7 @@ import java.util.UUID
 @Service
 class KeycloakInitScript(
     private val clientInitService: ClientInitService,
+    private val imScriptInitProperties: ImScriptInitProperties,
     private val initService: InitService,
     private val scriptFinderService: ScriptFinderService,
     private val privilegeAggregateService: PrivilegeAggregateService,
@@ -33,14 +33,13 @@ class KeycloakInitScript(
 ) {
     private val logger = LoggerFactory.getLogger(KeycloakInitScript::class.java)
 
-    fun run(auth: AuthRealm, jsonPath: String) = runBlocking(AuthContext(auth)) {
+    suspend fun run(jsonPath: String) {
         val properties = ParserUtils.getConfiguration(jsonPath, Array<KeycloakInitProperties>::class.java)
-        run(auth, properties)
-    }
-
-    suspend fun run(authRealm: AuthRealm, properties: List<KeycloakInitProperties>) {
         properties.forEach {
-            runOne(authRealm, it)
+            val auth = imScriptInitProperties.auth.toAuthRealm(it.realmId)
+            withContext(AuthContext(auth)) {
+                runOne(auth, it)
+            }
         }
     }
 
@@ -53,7 +52,7 @@ class KeycloakInitScript(
         initAdminClient(authRealm, properties)
 
         logger.info("Initializing Generic permissions...")
-        initGenericPermissions(properties)
+        initImPermissions(properties)
         logger.info("Initialized Generic permissions")
 
         properties.adminUser.forEach { adminUser ->
