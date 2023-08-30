@@ -4,7 +4,6 @@ import kotlin.js.JsExport
 
 @JsExport
 enum class ImRole(val identifier: String) {
-    SUPER_ADMIN("super_admin"),
     ORCHESTRATOR("tr_orchestrator"),
 
     IM_USER_READ("im_read_user"),

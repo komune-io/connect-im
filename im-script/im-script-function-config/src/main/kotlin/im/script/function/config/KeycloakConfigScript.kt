@@ -102,17 +102,6 @@ class KeycloakConfigScript (
                     ?: privilegeAggregateService.define(permission.toCommand(null))
             }
         }.awaitAll()
-
-        privilegeFinderService.getRoleOrNull(null, ImRole.SUPER_ADMIN.identifier)?.let { superAdminRole ->
-            RoleDefineCommandDTOBase(
-                identifier = superAdminRole.identifier,
-                description = superAdminRole.description,
-                targets = superAdminRole.targets,
-                locale = superAdminRole.locale,
-                bindings = superAdminRole.bindings.mapValues { (_, roles) -> roles.map(RoleDTOBase::identifier) },
-                permissions = superAdminRole.permissions + permissions.map(PermissionData::name)
-            ).let { privilegeAggregateService.define(it) }
-        }
     }
 
     private suspend fun initRoles(roles: List<RoleData>?) = coroutineScope {

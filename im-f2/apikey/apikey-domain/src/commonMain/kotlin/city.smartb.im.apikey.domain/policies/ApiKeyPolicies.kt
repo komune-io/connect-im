@@ -20,7 +20,7 @@ object ApiKeyPolicies {
      * User can list apikeys
      */
     fun canPage(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImRole.IM_APIKEY_READ) || authedUser.hasRole(ImRole.SUPER_ADMIN)
+        return authedUser.hasRole(ImRole.IM_APIKEY_READ)
     }
 
     /**

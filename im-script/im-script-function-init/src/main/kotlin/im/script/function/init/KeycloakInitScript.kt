@@ -91,6 +91,7 @@ class KeycloakInitScript(
     }
 
     private suspend fun KeycloakInitProperties.initAdmin(authRealm: AuthRealm, properties: AdminUserData) {
+        val permissions = privilegeFinderService.listPermissions(realmId)
         properties.email.let { email ->
             if (scriptFinderService.getUser(authRealm, email, realmId) != null) {
                 logger.info("User admin already created")
@@ -119,31 +120,21 @@ class KeycloakInitScript(
                         id = userId,
                         realm = realmId,
                         clientId = null,
-                        ImRole.SUPER_ADMIN.identifier
+                        roles = permissions.map(PermissionDTOBase::identifier).toTypedArray()
                     )
                 }
             }
         }
     }
 
-    private suspend fun initGenericPermissions(properties: KeycloakInitProperties) = coroutineScope {
-        val genericPermissions = ParserUtils.getConfiguration("genericPermissions.json", GenericPermissionsProperties::class.java)
+    private suspend fun initImPermissions(properties: KeycloakInitProperties) = coroutineScope {
+        val imPermissions = ParserUtils.getConfiguration("imPermissions.json", Array<PermissionData>::class.java)
 
-        genericPermissions.im.map { permission ->
+        imPermissions.map { permission ->
             async {
                 privilegeFinderService.getPrivilegeOrNull(properties.realmId, permission.name)
                     ?: privilegeAggregateService.define(permission.toCommand(properties.realmId))
             }
         }.awaitAll()
-
-        RoleDefineCommandDTOBase(
-            realmId = properties.realmId,
-            identifier = genericPermissions.superAdmin.name,
-            description = genericPermissions.superAdmin.description,
-            targets = listOf(RoleTarget.USER.name),
-            locale = emptyMap(),
-            bindings = null,
-            permissions = genericPermissions.im.map(PermissionData::name)
-        ).let { privilegeAggregateService.define(it) }
     }
 }
