@@ -43,7 +43,7 @@ connect:
     keycloak:
         url: http://keycloak-it:8080
         realm: master
-        clientId: im-root-plateform
+        clientId: im-root-platform
         clientSecret: secret
     user:
       action:
@@ -66,16 +66,17 @@ spring:
     activate:
       on-profile: test
 
-i2:
-  issuers:
-    -
-      name: test
-      authUrl: http://localhost:8080
-      realm: im-test
-      im:
-        clientId: im-test-client
-        clientSecret: secret
+f2:
+  tenant:
+    issuer-base-uri: http://localhost:8080
 
+connect:
+  im:
+    keycloak:
+      url: http://localhost:8080
+      realm: master
+      clientId: im-root-platform
+      clientSecret: secret
 
 ---
 spring:
@@ -92,15 +93,5 @@ connect:
     keycloak:
       url: http://localhost:8080
       realm: master
-      clientId: im-test-client
+      clientId: im-root-platform
       clientSecret: secret
-
-#i2:
-#  issuers:
-#    -
-#      name: local
-#      authUrl: http://localhost:8080
-#      realm: im-local
-#      im:
-#        clientId: im-client
-#        clientSecret: secret
