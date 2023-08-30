@@ -41,8 +41,8 @@ im:
     config:
         auth:
             serverUrl: http://localhost:8080
-            realmId: im-local
-            clientId: im-test-client
+            realmId: master
+            clientId: im-app
             client-Secret: secret
         json: file:./infra/docker-compose/config/build/config.json
     init:

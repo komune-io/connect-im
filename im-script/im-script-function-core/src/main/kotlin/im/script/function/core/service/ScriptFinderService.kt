@@ -2,10 +2,6 @@ package im.script.function.core.service
 
 import city.smartb.im.commons.model.AuthRealm
 import f2.dsl.fnc.invokeWith
-import i2.keycloak.f2.client.domain.ClientIdentifier
-import i2.keycloak.f2.client.domain.ClientModel
-import i2.keycloak.f2.client.domain.features.query.ClientGetByClientIdentifierFunction
-import i2.keycloak.f2.client.domain.features.query.ClientGetByClientIdentifierQuery
 import i2.keycloak.f2.realm.domain.RealmId
 import i2.keycloak.f2.realm.domain.RealmModel
 import i2.keycloak.f2.realm.domain.features.query.RealmGetFunction
@@ -18,23 +14,13 @@ import org.springframework.stereotype.Service
 @Service
 class ScriptFinderService(
     private val realmGetFunction: RealmGetFunction,
-    private val clientGetByClientIdentifierQueryFunction: ClientGetByClientIdentifierFunction,
     private val userGetByEmailQueryFunction: UserGetByEmailFunction,
 ) {
-
     suspend fun getRealm(authRealm: AuthRealm, realmId: RealmId): RealmModel? {
         return  RealmGetQuery(
             id = realmId,
             auth = authRealm
         ).invokeWith(realmGetFunction).item
-    }
-
-    suspend fun getClient(authRealm: AuthRealm, realmId: RealmId, id: ClientIdentifier): ClientModel? {
-        return ClientGetByClientIdentifierQuery(
-            clientIdentifier = id,
-            realmId = realmId,
-            auth = authRealm
-        ).invokeWith(clientGetByClientIdentifierQueryFunction).item
     }
 
     suspend fun getUser(authRealm: AuthRealm, email: String, realmId: RealmId): UserModel? {

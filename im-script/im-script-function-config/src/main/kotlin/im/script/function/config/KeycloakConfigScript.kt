@@ -5,11 +5,9 @@ import city.smartb.im.commons.model.RealmId
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import f2.spring.exception.NotFoundException
-import i2.keycloak.f2.client.domain.ClientId
 import im.script.function.config.config.KeycloakConfigParser
 import im.script.function.config.config.KeycloakConfigProperties
 import im.script.function.config.config.KeycloakUserConfig
-import im.script.function.config.config.WebClient
 import im.script.function.config.service.ConfigService
 import im.script.function.core.model.AuthContext
 import im.script.function.core.model.PermissionData
@@ -25,8 +23,6 @@ import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
-const val ORGANIZATION_ID_CLAIM_NAME = "memberOf"
-
 @Service
 class KeycloakConfigScript (
     private val clientInitService: ClientInitService,
@@ -39,54 +35,29 @@ class KeycloakConfigScript (
     private val logger = LoggerFactory.getLogger(KeycloakConfigScript::class.java)
 
     suspend fun run(configPath: String) {
-        val auth = imScriptConfigProperties.auth.toAuthRealm()
         val config = KeycloakConfigParser().getConfiguration(configPath)
+        val auth = imScriptConfigProperties.auth.toAuthRealm(config.realmId)
         withContext(AuthContext(auth)) {
             run(auth, config)
         }
     }
 
     suspend fun run(authRealm: AuthRealm, config: KeycloakConfigProperties) {
-        logger.info("Verify Realm[${authRealm.realmId}] exists...")
-        verifyRealm(authRealm, authRealm.realmId)
+        logger.info("Verify Realm[${config.realmId}] exists...")
+        verifyRealm(authRealm, config.realmId)
 
         logger.info("Initializing Privileges...")
         initPrivileges(config.permissions, config.roles)
         logger.info("Initialized Privileges")
 
         logger.info("Initializing Clients...")
-        config.webClients.forEach { initWebClient(authRealm, it) }
-        config.appClients.forEach { clientInitService.initAppClient(authRealm, authRealm.realmId, it) }
+        config.webClients.forEach { clientInitService.initWebClient(it) }
+        config.appClients.forEach { clientInitService.initAppClient(it) }
         logger.info("Initialized Client")
 
         logger.info("Initializing Users...")
         initUsers(authRealm, config.users)
         logger.info("Initialized Users")
-    }
-
-    private suspend fun checkIfExists(authRealm: AuthRealm, clientId: ClientId): Boolean {
-        return if (scriptFinderService.getClient(authRealm, authRealm.realmId, clientId) != null) {
-            logger.info("Client [$clientId] already exists.")
-            true
-        } else {
-            false
-        }
-    }
-
-    private suspend fun initWebClient(authRealm: AuthRealm, webClient: WebClient) {
-        if (!checkIfExists(authRealm, webClient.clientId)) {
-            clientInitService.createClient(
-                authRealm = authRealm,
-                realmId = authRealm.realmId,
-                identifier = webClient.clientId,
-                baseUrl = webClient.webUrl,
-                isStandardFlowEnabled = true,
-                isDirectAccessGrantsEnabled = true,
-                isServiceAccountsEnabled = false,
-                isPublic = true,
-                protocolMappers = mapOf(ORGANIZATION_ID_CLAIM_NAME to ORGANIZATION_ID_CLAIM_NAME),
-            )
-        }
     }
 
     private suspend fun initPrivileges(permissions: List<PermissionData>?, roles: List<RoleData>?) {
@@ -102,7 +73,7 @@ class KeycloakConfigScript (
         permissions.map { permission ->
             async {
                 privilegeFinderService.getPrivilegeOrNull(permission.name)
-                    ?: privilegeAggregateService.define(permission.toCommand(null))
+                    ?: privilegeAggregateService.define(permission.toCommand())
             }
         }.awaitAll()
     }
@@ -115,7 +86,7 @@ class KeycloakConfigScript (
         roles.map { role ->
             async {
                 privilegeFinderService.getPrivilegeOrNull(role.name)
-                    ?: privilegeAggregateService.define(role.toCommand(null))
+                    ?: privilegeAggregateService.define(role.toCommand())
             }
         }.awaitAll()
     }

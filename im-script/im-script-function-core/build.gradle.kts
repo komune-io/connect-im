@@ -11,9 +11,8 @@ dependencies {
     implementation(project(Modules.Infra.keycloak))
     api(project(Modules.F2.privilegeLib))
 
-    api(project(Modules.imKeycloakF2ClientDomain))
-    implementation(project(Modules.imKeycloakF2ClientCommand))
-    implementation(project(Modules.imKeycloakF2ClientQuery))
+    api(project(Modules.Core.clientDomain))
+    implementation(project(Modules.Core.clientApi))
 
     api(project(Modules.imKeycloakF2RealmQuery))
     api(project(Modules.imKeycloakF2RealmDomain))

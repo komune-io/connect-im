@@ -1,11 +1,13 @@
 package im.script.function.config.config
 
-import i2.keycloak.f2.client.domain.ClientIdentifier
+import city.smartb.im.commons.model.RealmId
 import im.script.function.core.model.AppClient
 import im.script.function.core.model.PermissionData
 import im.script.function.core.model.RoleData
+import im.script.function.core.model.WebClient
 
-class KeycloakConfigProperties (
+class KeycloakConfigProperties(
+    val realmId: RealmId,
     val appClients: List<AppClient>,
     val webClients: List<WebClient>,
     val users: List<KeycloakUserConfig>?,
@@ -20,9 +22,4 @@ class KeycloakUserConfig(
     val firstname: String,
     val lastname: String,
     val role: String
-)
-
-class WebClient (
-    val clientId: ClientIdentifier,
-    val webUrl: String
 )

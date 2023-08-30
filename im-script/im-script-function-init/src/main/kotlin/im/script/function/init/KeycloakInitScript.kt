@@ -2,9 +2,13 @@ package im.script.function.init
 
 import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.utils.ParserUtils
+import city.smartb.im.core.client.api.ClientCoreAggregateService
+import city.smartb.im.core.client.api.ClientCoreFinderService
+import city.smartb.im.core.client.domain.command.ClientGrantClientRolesCommand
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
+import im.script.function.core.model.AppClient
 import im.script.function.core.model.AuthContext
 import im.script.function.core.model.PermissionData
 import im.script.function.core.service.ClientInitService
@@ -25,6 +29,8 @@ import java.util.UUID
 @Service
 class KeycloakInitScript(
     private val clientInitService: ClientInitService,
+    private val clientCoreAggregateService: ClientCoreAggregateService,
+    private val clientCoreFinderService: ClientCoreFinderService,
     private val imScriptInitProperties: ImScriptInitProperties,
     private val initService: InitService,
     private val scriptFinderService: ScriptFinderService,
@@ -35,58 +41,70 @@ class KeycloakInitScript(
 
     suspend fun run(jsonPath: String) {
         val properties = ParserUtils.getConfiguration(jsonPath, Array<KeycloakInitProperties>::class.java)
-        properties.forEach {
-            val auth = imScriptInitProperties.auth.toAuthRealm(it.realmId)
-            withContext(AuthContext(auth)) {
-                runOne(auth, it)
+        properties.forEach { runOne(it) }
+    }
+
+    suspend fun runOne(properties: KeycloakInitProperties) {
+        val masterAuth = imScriptInitProperties.auth.toAuthRealm()
+        withContext(AuthContext(masterAuth)) {
+            logger.info("Initializing Realm [${properties.realmId}]...")
+            initRealm(masterAuth, properties)
+            logger.info("Initialized Realm")
+        }
+
+        val newRealmAuth = imScriptInitProperties.auth.toAuthRealm(properties.realmId)
+        withContext(AuthContext(newRealmAuth)) {
+            logger.info("Initializing Clients [${properties.adminClients.size}]...")
+            initAdminClient(properties)
+            logger.info("Initialized Clients [${properties.adminClients.size}]")
+
+            logger.info("Initializing Generic permissions...")
+            initImPermissions(properties)
+            logger.info("Initialized Generic permissions")
+
+            properties.adminUsers.forEach { adminUser ->
+                logger.info("Initializing Admin user [${adminUser.email}]...")
+                properties.initAdmin(newRealmAuth, adminUser)
+                logger.info("Initialized Admin")
             }
+            logger.info("Initialized Admin users")
         }
     }
 
-    suspend fun runOne(authRealm: AuthRealm, properties: KeycloakInitProperties) {
-        logger.info("Initializing Realm [${properties.realmId}]...")
-        initRealm(authRealm, properties)
-        logger.info("Initialized Realm")
+    private suspend fun initImClient(properties: KeycloakInitProperties) {
+        val imClientId = AppClient(
+            clientId = properties.imMasterClient.clientId,
+            clientSecret = properties.imMasterClient.clientSecret,
+            roles = null,
+            realmManagementRoles = emptyList()
+        ).let { clientInitService.initAppClient(it) }
 
-        logger.info("Initializing Clients [${properties.adminClient.size}]...")
-        initAdminClient(authRealm, properties)
-
-        logger.info("Initializing Generic permissions...")
-        initImPermissions(properties)
-        logger.info("Initialized Generic permissions")
-
-        properties.adminUser.forEach { adminUser ->
-            logger.info("Initializing Admin user [${adminUser.email}]...")
-            properties.initAdmin(authRealm, adminUser)
-            logger.info("Initialized Admin")
-        }
-        logger.info("Initialized Admin users")
-
+        val realmClientId = clientCoreFinderService.getByIdentifier("${properties.realmId.lowercase()}-realm").id
+        val realmClientRoles = clientCoreFinderService.listClientRoles(realmClientId)
+        ClientGrantClientRolesCommand(
+            id = imClientId,
+            providerClientId = realmClientId,
+            roles = realmClientRoles
+        ).let { clientCoreAggregateService.grantClientRoles(it) }
     }
 
-    private suspend fun initAdminClient(authRealm: AuthRealm, properties: KeycloakInitProperties) {
-        properties.adminClient.map { appClient ->
-            logger.info("Initializing Clients [${appClient.clientId}]...")
-            val realmManagementRoles = appClient.realmManagementRoles ?: listOf(
-                "create-client",
-                "manage-clients",
-                "manage-users",
-                "manage-realm",
-                "view-clients",
-                "view-users"
-            )
-            appClient.copy(realmManagementRoles = realmManagementRoles)
-        }.forEach { appClient ->
-            clientInitService.initAppClient(authRealm, properties.realmId, appClient)
-            logger.info("Initialized Client")
-        }
+    private suspend fun initAdminClient(properties: KeycloakInitProperties) = coroutineScope {
+        properties.adminClients.map { appClient ->
+            async {
+                logger.info("Initializing Clients [${appClient.clientId}]...")
+                clientInitService.initAppClient(appClient)
+                logger.info("Initialized Client")
+            }
+        }.awaitAll()
     }
 
     private suspend fun initRealm(authRealm: AuthRealm, properties: KeycloakInitProperties) {
         val realmId = properties.realmId
-        scriptFinderService.getRealm(authRealm, realmId)?.let {
-          logger.info("Realm already created")
-        } ?: initService.createRealm(authRealm, realmId, properties.theme, properties.smtp)
+        scriptFinderService.getRealm(authRealm, realmId)
+            ?.let { logger.info("Realm already created") }
+            ?: initService.createRealm(authRealm, realmId, properties.theme, properties.smtp)
+
+        initImClient(properties)
     }
 
     private suspend fun KeycloakInitProperties.initAdmin(authRealm: AuthRealm, properties: AdminUserData) {
@@ -97,7 +115,7 @@ class KeycloakInitScript(
             } else {
                 val password = properties.password ?: UUID.randomUUID().toString()
                 logger.info("Creating user admin with password: $password")
-                initService.createUser(
+                val userId = initService.createUser(
                     authRealm = authRealm,
                     username = properties.username ?: email,
                     email = email,
@@ -106,22 +124,21 @@ class KeycloakInitScript(
                     isEnable = true,
                     password = password,
                     realm = realmId
-                ).let { userId ->
-                    initService.grantUser(
-                        authRealm = authRealm,
-                        id = userId,
-                        realm = realmId,
-                        clientId = "realm-management",
-                        "realm-admin"
-                    )
-                    initService.grantUser(
-                        authRealm = authRealm,
-                        id = userId,
-                        realm = realmId,
-                        clientId = null,
-                        roles = permissions.map(PermissionDTOBase::identifier).toTypedArray()
-                    )
-                }
+                )
+                initService.grantUser(
+                    authRealm = authRealm,
+                    id = userId,
+                    realm = realmId,
+                    clientId = "realm-management",
+                    "realm-admin"
+                )
+                initService.grantUser(
+                    authRealm = authRealm,
+                    id = userId,
+                    realm = realmId,
+                    clientId = null,
+                    roles = permissions.map(PermissionDTOBase::identifier).toTypedArray()
+                )
             }
         }
     }
@@ -132,7 +149,7 @@ class KeycloakInitScript(
         imPermissions.map { permission ->
             async {
                 privilegeFinderService.getPrivilegeOrNull(permission.name)
-                    ?: privilegeAggregateService.define(permission.toCommand(properties.realmId))
+                    ?: privilegeAggregateService.define(permission.toCommand())
             }
         }.awaitAll()
     }

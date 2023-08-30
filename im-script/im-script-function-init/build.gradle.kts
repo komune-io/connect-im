@@ -11,9 +11,7 @@ dependencies {
     api(project(Modules.Script.config))
     api(project(Modules.Script.functionCore))
 
-    api(project(Modules.imKeycloakF2ClientDomain))
-    implementation(project(Modules.imKeycloakF2ClientCommand))
-    implementation(project(Modules.imKeycloakF2ClientQuery))
+    implementation(project(Modules.Core.clientApi))
 
     api(project(Modules.imKeycloakF2RealmDomain))
     implementation(project(Modules.imKeycloakF2RealmCommand))

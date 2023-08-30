@@ -1,5 +1,6 @@
 package im.script.function.init.config
 
+import city.smartb.im.core.client.domain.model.ClientIdentifier
 import i2.keycloak.f2.realm.domain.RealmId
 import im.script.function.core.model.AppClient
 
@@ -7,8 +8,9 @@ data class KeycloakInitProperties(
     val realmId: RealmId,
     val theme: String?,
     val smtp: Map<String, String>?,
-    val adminUser: List<AdminUserData>,
-    val adminClient: List<AppClient>
+    val adminUsers: List<AdminUserData>,
+    val imMasterClient: ClientCredentials,
+    val adminClients: List<AppClient>
 )
 
 data class AdminUserData(
@@ -19,7 +21,7 @@ data class AdminUserData(
     val lastName: String?
 )
 
-data class AdminClientData(
-    val name: String,
-    val secret: String
+data class ClientCredentials(
+    val clientId: ClientIdentifier,
+    val clientSecret: String
 )
