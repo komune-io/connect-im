@@ -27,7 +27,7 @@ class RoleEndpoint(
     override fun roleGet(): RoleGetFunction = f2Function { query ->
         logger.info("roleGet: $query")
         privilegePoliciesEnforcer.checkGet()
-        privilegeFinderService.getRoleOrNull(query.realmId, query.identifier)
+        privilegeFinderService.getRoleOrNull(query.identifier)
             .let(::RoleGetResultDTOBase)
     }
 
@@ -36,7 +36,6 @@ class RoleEndpoint(
         logger.info("roleList: $query")
         privilegePoliciesEnforcer.checkList()
         privilegeFinderService.listRoles(
-            realmId = query.realmId,
             targets = query.target?.let { listOf(RoleTarget.valueOf(it)) }
         ).let(::RoleListResultDTOBase)
     }

@@ -1,6 +1,5 @@
 package city.smartb.im.core.privilege.domain.command
 
-import city.smartb.im.commons.model.ImCommand
 import city.smartb.im.core.privilege.domain.model.PermissionIdentifier
 import city.smartb.im.core.privilege.domain.model.PrivilegeIdentifier
 import city.smartb.im.core.privilege.domain.model.PrivilegeType
@@ -10,8 +9,7 @@ import f2.dsl.cqrs.Event
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface PrivilegeDefineCommand: ImCommand {
-    override val realmId: String?
+sealed interface PrivilegeDefineCommand {
     val identifier: PrivilegeIdentifier
     val description: String
     val type: PrivilegeType
@@ -19,7 +17,6 @@ sealed interface PrivilegeDefineCommand: ImCommand {
 
 @Serializable
 data class PermissionDefineCommand(
-    override val realmId: String? = null,
     override val identifier: PermissionIdentifier,
     override val description: String
 ): PrivilegeDefineCommand {
@@ -28,7 +25,6 @@ data class PermissionDefineCommand(
 
 @Serializable
 data class RoleDefineCommand(
-    override val realmId: String? = null,
     override val identifier: RoleIdentifier,
     override val description: String,
     val targets: List<RoleTarget>,

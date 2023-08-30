@@ -1,6 +1,5 @@
 package im.script.function.core.model
 
-import city.smartb.im.commons.model.RealmId
 import city.smartb.im.core.privilege.domain.model.PermissionIdentifier
 import city.smartb.im.core.privilege.domain.model.RoleIdentifier
 import city.smartb.im.core.privilege.domain.model.RoleTarget
@@ -14,8 +13,7 @@ data class RoleData(
     val bindings: Map<RoleTarget, List<RoleIdentifier>>?,
     val permissions: List<PermissionIdentifier>?
 ) {
-    fun toCommand(realmId: RealmId?) = RoleDefineCommandDTOBase(
-        realmId = realmId,
+    fun toCommand() = RoleDefineCommandDTOBase(
         identifier = name,
         description = description,
         targets = targets?.map(RoleTarget::name).orEmpty(),

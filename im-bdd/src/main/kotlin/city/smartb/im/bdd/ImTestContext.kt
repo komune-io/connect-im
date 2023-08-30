@@ -29,7 +29,7 @@ class ImTestContext(
     val userIds = testEntities<TestContextKey, UserId>("User")
 
     var realmId: RealmId? = "im-test"
-    suspend fun keycloakClient() = keycloakClientProvider.getFor(realmId)
+    suspend fun keycloakClient() = keycloakClientProvider.get()
 
     private val permanentRoles = ImRole.values()
         .asSequence()

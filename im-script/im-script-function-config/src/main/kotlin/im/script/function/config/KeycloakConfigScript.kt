@@ -101,7 +101,7 @@ class KeycloakConfigScript (
 
         permissions.map { permission ->
             async {
-                privilegeFinderService.getPrivilegeOrNull(null, permission.name)
+                privilegeFinderService.getPrivilegeOrNull(permission.name)
                     ?: privilegeAggregateService.define(permission.toCommand(null))
             }
         }.awaitAll()
@@ -114,7 +114,7 @@ class KeycloakConfigScript (
 
         roles.map { role ->
             async {
-                privilegeFinderService.getPrivilegeOrNull(null, role.name)
+                privilegeFinderService.getPrivilegeOrNull(role.name)
                     ?: privilegeAggregateService.define(role.toCommand(null))
             }
         }.awaitAll()

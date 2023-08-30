@@ -17,7 +17,6 @@ class PrivilegeAggregateService(
     suspend fun define(command: RoleDefineCommandDTOBase): RoleDefinedEventDTOBase {
         val event = privilegeCoreAggregateService.define(
             RoleDefineCommand(
-                realmId = command.realmId,
                 identifier = command.identifier,
                 description = command.description,
                 targets = command.targets.map(RoleTarget::valueOf),
@@ -33,7 +32,6 @@ class PrivilegeAggregateService(
     suspend fun define(command: PermissionDefineCommandDTOBase): PermissionDefinedEventDTOBase {
         val event = privilegeCoreAggregateService.define(
             PermissionDefineCommand(
-                realmId = command.realmId,
                 identifier = command.identifier,
                 description = command.description,
             )

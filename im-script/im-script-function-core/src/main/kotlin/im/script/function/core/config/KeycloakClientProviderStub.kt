@@ -15,13 +15,13 @@ class KeycloakClientProviderStub(
 ): KeycloakClientProvider(authenticationResolver) {
     private val cache = mutableMapOf<String, KeycloakClientCache>()
 
-    override suspend fun getFor(realmId: RealmId?): KeycloakClient {
+    override suspend fun get(): KeycloakClient {
         val auth = authenticationResolver.getAuth()
         val clientCache = cache.getOrPut("${auth.serverUrl} ${auth.clientId}") {
-            KeycloakClientCache(KeycloakClientBuilder.openConnection(authenticationResolver.getAuth()))
+            KeycloakClientCache(KeycloakClientBuilder.openConnection(auth))
         }
-        return clientCache.clients.getOrPut(realmId) {
-            clientCache.connection.forRealm(realmId)
+        return clientCache.clients.getOrPut(auth.space) {
+            clientCache.connection.forRealm(auth.space)
         }
     }
 

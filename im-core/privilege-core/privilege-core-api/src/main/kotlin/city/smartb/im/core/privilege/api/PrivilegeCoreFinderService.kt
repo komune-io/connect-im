@@ -1,6 +1,5 @@
 package city.smartb.im.core.privilege.api
 
-import city.smartb.im.commons.model.RealmId
 import city.smartb.im.core.privilege.api.model.toPrivilege
 import city.smartb.im.core.privilege.domain.model.Privilege
 import city.smartb.im.core.privilege.domain.model.PrivilegeIdentifier
@@ -16,8 +15,8 @@ import org.springframework.stereotype.Service
 class PrivilegeCoreFinderService(
     private val keycloakClientProvider: KeycloakClientProvider
 ) {
-    suspend fun getPrivilegeOrNull(realmId: RealmId?, identifier: PrivilegeIdentifier): Privilege? {
-        val client = keycloakClientProvider.getFor(realmId)
+    suspend fun getPrivilegeOrNull(identifier: PrivilegeIdentifier): Privilege? {
+        val client = keycloakClientProvider.get()
 
         return try {
             client.role(identifier)
@@ -28,16 +27,15 @@ class PrivilegeCoreFinderService(
         }
     }
 
-    suspend fun getPrivilege(realmId: RealmId?, identifier: PrivilegeIdentifier): Privilege {
-        return getPrivilegeOrNull(realmId, identifier) ?: throw NotFoundException("Privilege", identifier)
+    suspend fun getPrivilege(identifier: PrivilegeIdentifier): Privilege {
+        return getPrivilegeOrNull(identifier) ?: throw NotFoundException("Privilege", identifier)
     }
 
     suspend fun list(
-        realmId: RealmId?,
         types: Collection<PrivilegeType>? = null,
         targets: Collection<RoleTarget>? = null
     ): List<Privilege> {
-        val client = keycloakClientProvider.getFor(realmId)
+        val client = keycloakClientProvider.get()
         return client.roles().list(false)
             .map(RoleRepresentation::toPrivilege)
             .filter { privilege ->

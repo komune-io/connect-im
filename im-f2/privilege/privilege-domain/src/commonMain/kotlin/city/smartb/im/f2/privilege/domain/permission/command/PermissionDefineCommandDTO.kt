@@ -1,6 +1,5 @@
 package city.smartb.im.f2.privilege.domain.permission.command
 
-import city.smartb.im.commons.model.ImCommand
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
@@ -20,7 +19,7 @@ typealias PermissionDefineFunction = F2Function<PermissionDefineCommandDTOBase, 
  * @parent [PermissionDefineFunction]
  */
 @JsExport
-interface PermissionDefineCommandDTO: ImCommand {
+interface PermissionDefineCommandDTO {
     /**
      * @ref [city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase.identifier]
      */
@@ -37,7 +36,6 @@ interface PermissionDefineCommandDTO: ImCommand {
  */
 @Serializable
 data class PermissionDefineCommandDTOBase(
-    override val realmId: String? = null,
     override val identifier: PermissionIdentifier,
     override val description: String,
 ): PermissionDefineCommandDTO

@@ -26,7 +26,7 @@ class PermissionEndpoint(
     override fun permissionGet(): PermissionGetFunction = f2Function { query ->
         logger.info("permissionGet: $query")
         privilegePoliciesEnforcer.checkGet()
-        privilegeFinderService.getPermissionOrNull(query.realmId, query.identifier)
+        privilegeFinderService.getPermissionOrNull(query.identifier)
             .let(::PermissionGetResultDTOBase)
     }
 
@@ -34,7 +34,7 @@ class PermissionEndpoint(
     override fun permissionList(): PermissionListFunction = f2Function { query ->
         logger.info("permissionList: $query")
         privilegePoliciesEnforcer.checkList()
-        privilegeFinderService.listPermissions(query.realmId).let(::PermissionListResultDTOBase)
+        privilegeFinderService.listPermissions().let(::PermissionListResultDTOBase)
     }
 
     @Bean

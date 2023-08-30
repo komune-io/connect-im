@@ -18,9 +18,9 @@ class PrivilegeCoreAggregateService(
 ) {
 
     suspend fun define(command: PrivilegeDefineCommand): PrivilegeDefinedEvent = coroutineScope {
-        val client = keycloakClientProvider.getFor(command)
+        val client = keycloakClientProvider.get()
 
-        val oldPrivilege = privilegeCoreFinderService.getPrivilegeOrNull(command.realmId, command.identifier)
+        val oldPrivilege = privilegeCoreFinderService.getPrivilegeOrNull(command.identifier)
         val newPrivilege = command.toPrivilege(oldPrivilege?.id)
 
         val oldPrivilegePermissions = (oldPrivilege as? Role)?.permissions.orEmpty().toSet()
@@ -28,12 +28,12 @@ class PrivilegeCoreAggregateService(
 
         val removedPermissions = oldPrivilegePermissions.filter { it !in newPrivilegePermissions }
             .map { permissionIdentifier ->
-                async { privilegeCoreFinderService.getPrivilegeOrNull(client.realmId, permissionIdentifier)?.toRoleRepresentation() }
+                async { privilegeCoreFinderService.getPrivilegeOrNull(permissionIdentifier)?.toRoleRepresentation() }
             }.awaitAll().filterNotNull()
 
         val newPermissions = newPrivilegePermissions.filter { it !in oldPrivilegePermissions }
             .map { permissionIdentifier ->
-                async { privilegeCoreFinderService.getPrivilege(client.realmId, permissionIdentifier).toRoleRepresentation() }
+                async { privilegeCoreFinderService.getPrivilege(permissionIdentifier).toRoleRepresentation() }
             }.awaitAll()
 
         // creation and update should be done after permissions fetch in case one of them throws 404

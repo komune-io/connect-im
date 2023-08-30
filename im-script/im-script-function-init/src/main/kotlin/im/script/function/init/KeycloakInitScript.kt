@@ -90,7 +90,7 @@ class KeycloakInitScript(
     }
 
     private suspend fun KeycloakInitProperties.initAdmin(authRealm: AuthRealm, properties: AdminUserData) {
-        val permissions = privilegeFinderService.listPermissions(realmId)
+        val permissions = privilegeFinderService.listPermissions()
         properties.email.let { email ->
             if (scriptFinderService.getUser(authRealm, email, realmId) != null) {
                 logger.info("User admin already created")
@@ -131,7 +131,7 @@ class KeycloakInitScript(
 
         imPermissions.map { permission ->
             async {
-                privilegeFinderService.getPrivilegeOrNull(properties.realmId, permission.name)
+                privilegeFinderService.getPrivilegeOrNull(permission.name)
                     ?: privilegeAggregateService.define(permission.toCommand(properties.realmId))
             }
         }.awaitAll()

@@ -1,7 +1,6 @@
 package city.smartb.im.f2.privilege.lib
 
 import city.smartb.im.commons.SimpleCache
-import city.smartb.im.commons.model.RealmId
 import city.smartb.im.core.privilege.api.PrivilegeCoreFinderService
 import city.smartb.im.core.privilege.domain.model.Privilege
 import city.smartb.im.core.privilege.domain.model.PrivilegeType
@@ -21,41 +20,39 @@ import org.springframework.stereotype.Service
 class PrivilegeFinderService(
     private val privilegeCoreFinderService: PrivilegeCoreFinderService
 ) {
-    suspend fun getPrivilegeOrNull(realmId: RealmId?, identifier: PrivilegeIdentifier): PrivilegeDTO? {
-        return privilegeCoreFinderService.getPrivilegeOrNull(realmId, identifier)
-            ?.toDTOCached(realmId)
+    suspend fun getPrivilegeOrNull(identifier: PrivilegeIdentifier): PrivilegeDTO? {
+        return privilegeCoreFinderService.getPrivilegeOrNull(identifier)
+            ?.toDTOCached()
     }
 
-    suspend fun getPrivilege(realmId: RealmId?, identifier: PrivilegeIdentifier): PrivilegeDTO {
-        return privilegeCoreFinderService.getPrivilege(realmId, identifier)
-            .toDTOCached(realmId)
+    suspend fun getPrivilege(identifier: PrivilegeIdentifier): PrivilegeDTO {
+        return privilegeCoreFinderService.getPrivilege(identifier)
+            .toDTOCached()
     }
 
-    suspend fun getRoleOrNull(realmId: RealmId?, identifier: RoleIdentifier): RoleDTOBase? {
-        return getPrivilegeOrNull(realmId, identifier)
+    suspend fun getRoleOrNull(identifier: RoleIdentifier): RoleDTOBase? {
+        return getPrivilegeOrNull(identifier)
             ?.takeIf { it is RoleDTOBase } as RoleDTOBase?
     }
 
-    suspend fun getRole(realmId: RealmId?, identifier: RoleIdentifier): RoleDTOBase {
-        return getRoleOrNull(realmId, identifier) ?: throw NotFoundException("Role", identifier)
+    suspend fun getRole(identifier: RoleIdentifier): RoleDTOBase {
+        return getRoleOrNull(identifier) ?: throw NotFoundException("Role", identifier)
     }
 
-    suspend fun getPermissionOrNull(realmId: RealmId?, identifier: PermissionIdentifier): PermissionDTOBase? {
-        return getPrivilegeOrNull(realmId, identifier)
+    suspend fun getPermissionOrNull(identifier: PermissionIdentifier): PermissionDTOBase? {
+        return getPrivilegeOrNull(identifier)
             ?.takeIf { it is PermissionDTOBase } as PermissionDTOBase?
     }
 
-    suspend fun getPermission(realmId: RealmId?, identifier: PermissionIdentifier): PermissionDTOBase {
-        return getPermissionOrNull(realmId, identifier) ?: throw NotFoundException("Permission", identifier)
+    suspend fun getPermission(identifier: PermissionIdentifier): PermissionDTOBase {
+        return getPermissionOrNull(identifier) ?: throw NotFoundException("Permission", identifier)
     }
 
     suspend fun listRoles(
-        realmId: RealmId?,
         targets: Collection<RoleTarget>? = null
     ): List<RoleDTOBase> {
-        val cache = Cache(realmId)
+        val cache = Cache()
         return privilegeCoreFinderService.list(
-            realmId = realmId,
             types = listOf(PrivilegeType.ROLE),
             targets = targets
         ).onEach { role ->
@@ -63,21 +60,19 @@ class PrivilegeFinderService(
         }.map { it.toDTOCached(cache) as RoleDTOBase }
     }
 
-    suspend fun listPermissions(realmId: RealmId?): List<PermissionDTOBase> {
-        val cache = Cache(realmId)
+    suspend fun listPermissions(): List<PermissionDTOBase> {
+        val cache = Cache()
         return privilegeCoreFinderService.list(
-            realmId = realmId,
             types = listOf(PrivilegeType.PERMISSION)
         ).map { it.toDTOCached(cache) as PermissionDTOBase }
     }
 
-    private suspend fun Privilege.toDTOCached(realmId: RealmId?) = toDTOCached(Cache(realmId))
-    private suspend fun Privilege.toDTOCached(cache: Cache): PrivilegeDTO = toDTO(
+    private suspend fun Privilege.toDTOCached(cache: Cache = Cache()): PrivilegeDTO = toDTO(
         getRole = cache.roleDTOs::get
     )
 
-    private inner class Cache(realmId: RealmId?) {
-        val roles = SimpleCache<RoleIdentifier, Role> { privilegeCoreFinderService.getPrivilege(realmId, it) as Role }
+    private inner class Cache {
+        val roles = SimpleCache<RoleIdentifier, Role> { privilegeCoreFinderService.getPrivilege(it) as Role }
         val roleDTOs = SimpleCache<RoleIdentifier, RoleDTOBase> { roleIdentifier ->
             roles.get(roleIdentifier).toDTOCached(this) as RoleDTOBase
         }
