@@ -5,10 +5,9 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.S2.imSpaceDomain))
+    api(project(Modules.F2.spaceDomain))
 
-    implementation(project(Modules.imKeycloakF2RealmCommand))
-    implementation(project(Modules.imKeycloakF2RealmQuery))
+    implementation(project(Modules.Core.clientApi))
 
     implementation(project(":im-api:api-config"))
     implementation(project(Modules.Infra.redis))

@@ -5,8 +5,8 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.S2.imSpaceDomain))
-    api(project(Modules.S2.imSpaceLib))
+    api(project(Modules.F2.spaceDomain))
+    api(project(Modules.F2.spaceLib))
 
     implementation(project(":im-api:api-config"))
     implementation(project(Modules.Infra.redis))

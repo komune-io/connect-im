@@ -13,8 +13,8 @@ object SpacePolicies {
     /**
      * User can get a space
      */
-    fun canGet(authedUser: AuthedUserDTO, spaceId: String): Boolean {
-        return authedUser.hasRole(ImRole.IM_SPACE_READ) || authedUser.memberOf == spaceId
+    fun canGet(authedUser: AuthedUserDTO): Boolean {
+        return authedUser.hasRole(ImRole.IM_SPACE_READ)
     }
 
     /**

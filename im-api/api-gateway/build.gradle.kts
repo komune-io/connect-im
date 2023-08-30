@@ -12,7 +12,7 @@ dependencies {
 	implementation(project(Modules.F2.organizationApi))
 	implementation(project(Modules.F2.privilegeApi))
 	implementation(project(Modules.F2.userApi))
-	implementation(project(Modules.S2.imSpaceApi))
+	implementation(project(Modules.F2.spaceApi))
 
 	implementation("city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}")
 	implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")

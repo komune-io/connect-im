@@ -1,4 +1,4 @@
-package city.smartb.im.space.api.policies
+package city.smartb.im.space.api.service
 
 import city.smartb.im.commons.auth.policies.PolicyEnforcer
 import city.smartb.im.space.domain.model.SpaceId
@@ -9,18 +9,18 @@ import org.springframework.stereotype.Service
 class SpacePoliciesEnforcer: PolicyEnforcer() {
 
     suspend fun checkGet(spaceId: SpaceId) = checkAuthed("get space") { authedUser ->
-        SpacePolicies.canGet(authedUser, spaceId)
+        SpacePolicies.canGet(authedUser)
     }
 
     suspend fun checkPage() = checkAuthed("page spaces") { authedUser ->
         SpacePolicies.canPage(authedUser)
     }
 
-    suspend fun checkCreate() = checkAuthed("create an space") { authedUser ->
+    suspend fun checkCreate() = checkAuthed("create a space") { authedUser ->
         SpacePolicies.canCreate(authedUser)
     }
 
-    suspend fun checkDelete(spaceId: SpaceId) = checkAuthed("delete an space") { authedUser ->
+    suspend fun checkDelete(spaceId: SpaceId) = checkAuthed("delete a space") { authedUser ->
         SpacePolicies.canDelete(authedUser, spaceId)
     }
 

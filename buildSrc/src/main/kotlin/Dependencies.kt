@@ -195,18 +195,17 @@ object Modules {
         const val privilegeDomain = "$PRIVILEGE-domain"
         const val privilegeLib = "$PRIVILEGE-lib"
 
+        private const val SPACE = "$BASE:space:space"
+        val spaceApi = "$SPACE-api"
+        val spaceDomain = "$SPACE-domain"
+        val spaceClient = "$SPACE-client"
+        val spaceLib = "$SPACE-lib"
+
         private const val USER = "$BASE:user:user"
         const val userApi = "$USER-api"
         const val userClient = "$USER-client"
         const val userDomain = "$USER-domain"
         const val userLib = "$USER-lib"
-	}
-
-	object S2 {
-		val imSpaceApi = ":im-f2:space:space-api"
-		val imSpaceDomain = ":im-f2:space:space-domain"
-		val imSpaceClient = ":im-f2:space:space-client"
-		val imSpaceLib = ":im-f2:space:space-lib"
 	}
 
 	object Script {

@@ -7,5 +7,5 @@ plugins {
 
 dependencies {
     api(project(Modules.imCommonsDomain))
-    api(project(Modules.S2.imSpaceDomain))
+    api(project(Modules.F2.spaceDomain))
 }

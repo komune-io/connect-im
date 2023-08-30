@@ -15,44 +15,42 @@ import kotlin.js.JsName
  */
 typealias SpaceCreateFunction = F2Function<SpaceCreateCommand, SpaceCreatedEvent>
 
-@JsExport
-@JsName("SpaceCreateCommandDTO")
-interface SpaceCreateCommandDTO: Command {
-    val name: String
-}
-
 /**
  * @d2 command
  * @parent [SpaceCreateFunction]
  */
-data class SpaceCreateCommand(
-    /**
-     * Official name of the space.
-     * @example [city.smartb.im.space.domain.model.Space.name]
-     */
-    override val name: String,
-): SpaceCreateCommandDTO
-
 @JsExport
-@JsName("SpaceCreatedEventDTO")
-interface SpaceCreatedEventDTO: Event {
-    val id: SpaceId
-    val name: String
+@JsName("SpaceCreateCommandDTO")
+interface SpaceCreateCommandDTO: Command {
+    /**
+     * Identifier of the space to create.
+     */
+    val identifier: SpaceId
 }
+
+/**
+ * @d2 inherit
+ */
+data class SpaceCreateCommand(
+    override val identifier: String
+): SpaceCreateCommandDTO
 
 /**
  * @d2 event
  * @parent [SpaceCreateFunction]
  */
+@JsExport
+@JsName("SpaceCreatedEventDTO")
+interface SpaceCreatedEventDTO: Event {
+    /**
+     * Identifier of the created space.
+     */
+    val identifier: SpaceId
+}
+
+/**
+ * @d2 inherit
+ */
 data class SpaceCreatedEvent(
-    /**
-     * Identifier of the space.
-     */
-    override val id: SpaceId,
-    /**
-     * name of the space.
-     */
-    override val name: String,
-
-
+    override val identifier: SpaceId,
 ): SpaceCreatedEventDTO
