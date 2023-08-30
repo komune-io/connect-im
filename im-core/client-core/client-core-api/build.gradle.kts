@@ -5,5 +5,7 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.Core.privilegeDomain))
+    api(project(Modules.Core.clientDomain))
+
+    implementation(project(Modules.imApiConfig))
 }

@@ -18,7 +18,7 @@ class UserEmailSendActionsFunctionImpl {
                 throw IllegalArgumentException("Params clientId must be defined if redirectUri is not null")
             }
             val redirectUri = cmd.redirectUri ?: cmd.clientId?.let { clientId ->
-                client.getClientByClientId(clientId)?.baseUrl
+                client.getClientByIdentifier(clientId)?.baseUrl
             }
             client.user(cmd.userId).executeActionsEmail(cmd.clientId, redirectUri, cmd.actions)
 

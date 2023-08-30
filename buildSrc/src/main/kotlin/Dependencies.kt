@@ -165,6 +165,10 @@ object Modules {
     object Core {
         private const val BASE = ":im-core"
 
+        private const val CLIENT = "$BASE:client-core:client-core"
+        const val clientApi = "$CLIENT-api"
+        const val clientDomain = "$CLIENT-domain"
+
         private const val PRIVILEGE = "$BASE:privilege-core:privilege-core"
         const val privilegeApi = "$PRIVILEGE-api"
         const val privilegeDomain = "$PRIVILEGE-domain"

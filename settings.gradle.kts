@@ -32,6 +32,8 @@ include(
 )
 
 include(
+    "im-core:client-core:client-core-api",
+    "im-core:client-core:client-core-domain",
     "im-core:privilege-core:privilege-core-api",
     "im-core:privilege-core:privilege-core-domain",
 )

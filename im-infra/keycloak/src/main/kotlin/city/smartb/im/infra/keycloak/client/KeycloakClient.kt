@@ -31,8 +31,8 @@ class KeycloakClient(
         return clients().get(id)!!
     }
 
-	fun getClientByClientId(clientId: String): ClientRepresentation? {
-		return clients().findByClientId(clientId)?.firstOrNull()
+	fun getClientByIdentifier(identifier: String): ClientRepresentation? {
+		return clients().findByClientId(identifier)?.firstOrNull()
 	}
 
 	/* User */

@@ -13,7 +13,7 @@ class ClientGetByClientIdentifierFunctionImpl {
     @Bean
     fun clientGetByClientIdentifierFunction(): ClientGetByClientIdentifierFunction = keycloakF2Function { cmd, keycloakClient ->
         try {
-            keycloakClient.getClientByClientId(cmd.clientIdentifier)
+            keycloakClient.getClientByIdentifier(cmd.clientIdentifier)
                 ?.asModel()
                 .asResult()
         } catch (e: NotFoundException) {

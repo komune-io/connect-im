@@ -17,7 +17,7 @@ class ClientRealmManagementRolesGrantFunctionImpl {
     fun clientRealmManagementRolesGrantFunction(): ClientRealmManagementRolesGrantFunction = keycloakF2Function { cmd, keycloakClient ->
         try {
             logger.info("Realm[${cmd.realmId}] Client[${cmd.id}] Granting roles[${cmd.roles}]")
-            val targetClientKeycloakId = keycloakClient.getClientByClientId(cmd.id)!!.id
+            val targetClientKeycloakId = keycloakClient.getClientByIdentifier(cmd.id)!!.id
             val targetClientResource = keycloakClient.client(targetClientKeycloakId)
 
             val roleProviderClientKeycloakId = keycloakClient.clients().findByClientId("realm-management").first().id

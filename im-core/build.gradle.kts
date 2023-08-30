@@ -6,4 +6,12 @@ subprojects {
             implementation(project(Modules.imCommonsApi))
         }
     }
+
+    plugins.withType(org.jetbrains.kotlin.gradle.plugin.KotlinMultiplatformPluginWrapper::class.java).whenPluginAdded {
+        dependencies {
+            val commonMainApi by configurations
+            commonMainApi(project(Modules.imCommonsDomain))
+            Dependencies.Mpp.f2 { commonMainApi(it) }
+        }
+    }
 }

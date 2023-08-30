@@ -9,6 +9,7 @@ import i2.keycloak.f2.commons.domain.KeycloakF2Command
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
+@Deprecated("Use ClientCoreAggregateService.grantClientRoles")
 typealias ClientRealmManagementRolesGrantFunction =
         F2Function<ClientRealmManagementRolesGrantCommand, ClientRealmManagementRolesGrantedEvent>
 
