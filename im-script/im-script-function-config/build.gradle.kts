@@ -4,18 +4,18 @@ plugins {
 }
 
 dependencies {
-    api(project(":im-keycloak:keycloak-auth:keycloak-auth-client"))
+    api(project(Modules.Infra.keycloak))
 
     api(project(Modules.imCommonsApi))
 
-    api(project(Modules.Script.imScriptFunctionCore))
+    api(project(Modules.Script.config))
+    api(project(Modules.Script.functionCore))
+
+    implementation(project(Modules.F2.spaceApi))
 
     api(project(Modules.imKeycloakF2ClientDomain))
     implementation(project(Modules.imKeycloakF2ClientCommand))
     implementation(project(Modules.imKeycloakF2ClientQuery))
-
-    api(project(Modules.imKeycloakF2RealmQuery))
-    api(project(Modules.imKeycloakF2RealmDomain))
 
     api(project(Modules.imKeycloakF2RoleDomain))
     implementation(project(Modules.imKeycloakF2RoleCommand))

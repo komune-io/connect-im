@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Configuration
 class UserGetGroupsFunctionImpl {
 
 	@Bean
-	fun userGetGroupsQueryFunction(): UserGetGroupsFunction = keycloakF2Function { query, realmClient ->
-		val items = realmClient.getUserResource(query.realmId, query.userId).groups().map {
-			val group = realmClient.getGroupResource(it.id).toRepresentation()
+	fun userGetGroupsQueryFunction(): UserGetGroupsFunction = keycloakF2Function { query, client ->
+		val items = client.user(query.userId).groups().map {
+			val group = client.group(it.id).toRepresentation()
 			UserGroup(group.id, group.name, group.realmRoles)
 		}
 

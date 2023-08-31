@@ -13,9 +13,10 @@ class RolesCompositeGetFunctionImpl {
 	@Bean
 	fun i2RolesCompositeGetFunctionImpl(rolesFinderService: RolesFinderService): RoleCompositeGetFunction = keycloakF2Function { cmd, client ->
 		rolesFinderService.getRolesComposite(
-			realmId = cmd.realmId,
 			objId = cmd.objId,
-			objType = cmd.objType, client = client).let(::RoleCompositeGetResult)
+			objType = cmd.objType,
+            client = client
+        ).let(::RoleCompositeGetResult)
 	}
 
 }

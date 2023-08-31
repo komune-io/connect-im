@@ -1,14 +1,13 @@
 package i2.keycloak.f2.user.command
 
-import f2.dsl.fnc.f2Function
+import city.smartb.im.infra.keycloak.client.KeycloakClient
+import city.smartb.im.infra.keycloak.isFailure
+import city.smartb.im.infra.keycloak.onCreationFailure
+import city.smartb.im.infra.keycloak.toEntityCreatedId
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.user.domain.features.command.UserCreateCommand
 import i2.keycloak.f2.user.domain.features.command.UserCreateFunction
 import i2.keycloak.f2.user.domain.features.command.UserCreatedCommand
-import i2.keycloak.realm.client.config.AuthRealmClient
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
-import i2.keycloak.utils.isFailure
-import i2.keycloak.utils.onCreationFailure
-import i2.keycloak.utils.toEntityCreatedId
 import org.keycloak.representations.idm.CredentialRepresentation
 import org.keycloak.representations.idm.UserRepresentation
 import org.springframework.context.annotation.Bean
@@ -18,25 +17,21 @@ import org.springframework.context.annotation.Configuration
 class UserCreateFunctionImpl {
 
 	@Bean
-	fun userCreateFunction(): UserCreateFunction = f2Function { cmd ->
-		val serviceClient = AuthRealmClientBuilder().build(cmd.auth)
-		val userId = createUser(serviceClient, cmd)
+	fun userCreateFunction(): UserCreateFunction = keycloakF2Function { cmd, client ->
+		val userId = createUser(client, cmd)
 		UserCreatedCommand(userId)
 	}
 
-	private fun createUser(client: AuthRealmClient, cmd: UserCreateCommand): String {
+	private fun createUser(client: KeycloakClient, cmd: UserCreateCommand): String {
 		val userRepresentation = initUserRepresentation(cmd)
-		return createUser(client, cmd.realmId, userRepresentation).also {
-			// onboarding(client, cmd)
-		}
+		return createUser(client, userRepresentation)
 	}
 
 	private fun createUser(
-		client: AuthRealmClient,
-		realmId: String,
+		client: KeycloakClient,
 		user: UserRepresentation,
 	): String {
-		val response = client.keycloak.realm(realmId).users().create(user)
+		val response = client.users().create(user)
 		if (response.isFailure()) {
 			response.onCreationFailure("user")
 		}

@@ -1,8 +1,8 @@
 package im.script.function.core.model
 
-import i2.keycloak.f2.client.domain.ClientIdentifier
+import city.smartb.im.core.client.domain.model.ClientIdentifier
 
-data class AppClient (
+data class AppClient(
     val clientId: ClientIdentifier,
     val clientSecret: String?,
     val roles: List<String>?,

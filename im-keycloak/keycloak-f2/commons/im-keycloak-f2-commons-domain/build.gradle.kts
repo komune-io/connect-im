@@ -4,9 +4,8 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(Modules.imKeycloakAuthDomain))
+    commonMainApi(project(Modules.imCommonsDomain))
 
     Dependencies.Mpp.f2(::commonMainApi)
-
     Dependencies.Mpp.datetime(::commonMainApi)
 }

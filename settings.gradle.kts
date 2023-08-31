@@ -12,11 +12,12 @@ rootProject.name = "im"
 
 include(
     "im-api:api-config",
-    "im-api:api-gateway"
+    "im-api:api-gateway",
+    "im-api:f2-spring-boot-starter-auth-tenant"
 )
 
 include(
-    "im-bdd:bdd-commons"
+    "im-bdd"
 )
 
 include(
@@ -26,48 +27,46 @@ include(
 )
 
 include(
-    "im-infra:infra-redis"
+    "im-infra:keycloak",
+    "im-infra:redis"
 )
 
 include(
-    "im-s2:im-organization:organization-api",
-    "im-s2:im-organization:organization-domain",
-    "im-s2:im-organization:organization-client",
-    "im-s2:im-organization:organization-lib"
+    "im-core:client-core:client-core-api",
+    "im-core:client-core:client-core-domain",
+    "im-core:privilege-core:privilege-core-api",
+    "im-core:privilege-core:privilege-core-domain",
 )
 
 include(
-    "im-s2:im-user:user-api",
-    "im-s2:im-user:user-domain",
-    "im-s2:im-user:user-client",
-    "im-s2:im-user:user-lib"
+    "im-f2:apikey:apikey-api",
+    "im-f2:apikey:apikey-domain",
+    "im-f2:apikey:apikey-client",
+    "im-f2:apikey:apikey-lib",
+
+    "im-f2:organization:organization-api",
+    "im-f2:organization:organization-domain",
+    "im-f2:organization:organization-client",
+    "im-f2:organization:organization-lib",
+
+    "im-f2:privilege:privilege-api",
+    "im-f2:privilege:privilege-client",
+    "im-f2:privilege:privilege-core",
+    "im-f2:privilege:privilege-domain",
+    "im-f2:privilege:privilege-lib",
+
+    "im-f2:space:space-api",
+    "im-f2:space:space-client",
+    "im-f2:space:space-domain",
+    "im-f2:space:space-lib",
+
+    "im-f2:user:user-api",
+    "im-f2:user:user-domain",
+    "im-f2:user:user-client",
+    "im-f2:user:user-lib",
 )
 
 include(
-    "im-s2:im-apikey:apikey-api",
-    "im-s2:im-apikey:apikey-domain",
-    "im-s2:im-apikey:apikey-client",
-    "im-s2:im-apikey:apikey-lib"
-)
-
-include(
-    "im-s2:im-role:role-api",
-    "im-s2:im-role:role-domain",
-    "im-s2:im-role:role-client"
-)
-
-include(
-    "im-s2:im-space:space-api",
-    "im-s2:im-space:space-client",
-    "im-s2:im-space:space-domain",
-    "im-s2:im-space:space-lib"
-)
-
-include(
-    "im-keycloak:keycloak-auth:keycloak-auth-client",
-    "im-keycloak:keycloak-auth:keycloak-auth-domain",
-    "im-keycloak:keycloak-utils",
-
     "im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-api",
     "im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-domain",
 
@@ -78,10 +77,6 @@ include(
     "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-domain",
     "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-command",
     "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-query",
-
-    "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-domain",
-    "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-command",
-    "im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-query",
 
     "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-domain",
     "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-command",

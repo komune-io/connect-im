@@ -1,8 +1,9 @@
 package im.script.gateway.conguration.config.base
 
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.AuthRealmClientSecret
-import i2.keycloak.master.domain.AuthRealmPassword
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.commons.model.AuthRealmClientSecret
+import city.smartb.im.commons.model.AuthRealmPassword
+import city.smartb.im.commons.model.RealmId
 
 data class ImAuthProperties(
     val serverUrl: String,
@@ -13,14 +14,15 @@ data class ImAuthProperties(
     val password: String? = null,
 )
 
-fun ImAuthProperties.toAuthRealm(): AuthRealm {
+fun ImAuthProperties.toAuthRealm(space: RealmId? = null): AuthRealm {
     return if (clientSecret != null) {
             AuthRealmClientSecret(
                 serverUrl = serverUrl,
                 realmId = realmId,
                 clientId = clientId,
                 clientSecret = clientSecret,
-                redirectUrl = null
+                redirectUrl = null,
+                space = space ?: realmId
             )
         } else if (username != null && password != null) {
             AuthRealmPassword(
@@ -29,7 +31,8 @@ fun ImAuthProperties.toAuthRealm(): AuthRealm {
                 clientId = clientId,
                 username = username,
                 password = password,
-                redirectUrl = ""
+                redirectUrl = "",
+                space = space ?: realmId
             )
 
         } else {

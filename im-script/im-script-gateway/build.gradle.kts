@@ -6,9 +6,9 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.Script.imScriptConfig))
-    implementation(project(Modules.Script.imScriptFunctionConfig))
-    implementation(project(Modules.Script.imScriptFunctionInit))
+    implementation(project(Modules.Script.config))
+    implementation(project(Modules.Script.functionConfig))
+    implementation(project(Modules.Script.functionInit))
 
 
     Dependencies.Jvm.f2(::implementation)

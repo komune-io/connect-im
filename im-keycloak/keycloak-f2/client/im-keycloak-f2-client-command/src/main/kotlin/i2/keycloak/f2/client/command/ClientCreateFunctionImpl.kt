@@ -1,12 +1,11 @@
 package i2.keycloak.f2.client.command
 
-import f2.dsl.fnc.f2Function
+import city.smartb.im.infra.keycloak.client.KeycloakClient
+import city.smartb.im.infra.keycloak.toEntityCreatedId
 import i2.keycloak.f2.client.domain.features.command.ClientCreateCommand
 import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
 import i2.keycloak.f2.client.domain.features.command.ClientCreatedEvent
-import i2.keycloak.realm.client.config.AuthRealmClient
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
-import i2.keycloak.utils.toEntityCreatedId
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import org.keycloak.representations.idm.ClientRepresentation
 import org.keycloak.representations.idm.ProtocolMapperRepresentation
 import org.springframework.context.annotation.Bean
@@ -16,9 +15,9 @@ import org.springframework.context.annotation.Configuration
 class ClientCreateFunctionImpl {
 
 	@Bean
-	fun clientCreateFunction(): ClientCreateFunction = f2Function { cmd ->
+	fun clientCreateFunction(): ClientCreateFunction = keycloakF2Function { cmd, keycloakClient ->
 		buildClient(cmd).let { client ->
-			AuthRealmClientBuilder().build(cmd.auth).createClient(cmd.realmId, client)
+            keycloakClient.createClient(client)
 		}.let { id ->
 			ClientCreatedEvent(id)
 		}
@@ -59,7 +58,7 @@ class ClientCreateFunctionImpl {
 		}
 	}
 
-	private fun AuthRealmClient.createClient(realmId: String, client: ClientRepresentation): String {
-		return this.clients(realmId).create(client).toEntityCreatedId()
+	private fun KeycloakClient.createClient(client: ClientRepresentation): String {
+		return this.clients().create(client).toEntityCreatedId()
 	}
 }

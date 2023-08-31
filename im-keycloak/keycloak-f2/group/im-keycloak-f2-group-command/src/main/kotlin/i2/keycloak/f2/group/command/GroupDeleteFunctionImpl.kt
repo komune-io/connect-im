@@ -14,7 +14,7 @@ class GroupDeleteFunctionImpl {
 	@Bean
 	fun groupDeleteFunction(): GroupDeleteFunction = keycloakF2Function { cmd, client ->
 		try {
-			client.getGroupResource(cmd.realmId, cmd.id).remove()
+			client.group(cmd.id).remove()
 			GroupDeletedEvent(cmd.id)
 		} catch (e: Exception) {
 			throw I2ApiError(

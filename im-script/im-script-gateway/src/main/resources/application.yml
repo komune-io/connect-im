@@ -1,6 +1,5 @@
-spring:
-  main:
-    web-application-type: none
+server:
+  port: 1000
 
 im:
   script:
@@ -8,27 +7,28 @@ im:
       max: 5
       delayMillis: 10000
     config:
-      auth:
-        serverUrl: http://keycloak-it:8080
-        realmId: im-test
-        clientId: im-test-client
-        client-Secret: secret
       retry:
         max: ${im.script.retry.max}
         delayMillis: ${im.script.retry.delayMillis}
 #      json: file:./infra/docker-compose/config/config.json
     init:
-      auth:
-        serverUrl: http://keycloak-it:8080
-        username: root
-        password: root
-        realmId: master
-        clientId: admin-cli
+
       retry:
         max: ${im.script.retry.max}
         delayMillis: ${im.script.retry.delayMillis}
 #      json: file:./infra/docker-compose/config/init.json
 
+f2:
+  tenant:
+    issuerBaseUri: http://localhost:8080
+
+connect:
+  im:
+    keycloak:
+      url: http://localhost:8080
+      realm: master
+      clientId: im-root-platform
+      clientSecret: secret
 
 ---
 spring:
@@ -39,6 +39,17 @@ spring:
 im:
   script:
     config:
-      json: file:./infra/docker-compose/config/build/config.json
+        auth:
+            serverUrl: http://localhost:8080
+            realmId: master
+            clientId: im-root-platform
+            clientSecret: secret
+        json: file:./infra/docker-compose/config/build/config.json
     init:
-      json: file:./infra/docker-compose/config/build/init.json
+        auth:
+            serverUrl: http://localhost:8080
+            username: root
+            password: root
+            realmId: master
+            clientId: admin-cli
+        json: file:./infra/docker-compose/config/build/init.json

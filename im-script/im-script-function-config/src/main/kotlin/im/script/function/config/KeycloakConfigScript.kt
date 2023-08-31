@@ -1,47 +1,61 @@
 package im.script.function.config
 
-import city.smartb.im.commons.exception.NotFoundException
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.commons.model.RealmId
+import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
+import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
+import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
+import city.smartb.im.f2.space.lib.SpaceFinderService
+import f2.spring.exception.NotFoundException
 import im.script.function.config.config.KeycloakConfigParser
 import im.script.function.config.config.KeycloakConfigProperties
 import im.script.function.config.config.KeycloakUserConfig
-import im.script.function.config.config.WebClient
 import im.script.function.config.service.ConfigService
-import i2.keycloak.f2.client.domain.ClientId
-import i2.keycloak.f2.role.domain.RoleName
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
+import im.script.function.core.model.AuthContext
+import im.script.function.core.model.PermissionData
+import im.script.function.core.model.RoleData
 import im.script.function.core.service.ClientInitService
 import im.script.function.core.service.ScriptFinderService
-import kotlinx.coroutines.runBlocking
+import im.script.gateway.conguration.config.ImScriptConfigProperties
+import im.script.gateway.conguration.config.base.toAuthRealm
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
-const val SUPER_ADMIN_ROLE = "super_admin"
-const val ORGANIZATION_ID_CLAIM_NAME = "memberOf"
-
 @Service
 class KeycloakConfigScript (
-    private val keycloakAggregateService: ConfigService,
     private val clientInitService: ClientInitService,
-    private val scriptFinderService: ScriptFinderService
+    private val configService: ConfigService,
+    private val imScriptConfigProperties: ImScriptConfigProperties,
+    private val privilegeAggregateService: PrivilegeAggregateService,
+    private val privilegeFinderService: PrivilegeFinderService,
+    private val scriptFinderService: ScriptFinderService,
+    private val spaceFinderService: SpaceFinderService
 ) {
     private val logger = LoggerFactory.getLogger(KeycloakConfigScript::class.java)
 
-    fun run(authRealm: AuthRealm, configPath: String) {
+    suspend fun run(configPath: String) {
         val config = KeycloakConfigParser().getConfiguration(configPath)
-        run(authRealm, config)
+        val auth = imScriptConfigProperties.auth.toAuthRealm(config.realmId)
+        withContext(AuthContext(auth)) {
+            run(auth, config)
+        }
     }
 
-    fun run(authRealm: AuthRealm, config: KeycloakConfigProperties) = runBlocking {
-        logger.info("Verify Realm[${authRealm.realmId}] exists...")
-        verifyRealm(authRealm, authRealm.realmId)
-        logger.info("Initializing Roles...")
-        initRoles(authRealm, config.roles, config.roleComposites)
-        logger.info("Initialized Roles")
+    suspend fun run(authRealm: AuthRealm, config: KeycloakConfigProperties) {
+        logger.info("Verify Realm[${config.realmId}] exists...")
+        verifyRealm(config.realmId)
+
+        logger.info("Initializing Privileges...")
+        initPrivileges(config.permissions, config.roles)
+        logger.info("Initialized Privileges")
 
         logger.info("Initializing Clients...")
-        config.webClients.forEach { initWebClient(authRealm, it) }
-        config.appClients.forEach { clientInitService.initAppClient(authRealm, authRealm.realmId, it) }
+        config.webClients.forEach { clientInitService.initWebClient(it) }
+        config.appClients.forEach { clientInitService.initAppClient(it) }
         logger.info("Initialized Client")
 
         logger.info("Initializing Users...")
@@ -49,60 +63,65 @@ class KeycloakConfigScript (
         logger.info("Initialized Users")
     }
 
-    private suspend fun checkIfExists(authRealm: AuthRealm, clientId: ClientId): Boolean {
-        return if (scriptFinderService.getClient(authRealm, authRealm.realmId, clientId) != null) {
-            logger.info("Client [$clientId] already exists.")
-            true
-        } else {
-            false
-        }
+    private suspend fun initPrivileges(permissions: List<PermissionData>?, roles: List<RoleData>?) {
+        initPermissions(permissions)
+        initRoles(roles)
     }
 
-    private suspend fun initWebClient(authRealm: AuthRealm, webClient: WebClient) {
-        if (!checkIfExists(authRealm, webClient.clientId)) {
-            clientInitService.createClient(
-                authRealm = authRealm,
-                realmId = authRealm.realmId,
-                identifier = webClient.clientId,
-                baseUrl = webClient.webUrl,
-                isStandardFlowEnabled = true,
-                isDirectAccessGrantsEnabled = false,
-                isServiceAccountsEnabled = false,
-                isPublic = true,
-                protocolMappers = mapOf(ORGANIZATION_ID_CLAIM_NAME to ORGANIZATION_ID_CLAIM_NAME),
+    private suspend fun initPermissions(permissions: List<PermissionData>?) = coroutineScope {
+        if (permissions.isNullOrEmpty()) {
+            return@coroutineScope
+        }
+
+        permissions.map { permission ->
+            async {
+                privilegeFinderService.getPrivilegeOrNull(permission.name)
+                    ?: privilegeAggregateService.define(permission.toCommand())
+            }
+        }.awaitAll()
+    }
+
+    private suspend fun initRoles(roles: List<RoleData>?) = coroutineScope {
+        if (roles.isNullOrEmpty()) {
+            return@coroutineScope
+        }
+
+        val existingRoles = privilegeFinderService.listRoles()
+            .plus(privilegeFinderService.listPermissions())
+            .map(PrivilegeDTO::identifier)
+            .toMutableSet()
+
+        val remainingRoles = roles.filter { it.name !in existingRoles }.toMutableSet()
+        var anyRoleInitialized = true
+
+        while (remainingRoles.isNotEmpty() && anyRoleInitialized) {
+            remainingRoles.filter { role ->
+                role.permissions.orEmpty().all { it in existingRoles }
+            }.also {
+                anyRoleInitialized = it.isNotEmpty()
+            }.map { role ->
+                async { privilegeAggregateService.define(role.toCommand()) }
+            }.awaitAll().forEach { role ->
+                remainingRoles.removeIf { it.name == role.identifier }
+                existingRoles.add(role.identifier)
+            }
+        }
+
+        if (remainingRoles.isNotEmpty()) {
+            throw IllegalArgumentException(
+                "Could not initialize roles [${remainingRoles.joinToString { it.name }}] because some of their permissions do not exist"
             )
         }
-    }
 
-    private suspend fun initRoles(authRealm: AuthRealm, roles: List<RoleName>?, roleComposites: Map<RoleName, List<RoleName>>?) {
-        roles?.let {
-            roles.forEach { role ->
-                initRoleWithComposites(authRealm, role)
-            }
-            addCompositesToAdmin(authRealm, roles.filter { it != SUPER_ADMIN_ROLE })
-        }
-
-        roleComposites?.let {
-            roleComposites.forEach { roleComposite ->
-                initRoleWithComposites(authRealm, roleComposite.key, roleComposite.value)
-            }
+        roles.forEach { role ->
+            privilegeFinderService.getPrivilegeOrNull(role.name)
+                ?: privilegeAggregateService.define(role.toCommand())
         }
     }
 
-    private suspend fun verifyRealm(authRealm: AuthRealm, realmId: RealmId) {
-        scriptFinderService.getRealm(authRealm, realmId) ?: throw NotFoundException("Realm", realmId)
-    }
-    private suspend fun initRoleWithComposites(authRealm: AuthRealm, role: RoleName, composites: List<RoleName> = emptyList()) {
-        scriptFinderService.getRole(authRealm, role, authRealm.realmId)
-            ?: keycloakAggregateService.createRole(authRealm, role)
-
-        if (composites.isNotEmpty()) {
-            keycloakAggregateService.addRoleComposites(authRealm, role, composites)
-        }
-    }
-
-    private suspend fun addCompositesToAdmin(authRealm: AuthRealm, composites: List<RoleName>) {
-        keycloakAggregateService.addRoleComposites(authRealm, SUPER_ADMIN_ROLE, composites)
+    private suspend fun verifyRealm(realmId: RealmId) {
+        spaceFinderService.getOrNull(realmId)
+            ?: throw NotFoundException("Realm", realmId)
     }
 
     private suspend fun initUsers(authRealm: AuthRealm, users: List<KeycloakUserConfig>?) {
@@ -113,7 +132,7 @@ class KeycloakConfigScript (
 
     private suspend fun initUser(authRealm: AuthRealm, user: KeycloakUserConfig) {
         scriptFinderService.getUser(authRealm, user.email, authRealm.realmId)
-            ?: keycloakAggregateService.createUser(
+            ?: configService.createUser(
                 authRealm = authRealm,
                 username = user.username,
                 email = user.email,
@@ -122,7 +141,7 @@ class KeycloakConfigScript (
                 isEnable = true,
                 password = user.password
             ).let { userId ->
-                keycloakAggregateService.grantUser(authRealm, userId, user.role)
+                configService.grantUser(authRealm, userId, user.role)
             }
     }
 }

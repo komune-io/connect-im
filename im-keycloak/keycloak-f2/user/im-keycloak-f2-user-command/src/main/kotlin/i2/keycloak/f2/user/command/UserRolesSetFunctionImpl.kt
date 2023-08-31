@@ -19,7 +19,7 @@ class UserRolesSetFunctionImpl(
 
 	@Bean
 	fun userRolesSetFunction(): UserRolesSetFunction = keycloakF2Function { cmd, client ->
-		val oldRoles = client.getUserResource(cmd.realmId, cmd.id).roles().realmLevel().listAll()
+		val oldRoles = client.user(cmd.id).roles().realmLevel().listAll()
 
 		UserRolesRevokeCommand(
 			id = cmd.id,

@@ -19,7 +19,7 @@ object PluginVersions {
 
 object Versions {
 	val f2 = Framework.fixers
-	val i2 = Framework.fixers
+//	val i2 = Framework.fixers
 	val s2 = Framework.fixers
 
 	val fs = Framework.connect
@@ -28,6 +28,7 @@ object Versions {
 
 	const val springBoot = PluginVersions.springBoot
 	const val springData = FixersVersions.Spring.data
+	const val springSecurity = "6.1.3"
 
 	const val kdatetime = "0.1.1"
 
@@ -80,12 +81,12 @@ object Dependencies {
 			)
 		}
 
-		fun i2Auth(scope: Scope) = scope.add(
-			"city.smartb.i2:i2-spring-boot-starter-auth:${Versions.i2}"
+		fun f2Auth(scope: Scope) = scope.add(
+//			"city.smartb.i2:i2-spring-boot-starter-auth:${Versions.i2}"
 		)
 
 		fun i2AuthClient(scope: Scope) = scope.add(
-			"city.smartb.i2:keycloak-auth-client:${Versions.i2}"
+//			"city.smartb.i2:keycloak-auth-client:${Versions.i2}"
 		)
 
 		fun ktor(scope: Scope) = scope.add(
@@ -98,6 +99,7 @@ object Dependencies {
 
 		fun cucumber(scope: Scope) = FixersDependencies.Jvm.Test.cucumber(scope)
 			.add(
+//                "city.smartb.s2:s2-test-bdd:${Versions.s2}",
 				"io.cucumber:cucumber-spring:${FixersVersions.Test.cucumber}",
 				"org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}"
 			)
@@ -133,6 +135,11 @@ object Dependencies {
 			"city.smartb.f2:f2-dsl-function:${Versions.f2}"
 		)
 
+        fun f2Client(scope: Scope) = scope.add(
+            "city.smartb.f2:f2-client-ktor:${Versions.f2}",
+            "io.ktor:ktor-client-auth:${Versions.ktor}"
+        )
+
 		fun datetime(scope: Scope) = scope.add(
 			"org.jetbrains.kotlinx:kotlinx-datetime:${Versions.kdatetime}"
 		)
@@ -148,79 +155,99 @@ object Dependencies {
 }
 
 object Modules {
-	object S2 {
-		val imOrganizationApi = ":im-s2:im-organization:organization-api"
-		val imOrganizationDomain = ":im-s2:im-organization:organization-domain"
-		val imOrganizationClient = ":im-s2:im-organization:organization-client"
-		val imOrganizationLib = ":im-s2:im-organization:organization-lib"
+    object Infra {
+        private const val BASE = ":im-infra"
 
-		val imUserApi = ":im-s2:im-user:user-api"
-		val imUserDomain = ":im-s2:im-user:user-domain"
-		val imUserClient = ":im-s2:im-user:user-client"
-		val imUserLib = ":im-s2:im-user:user-lib"
-
-		val imApikeyApi = ":im-s2:im-apikey:apikey-api"
-		val imApikeyDomain = ":im-s2:im-apikey:apikey-domain"
-		val imApikeyClient = ":im-s2:im-apikey:apikey-client"
-		val imApikeyLib = ":im-s2:im-apikey:apikey-lib"
-
-		val imRoleApi = ":im-s2:im-role:role-api"
-		val imRoleDomain = ":im-s2:im-role:role-domain"
-		val imRoleClient = ":im-s2:im-role:role-client"
-        
-        val imSpaceApi = ":im-s2:im-space:space-api"
-        val imSpaceDomain = ":im-s2:im-space:space-domain"
-        val imSpaceClient = ":im-s2:im-space:space-client"
-        val imSpaceLib = ":im-s2:im-space:space-lib"
+        const val keycloak = "$BASE:keycloak"
+        const val redis = "$BASE:redis"
     }
 
-	object Script {
-		val imScriptGateway = ":im-script:im-script-gateway"
-		val imScriptConfig = ":im-script:im-script-gateway-configuration"
+    object Core {
+        private const val BASE = ":im-core"
 
-		val imScriptFunctionConfig = ":im-script:im-script-function-config"
-		val imScriptFunctionCore = ":im-script:im-script-function-core"
-		val imScriptFunctionInit = ":im-script:im-script-function-init"
+        private const val CLIENT = "$BASE:client-core:client-core"
+        const val clientApi = "$CLIENT-api"
+        const val clientDomain = "$CLIENT-domain"
+
+        private const val PRIVILEGE = "$BASE:privilege-core:privilege-core"
+        const val privilegeApi = "$PRIVILEGE-api"
+        const val privilegeDomain = "$PRIVILEGE-domain"
+    }
+
+	object F2 {
+        private const val BASE = ":im-f2"
+
+        private const val API_KEY = "$BASE:apikey:apikey"
+        const val apikeyApi = "$API_KEY-api"
+        const val apikeyClient = "$API_KEY-client"
+        const val apikeyDomain = "$API_KEY-domain"
+        const val apikeyLib = "$API_KEY-lib"
+
+        private const val ORGANIZATION = "$BASE:organization:organization"
+		const val organizationApi = "$ORGANIZATION-api"
+        const val organizationClient = "$ORGANIZATION-client"
+        const val organizationDomain = "$ORGANIZATION-domain"
+		const val organizationLib = "$ORGANIZATION-lib"
+
+        private const val PRIVILEGE = "$BASE:privilege:privilege"
+		const val privilegeApi = "$PRIVILEGE-api"
+        const val privilegeClient = "$PRIVILEGE-client"
+        const val privilegeDomain = "$PRIVILEGE-domain"
+        const val privilegeLib = "$PRIVILEGE-lib"
+
+        private const val SPACE = "$BASE:space:space"
+        val spaceApi = "$SPACE-api"
+        val spaceDomain = "$SPACE-domain"
+        val spaceClient = "$SPACE-client"
+        val spaceLib = "$SPACE-lib"
+
+        private const val USER = "$BASE:user:user"
+        const val userApi = "$USER-api"
+        const val userClient = "$USER-client"
+        const val userDomain = "$USER-domain"
+        const val userLib = "$USER-lib"
 	}
 
-	val imCommonsApi = ":im-commons:im-commons-api"
-	val imCommonsAuth = ":im-commons:im-commons-auth"
-	val imCommonsDomain = ":im-commons:im-commons-domain"
+	object Script {
+		const val gateway = ":im-script:im-script-gateway"
+		const val config = ":im-script:im-script-gateway-configuration"
 
-	val imKeycloakUtils = ":im-keycloak:keycloak-utils"
+		const val functionConfig = ":im-script:im-script-function-config"
+		const val functionCore = ":im-script:im-script-function-core"
+		const val functionInit = ":im-script:im-script-function-init"
+	}
 
-	val imKeycloakAuthClient = ":im-keycloak:keycloak-auth:keycloak-auth-client"
-	val imKeycloakAuthDomain = ":im-keycloak:keycloak-auth:keycloak-auth-domain"
+    const val imApiConfig = ":im-api:api-config"
 
-	val imKeycloakF2CommonsApi = ":im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-api"
-	val imKeycloakF2CommonsDomain = ":im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-domain"
+	const val imCommonsApi = ":im-commons:im-commons-api"
+	const val imCommonsAuth = ":im-commons:im-commons-auth"
+	const val imCommonsDomain = ":im-commons:im-commons-domain"
 
-	val imKeycloakF2ClientDomain = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-domain"
-	val imKeycloakF2ClientCommand = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-command"
-	val imKeycloakF2ClientQuery = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-query"
+	const val imKeycloakF2CommonsApi = ":im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-api"
+	const val imKeycloakF2CommonsDomain = ":im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-domain"
 
-	val imKeycloakF2GroupDomain = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-domain"
-	val imKeycloakF2GroupCommand = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-command"
-	val imKeycloakF2GroupQuery = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-query"
+	const val imKeycloakF2ClientDomain = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-domain"
+	const val imKeycloakF2ClientCommand = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-command"
+	const val imKeycloakF2ClientQuery = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-query"
 
-	val imKeycloakF2RealmDomain = ":im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-domain"
-	val imKeycloakF2RealmCommand = ":im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-command"
-	val imKeycloakF2RealmQuery = ":im-keycloak:keycloak-f2:realm:im-keycloak-f2-realm-query"
+	const val imKeycloakF2GroupDomain = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-domain"
+	const val imKeycloakF2GroupCommand = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-command"
+	const val imKeycloakF2GroupQuery = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-query"
 
-	val imKeycloakF2RoleDomain = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-domain"
-	val imKeycloakF2RoleCommand = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-command"
-	val imKeycloakF2RoleQuery = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-query"
+	const val imKeycloakF2RoleDomain = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-domain"
+	const val imKeycloakF2RoleCommand = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-command"
+	const val imKeycloakF2RoleQuery = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-query"
 
-	val imKeycloakF2UserDomain = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-domain"
-	val imKeycloakF2UserCommand = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-command"
-	val imKeycloakF2UserQuery = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-query"
+	const val imKeycloakF2UserDomain = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-domain"
+	const val imKeycloakF2UserCommand = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-command"
+	const val imKeycloakF2UserQuery = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-query"
 
-	val keycloakPlugin = ":im-keycloak:keycloak-plugin"
-	val keycloakGenerateActionToken = ":im-keycloak:keycloak-plugin:keycloak-generate-action-token"
-	val keycloakEventListenerHttp = ":im-keycloak:keycloak-plugin:keycloak-event-listener-http"
-	val keycloakPluginClient = ":im-keycloak:keycloak-plugin:keycloak-plugin-client"
-	val keycloakPluginDomain = ":im-keycloak:keycloak-plugin:keycloak-plugin-domain"
+	const val keycloakPlugin = ":im-keycloak:keycloak-plugin"
+	const val keycloakGenerateActionToken = ":im-keycloak:keycloak-plugin:keycloak-generate-action-token"
+	const val keycloakEventListenerHttp = ":im-keycloak:keycloak-plugin:keycloak-event-listener-http"
+	const val keycloakPluginClient = ":im-keycloak:keycloak-plugin:keycloak-plugin-client"
+	const val keycloakPluginDomain = ":im-keycloak:keycloak-plugin:keycloak-plugin-domain"
 
-	val keycloakTestBdd = ":im-keycloak:keycloak-test:test-bdd"
-	val keycloakTestIt = ":im-keycloak:keycloak-test:test-it"
+	const val keycloakTestBdd = ":im-keycloak:keycloak-test:test-bdd"
+	const val keycloakTestIt = ":im-keycloak:keycloak-test:test-it"
 }

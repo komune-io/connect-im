@@ -9,6 +9,15 @@ fun <T> String.parseJsonTo(targetClass: Class<T>): T {
     return this.parseTo(targetClass)
 }
 
+inline fun <reified T> String.parseJsonTo(): T {
+    val mapper = ObjectMapper()
+        .enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .registerKotlinModule()
+
+    return mapper.readValue(this, T::class.java)
+}
+
 fun <T> String.parseJsonTo(targetClass: Class<Array<T>>): List<T> {
     return parseTo(targetClass).toList()
 }

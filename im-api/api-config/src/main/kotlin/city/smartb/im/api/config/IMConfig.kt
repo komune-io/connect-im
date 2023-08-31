@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration
 class IMConfig {
 
     @Bean
-    fun iMProperties(imProperties: IMProperties): InseeProperties? {
+    fun imProperties(imProperties: IMProperties): InseeProperties? {
         return imProperties.organization?.insee
     }
 }

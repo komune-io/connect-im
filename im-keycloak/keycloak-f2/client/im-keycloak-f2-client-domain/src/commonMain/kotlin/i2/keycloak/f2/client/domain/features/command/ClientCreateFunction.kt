@@ -1,12 +1,12 @@
 package i2.keycloak.f2.client.domain.features.command
 
-import f2.dsl.cqrs.Command
+import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.commons.model.RealmId
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import i2.keycloak.f2.client.domain.ClientId
 import i2.keycloak.f2.client.domain.ClientIdentifier
-import i2.keycloak.master.domain.AuthRealm
-import i2.keycloak.master.domain.RealmId
+import i2.keycloak.f2.commons.domain.KeycloakF2Command
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
@@ -15,7 +15,7 @@ typealias ClientCreateFunction = F2Function<ClientCreateCommand, ClientCreatedEv
 @JsExport
 @JsName("ClientCreateCommand")
 class ClientCreateCommand(
-    val auth: AuthRealm,
+    override val auth: AuthRealm,
     val realmId: RealmId,
     val clientIdentifier: ClientIdentifier,
     val secret: String? = null,
@@ -30,7 +30,7 @@ class ClientCreateCommand(
     val adminUrl: String = "",
     val webOrigins: List<String> = emptyList(),
     val protocolMappers: Map<String, String> = emptyMap(),
-): Command
+): KeycloakF2Command
 
 @JsExport
 @JsName("ClientCreatedEvent")

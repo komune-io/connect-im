@@ -1,13 +1,12 @@
 package i2.keycloak.f2.client.query
 
-import f2.dsl.fnc.f2Function
 import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountFunction
 import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountResult
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.commons.domain.error.I2ApiError
 import i2.keycloak.f2.commons.domain.error.asI2Exception
 import i2.keycloak.f2.user.query.model.asModel
 import i2.keycloak.f2.user.query.service.UserFinderService
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -22,13 +21,11 @@ class ClientGetServiceAccountFunctionImpl {
     private lateinit var userFinderService: UserFinderService
 
     @Bean
-    fun clientGetServiceAccountFunction(): ClientGetServiceAccountFunction = f2Function { query ->
+    fun clientGetServiceAccountFunction(): ClientGetServiceAccountFunction = keycloakF2Function { query, keycloakClient ->
         try {
-            val realmClient = AuthRealmClientBuilder().build(query.auth)
-
-            realmClient.getClientResource(query.realmId, query.id)
+            keycloakClient.client(query.id)
                 .serviceAccountUser
-                .asModel { userId -> userFinderService.getRolesComposition(userId, query.realmId, realmClient) }
+                .asModel { userId -> userFinderService.getRolesComposition(userId, keycloakClient) }
                 .let(::ClientGetServiceAccountResult)
 
         } catch (e: NotFoundException) {

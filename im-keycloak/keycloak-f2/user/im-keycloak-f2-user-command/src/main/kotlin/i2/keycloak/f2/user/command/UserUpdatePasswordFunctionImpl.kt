@@ -15,7 +15,7 @@ class UserUpdatePasswordFunctionImpl {
 	@Bean
 	fun userUpdatePasswordFunction(): UserUpdatePasswordFunction = keycloakF2Function { cmd, client ->
 		try {
-			val userResource = client.getUserResource(cmd.realmId, cmd.userId)
+			val userResource = client.user(cmd.userId)
 
 			CredentialRepresentation().apply {
 				type = CredentialRepresentation.PASSWORD

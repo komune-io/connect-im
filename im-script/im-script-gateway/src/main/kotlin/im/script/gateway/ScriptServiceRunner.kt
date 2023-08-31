@@ -1,12 +1,10 @@
 package im.script.gateway
 
-import im.script.gateway.conguration.config.ImScriptConfigProperties
-import im.script.gateway.conguration.retryWithExceptions
-import im.script.gateway.conguration.config.ImScriptInitProperties
-import im.script.gateway.conguration.config.base.toAuthRealm
-import im.script.function.init.KeycloakInitScript
-import i2.keycloak.master.domain.AuthRealm
 import im.script.function.config.KeycloakConfigScript
+import im.script.function.init.KeycloakInitScript
+import im.script.gateway.conguration.config.ImScriptConfigProperties
+import im.script.gateway.conguration.config.ImScriptInitProperties
+import im.script.gateway.conguration.retryWithExceptions
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
@@ -26,18 +24,22 @@ class ScriptServiceRunner(
 
     override fun run(vararg args: String?) = runBlocking {
         imScriptInitProperties.json?.let { json ->
-            val auth = imScriptInitProperties.auth.toAuthRealm()
-            runInit(auth, json)
+            runInit(json)
         }
         imScriptConfigProperties.json?.let { json ->
-            val auth = imScriptConfigProperties.auth.toAuthRealm()
-            runConfig(auth, json)
+            runConfig(json)
         }
         context.close()
     }
-    suspend fun runInit(authRealm: AuthRealm, json: String) {
-        val success = retryWithExceptions("Init", imScriptInitProperties.retry.max, imScriptInitProperties.retry.delayMillis, logger) {
-            keycloakInitService.run(authRealm, json)
+
+    suspend fun runInit(json: String) {
+        val success = retryWithExceptions(
+            actionName = "Init",
+            maxRetries = imScriptInitProperties.retry.max,
+            retryDelayMillis = imScriptInitProperties.retry.delayMillis,
+            logger = logger
+        ) {
+            keycloakInitService.run(json)
         }
         if (!success) {
             logger.error("Could not initialize Keycloak. Exiting application.")
@@ -45,14 +47,14 @@ class ScriptServiceRunner(
         }
     }
 
-    suspend fun runConfig(authRealm: AuthRealm, json: String) {
+    suspend fun runConfig(json: String) {
         val success = retryWithExceptions(
-            "Config",
-            imScriptConfigProperties.retry.max,
-            imScriptConfigProperties.retry.delayMillis,
-            logger
+            actionName = "Config",
+            maxRetries = imScriptConfigProperties.retry.max,
+            retryDelayMillis = imScriptConfigProperties.retry.delayMillis,
+            logger = logger
         ) {
-            keycloakConfigService.run(authRealm, json)
+            keycloakConfigService.run(json)
         }
         if (!success) {
             logger.error("Could not configure Keycloak. Exiting application.")

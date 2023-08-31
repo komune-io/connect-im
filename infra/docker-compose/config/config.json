@@ -1,39 +1,73 @@
 {
-  "appClients": [
-    {
-      "clientId": "${KC_ADMIN_CLIENT_ID}",
-      "clientSecret": "${KC_ADMIN_CLIENT_SECRET}",
-      "roles": ["super_admin"],
-      "realmManagementRoles": [
-        "manage-users",
-        "view-users",
-        "query-groups",
-        "manage-realm"
-      ]
-    }
-  ],
-  "webClients": [
-    {
-      "clientId": "im-test-web",
-      "webUrl": "http://localhost:3000"
-    }
-  ],
-  "users": [],
-  "roles": [
-    "im_read_user",
-    "im_write_user",
-    "im_write_organization",
-    "im_read_organization",
-    "im_read_role",
-    "im_write_role",
-    "im_write_my_organization",
-    "im_read_apikey",
-    "im_write_apikey",
-
-    "super_admin",
-    "admin",
-    "user"
-  ],
-  "roleComposites": {
-  }
+    "realmId": "${KC_REALM}",
+    "appClients": [
+        {
+            "clientId": "${KC_ADMIN_CLIENT_ID}",
+            "clientSecret": "${KC_ADMIN_CLIENT_SECRET}",
+            "roles": ["super_admin"],
+            "realmManagementRoles": [
+                "manage-users",
+                "view-users",
+                "query-groups",
+                "manage-realm"
+            ]
+        }
+    ],
+    "webClients": [
+        {
+            "clientId": "im-test-web",
+            "webUrl": "http://localhost:3000"
+        }
+    ],
+    "users": [],
+    "permissions": [
+        {
+            "name": "tr_project_read",
+            "description": "Ability to view project data"
+        }, {
+            "name": "tr_project_write",
+            "description": "Ability to modify project data"
+        }
+    ],
+    "roles": [
+        {
+            "name": "tr_orchestrator",
+            "description": "Main organization role for orchestrators",
+            "targets": ["ORGANIZATION"],
+            "locale": {
+                "fr": "Orchestrateur",
+                "en": "Orchestrator"
+            },
+            "bindings": {
+                "USER": ["tr_orchestrator_user", "tr_orchestrator_admin"],
+                "API_KEY": ["tr_orchestrator_user", "tr_orchestrator_admin"]
+            }
+        },
+        {
+            "name": "tr_orchestrator_user",
+            "description": "Basic user role for orchestrator org",
+            "targets": ["USER", "API_KEY"],
+            "locale": {
+                "fr": "Utilisateur",
+                "en": "User"
+            },
+            "permissions": ["im_user_read", "tr_project_read"]
+        },
+        {
+            "name": "tr_orchestrator_admin",
+            "description": "Admin user role for orchestrator org",
+            "targets": ["USER", "API_KEY"],
+            "locale": {
+                "fr": "Administrateur",
+                "en": "Administrator"
+            },
+            "permissions": [
+                "im_organization_read", "im_organization_write",
+                "im_user_read", "im_user_write",
+                "im_role_read",  "im_role_write",
+                "im_apikey_read", "im_apikey_write",
+                "tr_project_read", "tr_project_write"
+            ]
+        }
+    ]
 }

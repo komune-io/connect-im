@@ -1,11 +1,11 @@
 package i2.keycloak.f2.role.query.service
 
+import city.smartb.im.commons.model.RealmId
+import city.smartb.im.infra.keycloak.client.KeycloakClient
+import i2.keycloak.f2.role.domain.RoleCompositeObjType
 import i2.keycloak.f2.role.domain.RoleCompositesModel
 import i2.keycloak.f2.role.domain.RolesCompositesModel
 import i2.keycloak.f2.role.domain.defaultRealmRole
-import i2.keycloak.f2.role.domain.features.query.RoleCompositeObjType
-import i2.keycloak.master.domain.RealmId
-import i2.keycloak.realm.client.config.AuthRealmClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -19,12 +19,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class RolesFinderService{
-    suspend fun getAllRolesComposition(
-        realmId: RealmId,
-        client: AuthRealmClient
-    ): List<RoleCompositesModel> = withContext(Dispatchers.IO) {
+    suspend fun getAllRolesComposition(client: KeycloakClient): List<RoleCompositesModel> = withContext(Dispatchers.IO) {
         client.roles().list().map { role ->
-            async {  val composites = client.getRoleResource(role.name).realmRoleComposites.mapNotNull { it.name }
+            async {  val composites = client.role(role.name).realmRoleComposites.mapNotNull { it.name }
                 RoleCompositesModel(
                     assignedRole = role.name,
                     effectiveRoles = composites
@@ -33,16 +30,15 @@ class RolesFinderService{
     }
 
     suspend fun getRolesComposite(
-        realmId: RealmId,
         objId: String,
         objType: RoleCompositeObjType,
-        client: AuthRealmClient
+        client: KeycloakClient
     ): RolesCompositesModel {
-        val roleResource = when(objType) {
-            RoleCompositeObjType.USER ->  client.getUserResource(realmId, objId).roles().realmLevel()
-            RoleCompositeObjType.GROUP ->  client.getGroupResource(realmId, objId).roles().realmLevel()
+        val roleResource = when (objType) {
+            RoleCompositeObjType.USER ->  client.user(objId).roles().realmLevel()
+            RoleCompositeObjType.GROUP ->  client.group(objId).roles().realmLevel()
         }
-        return roleResource.fetchAsyncRoles(realmId)
+        return roleResource.fetchAsyncRoles(client.realmId)
     }
 
     private suspend fun RoleScopeResource.fetchAsyncRoles(realmId: RealmId): RolesCompositesModel = withContext(Dispatchers.IO) {

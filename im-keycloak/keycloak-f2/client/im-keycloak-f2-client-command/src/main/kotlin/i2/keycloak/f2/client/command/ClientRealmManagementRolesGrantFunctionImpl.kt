@@ -1,10 +1,9 @@
 package i2.keycloak.f2.client.command
 
-import f2.dsl.fnc.f2Function
 import i2.keycloak.f2.client.domain.features.command.ClientRealmManagementRolesGrantFunction
 import i2.keycloak.f2.client.domain.features.command.ClientRealmManagementRolesGrantedEvent
 import i2.keycloak.f2.commons.app.asI2Exception
-import i2.keycloak.realm.client.config.AuthRealmClientBuilder
+import i2.keycloak.f2.commons.app.keycloakF2Function
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,21 +14,18 @@ class ClientRealmManagementRolesGrantFunctionImpl {
     private val logger = LoggerFactory.getLogger(ClientRealmManagementRolesGrantFunctionImpl::class.java)
 
     @Bean
-    fun clientRealmManagementRolesGrantFunction(): ClientRealmManagementRolesGrantFunction = f2Function { cmd ->
+    fun clientRealmManagementRolesGrantFunction(): ClientRealmManagementRolesGrantFunction = keycloakF2Function { cmd, keycloakClient ->
         try {
             logger.info("Realm[${cmd.realmId}] Client[${cmd.id}] Granting roles[${cmd.roles}]")
-            val realmClient = AuthRealmClientBuilder().build(cmd.auth)
+            val targetClientKeycloakId = keycloakClient.getClientByIdentifier(cmd.id)!!.id
+            val targetClientResource = keycloakClient.client(targetClientKeycloakId)
 
-            val targetClientKeycloakId = realmClient.clients(cmd.realmId).findByClientId(cmd.id).first().id
-            val targetClientResource = realmClient.getClientResource(cmd.realmId, targetClientKeycloakId)
-
-            val roleProviderClientKeycloakId = realmClient.clients(cmd.realmId).findByClientId("realm-management").first().id
+            val roleProviderClientKeycloakId = keycloakClient.clients().findByClientId("realm-management").first().id
 
             val rolesToAdd = cmd.roles.map { role ->
-                realmClient.getClientResource(cmd.realmId, roleProviderClientKeycloakId).roles().get(role).toRepresentation()
+                keycloakClient.client(roleProviderClientKeycloakId).roles().get(role).toRepresentation()
             }
-            realmClient
-                .getUserResource(cmd.realmId, targetClientResource.serviceAccountUser.id)
+            keycloakClient.user(targetClientResource.serviceAccountUser.id)
                 .roles()
                 .clientLevel(roleProviderClientKeycloakId)
                 .add(rolesToAdd)

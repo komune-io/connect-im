@@ -3,12 +3,19 @@ version: "3.7"
 services:
   im-config:
     image: smartbcity/im-script:${VERSION_IM}
-    network_mode: host
+    container_name: im-config
     environment:
       - im_script_config_auth_serverUrl=${AUTH_HOST_URL}
       - im_script_config_auth_realmId=${KC_REALM}
-      - im_script_config_auth_clientId=${KC_ADMIN_CLIENT_ID}
-      - im_script_config_auth_clientSecret=${KC_ADMIN_CLIENT_SECRET}
+      - im_script_config_auth_clientId=${KC_IM_CLIENT_ID}
+      - im_script_config_auth_clientSecret=${KC_IM_CLIENT_SECRET}
       - im_script_config_json=file:/tmp/config.json
     volumes:
       - ./config/build/config.json:/tmp/config.json
+    networks:
+      - net
+
+networks:
+  net:
+    name: ${DOCKER_NETWORK}
+    external: true
