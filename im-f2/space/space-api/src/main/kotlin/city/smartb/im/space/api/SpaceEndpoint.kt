@@ -1,6 +1,8 @@
 package city.smartb.im.space.api
 
 import city.smartb.im.commons.auth.policies.f2Function
+import city.smartb.im.f2.space.lib.SpaceAggregateService
+import city.smartb.im.f2.space.lib.SpaceFinderService
 import city.smartb.im.space.api.service.SpacePoliciesEnforcer
 import city.smartb.im.space.domain.SpaceApi
 import city.smartb.im.space.domain.features.command.SpaceCreateFunction
@@ -8,8 +10,6 @@ import city.smartb.im.space.domain.features.command.SpaceDeleteFunction
 import city.smartb.im.space.domain.features.query.SpaceGetFunction
 import city.smartb.im.space.domain.features.query.SpaceGetResult
 import city.smartb.im.space.domain.features.query.SpacePageFunction
-import city.smartb.im.space.lib.SpaceAggregateService
-import city.smartb.im.space.lib.SpaceFinderService
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service
 import s2.spring.utils.logger.Logger

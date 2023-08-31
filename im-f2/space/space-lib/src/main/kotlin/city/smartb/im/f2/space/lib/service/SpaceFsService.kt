@@ -1,4 +1,4 @@
-package city.smartb.im.space.lib.service
+package city.smartb.im.f2.space.lib.service
 
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.im.api.config.FsConfig

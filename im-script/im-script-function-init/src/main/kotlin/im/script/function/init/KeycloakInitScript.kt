@@ -1,6 +1,7 @@
 package im.script.function.init
 
 import city.smartb.im.commons.model.AuthRealm
+import city.smartb.im.commons.model.AuthRealmClientSecret
 import city.smartb.im.commons.utils.ParserUtils
 import city.smartb.im.core.client.api.ClientCoreAggregateService
 import city.smartb.im.core.client.api.ClientCoreFinderService
@@ -8,9 +9,9 @@ import city.smartb.im.core.client.domain.command.ClientGrantClientRolesCommand
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
+import city.smartb.im.f2.space.lib.SpaceAggregateService
+import city.smartb.im.f2.space.lib.SpaceFinderService
 import city.smartb.im.space.domain.features.command.SpaceCreateCommand
-import city.smartb.im.space.lib.SpaceAggregateService
-import city.smartb.im.space.lib.SpaceFinderService
 import im.script.function.core.model.AppClient
 import im.script.function.core.model.AuthContext
 import im.script.function.core.model.PermissionData

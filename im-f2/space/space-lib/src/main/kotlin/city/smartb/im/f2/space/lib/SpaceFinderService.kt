@@ -1,13 +1,13 @@
-package city.smartb.im.space.lib
+package city.smartb.im.f2.space.lib
 
 import city.smartb.im.api.config.PageDefault
+import city.smartb.im.f2.space.lib.model.toSpace
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import city.smartb.im.infra.redis.CacheName
 import city.smartb.im.infra.redis.RedisCache
 import city.smartb.im.space.domain.features.query.SpacePageResult
 import city.smartb.im.space.domain.model.Space
 import city.smartb.im.space.domain.model.SpaceId
-import city.smartb.im.space.lib.model.toSpace
 import f2.dsl.cqrs.page.PagePagination
 import f2.spring.exception.NotFoundException
 import org.keycloak.representations.idm.RealmRepresentation

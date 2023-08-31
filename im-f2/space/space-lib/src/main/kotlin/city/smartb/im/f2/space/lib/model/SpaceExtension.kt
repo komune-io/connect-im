@@ -1,4 +1,4 @@
-package city.smartb.im.space.lib.model
+package city.smartb.im.f2.space.lib.model
 
 import city.smartb.im.space.domain.model.Space
 import org.keycloak.representations.idm.RealmRepresentation

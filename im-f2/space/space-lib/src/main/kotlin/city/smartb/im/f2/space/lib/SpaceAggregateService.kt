@@ -1,4 +1,4 @@
-package city.smartb.im.space.lib
+package city.smartb.im.f2.space.lib
 
 import city.smartb.im.api.config.properties.IMProperties
 import city.smartb.im.core.client.api.ClientCoreAggregateService
@@ -34,10 +34,11 @@ class SpaceAggregateService(
         )
         client.realms().create(realms)
 
+        val authClientId = clientCoreFinderService.getByIdentifier(client.auth.clientId).id
         val realmClientId = clientCoreFinderService.getByIdentifier("${command.identifier}-realm").id
         val realmClientRoles = clientCoreFinderService.listClientRoles(realmClientId)
         ClientGrantClientRolesCommand(
-            id = client.auth.clientId,
+            id = authClientId,
             providerClientId = realmClientId,
             roles = realmClientRoles
         ).let { clientCoreAggregateService.grantClientRoles(it) }

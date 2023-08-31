@@ -4,7 +4,7 @@ import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.model.RealmId
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
-import city.smartb.im.space.lib.SpaceFinderService
+import city.smartb.im.f2.space.lib.SpaceFinderService
 import f2.spring.exception.NotFoundException
 import im.script.function.config.config.KeycloakConfigParser
 import im.script.function.config.config.KeycloakConfigProperties
