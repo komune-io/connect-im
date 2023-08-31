@@ -2,6 +2,7 @@ package im.script.function.config
 
 import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.model.RealmId
+import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import city.smartb.im.f2.space.lib.SpaceFinderService
@@ -85,12 +86,37 @@ class KeycloakConfigScript (
             return@coroutineScope
         }
 
-        roles.map { role ->
-            async {
-                privilegeFinderService.getPrivilegeOrNull(role.name)
-                    ?: privilegeAggregateService.define(role.toCommand())
+        val existingRoles = privilegeFinderService.listRoles()
+            .plus(privilegeFinderService.listPermissions())
+            .map(PrivilegeDTO::identifier)
+            .toMutableSet()
+
+        val remainingRoles = roles.filter { it.name !in existingRoles }.toMutableSet()
+        var anyRoleInitialized = true
+
+        while (remainingRoles.isNotEmpty() && anyRoleInitialized) {
+            remainingRoles.filter { role ->
+                role.permissions.orEmpty().all { it in existingRoles }
+            }.also {
+                anyRoleInitialized = it.isNotEmpty()
+            }.map { role ->
+                async { privilegeAggregateService.define(role.toCommand()) }
+            }.awaitAll().forEach { role ->
+                remainingRoles.removeIf { it.name == role.identifier }
+                existingRoles.add(role.identifier)
             }
-        }.awaitAll()
+        }
+
+        if (remainingRoles.isNotEmpty()) {
+            throw IllegalArgumentException(
+                "Could not initialize roles [${remainingRoles.joinToString { it.name }}] because some of their permissions do not exist"
+            )
+        }
+
+        roles.forEach { role ->
+            privilegeFinderService.getPrivilegeOrNull(role.name)
+                ?: privilegeAggregateService.define(role.toCommand())
+        }
     }
 
     private suspend fun verifyRealm(realmId: RealmId) {

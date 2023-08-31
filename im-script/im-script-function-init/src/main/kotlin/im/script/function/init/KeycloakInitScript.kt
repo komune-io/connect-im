@@ -56,7 +56,17 @@ class KeycloakInitScript(
             logger.info("Initializing IM client...")
             initImClient(properties)
             logger.info("Initialized IM client")
+        }
 
+        val imClientAuth = AuthRealmClientSecret(
+            serverUrl = masterAuth.serverUrl,
+            realmId = masterAuth.realmId,
+            clientId = properties.imMasterClient.clientId,
+            clientSecret = properties.imMasterClient.clientSecret,
+            redirectUrl = masterAuth.redirectUrl,
+            space = masterAuth.space
+        )
+        withContext(AuthContext(imClientAuth)) {
             logger.info("Initializing Realm [${properties.realmId}]...")
             initRealm(properties)
             logger.info("Initialized Realm")
@@ -85,11 +95,11 @@ class KeycloakInitScript(
         val imClientId = AppClient(
             clientId = properties.imMasterClient.clientId,
             clientSecret = properties.imMasterClient.clientSecret,
-            roles = null,
+            roles = listOf("create-realm", "admin"),
             realmManagementRoles = emptyList()
         ).let { clientInitService.initAppClient(it) }
 
-        val realmClientId = clientCoreFinderService.getByIdentifier("${properties.realmId}-realm").id
+        val realmClientId = clientCoreFinderService.getByIdentifier("master-realm").id
         val realmClientRoles = clientCoreFinderService.listClientRoles(realmClientId)
         ClientGrantClientRolesCommand(
             id = imClientId,
