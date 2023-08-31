@@ -11,17 +11,17 @@ dependencies {
 
     implementation(project(Modules.F2.apikeyApi))
     implementation(project(Modules.F2.apikeyLib))
-
     implementation(project(Modules.F2.organizationApi))
     implementation(project(Modules.F2.organizationLib))
-
+    implementation(project(Modules.F2.privilegeApi))
+    implementation(project(Modules.F2.privilegeLib))
+    implementation(project(Modules.F2.spaceApi))
+    implementation(project(Modules.F2.spaceLib))
     implementation(project(Modules.F2.userApi))
     implementation(project(Modules.F2.userLib))
 
-    implementation(project(Modules.F2.privilegeApi))
-    implementation(project(Modules.F2.privilegeLib))
-
     implementation(project(Modules.Core.privilegeApi))
+    implementation(project(Modules.Core.clientApi))
 
 	Dependencies.Jvm.f2(::implementation)
 	Dependencies.Mpp.f2(::implementation)

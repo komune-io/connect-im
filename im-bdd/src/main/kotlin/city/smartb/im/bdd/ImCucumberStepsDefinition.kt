@@ -2,6 +2,10 @@ package city.smartb.im.bdd
 
 import city.smartb.f2.spring.boot.auth.config.WebSecurityConfig
 import city.smartb.im.api.config.properties.IMProperties
+import city.smartb.im.api.config.properties.toAuthRealm
+import city.smartb.im.commons.auth.withAuth
+import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.reactor.ReactorContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -18,7 +22,17 @@ open class ImCucumberStepsDefinition: s2.bdd.CucumberStepsDefinition() {
     override lateinit var context: ImTestContext
 
     @Autowired
+    lateinit var keycloakClientProvider: KeycloakClientProvider
+
+    @Autowired
     lateinit var imProperties: IMProperties
+
+
+    suspend fun <R> withAuth(space: String, block: suspend CoroutineScope.() -> R): R {
+        return withAuth(imProperties.keycloak.toAuthRealm(), space, block)
+    }
+
+    suspend fun keycloakClient() = keycloakClientProvider.get()
 
     override fun authedContext(): ReactorContext {
         val authedUser = context.authedUser

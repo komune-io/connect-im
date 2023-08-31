@@ -1,14 +1,14 @@
 package city.smartb.im.f2.space.api.service
 
 import city.smartb.im.commons.auth.policies.PolicyEnforcer
-import city.smartb.im.f2.space.domain.model.SpaceId
+import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.f2.space.domain.policies.SpacePolicies
 import org.springframework.stereotype.Service
 
 @Service
 class SpacePoliciesEnforcer: PolicyEnforcer() {
 
-    suspend fun checkGet(spaceId: SpaceId) = checkAuthed("get space") { authedUser ->
+    suspend fun checkGet(spaceIdentifier: SpaceIdentifier) = checkAuthed("get space") { authedUser ->
         SpacePolicies.canGet(authedUser)
     }
 
@@ -20,8 +20,8 @@ class SpacePoliciesEnforcer: PolicyEnforcer() {
         SpacePolicies.canCreate(authedUser)
     }
 
-    suspend fun checkDelete(spaceId: SpaceId) = checkAuthed("delete a space") { authedUser ->
-        SpacePolicies.canDelete(authedUser, spaceId)
+    suspend fun checkDelete(spaceIdentifier: SpaceIdentifier) = checkAuthed("delete a space") { authedUser ->
+        SpacePolicies.canDelete(authedUser, spaceIdentifier)
     }
 
 }

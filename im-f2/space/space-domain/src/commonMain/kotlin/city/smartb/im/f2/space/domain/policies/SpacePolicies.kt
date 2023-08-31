@@ -3,7 +3,7 @@ package city.smartb.im.f2.space.domain.policies
 import city.smartb.im.commons.auth.AuthedUserDTO
 import city.smartb.im.commons.auth.ImRole
 import city.smartb.im.commons.auth.hasRole
-import city.smartb.im.f2.space.domain.model.SpaceId
+import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
@@ -34,7 +34,7 @@ object SpacePolicies {
     /**
      * User can delete a space
      */
-    fun canDelete(authedUser: AuthedUserDTO, spaceId: SpaceId): Boolean {
+    fun canDelete(authedUser: AuthedUserDTO, spaceIdentifier: SpaceIdentifier): Boolean {
         return authedUser.hasRole(ImRole.IM_SPACE_WRITE)
     }
 

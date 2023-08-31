@@ -32,8 +32,8 @@ object AuthenticationProvider {
         return getPrincipal()?.getClaim<String>(ORGANIZATION_ID_CLAIM_NAME)
     }
 
-    suspend fun getIssuer(): String {
-        return getPrincipal()?.issuer.toString()
+    suspend fun getIssuer(): String? {
+        return getPrincipal()?.issuer?.toString()
     }
 
     suspend fun getClientId(): String? {

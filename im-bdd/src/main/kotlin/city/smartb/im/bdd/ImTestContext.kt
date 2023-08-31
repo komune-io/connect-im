@@ -8,7 +8,7 @@ import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
-import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
+import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.model.User
@@ -19,18 +19,16 @@ import s2.bdd.data.TestContext
 import s2.bdd.data.TestContextKey
 
 @Component
-class ImTestContext(
-    private val keycloakClientProvider: KeycloakClientProvider
-): TestContext() {
+class ImTestContext: TestContext() {
     val apikeyIds = testEntities<TestContextKey, ApiKeyId>("ApiKey")
     val organizationIds = testEntities<TestContextKey, OrganizationId>("Organization")
     val permissionIdentifiers = testEntities<TestContextKey, PermissionIdentifier>("Permission")
     val realmIds = testEntities<TestContextKey, RealmId>("Realm")
     val roleIdentifiers = testEntities<TestContextKey, RoleIdentifier>("Role")
+    val spaceIdentifiers = testEntities<TestContextKey, SpaceIdentifier>("Space")
     val userIds = testEntities<TestContextKey, UserId>("User")
 
-    var realmId: RealmId? = "im-test"
-    suspend fun keycloakClient() = keycloakClientProvider.get()
+    var realmId: RealmId = "im-test"
 
     private val permanentRoles = ImRole.values()
         .asSequence()
@@ -39,7 +37,7 @@ class ImTestContext(
         .plus("offline_access")
         .toSet()
 
-    suspend fun permanentRoles() = permanentRoles + "default-roles-${keycloakClient().realmId}"
+    suspend fun permanentRoles(space: String? = realmId) = permanentRoles + "default-roles-${space}"
 
     final var fetched = FetchContext()
         private set

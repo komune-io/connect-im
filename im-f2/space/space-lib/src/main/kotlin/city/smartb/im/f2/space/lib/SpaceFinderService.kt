@@ -2,7 +2,7 @@ package city.smartb.im.f2.space.lib
 
 import city.smartb.im.api.config.PageDefault
 import city.smartb.im.f2.space.domain.model.Space
-import city.smartb.im.f2.space.domain.model.SpaceId
+import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.f2.space.domain.query.SpacePageResult
 import city.smartb.im.f2.space.lib.model.toSpace
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
@@ -18,7 +18,7 @@ open class SpaceFinderService(
     private val keycloakClientProvider: KeycloakClientProvider,
     private val redisCache: RedisCache,
 ) {
-    suspend fun getOrNull(id: SpaceId): Space? = redisCache.getFromCacheOr(CacheName.Space, id) {
+    suspend fun getOrNull(id: SpaceIdentifier): Space? = redisCache.getFromCacheOr(CacheName.Space, id) {
         val client = keycloakClientProvider.get()
 
         try {
@@ -30,7 +30,7 @@ open class SpaceFinderService(
         }
     }
 
-    suspend fun get(id: SpaceId): Space {
+    suspend fun get(id: SpaceIdentifier): Space {
         return getOrNull(id) ?: throw NotFoundException("Space", id)
     }
 

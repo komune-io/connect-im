@@ -60,7 +60,7 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
 
         Then("The role should be defined") {
             step {
-                AssertionBdd.role(context.keycloakClient()).assertThatId(command.identifier).hasFields(
+                AssertionBdd.role(keycloakClientProvider.get()).assertThatId(command.identifier).hasFields(
                     identifier = command.identifier,
                     description = command.description,
                     targets = command.targets.map { RoleTarget.valueOf(it) },

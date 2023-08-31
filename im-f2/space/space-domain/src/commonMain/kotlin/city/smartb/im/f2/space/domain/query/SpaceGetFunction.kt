@@ -2,7 +2,7 @@ package city.smartb.im.f2.space.domain.query
 
 import city.smartb.im.f2.space.domain.model.Space
 import city.smartb.im.f2.space.domain.model.SpaceDTO
-import city.smartb.im.f2.space.domain.model.SpaceId
+import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
@@ -20,7 +20,7 @@ typealias SpaceGetFunction = F2Function<SpaceGetQuery, SpaceGetResult>
 @JsExport
 @JsName("SpaceGetQueryDTO")
 interface SpaceGetQueryDTO: Query {
-    val id: SpaceId
+    val id: SpaceIdentifier
 }
 
 /**
@@ -31,7 +31,7 @@ data class SpaceGetQuery(
     /**
      * Identifier of the space.
      */
-    override val id: SpaceId
+    override val id: SpaceIdentifier
 ): SpaceGetQueryDTO
 
 @JsExport

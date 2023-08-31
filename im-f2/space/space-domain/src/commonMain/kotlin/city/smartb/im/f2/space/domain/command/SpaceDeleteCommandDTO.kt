@@ -1,6 +1,6 @@
 package city.smartb.im.f2.space.domain.command
 
-import city.smartb.im.f2.space.domain.model.SpaceId
+import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
@@ -18,7 +18,7 @@ typealias SpaceDeleteFunction = F2Function<SpaceDeleteCommand, SpaceDeletedEvent
 @JsExport
 @JsName("SpaceDeleteCommandDTO")
 interface SpaceDeleteCommandDTO: Command {
-    val id: SpaceId
+    val id: SpaceIdentifier
 }
 
 /**
@@ -29,13 +29,13 @@ data class SpaceDeleteCommand(
     /**
      * Identifier of the space to delete.
      */
-    override val id: SpaceId
+    override val id: SpaceIdentifier
 ): SpaceDeleteCommandDTO
 
 @JsExport
 @JsName("SpaceDeletedEventDTO")
 interface SpaceDeletedEventDTO: Event {
-    val id: SpaceId
+    val id: SpaceIdentifier
 }
 
 /**
@@ -46,5 +46,5 @@ data class SpaceDeletedEvent(
     /**
      * Identifier of the deleted space.
      */
-    override val id: SpaceId,
+    override val id: SpaceIdentifier,
 ): SpaceDeletedEventDTO
