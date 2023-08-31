@@ -1,9 +1,9 @@
-package city.smartb.im.space.domain
+package city.smartb.im.f2.space.domain
 
-import city.smartb.im.space.domain.features.command.SpaceCreateFunction
-import city.smartb.im.space.domain.features.command.SpaceDeleteFunction
-import city.smartb.im.space.domain.features.query.SpaceGetFunction
-import city.smartb.im.space.domain.features.query.SpacePageFunction
+import city.smartb.im.f2.space.domain.command.SpaceCreateFunction
+import city.smartb.im.f2.space.domain.command.SpaceDeleteFunction
+import city.smartb.im.f2.space.domain.query.SpaceGetFunction
+import city.smartb.im.f2.space.domain.query.SpacePageFunction
 
 /**
  * @d2 api

@@ -1,4 +1,4 @@
-package city.smartb.im.space.domain
+package city.smartb.im.f2.space.domain
 
 /**
  * @d2 page

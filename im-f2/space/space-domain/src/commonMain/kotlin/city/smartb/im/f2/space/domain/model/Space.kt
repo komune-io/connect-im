@@ -1,4 +1,4 @@
-package city.smartb.im.space.domain.model
+package city.smartb.im.f2.space.domain.model
 
 import city.smartb.im.commons.model.RealmId
 import kotlin.js.JsExport

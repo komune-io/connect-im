@@ -1,4 +1,4 @@
-package city.smartb.im.space.client
+package city.smartb.im.f2.space.client
 
 import city.smartb.im.commons.http.ClientBuilder
 import city.smartb.im.commons.http.ClientJvm

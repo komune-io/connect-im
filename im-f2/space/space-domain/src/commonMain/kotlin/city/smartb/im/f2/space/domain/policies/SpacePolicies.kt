@@ -1,9 +1,9 @@
-package city.smartb.im.space.domain.policies
+package city.smartb.im.f2.space.domain.policies
 
 import city.smartb.im.commons.auth.AuthedUserDTO
 import city.smartb.im.commons.auth.ImRole
 import city.smartb.im.commons.auth.hasRole
-import city.smartb.im.space.domain.model.SpaceId
+import city.smartb.im.f2.space.domain.model.SpaceId
 import kotlin.js.JsExport
 import kotlin.js.JsName
 

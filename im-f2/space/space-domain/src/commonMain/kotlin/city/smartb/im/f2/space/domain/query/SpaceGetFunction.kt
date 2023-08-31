@@ -1,8 +1,8 @@
-package city.smartb.im.space.domain.features.query
+package city.smartb.im.f2.space.domain.query
 
-import city.smartb.im.space.domain.model.Space
-import city.smartb.im.space.domain.model.SpaceDTO
-import city.smartb.im.space.domain.model.SpaceId
+import city.smartb.im.f2.space.domain.model.Space
+import city.smartb.im.f2.space.domain.model.SpaceDTO
+import city.smartb.im.f2.space.domain.model.SpaceId
 import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function

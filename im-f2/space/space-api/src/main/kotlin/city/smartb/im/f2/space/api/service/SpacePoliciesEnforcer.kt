@@ -1,8 +1,8 @@
-package city.smartb.im.space.api.service
+package city.smartb.im.f2.space.api.service
 
 import city.smartb.im.commons.auth.policies.PolicyEnforcer
-import city.smartb.im.space.domain.model.SpaceId
-import city.smartb.im.space.domain.policies.SpacePolicies
+import city.smartb.im.f2.space.domain.model.SpaceId
+import city.smartb.im.f2.space.domain.policies.SpacePolicies
 import org.springframework.stereotype.Service
 
 @Service
