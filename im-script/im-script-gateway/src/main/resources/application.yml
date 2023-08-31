@@ -27,7 +27,7 @@ connect:
     keycloak:
       url: http://localhost:8080
       realm: master
-      clientId: im-test-client
+      clientId: im-root-platform
       clientSecret: secret
 
 ---
@@ -42,8 +42,8 @@ im:
         auth:
             serverUrl: http://localhost:8080
             realmId: master
-            clientId: im-app
-            client-Secret: secret
+            clientId: im-root-platform
+            clientSecret: secret
         json: file:./infra/docker-compose/config/build/config.json
     init:
         auth:

@@ -21,20 +21,20 @@ Feature: PermissionDefine
     When I define a permission
     Then I should be forbidden to do so
 
-  Scenario: I want to be allowed to define a permission with the permission im_write_role
+  Scenario: I want to be allowed to define a permission with the permission im_role_write
     Given A user is created:
       | identifier | roles         |
-      | writer     | im_write_role |
+      | writer     | im_role_write |
     And I am authenticated as:
       | identifier |
       | writer     |
     When I define a permission
     Then The permission should be defined
 
-  Scenario: I want to receive an error when defining a permission without the permission im_write_role
+  Scenario: I want to receive an error when defining a permission without the permission im_role_write
     Given A user is created:
       | identifier | roles        |
-      | reader     | im_read_role |
+      | reader     | im_role_read |
     And I am authenticated as:
       | identifier |
       | reader     |

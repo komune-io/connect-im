@@ -14,6 +14,7 @@ import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.model.User
 import city.smartb.im.user.domain.model.UserId
 import org.springframework.stereotype.Component
+import s2.bdd.auth.AuthedUser
 import s2.bdd.data.TestContext
 import s2.bdd.data.TestContextKey
 
@@ -46,7 +47,12 @@ class ImTestContext(
     override fun resetEnv() {
         fetched = FetchContext()
         realmId = "im-test"
-        authedUser = null
+        // needed to define issuer with realmId
+        authedUser = AuthedUser(
+            id = "",
+            roles = emptyArray(),
+            memberOf = null
+        )
     }
 
     class FetchContext {

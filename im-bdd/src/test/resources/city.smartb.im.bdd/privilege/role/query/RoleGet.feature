@@ -35,13 +35,13 @@ Feature: RoleGet
     When I get the role
     Then I should be forbidden to do so
 
-  Scenario: I want to be allowed to get a role with the permission im_read_role
+  Scenario: I want to be allowed to get a role with the permission im_role_read
     Given A role is defined:
       | identifier |
       | r1         |
     And A user is created:
       | identifier | roles        |
-      | reader     | im_read_role |
+      | reader     | im_role_read |
     And I am authenticated as:
       | identifier |
       | reader     |
@@ -50,13 +50,13 @@ Feature: RoleGet
       | r1         |
     Then I should receive the role
 
-  Scenario: I want to be forbidden from getting a role without the permission im_read_role
+  Scenario: I want to be forbidden from getting a role without the permission im_role_read
     Given A role is defined:
       | identifier |
       | r1         |
     And A user is created:
       | identifier | roles         |
-      | writer     | im_write_role |
+      | writer     | im_role_write |
     And I am authenticated as:
       | identifier |
       | writer     |

@@ -35,13 +35,13 @@ Feature: PermissionList
     When I list the permissions
     Then I should be forbidden to do so
 
-  Scenario: I want to be allowed to list permissions with the permission im_read_role
+  Scenario: I want to be allowed to list permissions with the permission im_role_read
     Given A permission is defined:
       | identifier |
       | p1         |
     And A user is created:
       | identifier | roles        |
-      | reader     | im_read_role |
+      | reader     | im_role_read |
     And I am authenticated as:
       | identifier |
       | reader     |
@@ -50,11 +50,11 @@ Feature: PermissionList
       | identifier |
       | p1         |
 
-  Scenario: I want to be forbidden from listing permissions without the permission im_read_role
+  Scenario: I want to be forbidden from listing permissions without the permission im_role_read
     Given A permission is defined
     And A user is created:
       | identifier | roles         |
-      | writer     | im_write_role |
+      | writer     | im_role_write |
     And I am authenticated as:
       | identifier |
       | writer     |

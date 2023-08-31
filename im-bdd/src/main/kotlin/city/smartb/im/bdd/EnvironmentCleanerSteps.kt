@@ -4,11 +4,8 @@ import io.cucumber.java8.En
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
 
-class EnvironmentCleanerSteps(
-    private val context: ImTestContext,
-): En {
+class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
     init {
         Before { _ ->
             context.reset()
@@ -16,7 +13,7 @@ class EnvironmentCleanerSteps(
         }
     }
 
-    private fun cleanKeycloak() = runBlocking {
+    private fun cleanKeycloak() = step {
         cleanKeycloakUsers()
         cleanKeycloakOrganizations()
         cleanKeycloakRoles()

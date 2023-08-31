@@ -45,12 +45,13 @@ class RoleQuerySteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun assertFetchedRoles(identifiers: List<TestContextKey>) = coroutineScope {
-        val fetchedIdentifiers = context.fetched.roles.map(RoleDTOBase::identifier)
+        val fetchedRoles = context.fetched.roles.filter { it.identifier !in context.permanentRoles() }
+        val fetchedIdentifiers = fetchedRoles.map(RoleDTOBase::identifier)
         val expectedIdentifiers = identifiers.map { context.roleIdentifiers[it] ?: it }
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 
         val roleAsserter = AssertionBdd.role(context.keycloakClient())
-        context.fetched.roles.map { role ->
+        fetchedRoles.map { role ->
             async { roleAsserter.assertThatId(role.identifier).matches(role) }
         }.awaitAll()
     }

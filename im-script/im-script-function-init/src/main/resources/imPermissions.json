@@ -25,4 +25,10 @@
 }, {
     "name": "im_apikey_write",
     "description": "Ability to modify API keys"
+}, {
+    "name": "im_space_read",
+    "description": "Ability to view space data"
+}, {
+    "name": "im_space_write",
+    "description": "Ability to modify space data"
 }]

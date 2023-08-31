@@ -35,13 +35,13 @@ Feature: RoleList
     When I list the roles
     Then I should be forbidden to do so
 
-  Scenario: I want to be allowed to list roles with the permission im_read_role
+  Scenario: I want to be allowed to list roles with the permission im_role_read
     Given A role is defined:
       | identifier |
       | r1         |
     And A user is created:
       | identifier | roles        |
-      | reader     | im_read_role |
+      | reader     | im_role_read |
     And I am authenticated as:
       | identifier |
       | reader     |
@@ -50,11 +50,11 @@ Feature: RoleList
       | identifier |
       | r1         |
 
-  Scenario: I want to be forbidden from listing roles without the permission im_read_role
+  Scenario: I want to be forbidden from listing roles without the permission im_role_read
     Given A role is defined
     And A user is created:
       | identifier | roles         |
-      | writer     | im_write_role |
+      | writer     | im_role_write |
     And I am authenticated as:
       | identifier |
       | writer     |
