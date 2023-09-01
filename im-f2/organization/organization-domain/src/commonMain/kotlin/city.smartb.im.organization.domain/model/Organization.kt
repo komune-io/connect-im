@@ -9,10 +9,7 @@ import kotlin.js.JsExport
 import kotlin.js.JsName
 
 /**
- * Unique identifier of an organization.
- * @d2 model
- * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
- * @order 20
+ * @d2 hidden
  * @visual json "85171569-8970-45fb-b52a-85b59f06c292"
  */
 typealias OrganizationId = GroupId

@@ -17,7 +17,7 @@ fun Response.isFailure(): Boolean {
 
 fun Response.onCreationFailure(entityName: String = "entity") {
 	val error = this.readEntity(String::class.java)
-	val msg = "Error creating $entityName (code: ${status}) }. Cause: ${error}"
+	val msg = "Error creating $entityName (code: $status) }. Cause: $error"
 
     val cause = when (status) {
         HttpStatus.SC_CONFLICT -> ConflictException(entityName, "", "")

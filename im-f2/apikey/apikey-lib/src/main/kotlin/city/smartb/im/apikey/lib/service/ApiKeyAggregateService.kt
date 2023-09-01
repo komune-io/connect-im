@@ -6,7 +6,6 @@ import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddedEven
 import city.smartb.im.apikey.domain.features.command.ApikeyRemoveCommand
 import city.smartb.im.apikey.domain.features.command.ApikeyRemoveEvent
 import city.smartb.im.apikey.domain.model.ApiKey
-import city.smartb.im.apikey.domain.model.ApiKeyDTO
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.infra.redis.RedisCache
 import city.smartb.im.organization.domain.model.OrganizationId
@@ -29,16 +28,18 @@ import i2.keycloak.f2.group.domain.model.GroupModel
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 import java.text.Normalizer
 import java.util.UUID
 
-open class ApiKeyAggregateService<MODEL: ApiKeyDTO>(
+@Service
+class ApiKeyAggregateService(
     private val authenticationResolver: ImAuthenticationProvider,
     private val clientCreateFunction: ClientCreateFunction,
     private val clientDeleteFunction: ClientDeleteFunction,
     private val clientGetServiceAccountFunction: ClientGetServiceAccountFunction,
     private val clientServiceAccountRolesGrantFunction: ClientServiceAccountRolesGrantFunction,
-    private val apikeyFinderService: ApiKeyFinderService<MODEL>,
+    private val apikeyFinderService: ApiKeyFinderService,
     private val groupGetFunction: GroupGetFunction,
     private val userSetAttributesFunction: UserSetAttributesFunction,
     private val groupSetAttributesFunction: GroupSetAttributesFunction,

@@ -1,6 +1,7 @@
 package city.smartb.im.organization.api
 
-import city.smartb.im.commons.auth.policies.verify
+import city.smartb.im.commons.auth.policies.f2Function
+import city.smartb.im.commons.utils.contentByteArray
 import city.smartb.im.organization.api.policies.OrganizationPoliciesEnforcer
 import city.smartb.im.organization.domain.features.command.OrganizationCreateFunction
 import city.smartb.im.organization.domain.features.command.OrganizationDeleteFunction
@@ -9,17 +10,22 @@ import city.smartb.im.organization.domain.features.command.OrganizationUpdateFun
 import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
 import city.smartb.im.organization.domain.features.command.OrganizationUploadedLogoEvent
 import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeFunction
+import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeResult
 import city.smartb.im.organization.domain.features.query.OrganizationGetFunction
+import city.smartb.im.organization.domain.features.query.OrganizationGetResult
 import city.smartb.im.organization.domain.features.query.OrganizationPageFunction
 import city.smartb.im.organization.domain.features.query.OrganizationRefListFunction
-import city.smartb.im.organization.domain.model.Organization
-import city.smartb.im.organization.lib.OrganizationFeaturesImpl
+import city.smartb.im.organization.domain.features.query.OrganizationRefListResult
+import city.smartb.im.organization.lib.OrganizationAggregateService
+import city.smartb.im.organization.lib.OrganizationFinderService
 import org.springframework.context.annotation.Bean
+import org.springframework.http.codec.multipart.FilePart
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
+import s2.spring.utils.logger.Logger
 
 /**
  * @d2 service
@@ -29,24 +35,30 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping
 @Service
 class OrganizationEndpoint(
-    private val organizationFeatures: OrganizationFeaturesImpl<Organization>,
+    private val organizationAggregateService: OrganizationAggregateService,
+    private val organizationFinderService: OrganizationFinderService,
     private val organizationPoliciesEnforcer: OrganizationPoliciesEnforcer,
 ) {
+    private val logger by Logger()
 
     /**
      * Fetch an Organization by its ID.
      */
     @Bean
-    fun organizationGet(): OrganizationGetFunction<Organization> = verify(organizationFeatures.organizationGet()) { query ->
+    fun organizationGet(): OrganizationGetFunction = f2Function { query ->
+        logger.info("organizationGet: $query")
         organizationPoliciesEnforcer.checkGet(query.id)
+        organizationFinderService.getOrNull(query.id).let(::OrganizationGetResult)
     }
 
     /**
      * Fetch an Organization by its siret number from the Insee Sirene API.
      */
     @Bean
-    fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = verify(organizationFeatures.organizationGetFromInsee()) { query ->
+    fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = f2Function { query ->
+        logger.info("organizationGetFromInsee: $query")
         organizationPoliciesEnforcer.checkList()
+        organizationFinderService.getFromInsee(query).let(::OrganizationGetFromInseeResult)
     }
 
 
@@ -54,8 +66,10 @@ class OrganizationEndpoint(
      * Fetch a page of organizations.
      */
     @Bean
-    fun organizationPage(): OrganizationPageFunction<Organization> = verify(organizationFeatures.organizationPage()) { query ->
+    fun organizationPage(): OrganizationPageFunction = f2Function { query ->
+        logger.info("organizationPage: $query")
         organizationPoliciesEnforcer.checkPage()
+        organizationFinderService.page(query)
     }
 
 
@@ -63,24 +77,30 @@ class OrganizationEndpoint(
      * Fetch all OrganizationRef.
      */
     @Bean
-    fun organizationRefList(): OrganizationRefListFunction = verify(organizationFeatures.organizationRefList()) { query ->
+    fun organizationRefList(): OrganizationRefListFunction = f2Function { query ->
+        logger.info("organizationRefList: $query")
         organizationPoliciesEnforcer.checkRefList()
+        organizationFinderService.listRefs(query).let(::OrganizationRefListResult)
     }
 
     /**
      * Create an organization.
      */
     @Bean
-    fun organizationCreate(): OrganizationCreateFunction = verify(organizationFeatures.organizationCreate()) { command ->
+    fun organizationCreate(): OrganizationCreateFunction = f2Function { command ->
+        logger.info("organizationCreate: $command")
         organizationPoliciesEnforcer.checkCreate()
+        organizationAggregateService.create(command)
     }
 
     /**
      * Update an organization.
      */
     @Bean
-    fun organizationUpdate(): OrganizationUpdateFunction = verify(organizationFeatures.organizationUpdate()) { command ->
+    fun organizationUpdate(): OrganizationUpdateFunction = f2Function { command ->
+        logger.info("organizationUpdate: $command")
         organizationPoliciesEnforcer.checkUpdate(command.id)
+        organizationAggregateService.update(command)
     }
 
     /**
@@ -88,25 +108,33 @@ class OrganizationEndpoint(
      */
     @PostMapping("/organizationUploadLogo")
     suspend fun organizationUploadLogo(
-        @RequestPart("command") cmd: OrganizationUploadLogoCommand,
-        @RequestPart("file") file: org.springframework.http.codec.multipart.FilePart
-    ): OrganizationUploadedLogoEvent = organizationFeatures.organizationUploadLogo(cmd, file)
+        @RequestPart("command") command: OrganizationUploadLogoCommand,
+        @RequestPart("file") file: FilePart
+    ): OrganizationUploadedLogoEvent {
+        logger.info("organizationUploadLogo: $command")
+        organizationPoliciesEnforcer.checkUpdate(command.id)
+        return organizationAggregateService.uploadLogo(command, file.contentByteArray())
+    }
 
     /**
      * Disable an organization and its users.
      */
     @Bean
-    fun organizationDisable(): OrganizationDisableFunction = verify(organizationFeatures.organizationDisable()) { command ->
+    fun organizationDisable(): OrganizationDisableFunction = f2Function { command ->
+        logger.info("organizationDisable: $command")
         organizationPoliciesEnforcer.checkDisable(command.id)
+        organizationAggregateService.disable(command)
     }
 
 
-        /**
+    /**
      * Delete an organization and its users.
      */
     @Bean
-    fun organizationDelete(): OrganizationDeleteFunction = verify(organizationFeatures.organizationDelete()) { command ->
+    fun organizationDelete(): OrganizationDeleteFunction = f2Function { command ->
+        logger.info("organizationDelete: $command")
         organizationPoliciesEnforcer.checkDelete(command.id)
+        organizationAggregateService.delete(command)
     }
 
 }

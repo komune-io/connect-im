@@ -1,5 +1,6 @@
 package city.smartb.im.organization.domain.features.query
 
+import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationDTO
 import f2.dsl.cqrs.Query
 import f2.dsl.cqrs.page.PageDTO
@@ -13,11 +14,8 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
  * @order 30
  */
-typealias OrganizationPageFunction<MODEL> = F2Function<OrganizationPageQuery, OrganizationPageResult<MODEL>>
+typealias OrganizationPageFunction = F2Function<OrganizationPageQuery, OrganizationPageResult>
 
-/**
- * TODO Use PageQueryDTO and sub filter object
- */
 @JsExport
 @JsName("OrganizationPageQueryDTO")
 interface OrganizationPageQueryDTO: Query {
@@ -68,29 +66,33 @@ data class OrganizationPageQuery(
 	 * @example 10
 	 */
 	override val size: Int? = null,
+
 	/**
 	 * Role filter.
 	 */
 	override val roles: List<String>? = null
 ): OrganizationPageQueryDTO
 
-@JsExport
-@JsName("OrganizationPageResultDTO")
-interface OrganizationPageResultDTO<MODEL: OrganizationDTO>: PageDTO<MODEL>
-
 /**
  * @d2 result
  * @parent [OrganizationPageFunction]
  */
-data class OrganizationPageResult<MODEL: OrganizationDTO>(
+@JsExport
+@JsName("OrganizationPageResultDTO")
+interface OrganizationPageResultDTO: PageDTO<OrganizationDTO>
+
+/**
+ * @d2 inherit
+ */
+data class OrganizationPageResult(
 	/**
 	 * List of organizations satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
 	 */
-	override val items: List<MODEL>,
+	override val items: List<Organization>,
 
 	/**
-	 * The total amount of users satisfying the requesting filters.
+	 * The total amount of organization satisfying the requesting filters.
 	 * @example 38
 	 */
 	override val total: Int
-): OrganizationPageResultDTO<MODEL>
+): OrganizationPageResultDTO

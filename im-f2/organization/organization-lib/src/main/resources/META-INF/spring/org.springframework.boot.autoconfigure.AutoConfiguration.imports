@@ -1,2 +1,4 @@
 city.smartb.im.organization.lib.config.InseeClientConfig
 city.smartb.im.organization.lib.config.OrganizationFsConfig
+city.smartb.im.organization.lib.OrganizationAggregateService
+city.smartb.im.organization.lib.OrganizationFinderService

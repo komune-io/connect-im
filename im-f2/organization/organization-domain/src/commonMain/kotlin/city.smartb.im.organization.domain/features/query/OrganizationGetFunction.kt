@@ -1,12 +1,12 @@
 package city.smartb.im.organization.domain.features.query
 
+import city.smartb.im.organization.domain.model.Organization
 import city.smartb.im.organization.domain.model.OrganizationDTO
 import city.smartb.im.organization.domain.model.OrganizationId
 import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
-import kotlin.js.JsName
 
 /**
  * Get an organization by ID.
@@ -14,38 +14,42 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
  * @order 10
  */
-typealias OrganizationGetFunction<MODEL> = F2Function<OrganizationGetQuery, OrganizationGetResult<MODEL>>
-
-@JsExport
-@JsName("OrganizationGetQueryDTO")
-interface OrganizationGetQueryDTO: Query {
-    val id: OrganizationId
-}
+typealias OrganizationGetFunction = F2Function<OrganizationGetQuery, OrganizationGetResult>
 
 /**
  * @d2 query
  * @parent [OrganizationGetFunction]
  */
-data class OrganizationGetQuery(
+@JsExport
+interface OrganizationGetQueryDTO: Query {
     /**
-     * Identifier of the organization.
+     * Id of the organization to get.
      */
+    val id: OrganizationId
+}
+
+/**
+ * @d2 inherit
+ */
+data class OrganizationGetQuery(
     override val id: OrganizationId
 ): OrganizationGetQueryDTO
-
-@JsExport
-@JsName("OrganizationGetResultDTO")
-interface OrganizationGetResultDTO<out MODEL: OrganizationDTO>: Event {
-    val item: MODEL?
-}
 
 /**
  * @d2 result
  * @parent [OrganizationGetFunction]
  */
-data class OrganizationGetResult<out MODEL: OrganizationDTO>(
+@JsExport
+interface OrganizationGetResultDTO: Event {
     /**
-     * The organization.
+     * The organization matching the given id, or null if it does not exist.
      */
-    override val item: MODEL?
-): OrganizationGetResultDTO<MODEL>
+    val item: OrganizationDTO?
+}
+
+/**
+ * @d2 inherit
+ */
+data class OrganizationGetResult(
+    override val item: Organization?
+): OrganizationGetResultDTO

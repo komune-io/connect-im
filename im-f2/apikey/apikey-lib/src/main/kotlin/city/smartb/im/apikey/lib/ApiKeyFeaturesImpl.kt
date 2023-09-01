@@ -6,28 +6,24 @@ import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddFuncti
 import city.smartb.im.apikey.domain.features.command.ApikeyRemoveFunction
 import city.smartb.im.apikey.domain.features.query.ApiKeyGetFunction
 import city.smartb.im.apikey.domain.features.query.ApiKeyPageFunction
-import city.smartb.im.apikey.domain.model.ApiKey
-import city.smartb.im.apikey.domain.model.ApiKeyDTO
 import city.smartb.im.apikey.lib.service.ApiKeyAggregateService
 import city.smartb.im.apikey.lib.service.ApiKeyFinderService
-import city.smartb.im.apikey.lib.service.ApiKeyMapper
 import f2.dsl.fnc.f2Function
 
-class ApiKeyFeaturesImpl<MODEL: ApiKeyDTO>(
-    private val apikeyFinderService: ApiKeyFinderService<MODEL>,
-    private val apikeyAggregateService: ApiKeyAggregateService<MODEL>,
-    private val apikeyMapper: ApiKeyMapper<ApiKey, MODEL>,
-): ApiKeyQueryFeatures<MODEL>, ApiKeyCommandFeatures {
+class ApiKeyFeaturesImpl(
+    private val apikeyFinderService: ApiKeyFinderService,
+    private val apikeyAggregateService: ApiKeyAggregateService,
+): ApiKeyQueryFeatures, ApiKeyCommandFeatures {
     private val logger by s2.spring.utils.logger.Logger()
 
-    override fun apiKeyGet(): ApiKeyGetFunction<MODEL> = f2Function { query ->
+    override fun apiKeyGet(): ApiKeyGetFunction = f2Function { query ->
         logger.debug("apikeyGet: $query")
-        apikeyFinderService.apikeyGet(query, apikeyMapper)
+        apikeyFinderService.apikeyGet(query)
     }
 
-    override fun apiKeyPage(): ApiKeyPageFunction<MODEL> = f2Function { query ->
+    override fun apiKeyPage(): ApiKeyPageFunction = f2Function { query ->
         logger.debug("apikeyPage: $query")
-        apikeyFinderService.apikeyPage(query, apikeyMapper)
+        apikeyFinderService.apikeyPage(query)
     }
 
     override fun apiKeyCreate(): ApiKeyOrganizationAddFunction = f2Function { cmd ->

@@ -11,7 +11,7 @@ interface OrganizationQueryFeatures<MODEL: OrganizationDTO> {
     /**
      * Fetch an Organization by its ID.
      */
-    fun organizationGet(): OrganizationGetFunction<MODEL>
+    fun organizationGet(): OrganizationGetFunction
 
     /**
      * Fetch an Organization by its siret number from the Insee Sirene API.
@@ -21,7 +21,7 @@ interface OrganizationQueryFeatures<MODEL: OrganizationDTO> {
     /**
      * Fetch a page of organizations.
      */
-    fun organizationPage(): OrganizationPageFunction<MODEL>
+    fun organizationPage(): OrganizationPageFunction
 
     /**
      * Fetch all OrganizationRef.
