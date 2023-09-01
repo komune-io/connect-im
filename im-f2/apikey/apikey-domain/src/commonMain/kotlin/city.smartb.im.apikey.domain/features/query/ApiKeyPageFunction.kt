@@ -1,5 +1,6 @@
 package city.smartb.im.apikey.domain.features.query
 
+import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.domain.model.ApiKeyDTO
 import city.smartb.im.commons.auth.OrganizationId
 import f2.dsl.cqrs.Query
@@ -14,7 +15,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.apikey.domain.D2ApiKeyPage]
  * @order 30
  */
-typealias ApiKeyPageFunction<MODEL> = F2Function<ApiKeyPageQuery, ApiKeyPageResult<MODEL>>
+typealias ApiKeyPageFunction = F2Function<ApiKeyPageQuery, ApiKeyPageResult>
 
 /**
  * TODO Use PageQueryDTO and sub filter object
@@ -75,21 +76,21 @@ data class ApiKeyPageQuery(
 
 @JsExport
 @JsName("ApiKeyPageResultDTO")
-interface ApiKeyPageResultDTO<MODEL: ApiKeyDTO>: PageDTO<MODEL>
+interface ApiKeyPageResultDTO: PageDTO<ApiKeyDTO>
 
 /**
  * @d2 result
  * @parent [ApiKeyPageFunction]
  */
-data class ApiKeyPageResult<MODEL: ApiKeyDTO>(
-	/**
+data class ApiKeyPageResult(
+    /**
 	 * List of apikeys satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
 	 */
-	override val items: List<MODEL>,
+	override val items: List<ApiKey>,
 
-	/**
+    /**
 	 * The total amount of users satisfying the requesting filters.
 	 * @example 38
 	 */
 	override val total: Int
-): ApiKeyPageResultDTO<MODEL>
+): ApiKeyPageResultDTO

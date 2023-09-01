@@ -1,5 +1,6 @@
 package city.smartb.im.apikey.domain.features.query
 
+import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.domain.model.ApiKeyDTO
 import city.smartb.im.apikey.domain.model.ApiKeyId
 import city.smartb.im.commons.auth.OrganizationId
@@ -15,7 +16,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.apikey.domain.D2ApiKeyPage]
  * @order 10
  */
-typealias ApiKeyGetFunction<MODEL> = F2Function<ApiKeyGetQuery, ApiKeyGetResult<MODEL>>
+typealias ApiKeyGetFunction = F2Function<ApiKeyGetQuery, ApiKeyGetResult>
 
 @JsExport
 @JsName("ApiKeyGetQueryDTO")
@@ -41,17 +42,17 @@ data class ApiKeyGetQuery(
 
 @JsExport
 @JsName("ApiKeyGetResultDTO")
-interface ApiKeyGetResultDTO<out MODEL: ApiKeyDTO>: Event {
-    val item: MODEL?
+interface ApiKeyGetResultDTO: Event {
+    val item: ApiKeyDTO?
 }
 
 /**
  * @d2 result
  * @parent [ApiKeyGetFunction]
  */
-data class ApiKeyGetResult<out MODEL: ApiKeyDTO>(
+data class ApiKeyGetResult(
     /**
      * The apikey.
      */
-    override val item: MODEL?
-): ApiKeyGetResultDTO<MODEL>
+    override val item: ApiKey?
+): ApiKeyGetResultDTO

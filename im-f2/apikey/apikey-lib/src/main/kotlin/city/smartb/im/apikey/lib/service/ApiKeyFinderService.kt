@@ -5,8 +5,6 @@ import city.smartb.im.apikey.domain.features.query.ApiKeyGetQuery
 import city.smartb.im.apikey.domain.features.query.ApiKeyGetResult
 import city.smartb.im.apikey.domain.features.query.ApiKeyPageQuery
 import city.smartb.im.apikey.domain.features.query.ApiKeyPageResult
-import city.smartb.im.apikey.domain.model.ApiKey
-import city.smartb.im.apikey.domain.model.ApiKeyDTO
 import city.smartb.im.infra.redis.CacheName
 import city.smartb.im.infra.redis.RedisCache
 import f2.dsl.cqrs.page.PagePagination
@@ -16,8 +14,10 @@ import i2.keycloak.f2.group.domain.features.query.GroupGetQuery
 import i2.keycloak.f2.group.domain.features.query.GroupPageFunction
 import i2.keycloak.f2.group.domain.features.query.GroupPageQuery
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 
-open class ApiKeyFinderService<MODEL : ApiKeyDTO>(
+@Service
+class ApiKeyFinderService(
     private val groupGetFunction: GroupGetFunction,
     private val groupPageFunction: GroupPageFunction,
     private val authenticationResolver: ImAuthenticationProvider,
@@ -28,34 +28,19 @@ open class ApiKeyFinderService<MODEL : ApiKeyDTO>(
 
     suspend fun apikeyGet(
         query: ApiKeyGetQuery,
-        apikeyMapper: ApiKeyMapper<ApiKey, MODEL>,
-    ): ApiKeyGetResult<MODEL> = redisCache.getFromCacheOr(CacheName.Apikey, query.id) {
+    ): ApiKeyGetResult = redisCache.getFromCacheOr(CacheName.Apikey, query.id) {
         groupGetFunction.invoke(query.toGroupGetByIdQuery())
             .item
             ?.let { group -> group.toApiKeys().firstOrNull { it.id == query.id }}
+            .let { dto -> ApiKeyGetResult(dto) }
     }
-        ?.let { orgApiKey -> apikeyMapper.mapModel(ApiKey(
-            id = orgApiKey.id,
-            identifier = orgApiKey.identifier,
-            name = orgApiKey.name,
-            creationDate = orgApiKey.creationDate,
-        )) }
-        .let { dto ->
-            ApiKeyGetResult(dto)
-        }
 
 
     suspend fun apikeyPage(
         query: ApiKeyPageQuery,
-        apikeyMapper: ApiKeyMapper<ApiKey, MODEL>,
-    ): ApiKeyPageResult<MODEL> {
+    ): ApiKeyPageResult {
         val result = groupPageFunction.invoke(query.toGroupPageQuery())
-        val items = result.page.items.flatMap { it.toApiKeys() }.map { apikeyMapper.mapModel(ApiKey(
-            id = it.id,
-            identifier = it.identifier,
-            name = it.name,
-            creationDate = it.creationDate,
-        )) }
+        val items = result.page.items.flatMap { it.toApiKeys() }
         return ApiKeyPageResult(
             items = items,
             total = result.page.total
