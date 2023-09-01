@@ -59,5 +59,7 @@ class SpaceAggregateService(
         SpaceDeletedEvent(command.id)
     }
 
-    private suspend fun <R> mutate(id: SpaceIdentifier, block: suspend () -> R): R = redisCache.evictIfPresent(CacheName.Space, id) { block() }
+    private suspend fun <R> mutate(id: SpaceIdentifier, block: suspend () -> R): R = redisCache.evictIfPresent(CacheName.Space, id) {
+        block()
+    }
 }
