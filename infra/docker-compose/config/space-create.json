@@ -19,9 +19,5 @@
     "imMasterClient": {
         "clientId": "${KC_IM_CLIENT_ID}",
         "clientSecret": "${KC_IM_CLIENT_SECRET}"
-    },
-    "adminClients": [{
-        "clientId": "${KC_ADMIN_CLIENT_ID}",
-        "clientSecret": "${KC_ADMIN_CLIENT_SECRET}"
-    }]
+    }
 }

@@ -8,15 +8,20 @@ import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.f2.space.lib.SpaceFinderService
+import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
+import city.smartb.im.organization.lib.OrganizationAggregateService
+import city.smartb.im.organization.lib.OrganizationFinderService
 import city.smartb.im.script.core.config.properties.ImScriptSpaceProperties
 import city.smartb.im.script.core.config.properties.toAuthRealm
 import city.smartb.im.script.core.model.PermissionData
 import city.smartb.im.script.core.model.RoleData
 import city.smartb.im.script.core.service.ClientInitService
 import city.smartb.im.script.core.service.ScriptFinderService
+import city.smartb.im.script.space.config.config.OrganizationData
 import city.smartb.im.script.space.config.config.SpaceConfigProperties
 import city.smartb.im.script.space.config.config.UserData
 import city.smartb.im.script.space.config.service.ConfigService
+import f2.spring.exception.ConflictException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -29,6 +34,8 @@ class SpaceConfigScript (
     private val clientInitService: ClientInitService,
     private val configService: ConfigService,
     private val imScriptSpaceProperties: ImScriptSpaceProperties,
+    private val organizationAggregateService: OrganizationAggregateService,
+    private val organizationFinderService: OrganizationFinderService,
     private val privilegeAggregateService: PrivilegeAggregateService,
     private val privilegeFinderService: PrivilegeFinderService,
     private val scriptFinderService: ScriptFinderService,
@@ -54,6 +61,10 @@ class SpaceConfigScript (
             properties.webClients.forEach { clientInitService.initWebClient(it) }
             properties.appClients.forEach { clientInitService.initAppClient(it) }
             logger.info("Initialized Client")
+
+            logger.info("Initializing Organizations...")
+            initOrganizations(properties.organizations)
+            logger.info("Initialized Organizations")
 
             logger.info("Initializing Users...")
             initUsers(auth, properties.users)
@@ -114,6 +125,28 @@ class SpaceConfigScript (
 
     private suspend fun verifySpace(spaceIdentifier: SpaceIdentifier) {
         spaceFinderService.get(spaceIdentifier)
+    }
+
+    private suspend fun initOrganizations(organizations: List<OrganizationData>?) = coroutineScope {
+        organizations?.map { organization ->
+            async {
+                try {
+                    OrganizationCreateCommand(
+                        siret = organization.siret,
+                        name = organization.name,
+                        description = organization.description,
+                        address = organization.address,
+                        website = null,
+                        roles = organization.roles,
+                        parentOrganizationId = null,
+                        attributes = organization.attributes,
+                        withApiKey = organization.withApiKey
+                    ).let { organizationAggregateService.create(it) }
+                } catch (e: ConflictException) {
+                    logger.info("Organization ${organization.name} already exists")
+                }
+            }
+        }?.awaitAll()
     }
 
     private suspend fun initUsers(authRealm: AuthRealm, users: List<UserData>?) {

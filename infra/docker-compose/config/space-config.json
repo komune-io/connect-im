@@ -19,7 +19,6 @@
             "webUrl": "http://localhost:3000"
         }
     ],
-    "users": [],
     "permissions": [
         {
             "name": "tr_project_read",
@@ -69,5 +68,29 @@
                 "tr_project_read", "tr_project_write"
             ]
         }
-    ]
+    ],
+    "organizations": [
+        {
+            "name": "SmartB",
+            "siret": "50785916300119",
+            "description": "World owners",
+            "address": {
+                "street": "2 rue du Pavillon",
+                "postalCode": "34000",
+                "city": "Montpellier"
+            },
+            "roles": ["tr_orchestrator"],
+            "withApiKey": true
+        }, {
+            "name": "Monsstrai Company",
+            "description": "Your greatest fears working as one",
+            "address": {
+                "street": "123 rue Matysme",
+                "postalCode": "66666",
+                "city": "Ville Ainh"
+            },
+            "roles": []
+        }
+    ],
+    "users": []
 }

@@ -1,25 +1,38 @@
 package city.smartb.im.script.space.config.config
 
+import city.smartb.im.commons.model.Address
+import city.smartb.im.core.privilege.domain.model.RoleIdentifier
 import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.script.core.model.AppClient
 import city.smartb.im.script.core.model.PermissionData
 import city.smartb.im.script.core.model.RoleData
 import city.smartb.im.script.core.model.WebClient
 
-class SpaceConfigProperties(
+data class SpaceConfigProperties(
     val space: SpaceIdentifier,
     val appClients: List<AppClient>,
     val webClients: List<WebClient>,
-    val users: List<UserData>?,
     val permissions: List<PermissionData>?,
-    val roles: List<RoleData>?
+    val roles: List<RoleData>?,
+    val organizations: List<OrganizationData>?,
+    val users: List<UserData>?
 )
 
-class UserData(
+data class UserData(
     val username: String,
     val email: String,
     val password: String?,
     val firstname: String,
     val lastname: String,
-    val role: String
+    val role: String,
+)
+
+data class OrganizationData(
+    val siret: String?,
+    val name: String,
+    val description: String?,
+    val address: Address?,
+    val roles: List<RoleIdentifier>?,
+    val attributes: Map<String, String>?,
+    val withApiKey: Boolean = false
 )
