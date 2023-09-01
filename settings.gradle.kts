@@ -97,10 +97,9 @@ include(
 )
 
 include(
-    "im-script:im-script-gateway-configuration",
-    "im-script:im-script-gateway",
-
-    "im-script:im-script-function-init",
-    "im-script:im-script-function-config",
-    "im-script:im-script-function-core",
+    "im-script:script-core",
+    "im-script:script-gateway",
+    "im-script:script-init",
+    "im-script:script-space-config",
+    "im-script:script-space-create",
 )
