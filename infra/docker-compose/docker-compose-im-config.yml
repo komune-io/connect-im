@@ -5,13 +5,14 @@ services:
     image: smartbcity/im-script:${VERSION_IM}
     container_name: im-config
     environment:
-      - im_script_config_auth_serverUrl=${AUTH_HOST_URL}
-      - im_script_config_auth_realmId=${KC_REALM}
-      - im_script_config_auth_clientId=${KC_IM_CLIENT_ID}
-      - im_script_config_auth_clientSecret=${KC_IM_CLIENT_SECRET}
-      - im_script_config_json=file:/tmp/config.json
+      - im_script_space_auth_serverUrl=${AUTH_HOST_URL}
+      - im_script_space_auth_clientId=${KC_IM_CLIENT_ID}
+      - im_script_space_auth_clientSecret=${KC_IM_CLIENT_SECRET}
+      - im_script_space_jsonCreate=file:/tmp/space-create.json
+      - im_script_space_jsonConfig=file:/tmp/space-config.json
     volumes:
-      - ./config/build/config.json:/tmp/config.json
+      - ./config/build/space-create.json:/tmp/space-create.json
+      - ./config/build/space-config.json:/tmp/space-config.json
     networks:
       - net
 

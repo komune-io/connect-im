@@ -209,12 +209,12 @@ object Modules {
 	}
 
 	object Script {
-		const val gateway = ":im-script:im-script-gateway"
-		const val config = ":im-script:im-script-gateway-configuration"
-
-		const val functionConfig = ":im-script:im-script-function-config"
-		const val functionCore = ":im-script:im-script-function-core"
-		const val functionInit = ":im-script:im-script-function-init"
+        const val BASE = ":im-script:script"
+        const val core = "$BASE-core"
+        const val gateway = "$BASE-gateway"
+        const val init = "$BASE-init"
+        const val spaceConfig = "$BASE-space-config"
+		const val spaceCreate = "$BASE-space-create"
 	}
 
     const val imApiConfig = ":im-api:api-config"

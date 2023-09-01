@@ -10,7 +10,7 @@ IM_APP_PACKAGE	   	:= :im-api:api-gateway:bootBuildImage
 
 IM_SCRIPT_NAME	   	:= smartbcity/im-script
 IM_SCRIPT_IMG	    := ${IM_SCRIPT_NAME}:${VERSION}
-IM_SCRIPT_PACKAGE	:= :im-script:im-script-gateway:bootBuildImage
+IM_SCRIPT_PACKAGE	:= :im-script:script-gateway:bootBuildImage
 
 KEYCLOAK_DOCKERFILE	:= infra/docker/keycloak/Dockerfile
 
