@@ -15,22 +15,21 @@ import city.smartb.im.organization.domain.features.query.OrganizationPageQuery
 import city.smartb.im.organization.domain.features.query.OrganizationPageResult
 import city.smartb.im.organization.domain.features.query.OrganizationRefListQuery
 import city.smartb.im.organization.domain.features.query.OrganizationRefListResult
-import city.smartb.im.organization.domain.model.OrganizationDTO
 
-class OrganizationClient<MODEL: OrganizationDTO>(
+class OrganizationClient(
     url: String,
     httpClientBuilder: ClientBuilder = HttpClientBuilderJvm,
     generateBearerToken: suspend () -> String? = { null }
 ): ClientJvm(url, httpClientBuilder, generateBearerToken) {
 
-    suspend inline fun <reified OUT : MODEL> organizationGet(queries: List<OrganizationGetQuery>):
-            List<OrganizationGetResult<OUT>> = post("organizationGet",  queries)
+    suspend fun organizationGet(queries: List<OrganizationGetQuery>):
+            List<OrganizationGetResult> = post("organizationGet",  queries)
 
     suspend fun organizationGetFromInsee(queries: List<OrganizationGetFromInseeQuery>):
             List<OrganizationGetFromInseeResult> = post("organizationGetFromInsee", queries)
 
-    suspend inline fun <reified OUT : MODEL> organizationPage(queries: List<OrganizationPageQuery>):
-            List<OrganizationPageResult<OUT>> = post("organizationPage", queries)
+    suspend fun organizationPage(queries: List<OrganizationPageQuery>):
+            List<OrganizationPageResult> = post("organizationPage", queries)
 
     suspend fun organizationRefList(queries: List<OrganizationRefListQuery>):
             List<OrganizationRefListResult> = post("organizationRefList", queries)

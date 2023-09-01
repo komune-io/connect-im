@@ -1,10 +1,9 @@
-package city.smartb.im.organization.lib.service
+package city.smartb.im.organization.lib
 
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddKeyCommand
-import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.lib.service.ApiKeyAggregateService
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.orEmpty
@@ -21,9 +20,7 @@ import city.smartb.im.organization.domain.features.command.OrganizationUpdateCom
 import city.smartb.im.organization.domain.features.command.OrganizationUpdatedResult
 import city.smartb.im.organization.domain.features.command.OrganizationUploadLogoCommand
 import city.smartb.im.organization.domain.features.command.OrganizationUploadedLogoEvent
-import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
 import city.smartb.im.organization.domain.model.Organization
-import city.smartb.im.organization.domain.model.OrganizationDTO
 import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.organization.lib.config.OrganizationFsConfig
 import city.smartb.im.user.domain.features.command.UserDisableCommand
@@ -33,11 +30,6 @@ import city.smartb.im.user.lib.service.UserAggregateService
 import city.smartb.im.user.lib.service.UserFinderService
 import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
-import f2.spring.exception.NotFoundException
-import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
-import i2.keycloak.f2.client.domain.features.command.ClientDeleteFunction
-import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction
-import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountFunction
 import i2.keycloak.f2.group.domain.features.command.GroupCreateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupCreateFunction
 import i2.keycloak.f2.group.domain.features.command.GroupDeleteCommand
@@ -48,32 +40,28 @@ import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesCommand
 import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateCommand
 import i2.keycloak.f2.group.domain.features.command.GroupUpdateFunction
-import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
-open class OrganizationAggregateService<MODEL: OrganizationDTO>(
+@Service
+class OrganizationAggregateService(
+    private val apiKeyAggregateService: ApiKeyAggregateService,
     private val authenticationResolver: ImAuthenticationProvider,
-    private val clientCreateFunction: ClientCreateFunction,
-    private val clientDeleteFunction: ClientDeleteFunction,
-    private val clientGetServiceAccountFunction: ClientGetServiceAccountFunction,
-    private val clientServiceAccountRolesGrantFunction: ClientServiceAccountRolesGrantFunction,
     private val groupCreateFunction: GroupCreateFunction,
     private val groupDeleteFunction: GroupDeleteFunction,
     private val groupDisableFunction: GroupDisableFunction,
     private val groupSetAttributesFunction: GroupSetAttributesFunction,
     private val groupUpdateFunction: GroupUpdateFunction,
-    private val organizationFinderService: OrganizationFinderService<MODEL>,
+    private val organizationFinderService: OrganizationFinderService,
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService,
-    private val userSetAttributesFunction: UserSetAttributesFunction,
-    private val apiKeyService: ApiKeyAggregateService<ApiKey>,
     private val redisCache: RedisCache,
 ) {
 
     @Autowired(required = false)
     private lateinit var fileClient: FileClient
 
-    suspend fun create(command: OrganizationCreateCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationCreatedEvent {
+    suspend fun create(command: OrganizationCreateCommand): OrganizationCreatedEvent {
         val event = groupCreateFunction.invoke(command.toGroupCreateCommand())
             .id
             .let { groupId ->
@@ -84,7 +72,7 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
             }
 
         if (command.withApiKey) {
-            apiKeyService.addApiKey(ApiKeyOrganizationAddKeyCommand(
+            apiKeyAggregateService.addApiKey(ApiKeyOrganizationAddKeyCommand(
                 organizationId = event.id,
                 name = "Default"
             ))
@@ -93,12 +81,12 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
         return event
     }
 
-    suspend fun update(command: OrganizationUpdateCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationUpdatedResult
-            = redisCache.evictIfPresent(CacheName.Organization, command.id) {
-        val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id), mapper).item
-            ?: throw NotFoundException("Organization", command.id)
+    suspend fun update(
+        command: OrganizationUpdateCommand
+    ): OrganizationUpdatedResult = redisCache.evictIfPresent(CacheName.Organization, command.id) {
+        val organization = organizationFinderService.get(command.id)
 
-        groupUpdateFunction.invoke(command.toGroupUpdateCommand(  mapper.mapOrganization(organization)))
+        groupUpdateFunction.invoke(command.toGroupUpdateCommand(organization))
             .let { result -> OrganizationUpdatedResult(result.id) }
     }
 
@@ -123,8 +111,9 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
         )
     }
 
-    suspend fun disable(command: OrganizationDisableCommand, mapper: OrganizationMapper<Organization, MODEL>): OrganizationDisabledEvent
-            = redisCache.evictIfPresent(CacheName.Organization, command.id) {
+    suspend fun disable(
+        command: OrganizationDisableCommand
+    ): OrganizationDisabledEvent = redisCache.evictIfPresent(CacheName.Organization, command.id) {
         val auth = authenticationResolver.getAuth()
 
         val event = GroupDisableCommand(
@@ -134,7 +123,7 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
         ).invokeWith(groupDisableFunction)
 
         if (command.anonymize) {
-            val organization = organizationFinderService.organizationGet(OrganizationGetQuery(command.id), mapper).item!!
+            val organization = organizationFinderService.get(command.id)
 
             OrganizationUpdateCommand(
                 id = command.id,
@@ -147,7 +136,7 @@ open class OrganizationAggregateService<MODEL: OrganizationDTO>(
                     Organization::disabledBy.name to command.disabledBy.orEmpty(),
                     Organization::disabledDate.name to System.currentTimeMillis().toString()
                 ))
-            ).let { update(it, mapper) }
+            ).let { update(it) }
         }
 
         val userEvents = UserPageQuery(
