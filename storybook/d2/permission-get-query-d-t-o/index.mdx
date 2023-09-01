@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import PermissionGetQueryDTODesc from './desc.mdx'
+import PermissionGetQueryDTOVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<PermissionGetQueryDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={PermissionGetQueryDTOVisualJson}
+      language={"json"}
+      title={"Query"}
+    />
+  }
+  rightContainerProps={{}}
+/>

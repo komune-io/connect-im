@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import UserGetByEmailResultDesc from './desc.mdx'
+import UserGetByEmailResultVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<UserGetByEmailResultDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={UserGetByEmailResultVisualJson}
+      language={"json"}
+      title={"Result"}
+    />
+  }
+  rightContainerProps={{}}
+/>

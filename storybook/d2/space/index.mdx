@@ -1,0 +1,22 @@
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import SpaceDesc from './desc.mdx'
+import SpaceVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<SpaceDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={SpaceVisualJson}
+      language={"json"}
+      title={"Space"}
+    />
+  }
+  rightContainerProps={{}}
+/>
+
+<div
+  class={"spacer"}
+/>
+
+

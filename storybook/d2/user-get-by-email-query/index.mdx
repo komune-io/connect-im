@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import UserGetByEmailQueryDesc from './desc.mdx'
+import UserGetByEmailQueryVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<UserGetByEmailQueryDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={UserGetByEmailQueryVisualJson}
+      language={"json"}
+      title={"Query"}
+    />
+  }
+  rightContainerProps={{}}
+/>

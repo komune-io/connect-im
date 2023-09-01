@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import OrganizationDeleteCommandDesc from './desc.mdx'
+import OrganizationDeleteCommandVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<OrganizationDeleteCommandDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={OrganizationDeleteCommandVisualJson}
+      language={"json"}
+      title={"Command"}
+    />
+  }
+  rightContainerProps={{}}
+/>

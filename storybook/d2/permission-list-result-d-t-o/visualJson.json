@@ -1,0 +1,8 @@
+{
+  "items" : [ {
+    "id" : "868044f8-1852-43eb-897d-067bc4631396",
+    "type" : "PERMISSION",
+    "identifier" : "im_organization_write",
+    "description" : "Ability to modify organization data"
+  } ]
+}

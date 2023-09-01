@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import RoleDefineCommandDTODesc from './desc.mdx'
+import RoleDefineCommandDTOVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<RoleDefineCommandDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={RoleDefineCommandDTOVisualJson}
+      language={"json"}
+      title={"Command"}
+    />
+  }
+  rightContainerProps={{}}
+/>

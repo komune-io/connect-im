@@ -1,8 +1,8 @@
-import { CodeHighlighter, DescriptedCode } from '@smartb/g2-documentation'
-import UserIdDesc from './desc.md'
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import UserIdDesc from './desc.mdx'
 import UserIdVisualJson from './visualJson.json'
 
-<DescriptedCode
+<SegmentedContainer
   leftElement={<UserIdDesc />}
   leftContainerProps={{}}
   rightElement={
@@ -15,4 +15,8 @@ import UserIdVisualJson from './visualJson.json'
   rightContainerProps={{}}
 />
 
----
+<div
+  class={"spacer"}
+/>
+
+

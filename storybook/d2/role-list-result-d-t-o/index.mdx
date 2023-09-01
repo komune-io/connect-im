@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import RoleListResultDTODesc from './desc.mdx'
+import RoleListResultDTOVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<RoleListResultDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={RoleListResultDTOVisualJson}
+      language={"json"}
+      title={"Result"}
+    />
+  }
+  rightContainerProps={{}}
+/>
