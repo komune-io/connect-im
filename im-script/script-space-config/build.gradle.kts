@@ -10,8 +10,9 @@ dependencies {
 
     api(project(Modules.Script.core))
 
-    implementation(project(Modules.F2.organizationApi))
-    implementation(project(Modules.F2.spaceApi))
+    implementation(project(Modules.F2.organizationLib))
+    implementation(project(Modules.F2.spaceLib))
+    implementation(project(Modules.F2.userLib))
 
     api(project(Modules.imKeycloakF2ClientDomain))
     implementation(project(Modules.imKeycloakF2ClientCommand))

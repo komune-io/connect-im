@@ -12,7 +12,7 @@ dependencies {
 
     implementation(project(Modules.Core.clientApi))
 
-    implementation(project(Modules.F2.spaceApi))
+    implementation(project(Modules.F2.spaceLib))
 
     api(project(Modules.imKeycloakF2RoleDomain))
     implementation(project(Modules.imKeycloakF2RoleCommand))

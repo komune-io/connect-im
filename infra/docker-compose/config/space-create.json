@@ -9,13 +9,7 @@
         "starttls": "false",
         "auth": "false"
     },
-    "adminUsers": [{
-        "username": "${KC_ADMIN_USER}",
-        "password": "${KC_ADMIN_PASS}",
-        "email": "admin@admin.com",
-        "firstName": "admin",
-        "lastName": "im"
-    }],
+    "adminUsers": [],
     "imMasterClient": {
         "clientId": "${KC_IM_CLIENT_ID}",
         "clientSecret": "${KC_IM_CLIENT_SECRET}"

@@ -19,12 +19,12 @@ data class SpaceConfigProperties(
 )
 
 data class UserData(
-    val username: String,
     val email: String,
     val password: String?,
     val firstname: String,
     val lastname: String,
-    val role: String,
+    val roles: List<RoleIdentifier>,
+    val attributes: Map<String, String>?
 )
 
 data class OrganizationData(
@@ -34,5 +34,6 @@ data class OrganizationData(
     val address: Address?,
     val roles: List<RoleIdentifier>?,
     val attributes: Map<String, String>?,
-    val withApiKey: Boolean = false
+    val withApiKey: Boolean = false,
+    val users: List<UserData>?
 )

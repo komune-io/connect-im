@@ -80,7 +80,26 @@
                 "city": "Montpellier"
             },
             "roles": ["tr_orchestrator"],
-            "withApiKey": true
+            "withApiKey": true,
+            "users": [{
+                "email": "admin@admin.com",
+                "password":  "traceconnect",
+                "firstname": "Admin",
+                "lastname":  "Admin",
+                "roles": ["tr_orchestrator_admin"],
+                "attributes": {
+                    "job": "Admin (I think)"
+                }
+            }, {
+                "email": "sandra@geffroi.com",
+                "password":  "traceconnect",
+                "firstname": "Sandra",
+                "lastname":  "Geffroi",
+                "roles": ["tr_orchestrator_admin"],
+                "attributes": {
+                    "job": "Frileuse"
+                }
+            }]
         }, {
             "name": "Monsstrai Company",
             "description": "Your greatest fears working as one",
@@ -89,7 +108,32 @@
                 "postalCode": "66666",
                 "city": "Ville Ainh"
             },
-            "roles": []
+            "roles": [],
+            "users": [{
+                "email": "fred@ajance.com",
+                "password":  "traceconnect",
+                "firstname": "Fred",
+                "lastname":  "Ajance",
+                "roles": [],
+                "attributes": {
+                    "job": "Frais d'agence"
+                }
+            }, {
+                "email": "thibault@metyfeppeur.com",
+                "password":  "traceconnect",
+                "firstname": "Thibault",
+                "lastname":  "Métyfeppeur",
+                "roles": []
+            }, {
+                "email": "jess@croke.com",
+                "password":  "traceconnect",
+                "firstname": "Jess",
+                "lastname":  "Croke",
+                "roles": [],
+                "attribute": {
+                    "job": "Escroc"
+                }
+            }]
         }
     ],
     "users": []
