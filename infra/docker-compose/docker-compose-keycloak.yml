@@ -32,6 +32,15 @@ services:
     networks:
       - net
 
+  connect-fake-smtp:
+    container_name: ${SMTP_HOST}
+    image: reachfive/fake-smtp-server:latest
+    ports:
+      - "${SMTP_POST}:1025"
+      - "1080:1080"
+    networks:
+      - net
+
 networks:
   net:
     name: ${DOCKER_NETWORK}

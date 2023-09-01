@@ -3,7 +3,7 @@ package city.smartb.im.script.core
 import kotlinx.coroutines.delay
 import org.slf4j.Logger
 
-suspend fun retryWithExceptions(
+suspend fun retryOnThrow(
     actionName: String,
     maxRetries: Int = 5,
     retryDelayMillis: Long = 10000,
@@ -14,6 +14,7 @@ suspend fun retryWithExceptions(
     var attempts = 0
     @Suppress("TooGenericExceptionCaught")
     while (attempts < maxRetries && !success) {
+        attempts++
         try {
             logger.info("////////////////////////////////////////////////////")
             logger.info("$actionName (attempt $attempts of $maxRetries)")
@@ -21,11 +22,10 @@ suspend fun retryWithExceptions(
             action()
             success = true
         } catch (ex: Exception) {
-            attempts++
             logger.error("$actionName Failed to execute (attempt $attempts of $maxRetries). Retrying...", ex)
 
             if (attempts >= maxRetries) {
-                logger.error("$actionName Failed to execute init after $maxRetries attempts.")
+                logger.error("$actionName Failed to execute after $maxRetries attempts. Exiting application.")
                 break
             }
 

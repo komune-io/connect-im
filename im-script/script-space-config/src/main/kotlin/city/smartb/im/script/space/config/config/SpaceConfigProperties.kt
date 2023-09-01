@@ -1,21 +1,21 @@
 package city.smartb.im.script.space.config.config
 
-import city.smartb.im.commons.model.RealmId
+import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.script.core.model.AppClient
 import city.smartb.im.script.core.model.PermissionData
 import city.smartb.im.script.core.model.RoleData
 import city.smartb.im.script.core.model.WebClient
 
-class KeycloakConfigProperties(
-    val realmId: RealmId,
+class SpaceConfigProperties(
+    val space: SpaceIdentifier,
     val appClients: List<AppClient>,
     val webClients: List<WebClient>,
-    val users: List<KeycloakUserConfig>?,
+    val users: List<UserData>?,
     val permissions: List<PermissionData>?,
     val roles: List<RoleData>?
 )
 
-class KeycloakUserConfig(
+class UserData(
     val username: String,
     val email: String,
     val password: String?,

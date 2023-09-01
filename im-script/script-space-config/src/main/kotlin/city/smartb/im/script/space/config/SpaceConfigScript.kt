@@ -1,71 +1,64 @@
 package city.smartb.im.script.space.config
 
+import city.smartb.im.commons.auth.AuthContext
 import city.smartb.im.commons.model.AuthRealm
-import city.smartb.im.commons.model.RealmId
+import city.smartb.im.commons.utils.ParserUtils
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
+import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.f2.space.lib.SpaceFinderService
-import city.smartb.im.script.core.config.properties.ImScriptConfigProperties
+import city.smartb.im.script.core.config.properties.ImScriptSpaceProperties
 import city.smartb.im.script.core.config.properties.toAuthRealm
-import city.smartb.im.script.core.model.AuthContext
 import city.smartb.im.script.core.model.PermissionData
 import city.smartb.im.script.core.model.RoleData
 import city.smartb.im.script.core.service.ClientInitService
 import city.smartb.im.script.core.service.ScriptFinderService
-import city.smartb.im.script.space.config.config.KeycloakConfigParser
-import city.smartb.im.script.space.config.config.KeycloakConfigProperties
-import city.smartb.im.script.space.config.config.KeycloakUserConfig
+import city.smartb.im.script.space.config.config.SpaceConfigProperties
+import city.smartb.im.script.space.config.config.UserData
 import city.smartb.im.script.space.config.service.ConfigService
-import f2.spring.exception.NotFoundException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import s2.spring.utils.logger.Logger
 
 @Service
-class KeycloakConfigScript (
+class SpaceConfigScript (
     private val clientInitService: ClientInitService,
     private val configService: ConfigService,
-    private val imScriptConfigProperties: ImScriptConfigProperties,
+    private val imScriptSpaceProperties: ImScriptSpaceProperties,
     private val privilegeAggregateService: PrivilegeAggregateService,
     private val privilegeFinderService: PrivilegeFinderService,
     private val scriptFinderService: ScriptFinderService,
     private val spaceFinderService: SpaceFinderService
 ) {
-    private val logger = LoggerFactory.getLogger(KeycloakConfigScript::class.java)
+    private val logger by Logger()
 
-    suspend fun run(configPath: String) {
-        val config = KeycloakConfigParser().getConfiguration(configPath)
-        val auth = imScriptConfigProperties.auth.toAuthRealm(config.realmId)
+    suspend fun run() {
+        val jsonPath = imScriptSpaceProperties.jsonConfig ?: return
+        val properties = ParserUtils.getConfiguration(jsonPath, SpaceConfigProperties::class.java)
+
+        val auth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
         withContext(AuthContext(auth)) {
-            run(auth, config)
+            logger.info("Verify Realm[${properties.space}] exists...")
+            verifySpace(properties.space)
+
+            logger.info("Initializing Privileges...")
+            initPermissions(properties.permissions)
+            initRoles(properties.roles)
+            logger.info("Initialized Privileges")
+
+            logger.info("Initializing Clients...")
+            properties.webClients.forEach { clientInitService.initWebClient(it) }
+            properties.appClients.forEach { clientInitService.initAppClient(it) }
+            logger.info("Initialized Client")
+
+            logger.info("Initializing Users...")
+            initUsers(auth, properties.users)
+            logger.info("Initialized Users")
         }
-    }
-
-    suspend fun run(authRealm: AuthRealm, config: KeycloakConfigProperties) {
-        logger.info("Verify Realm[${config.realmId}] exists...")
-        verifyRealm(config.realmId)
-
-        logger.info("Initializing Privileges...")
-        initPrivileges(config.permissions, config.roles)
-        logger.info("Initialized Privileges")
-
-        logger.info("Initializing Clients...")
-        config.webClients.forEach { clientInitService.initWebClient(it) }
-        config.appClients.forEach { clientInitService.initAppClient(it) }
-        logger.info("Initialized Client")
-
-        logger.info("Initializing Users...")
-        initUsers(authRealm, config.users)
-        logger.info("Initialized Users")
-    }
-
-    private suspend fun initPrivileges(permissions: List<PermissionData>?, roles: List<RoleData>?) {
-        initPermissions(permissions)
-        initRoles(roles)
     }
 
     private suspend fun initPermissions(permissions: List<PermissionData>?) = coroutineScope {
@@ -119,18 +112,17 @@ class KeycloakConfigScript (
         }
     }
 
-    private suspend fun verifyRealm(realmId: RealmId) {
-        spaceFinderService.getOrNull(realmId)
-            ?: throw NotFoundException("Realm", realmId)
+    private suspend fun verifySpace(spaceIdentifier: SpaceIdentifier) {
+        spaceFinderService.get(spaceIdentifier)
     }
 
-    private suspend fun initUsers(authRealm: AuthRealm, users: List<KeycloakUserConfig>?) {
+    private suspend fun initUsers(authRealm: AuthRealm, users: List<UserData>?) {
         users?.let {
             users.forEach { initUser(authRealm, it) }
         }
     }
 
-    private suspend fun initUser(authRealm: AuthRealm, user: KeycloakUserConfig) {
+    private suspend fun initUser(authRealm: AuthRealm, user: UserData) {
         scriptFinderService.getUser(authRealm, user.email, authRealm.realmId)
             ?: configService.createUser(
                 authRealm = authRealm,

@@ -5,6 +5,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties("im.script.init")
 class ImScriptInitProperties(
     val auth: ImAuthProperties,
-    val retry: ImRetryProperties,
     val json: String?,
 )

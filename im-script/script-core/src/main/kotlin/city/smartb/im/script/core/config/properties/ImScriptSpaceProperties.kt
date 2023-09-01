@@ -2,9 +2,9 @@ package city.smartb.im.script.core.config.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "im.script.config")
-class ImScriptConfigProperties(
+@ConfigurationProperties(prefix = "im.script.space")
+class ImScriptSpaceProperties(
     val auth: ImAuthProperties,
-    val retry: ImRetryProperties,
-    val json: String?,
+    val jsonCreate: String?,
+    val jsonConfig: String?
 )

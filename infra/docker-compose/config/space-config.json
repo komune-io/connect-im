@@ -1,10 +1,10 @@
 {
-    "realmId": "${KC_REALM}",
+    "space": "${KC_REALM}",
     "appClients": [
         {
             "clientId": "${KC_ADMIN_CLIENT_ID}",
             "clientSecret": "${KC_ADMIN_CLIENT_SECRET}",
-            "roles": ["super_admin"],
+            "roles": [],
             "realmManagementRoles": [
                 "manage-users",
                 "view-users",

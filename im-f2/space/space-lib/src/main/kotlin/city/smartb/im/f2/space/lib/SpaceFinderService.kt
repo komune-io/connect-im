@@ -14,7 +14,7 @@ import org.keycloak.representations.idm.RealmRepresentation
 import org.springframework.stereotype.Service
 
 @Service
-open class SpaceFinderService(
+class SpaceFinderService(
     private val keycloakClientProvider: KeycloakClientProvider,
     private val redisCache: RedisCache,
 ) {

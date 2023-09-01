@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
-class AuthContext(
+data class AuthContext(
     val auth: AuthRealm
 ): CoroutineContext.Element {
     override val key: CoroutineContext.Key<*> = Key
