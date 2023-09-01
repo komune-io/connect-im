@@ -1,9 +1,0 @@
-
-
-### Query
-
-Type: `OrganizationRefGetAllQuery`
-
-
-
-

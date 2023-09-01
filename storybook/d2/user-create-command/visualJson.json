@@ -1,12 +1,14 @@
 {
   "email" : "user@smartb.city",
+  "password" : "zepasworde",
   "givenName" : "John",
   "familyName" : "Deuf",
   "phone" : "06 12 34 56 78",
   "roles" : [ "admin" ],
-  "sendEmailLink" : "true",
   "memberOf" : "85171569-8970-45fb-b52a-85b59f06c292",
   "attributes" : {
     "age" : "42"
-  }
+  },
+  "isEmailVerified" : true,
+  "isPasswordTemporary" : false
 }

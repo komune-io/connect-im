@@ -1,0 +1,118 @@
+
+
+
+## User
+
+
+
+Representation of a user.
+
+
+
+---
+
+***id*** [`UserId`](#userid)
+
+Identifier of the user.
+
+
+
+---
+
+***memberOf*** [`OrganizationRef?`](/docs/organization--page#organizationref)
+
+Organization Ref to which the user belongs.
+
+
+
+---
+
+***email*** `String`
+
+Email address.
+
+
+
+---
+
+***givenName*** `String`
+
+First name of the user.
+
+
+
+---
+
+***familyName*** `String`
+
+Family name of the user.
+
+
+
+---
+
+***address*** `Address?`
+
+Address of the user.
+
+
+
+---
+
+***phone*** `String?`
+
+Telephone number of the user.
+
+
+
+---
+
+***roles*** `List<RoleIdentifier>`
+
+Roles of the user.
+
+
+
+---
+
+***rolesComposites*** `RolesCompositesModel`
+
+---
+
+***attributes*** `Map<String, String>`
+
+Platform-specific attributes assigned to the user
+
+
+
+---
+
+***enabled*** `Boolean`
+
+Specifies if the user is enabled or not.
+
+
+
+---
+
+***disabledBy*** [`UserId?`](#userid)
+
+Identifier of the user that disabled the user.
+
+
+
+---
+
+***creationDate*** `Long`
+
+Creation date of the user, as UNIX timestamp in milliseconds.
+
+
+
+---
+
+***disabledDate*** `Long?`
+
+Disabled date of the user, as UNIX timestamp in milliseconds.
+
+

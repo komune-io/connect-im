@@ -1,0 +1,46 @@
+
+
+
+### Command
+
+Type: `OrganizationDisableCommand`
+
+---
+
+***id*** [`OrganizationId`](#organizationid)
+
+Identifier of the organization to disable.
+
+
+
+---
+
+***disabledBy*** `String?`
+
+Identifier of the user executing the command.
+
+
+
+---
+
+***anonymize*** `Boolean`
+
+Whether to anonymize the personal data of the organization or not. This will remove or blank all sensible fields except custom attributes. To anonymize custom attributes, see `attributes` field.
+
+
+
+---
+
+***attributes*** `Map<String, String>?`
+
+Custom attributes to update during anonymization. Use this field only if `anonymize` is set to true.
+
+
+
+---
+
+***userAttributes*** `Map<String, String>?`
+
+Custom attributes of the users of the organization to update during anonymization. Use this field only if `anonymize` is set to true.
+
+

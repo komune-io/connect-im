@@ -1,0 +1,74 @@
+
+
+
+## RoleDTO
+
+
+
+Named collection of permissions
+
+
+
+---
+
+***id*** `String`
+
+Generated id of the role.
+
+
+
+---
+
+***type*** `String`
+
+Type of privilege. See [PrivilegeType](#privilegetype)
+
+
+
+---
+
+***identifier*** `PrivilegeIdentifier`
+
+Identifier of the role. Must be unique within a realm.
+
+
+
+---
+
+***description*** `String`
+
+Description of the role.
+
+
+
+---
+
+***targets*** `List<String>`
+
+List of entities the role can be applied to. See [RoleTarget](#roletarget)
+
+
+
+---
+
+***locale*** `Map<String, String>`
+
+Human-readable translated names mapped by locale codes (e.g. "en", "fr", ...).
+
+
+
+---
+
+***bindings*** [`Map<String, List<RoleDTO>>`](#roledto)
+
+Allowed sub-roles mapped per [target](#roletarget).
+
+
+
+---
+
+***permissions*** `List<PermissionIdentifier>`
+
+Permissions granted to the role.
+
+

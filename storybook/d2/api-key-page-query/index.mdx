@@ -1,0 +1,16 @@
+import ApiKeyPageQueryDesc from './desc.mdx'
+import ApiKeyPageQueryVisualJson from './visualJson.json'
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+
+<SegmentedContainer
+  leftElement={<ApiKeyPageQueryDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={ApiKeyPageQueryVisualJson}
+      language={"json"}
+      title={"Query"}
+    />
+  }
+  rightContainerProps={{}}
+/>

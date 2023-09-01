@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import OrganizationDeletedEventDesc from './desc.mdx'
+import OrganizationDeletedEventVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<OrganizationDeletedEventDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={OrganizationDeletedEventVisualJson}
+      language={"json"}
+      title={"Event"}
+    />
+  }
+  rightContainerProps={{}}
+/>

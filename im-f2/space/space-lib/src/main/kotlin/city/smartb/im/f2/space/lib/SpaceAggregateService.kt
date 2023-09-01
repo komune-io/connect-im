@@ -1,18 +1,20 @@
 package city.smartb.im.f2.space.lib
 
+import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.api.config.properties.IMProperties
+import city.smartb.im.commons.auth.withAuth
 import city.smartb.im.core.client.api.ClientCoreAggregateService
 import city.smartb.im.core.client.api.ClientCoreFinderService
 import city.smartb.im.core.client.domain.command.ClientGrantClientRolesCommand
+import city.smartb.im.f2.space.domain.command.SpaceCreateCommand
+import city.smartb.im.f2.space.domain.command.SpaceCreatedEvent
+import city.smartb.im.f2.space.domain.command.SpaceDeleteCommand
+import city.smartb.im.f2.space.domain.command.SpaceDeletedEvent
+import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import city.smartb.im.infra.keycloak.client.buildRealmRepresentation
 import city.smartb.im.infra.redis.CacheName
 import city.smartb.im.infra.redis.RedisCache
-import city.smartb.im.space.domain.features.command.SpaceCreateCommand
-import city.smartb.im.space.domain.features.command.SpaceCreatedEvent
-import city.smartb.im.space.domain.features.command.SpaceDeleteCommand
-import city.smartb.im.space.domain.features.command.SpaceDeletedEvent
-import city.smartb.im.space.domain.model.SpaceId
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,10 +22,11 @@ class SpaceAggregateService(
     private val clientCoreAggregateService: ClientCoreAggregateService,
     private val clientCoreFinderService: ClientCoreFinderService,
     private val keycloakClientProvider: KeycloakClientProvider,
+    private val authenticationResolver: ImAuthenticationProvider,
     private val imProperties: IMProperties,
     private val redisCache: RedisCache
 ) {
-    suspend fun create(command: SpaceCreateCommand): SpaceCreatedEvent {
+    suspend fun create(command: SpaceCreateCommand): SpaceCreatedEvent = withAuth(authenticationResolver.getAuth(), "master") {
         val client = keycloakClientProvider.get()
 
         val realms = buildRealmRepresentation(
@@ -43,7 +46,9 @@ class SpaceAggregateService(
             roles = realmClientRoles
         ).let { clientCoreAggregateService.grantClientRoles(it) }
 
-        return SpaceCreatedEvent(
+        keycloakClientProvider.reset()
+
+        SpaceCreatedEvent(
             identifier = command.identifier,
         )
     }
@@ -54,5 +59,7 @@ class SpaceAggregateService(
         SpaceDeletedEvent(command.id)
     }
 
-    private suspend fun <R> mutate(id: SpaceId, block: suspend () -> R): R = redisCache.evictIfPresent(CacheName.Space, id) { block() }
+    private suspend fun <R> mutate(id: SpaceIdentifier, block: suspend () -> R): R = redisCache.evictIfPresent(CacheName.Space, id) {
+        block()
+    }
 }

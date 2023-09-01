@@ -1,0 +1,22 @@
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import PermissionDTODesc from './desc.mdx'
+import PermissionDTOVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<PermissionDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={PermissionDTOVisualJson}
+      language={"json"}
+      title={"PermissionDTO"}
+    />
+  }
+  rightContainerProps={{}}
+/>
+
+<div
+  class={"spacer"}
+/>
+
+

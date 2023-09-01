@@ -15,9 +15,9 @@ class RealmSelectSteps: En, ImCucumberStepsDefinition() {
             }
         }
 
-        Given("I work on the authenticated realm") {
+        Given("I work on default realm") {
             step {
-                context.realmId = null
+                context.realmId = "im-test"
             }
         }
     }

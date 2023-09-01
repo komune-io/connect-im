@@ -1,0 +1,89 @@
+import { DocsTable } from '@smartb/g2-documentation'
+
+
+
+<div
+  class={"spacer"}
+/>
+
+
+
+## Queries
+
+<DocsTable
+  gridColumnNumber={2}
+>
+
+  <div>
+
+  
+
+#### POST /roleGet
+
+
+
+Get a role by identifier
+
+
+  </div>
+
+  <div>
+
+    
+Body: [`RoleGetQueryDTO`](#role-get)  
+Result: [`RoleGetResultDTO`](#role-get)
+  </div>
+
+  <div>
+
+  
+
+#### POST /roleList
+
+
+
+Get a list of roles
+
+
+  </div>
+
+  <div>
+
+    
+Body: [`RoleListQueryDTO`](#role-list)  
+Result: [`RoleListResultDTO`](#role-list)
+  </div>
+</DocsTable>
+
+<div
+  class={"spacer"}
+/>
+
+
+
+## Commands
+
+<DocsTable
+  gridColumnNumber={2}
+>
+
+  <div>
+
+  
+
+#### POST /roleDefine
+
+
+
+Create or update a role
+
+
+  </div>
+
+  <div>
+
+    
+Body: [`RoleDefineCommandDTO`](#role-define)  
+Result: [`RoleDefinedEventDTO`](#role-define)
+  </div>
+</DocsTable>

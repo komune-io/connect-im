@@ -1,0 +1,94 @@
+
+
+
+<div
+  class={"spacer"}
+/>
+
+
+
+## Queries
+
+
+
+---
+
+**organizationGet**(query:[`OrganizationGetQuery`](#organization-get)):[`OrganizationGetResult<Organization>`](#organization-get)<br/>
+
+Fetch an Organization by its ID.
+
+
+
+---
+
+**organizationGetFromInsee**(query:[`OrganizationGetFromInseeQuery`](#organization-get-from-insee)):[`OrganizationGetFromInseeResult`](#organization-get-from-insee)<br/>
+
+Fetch an Organization by its siret number from the Insee Sirene API.
+
+
+
+---
+
+**organizationPage**(query:[`OrganizationPageQuery`](#organization-page)):[`OrganizationPageResult<Organization>`](#organization-page)<br/>
+
+Fetch a page of organizations.
+
+
+
+---
+
+**organizationRefList**(query:[`OrganizationRefListQuery`](#organization-ref-list)):[`OrganizationRefListResult`](#organization-ref-list)<br/>
+
+Fetch all OrganizationRef.
+
+
+
+<div
+  class={"spacer"}
+/>
+
+
+
+## Commands
+
+
+
+---
+
+**organizationCreate**(cmd:[`OrganizationCreateCommand`](#organization-create)):[`OrganizationCreatedEvent`](#organization-create)<br/>
+
+Create an organization.
+
+
+
+---
+
+**organizationUpdate**(cmd:[`OrganizationUpdateCommand`](#organization-update)):[`OrganizationUpdatedResult`](#organization-update)<br/>
+
+Update an organization.
+
+
+
+---
+
+**organizationUploadLogo**(cmd:[`OrganizationUploadLogoCommand`](#organization-upload-logo), file:`FilePart`):[`OrganizationUploadedLogoEvent`](#organization-upload-logo)<br/>
+
+Upload a logo for a given organization
+
+
+
+---
+
+**organizationDisable**(cmd:[`OrganizationDisableCommand`](#organization-disable)):[`OrganizationDisabledEvent`](#organization-disable)<br/>
+
+Disable an organization and its users.
+
+
+
+---
+
+**organizationDelete**(cmd:[`OrganizationDeleteCommand`](#organization-delete)):[`OrganizationDeletedEvent`](#organization-delete)<br/>
+
+Delete an organization and its users.
+
+
