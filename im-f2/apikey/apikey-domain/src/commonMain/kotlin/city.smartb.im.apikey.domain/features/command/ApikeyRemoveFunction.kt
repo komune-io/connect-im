@@ -30,11 +30,7 @@ data class ApikeyRemoveCommand(
     /**
      * Id of the apikey.
      */
-    override val id: ApiKeyId,
-    /**
-     * Identifier of the organizationId.
-     */
-    val organizationId: OrganizationId
+    override val id: ApiKeyId
 ): ApikeyRemoveCommandDTO
 
 @JsExport
