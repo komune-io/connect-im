@@ -28,8 +28,8 @@ interface ApiKeyPageQueryDTO: Query {
 	val role: String?
 	val attributes: Map<String, String>?
 	val withDisabled: Boolean?
-	val page: Int?
-	val size: Int?
+	val limit: Int?
+	val offset: Int?
 }
 
 /**
@@ -62,16 +62,16 @@ data class ApiKeyPageQuery(
 	override val withDisabled: Boolean? = false,
 
 	/**
-	 * Number of the page.
-	 * @example 0
-	 */
-	override val page: Int? = 0,
-
-	/**
-	 * Size of the page.
+	 * Number of apikeys.
 	 * @example 10
 	 */
-	override val size: Int? = 10
+	override val limit: Int? = 10,
+
+	/**
+	 * Index of the first apikey.
+	 * @example 0
+	 */
+	override val offset: Int? = 0
 ): ApiKeyPageQueryDTO
 
 @JsExport
@@ -89,7 +89,7 @@ data class ApiKeyPageResult(
 	override val items: List<ApiKey>,
 
     /**
-	 * The total amount of users satisfying the requesting filters.
+	 * The total amount of apikeys satisfying the requesting filters.
 	 * @example 38
 	 */
 	override val total: Int

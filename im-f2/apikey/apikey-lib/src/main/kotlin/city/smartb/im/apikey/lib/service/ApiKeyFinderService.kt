@@ -5,6 +5,8 @@ import city.smartb.im.apikey.domain.features.query.ApiKeyGetQuery
 import city.smartb.im.apikey.domain.features.query.ApiKeyGetResult
 import city.smartb.im.apikey.domain.features.query.ApiKeyPageQuery
 import city.smartb.im.apikey.domain.features.query.ApiKeyPageResult
+import city.smartb.im.apikey.domain.model.ApiKey
+import city.smartb.im.commons.utils.page
 import city.smartb.im.infra.redis.CacheName
 import city.smartb.im.infra.redis.RedisCache
 import f2.dsl.cqrs.page.PagePagination
@@ -40,25 +42,24 @@ class ApiKeyFinderService(
         query: ApiKeyPageQuery,
     ): ApiKeyPageResult {
         val result = groupPageFunction.invoke(query.toGroupPageQuery())
-        val items = result.page.items.flatMap { it.toApiKeys() }
+        val (items, total) = result.page.items.flatMap { it.toApiKeys() }
+            .filteredByName(query.search)
+            .sortedByDescending { it.creationDate }
+            .page(query.offset, query.limit)
         return ApiKeyPageResult(
             items = items,
-            total = result.page.total
+            total = total
         )
     }
 
     private suspend fun ApiKeyPageQuery.toGroupPageQuery(): GroupPageQuery {
         val auth = authenticationResolver.getAuth()
         return GroupPageQuery(
-            search = search,
             groupId = organizationId,
             roles = listOfNotNull(role),
             attributes = attributes.orEmpty(),
             withDisabled = withDisabled ?: false,
-            page = PagePagination(
-                page = page,
-                size = size
-            ),
+            page = PagePagination(null, null),
             realmId = auth.space,
             auth = auth
         )
@@ -73,4 +74,7 @@ class ApiKeyFinderService(
         )
     }
 
+    private fun List<ApiKey>.filteredByName(search: String?): List<ApiKey> {
+        return search?.let { this.filter { it.name.contains(search) } } ?: this
+    }
 }
