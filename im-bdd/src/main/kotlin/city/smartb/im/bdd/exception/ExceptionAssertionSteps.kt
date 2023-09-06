@@ -1,6 +1,8 @@
 package city.smartb.im.bdd.exception
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
+import city.smartb.im.commons.ExceptionCodes
+import city.smartb.im.core.privilege.api.exception.PrivilegeWrongTargetException
 import f2.spring.exception.ConflictException
 import f2.spring.exception.ForbiddenAccessException
 import f2.spring.exception.MessageConverterException
@@ -37,6 +39,7 @@ class ExceptionAssertionSteps: En, ImCucumberStepsDefinition()  {
         403 -> ForbiddenAccessException::class
         404 -> NotFoundException::class
         409 -> ConflictException::class
+        ExceptionCodes.privilegeWrongTarget() -> PrivilegeWrongTargetException::class
         else -> throw IllegalArgumentException("Unknown exception code [$this]")
     }
 

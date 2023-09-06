@@ -10,6 +10,10 @@ import city.smartb.im.core.organization.api.OrganizationCoreAggregateService
 import city.smartb.im.core.organization.domain.command.OrganizationDefineCommand
 import city.smartb.im.core.organization.domain.command.OrganizationSetSomeAttributesCommand
 import city.smartb.im.core.organization.domain.model.Organization
+import city.smartb.im.core.privilege.api.PrivilegeCoreFinderService
+import city.smartb.im.core.privilege.api.model.checkTarget
+import city.smartb.im.core.privilege.domain.model.PrivilegeIdentifier
+import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
 import city.smartb.im.f2.organization.domain.command.OrganizationCreatedEvent
 import city.smartb.im.f2.organization.domain.command.OrganizationDeleteCommandDTOBase
@@ -28,6 +32,9 @@ import city.smartb.im.user.domain.features.command.UserDisabledEvent
 import city.smartb.im.user.domain.features.query.UserPageQuery
 import city.smartb.im.user.lib.service.UserAggregateService
 import city.smartb.im.user.lib.service.UserFinderService
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -36,14 +43,16 @@ class OrganizationAggregateService(
     private val apiKeyAggregateService: ApiKeyAggregateService,
     private val organizationCoreAggregateService: OrganizationCoreAggregateService,
     private val organizationFinderService: OrganizationFinderService,
+    private val privilegeCoreFinderService: PrivilegeCoreFinderService,
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService,
 ) {
     @Autowired(required = false)
     private lateinit var fileClient: FileClient
 
-    suspend fun create(command: OrganizationCreateCommandDTOBase): OrganizationCreatedEvent {
-        // TODO check roles targets
+    suspend fun create(command: OrganizationCreateCommandDTOBase): OrganizationCreatedEvent = coroutineScope {
+        checkRoles(command.roles.orEmpty())
+
         val organizationId = OrganizationDefineCommand(
             id = null,
             identifier = command.name,
@@ -65,13 +74,15 @@ class OrganizationAggregateService(
             ))
         }
 
-        return OrganizationCreatedEvent(
+        OrganizationCreatedEvent(
             id = organizationId,
             parentOrganization = command.parentOrganizationId
         )
     }
 
     suspend fun update(command: OrganizationUpdateCommand): OrganizationUpdatedResult {
+        checkRoles(command.roles.orEmpty())
+
         OrganizationDefineCommand(
             id = command.id,
             identifier = command.name,
@@ -163,5 +174,14 @@ class OrganizationAggregateService(
 
     suspend fun delete(command: OrganizationDeleteCommandDTOBase): OrganizationDeletedEventDTOBase {
         return organizationCoreAggregateService.delete(command)
+    }
+
+    private suspend fun checkRoles(roles: List<PrivilegeIdentifier>) = coroutineScope {
+        roles.map {
+            async {
+                val privilege = privilegeCoreFinderService.getPrivilege(it)
+                privilege.checkTarget(RoleTarget.ORGANIZATION)
+            }
+        }.awaitAll()
     }
 }

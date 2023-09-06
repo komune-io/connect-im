@@ -8,10 +8,12 @@ dependencies {
     api(project(Modules.F2.organizationDomain))
 
     implementation(project(Modules.Core.organizationApi))
+    implementation(project(Modules.Core.privilegeApi))
 
-    implementation(project(Modules.imApiConfig))
     implementation(project(Modules.F2.userLib))
     implementation(project(Modules.F2.apikeyLib))
+
+    implementation(project(Modules.imApiConfig))
     implementation(project(Modules.Infra.redis))
 
     implementation(project(Modules.imKeycloakF2ClientCommand))
