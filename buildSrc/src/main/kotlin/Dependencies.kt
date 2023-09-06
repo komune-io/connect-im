@@ -19,7 +19,6 @@ object PluginVersions {
 
 object Versions {
 	val f2 = Framework.fixers
-//	val i2 = Framework.fixers
 	val s2 = Framework.fixers
 
 	val fs = Framework.connect
@@ -165,9 +164,15 @@ object Modules {
     object Core {
         private const val BASE = ":im-core"
 
+        const val commons = "$BASE:commons-core"
+
         private const val CLIENT = "$BASE:client-core:client-core"
         const val clientApi = "$CLIENT-api"
         const val clientDomain = "$CLIENT-domain"
+
+        private const val ORGANIZATION = "$BASE:organization-core:organization-core"
+        const val organizationApi = "$ORGANIZATION-api"
+        const val organizationDomain = "$ORGANIZATION-domain"
 
         private const val PRIVILEGE = "$BASE:privilege-core:privilege-core"
         const val privilegeApi = "$PRIVILEGE-api"
@@ -229,10 +234,6 @@ object Modules {
 	const val imKeycloakF2ClientDomain = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-domain"
 	const val imKeycloakF2ClientCommand = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-command"
 	const val imKeycloakF2ClientQuery = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-query"
-
-	const val imKeycloakF2GroupDomain = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-domain"
-	const val imKeycloakF2GroupCommand = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-command"
-	const val imKeycloakF2GroupQuery = ":im-keycloak:keycloak-f2:group:im-keycloak-f2-group-query"
 
 	const val imKeycloakF2RoleDomain = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-domain"
 	const val imKeycloakF2RoleCommand = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-command"

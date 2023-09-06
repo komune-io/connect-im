@@ -1,8 +1,8 @@
 package city.smartb.im.bdd.core.organization.query
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
-import city.smartb.im.organization.api.OrganizationEndpoint
-import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
+import city.smartb.im.f2.organization.api.OrganizationEndpoint
+import city.smartb.im.f2.organization.domain.query.OrganizationGetQuery
 import f2.dsl.fnc.invokeWith
 import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired

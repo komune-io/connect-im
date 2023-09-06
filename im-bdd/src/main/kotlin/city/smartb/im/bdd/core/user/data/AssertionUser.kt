@@ -1,7 +1,7 @@
 package city.smartb.im.bdd.core.user.data
 
 import city.smartb.im.commons.model.AddressDTO
-import city.smartb.im.organization.domain.model.OrganizationId
+import city.smartb.im.core.organization.domain.model.OrganizationId
 import city.smartb.im.user.api.UserEndpoint
 import city.smartb.im.user.domain.features.query.UserGetByEmailQuery
 import city.smartb.im.user.domain.features.query.UserGetQuery

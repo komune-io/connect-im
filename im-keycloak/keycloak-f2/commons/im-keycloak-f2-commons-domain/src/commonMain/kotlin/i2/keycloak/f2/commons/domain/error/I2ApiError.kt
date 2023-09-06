@@ -1,6 +1,6 @@
 package i2.keycloak.f2.commons.domain.error
 
-class I2ApiError(
+data class I2ApiError(
 	override val description: String,
 	override val payload: Map<String, String>,
 ): I2Error(

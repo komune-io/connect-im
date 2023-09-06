@@ -1,6 +1,6 @@
 package city.smartb.im.user.domain.features.query
 
-import city.smartb.im.organization.domain.model.OrganizationId
+import city.smartb.im.core.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.model.User
 import city.smartb.im.user.domain.model.UserDTO
 import f2.dsl.cqrs.Event
@@ -72,14 +72,14 @@ interface UserPageQueryDTO: Query {
  * @parent [UserPageFunction]
  */
 data class UserPageQuery(
-	override val organizationId: OrganizationId? = null,
-	override val search: String? = null,
-	override val role: String? = null,
-	override val attributes: Map<String, String>? = null,
-	override val withDisabled: Boolean,
-	override val page: Int? = null,
-	override val size: Int? = null,
-	override val roles: List<String>? = null
+    override val organizationId: OrganizationId? = null,
+    override val search: String? = null,
+    override val role: String? = null,
+    override val attributes: Map<String, String>? = null,
+    override val withDisabled: Boolean,
+    override val page: Int? = null,
+    override val size: Int? = null,
+    override val roles: List<String>? = null
 ): UserPageQueryDTO
 
 @JsExport

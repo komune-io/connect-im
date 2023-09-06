@@ -2,9 +2,9 @@ package city.smartb.im.user.domain.model
 
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.AddressDTO
+import city.smartb.im.f2.organization.domain.model.OrganizationRef
+import city.smartb.im.f2.organization.domain.model.OrganizationRefDTO
 import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
-import city.smartb.im.organization.domain.model.OrganizationRef
-import city.smartb.im.organization.domain.model.OrganizationRefDTO
 import i2.keycloak.f2.role.domain.RolesCompositesModel
 import kotlin.js.JsExport
 import kotlin.js.JsName

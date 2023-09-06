@@ -1,10 +1,10 @@
 package city.smartb.im.bdd.core.organization.data
 
 import city.smartb.im.commons.model.Address
-import city.smartb.im.organization.api.OrganizationEndpoint
-import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
-import city.smartb.im.organization.domain.model.Organization
-import city.smartb.im.organization.domain.model.OrganizationId
+import city.smartb.im.core.organization.domain.model.OrganizationId
+import city.smartb.im.f2.organization.api.OrganizationEndpoint
+import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
+import city.smartb.im.f2.organization.domain.query.OrganizationGetQuery
 import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
 import org.assertj.core.api.Assertions
@@ -21,18 +21,18 @@ class AssertionOrganization(
         return assertThat(organization)
     }
 
-    fun assertThat(entity: Organization) = OrganizationAssert(entity)
+    fun assertThat(entity: OrganizationDTOBase) = OrganizationAssert(entity)
 
     suspend fun notExists(id: OrganizationId) {
         Assertions.assertThat(get(id)).isNull()
     }
 
-    suspend fun get(id: OrganizationId): Organization? {
+    suspend fun get(id: OrganizationId): OrganizationDTOBase? {
         return OrganizationGetQuery(id).invokeWith(api.organizationGet()).item
     }
 
     inner class OrganizationAssert(
-        private val organization: Organization
+        private val organization: OrganizationDTOBase
     ) {
         fun hasFields(
             id: OrganizationId = organization.id,
@@ -63,7 +63,7 @@ class AssertionOrganization(
             Assertions.assertThat(organization.address?.street).isEqualTo(address?.street)
         }
 
-        fun matches(other: Organization) = hasFields(
+        fun matches(other: OrganizationDTOBase) = hasFields(
             siret = other.siret,
             name = other.name,
             description = other.description,

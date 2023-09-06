@@ -1,9 +1,9 @@
 package i2.keycloak.f2.user.query
 
+import city.smartb.im.commons.auth.OrganizationId
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import f2.dsl.cqrs.page.Page
 import i2.keycloak.f2.commons.app.keycloakF2Function
-import i2.keycloak.f2.group.domain.model.GroupId
 import i2.keycloak.f2.user.domain.features.query.UserPageFunction
 import i2.keycloak.f2.user.domain.features.query.UserPageResult
 import i2.keycloak.f2.user.domain.model.UserModel
@@ -75,7 +75,7 @@ class UserPageFunctionImpl {
 		return client.users().list()
 	}
 
-	private fun listUsersOfGroup(client: KeycloakClient, groupId: GroupId): List<UserRepresentation> {
+	private fun listUsersOfGroup(client: KeycloakClient, groupId: OrganizationId): List<UserRepresentation> {
 		return client.group(groupId).members()
 	}
 }

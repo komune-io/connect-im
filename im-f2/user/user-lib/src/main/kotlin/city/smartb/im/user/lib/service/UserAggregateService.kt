@@ -8,9 +8,10 @@ import city.smartb.im.api.config.properties.IMProperties
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.toJson
+import city.smartb.im.core.organization.api.OrganizationCoreFinderService
+import city.smartb.im.core.organization.domain.model.OrganizationId
 import city.smartb.im.infra.redis.CacheName
 import city.smartb.im.infra.redis.RedisCache
-import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateCommand
 import city.smartb.im.user.domain.features.command.KeycloakUserCreateFunction
 import city.smartb.im.user.domain.features.command.KeycloakUserDeleteCommand
@@ -45,8 +46,6 @@ import city.smartb.im.user.domain.model.UserId
 import city.smartb.im.user.lib.config.UserFsConfig
 import f2.dsl.fnc.invokeWith
 import f2.spring.exception.NotFoundException
-import i2.keycloak.f2.group.domain.features.query.GroupGetFunction
-import i2.keycloak.f2.group.domain.features.query.GroupGetQuery
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsCommand
 import i2.keycloak.f2.user.domain.features.command.UserEmailSendActionsFunction
 import i2.keycloak.f2.user.domain.features.command.UserJoinGroupCommand
@@ -70,12 +69,12 @@ class UserAggregateService(
     private val keycloakUserUpdateFunction: KeycloakUserUpdateFunction,
     private val keycloakUserUpdateEmailFunction: KeycloakUserUpdateEmailFunction,
     private val keycloakUserUpdatePasswordFunction: KeycloakUserUpdatePasswordFunction,
+    private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val userEmailSendActionsFunction: UserEmailSendActionsFunction,
     private val userFinderService: UserFinderService,
     private val userJoinGroupFunction: UserJoinGroupFunction,
     private val userRolesSetFunction: UserRolesSetFunction,
     private val userSetAttributesFunction: UserSetAttributesFunction,
-    private val groupGetFunction: GroupGetFunction,
     private val redisCache: RedisCache,
 ) {
     private val logger = LoggerFactory.getLogger(UserAggregateService::class.java)
@@ -84,7 +83,7 @@ class UserAggregateService(
     private lateinit var fileClient: FileClient
 
     suspend fun create(command: UserCreateCommand): UserCreatedEvent {
-        organizationExist(command.memberOf)
+        checkOrganizationExist(command.memberOf)
 
         val userId = command.toKeycloakUserCreateCommand().invokeWith(keycloakUserCreateFunction).id
 
@@ -121,7 +120,7 @@ class UserAggregateService(
 
     suspend fun update(command: UserUpdateCommand): UserUpdatedEvent =
         redisCache.evictIfPresent(CacheName.User, command.id) {
-            organizationExist(command.memberOf)
+            checkOrganizationExist(command.memberOf)
 
             command.toKeycloakUserUpdateCommand().invokeWith(keycloakUserUpdateFunction)
 
@@ -233,15 +232,8 @@ class UserAggregateService(
             )
         }
 
-    private suspend fun organizationExist(organizationId: OrganizationId?) {
-        if (organizationId == null) return
-        val auth = authenticationResolver.getAuth()
-        GroupGetQuery(
-            id = organizationId,
-            realmId = auth.space,
-            auth = auth
-        ).invokeWith(groupGetFunction).item
-            ?: throw NotFoundException("Organization", organizationId)
+    private suspend fun checkOrganizationExist(organizationId: OrganizationId?) {
+        organizationId?.let { organizationCoreFinderService.get(it) }
     }
 
     private suspend fun joinOrganization(userId: UserId, organizationId: OrganizationId) {

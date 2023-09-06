@@ -1,5 +1,6 @@
 package city.smartb.im.core.privilege.api
 
+import city.smartb.im.commons.utils.matches
 import city.smartb.im.core.privilege.api.model.toPrivilege
 import city.smartb.im.core.privilege.domain.model.Privilege
 import city.smartb.im.core.privilege.domain.model.PrivilegeIdentifier
@@ -46,13 +47,5 @@ class PrivilegeCoreFinderService(
                     targets == null || (privilege is Role && privilege.targets.matches(targets))
                 ).all { it }
             }
-    }
-
-    private fun <T> T.matches(filter: Collection<T>?): Boolean {
-        return filter == null || this in filter
-    }
-
-    private fun <T> Collection<T>.matches(filter: Collection<T>?): Boolean {
-        return filter == null || this.any { it.matches(filter) }
     }
 }

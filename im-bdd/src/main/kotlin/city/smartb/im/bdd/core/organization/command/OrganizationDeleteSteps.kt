@@ -2,8 +2,9 @@ package city.smartb.im.bdd.core.organization.command
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.organization.data.organization
-import city.smartb.im.organization.api.OrganizationEndpoint
-import city.smartb.im.organization.domain.features.command.OrganizationDeleteCommand
+import city.smartb.im.core.organization.domain.command.OrganizationDeleteCommand
+import city.smartb.im.f2.organization.api.OrganizationEndpoint
+import city.smartb.im.f2.organization.domain.command.OrganizationDeleteCommandDTOBase
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -15,7 +16,7 @@ class OrganizationDeleteSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var organizationEndpoint: OrganizationEndpoint
 
-    private lateinit var command: OrganizationDeleteCommand
+    private lateinit var command: OrganizationDeleteCommandDTOBase
 
     init {
         DataTableType(::organizationDeleteParams)

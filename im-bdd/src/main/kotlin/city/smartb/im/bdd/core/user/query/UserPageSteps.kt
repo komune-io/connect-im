@@ -1,7 +1,7 @@
 package city.smartb.im.bdd.core.user.query
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
-import city.smartb.im.organization.domain.model.OrganizationId
+import city.smartb.im.core.organization.domain.model.OrganizationId
 import city.smartb.im.user.api.UserEndpoint
 import city.smartb.im.user.domain.features.query.UserPageQuery
 import f2.dsl.fnc.invokeWith

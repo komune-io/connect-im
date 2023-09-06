@@ -4,13 +4,13 @@ import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.domain.model.ApiKeyId
 import city.smartb.im.commons.auth.ImRole
 import city.smartb.im.commons.model.RealmId
+import city.smartb.im.core.organization.domain.model.OrganizationId
+import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import city.smartb.im.f2.space.domain.model.SpaceIdentifier
-import city.smartb.im.organization.domain.model.Organization
-import city.smartb.im.organization.domain.model.OrganizationId
 import city.smartb.im.user.domain.model.User
 import city.smartb.im.user.domain.model.UserId
 import org.springframework.stereotype.Component
@@ -55,7 +55,7 @@ class ImTestContext: TestContext() {
 
     class FetchContext {
         lateinit var apikeys: List<ApiKey>
-        lateinit var organizations: List<Organization>
+        lateinit var organizations: List<OrganizationDTOBase>
         lateinit var permissions: List<PermissionDTOBase>
         lateinit var roles: List<RoleDTOBase>
         lateinit var users: List<User>

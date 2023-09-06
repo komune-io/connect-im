@@ -32,8 +32,11 @@ include(
 )
 
 include(
+    "im-core:commons-core",
     "im-core:client-core:client-core-api",
     "im-core:client-core:client-core-domain",
+    "im-core:organization-core:organization-core-api",
+    "im-core:organization-core:organization-core-domain",
     "im-core:privilege-core:privilege-core-api",
     "im-core:privilege-core:privilege-core-domain",
 )
@@ -51,7 +54,6 @@ include(
 
     "im-f2:privilege:privilege-api",
     "im-f2:privilege:privilege-client",
-    "im-f2:privilege:privilege-core",
     "im-f2:privilege:privilege-domain",
     "im-f2:privilege:privilege-lib",
 
@@ -73,10 +75,6 @@ include(
     "im-keycloak:keycloak-f2:client:im-keycloak-f2-client-domain",
     "im-keycloak:keycloak-f2:client:im-keycloak-f2-client-command",
     "im-keycloak:keycloak-f2:client:im-keycloak-f2-client-query",
-
-    "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-domain",
-    "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-command",
-    "im-keycloak:keycloak-f2:group:im-keycloak-f2-group-query",
 
     "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-domain",
     "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-command",

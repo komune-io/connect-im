@@ -3,7 +3,7 @@ package city.smartb.im.bdd.core.user.command
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.user.data.user
 import city.smartb.im.commons.model.Address
-import city.smartb.im.organization.domain.model.OrganizationId
+import city.smartb.im.core.organization.domain.model.OrganizationId
 import city.smartb.im.user.api.UserEndpoint
 import city.smartb.im.user.domain.features.command.UserCreateCommand
 import f2.dsl.fnc.invoke

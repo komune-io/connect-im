@@ -4,7 +4,7 @@ import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.commons.utils.parseJsonTo
-import city.smartb.im.organization.domain.model.OrganizationRef
+import city.smartb.im.f2.organization.domain.model.OrganizationRef
 import city.smartb.im.user.domain.model.User
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.query.UserGetGroupsFunction

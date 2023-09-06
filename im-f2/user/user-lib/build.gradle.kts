@@ -7,7 +7,8 @@ plugins {
 dependencies {
     api(project(Modules.F2.userDomain))
 
-    implementation(project(":im-api:api-config"))
+    implementation(project(Modules.imApiConfig))
+    implementation(project(Modules.Core.organizationApi))
     implementation(project(Modules.Infra.redis))
 
     implementation(project(Modules.imKeycloakF2UserCommand))

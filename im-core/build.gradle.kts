@@ -5,6 +5,9 @@ subprojects {
             implementation(project(Modules.Infra.keycloak))
             implementation(project(Modules.Infra.redis))
             implementation(project(Modules.imCommonsApi))
+            if (project.path != Modules.Core.commons) {
+                implementation(project(Modules.Core.commons))
+            }
         }
     }
 

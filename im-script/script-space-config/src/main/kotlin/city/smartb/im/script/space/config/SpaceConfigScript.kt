@@ -2,14 +2,14 @@ package city.smartb.im.script.space.config
 
 import city.smartb.im.commons.auth.AuthContext
 import city.smartb.im.commons.utils.ParserUtils
+import city.smartb.im.core.organization.domain.model.OrganizationId
+import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
+import city.smartb.im.f2.organization.lib.OrganizationAggregateService
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.f2.space.lib.SpaceFinderService
-import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
-import city.smartb.im.organization.domain.model.OrganizationId
-import city.smartb.im.organization.lib.OrganizationAggregateService
 import city.smartb.im.script.core.config.properties.ImScriptSpaceProperties
 import city.smartb.im.script.core.config.properties.toAuthRealm
 import city.smartb.im.script.core.model.PermissionData
@@ -130,7 +130,7 @@ class SpaceConfigScript (
         organizations?.map { organization ->
             async {
                 val organizationId = try {
-                    OrganizationCreateCommand(
+                    OrganizationCreateCommandDTOBase(
                         siret = organization.siret,
                         name = organization.name,
                         description = organization.description,
