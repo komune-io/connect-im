@@ -42,7 +42,7 @@ class GroupGetFunctionImpl {
 			throw I2ApiError(
 				description = msg,
 				payload = emptyMap()
-			).asI2Exception()
+			).asI2Exception(e)
 		}
 	}
 }
