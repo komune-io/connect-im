@@ -10,8 +10,9 @@ dependencies {
     implementation(project(Modules.Core.organizationApi))
     implementation(project(Modules.Core.privilegeApi))
 
-    implementation(project(Modules.F2.userLib))
     implementation(project(Modules.F2.apikeyLib))
+    implementation(project(Modules.F2.privilegeLib))
+    implementation(project(Modules.F2.userLib))
 
     implementation(project(Modules.imApiConfig))
     implementation(project(Modules.Infra.redis))

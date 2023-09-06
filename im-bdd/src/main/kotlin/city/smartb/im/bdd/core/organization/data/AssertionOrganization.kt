@@ -1,87 +1,84 @@
 package city.smartb.im.bdd.core.organization.data
 
 import city.smartb.im.commons.model.Address
+import city.smartb.im.commons.utils.parseJson
 import city.smartb.im.core.organization.domain.model.OrganizationId
-import city.smartb.im.f2.organization.api.OrganizationEndpoint
 import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
-import city.smartb.im.f2.organization.domain.query.OrganizationGetQuery
-import f2.dsl.fnc.invoke
-import f2.dsl.fnc.invokeWith
+import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
+import city.smartb.im.infra.keycloak.client.KeycloakClient
 import org.assertj.core.api.Assertions
+import org.keycloak.representations.idm.GroupRepresentation
 import s2.bdd.assertion.AssertionBdd
+import s2.bdd.repository.AssertionApiEntity
 
-fun AssertionBdd.organization(api: OrganizationEndpoint) = AssertionOrganization(api)
+fun AssertionBdd.organization(client: KeycloakClient) = AssertionOrganization(client)
 
 class AssertionOrganization(
-    val api: OrganizationEndpoint
-) {
-
-    suspend fun assertThat(id: OrganizationId): OrganizationAssert {
-        val organization = api.organizationGet().invoke(OrganizationGetQuery(id = id)).item!!
-        return assertThat(organization)
+    private val client: KeycloakClient
+): AssertionApiEntity<GroupRepresentation, OrganizationId, AssertionOrganization.OrganizationAssert>() {
+    override suspend fun findById(id: OrganizationId): GroupRepresentation? = try {
+        client.group(id).toRepresentation()
+    } catch (e: javax.ws.rs.NotFoundException) {
+        null
     }
-
-    fun assertThat(entity: OrganizationDTOBase) = OrganizationAssert(entity)
-
-    suspend fun notExists(id: OrganizationId) {
-        Assertions.assertThat(get(id)).isNull()
-    }
-
-    suspend fun get(id: OrganizationId): OrganizationDTOBase? {
-        return OrganizationGetQuery(id).invokeWith(api.organizationGet()).item
-    }
+    override suspend fun assertThat(entity: GroupRepresentation) = OrganizationAssert(entity)
 
     inner class OrganizationAssert(
-        private val organization: OrganizationDTOBase
+        private val group: GroupRepresentation
     ) {
-        fun hasFields(
-            id: OrganizationId = organization.id,
-            siret: String? = organization.siret,
-            name: String = organization.name,
-            description: String? = organization.description,
-            address: Address? = organization.address,
-            website: String? = organization.website,
-            attributes: Map<String, String> = organization.attributes,
-            roles: List<String>? = organization.roles,
-            enabled: Boolean = organization.enabled,
-            creationDate: Long = organization.creationDate,
-        ) = also {
-            Assertions.assertThat(organization.id).isEqualTo(id)
-            Assertions.assertThat(organization.siret).isEqualTo(siret)
-            Assertions.assertThat(organization.name).isEqualTo(name)
-            Assertions.assertThat(organization.description).isEqualTo(description)
-            Assertions.assertThat(organization.website).isEqualTo(website)
-            Assertions.assertThat(organization.attributes).isEqualTo(attributes)
-            Assertions.assertThat(organization.roles).isEqualTo(roles)
-            Assertions.assertThat(organization.enabled).isEqualTo(enabled)
-            Assertions.assertThat(organization.creationDate).isEqualTo(creationDate)
-        }.hasAddress(address)
+        private val singleAttributes = group.attributes
+            .mapValues { (_, values) -> values.firstOrNull() }
+            .filterValues { !it.isNullOrBlank() } as Map<String, String>
 
-        fun hasAddress(address: Address?) = also {
-            Assertions.assertThat(organization.address?.city).isEqualTo(address?.city)
-            Assertions.assertThat(organization.address?.postalCode).isEqualTo(address?.postalCode)
-            Assertions.assertThat(organization.address?.street).isEqualTo(address?.street)
+        private val groupSiret: String? = singleAttributes[OrganizationDTOBase::siret.name]
+        private val groupDescription: String? = singleAttributes[OrganizationDTOBase::description.name]
+        private val groupAddress: Address? = singleAttributes[OrganizationDTOBase::address.name]?.parseJson()
+        private val groupWebsite: String? = singleAttributes[OrganizationDTOBase::website.name]
+        private val groupEnabled: Boolean = singleAttributes[OrganizationDTOBase::enabled.name].toBoolean()
+        private val groupCreationDate: Long = singleAttributes[OrganizationDTOBase::creationDate.name]?.toLong() ?: 0
+
+        fun hasFields(
+            id: OrganizationId = group.id,
+            siret: String? = groupSiret,
+            name: String = group.name,
+            description: String? = groupDescription,
+            address: Address? = groupAddress,
+            website: String? = groupWebsite,
+            attributes: Map<String, String> = singleAttributes,
+            roles: List<String>? = group.realmRoles,
+            enabled: Boolean = groupEnabled,
+            creationDate: Long = groupCreationDate
+        ) = also {
+            Assertions.assertThat(group.id).isEqualTo(id)
+            Assertions.assertThat(groupSiret).isEqualTo(siret)
+            Assertions.assertThat(group.name).isEqualTo(name)
+            Assertions.assertThat(groupDescription).isEqualTo(description)
+            Assertions.assertThat(groupAddress).isEqualTo(address)
+            Assertions.assertThat(groupWebsite).isEqualTo(website)
+            Assertions.assertThat(singleAttributes).containsAllEntriesOf(attributes)
+            Assertions.assertThat(roles).isEqualTo(roles)
+            Assertions.assertThat(groupEnabled).isEqualTo(enabled)
+            Assertions.assertThat(groupCreationDate).isEqualTo(creationDate)
         }
 
-        fun matches(other: OrganizationDTOBase) = hasFields(
-            siret = other.siret,
-            name = other.name,
-            description = other.description,
-            address = other.address,
-            website = other.website,
-            attributes = other.attributes,
-            roles = other.roles,
-            enabled = other.enabled,
-            creationDate = other.creationDate
+        fun matches(organization: OrganizationDTOBase) = hasFields(
+            id = organization.id,
+            siret = organization.siret,
+            name = organization.name,
+            description = organization.description,
+            address = organization.address,
+            website = organization.website,
+            attributes = organization.attributes,
+            roles = organization.roles.map(RoleDTOBase::identifier),
+            enabled = organization.enabled,
+            creationDate = organization.creationDate
         )
 
-        fun isAnonymized() = also {
-            Assertions.assertThat(organization.name).isEqualTo("anonymous")
-            Assertions.assertThat(organization.description).isNull()
-            Assertions.assertThat(organization.address).isNull()
-            Assertions.assertThat(organization.website).isNull()
-            Assertions.assertThat(organization.roles).isEqualTo(organization.roles)
+        fun isAnonym() = also {
+            Assertions.assertThat(group.name).isEqualTo("anonymous")
+            Assertions.assertThat(groupDescription).isNull()
+            Assertions.assertThat(groupAddress).isNull()
+            Assertions.assertThat(groupWebsite).isNull()
         }
-
     }
 }

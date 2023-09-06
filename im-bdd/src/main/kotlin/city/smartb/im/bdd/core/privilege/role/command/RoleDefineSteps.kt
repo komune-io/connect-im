@@ -3,7 +3,7 @@ package city.smartb.im.bdd.core.privilege.role.command
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.privilege.role.data.extractRoleTargetList
 import city.smartb.im.bdd.core.privilege.role.data.role
-import city.smartb.im.commons.utils.parseJsonTo
+import city.smartb.im.commons.utils.parseJson
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.f2.privilege.api.RoleEndpoint
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
@@ -89,9 +89,9 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
             identifier = entry?.get("identifier") ?: context.roleIdentifiers.lastUsedOrNull.orRandom(),
             description = entry?.get("description") ?: UUID.randomUUID().toString(),
             targets = entry?.extractRoleTargetList("targets").orEmpty(),
-            locale = entry?.get("locale")?.parseJsonTo() ?: emptyMap(),
+            locale = entry?.get("locale")?.parseJson() ?: emptyMap(),
             bindings = entry?.get("bindings")
-                ?.parseJsonTo<Map<String, List<RoleIdentifier>>>()
+                ?.parseJson<Map<String, List<RoleIdentifier>>>()
                 ?.mapKeys { (key) -> RoleTarget.valueOf(key) },
             permissions = entry?.extractList("permissions")
         )

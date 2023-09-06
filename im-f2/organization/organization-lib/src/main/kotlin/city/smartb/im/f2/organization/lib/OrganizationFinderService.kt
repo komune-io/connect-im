@@ -10,6 +10,7 @@ import city.smartb.im.f2.organization.lib.model.toDTO
 import city.smartb.im.f2.organization.lib.model.toOrganization
 import city.smartb.im.f2.organization.lib.model.toRef
 import city.smartb.im.f2.organization.lib.service.InseeHttpClient
+import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import f2.dsl.cqrs.page.OffsetPagination
 import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.cqrs.page.map
@@ -19,14 +20,14 @@ import org.springframework.stereotype.Service
 class OrganizationFinderService(
     private val inseeHttpClient: InseeHttpClient?,
     private val organizationCoreFinderService: OrganizationCoreFinderService,
+    private val privilegeFinderService: PrivilegeFinderService
 ) {
-
     suspend fun getOrNull(id: OrganizationId): OrganizationDTOBase? {
-        return organizationCoreFinderService.getOrNull(id)?.toDTO()
+        return organizationCoreFinderService.getOrNull(id)?.toDTOInternal()
     }
 
     suspend fun get(id: OrganizationId): OrganizationDTOBase {
-        return organizationCoreFinderService.get(id).toDTO()
+        return organizationCoreFinderService.get(id).toDTOInternal()
     }
 
     suspend fun getFromInsee(siret: String): OrganizationDTOBase? {
@@ -52,7 +53,7 @@ class OrganizationFinderService(
             attributes = attributes,
             withDisabled = withDisabled,
             offset = offset,
-        ).map(Organization::toDTO)
+        ).map { it.toDTOInternal() }
     }
 
     suspend fun listRefs(withDisabled: Boolean = false): List<OrganizationRef> {
@@ -60,4 +61,8 @@ class OrganizationFinderService(
             withDisabled = withDisabled,
         ).items.map(Organization::toRef)
     }
+
+    private suspend fun Organization.toDTOInternal() = toDTO(
+        getRole = privilegeFinderService::getRole
+    )
 }

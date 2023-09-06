@@ -7,6 +7,7 @@ import city.smartb.im.apikey.lib.service.ApiKeyAggregateService
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.core.organization.api.OrganizationCoreAggregateService
+import city.smartb.im.core.organization.api.OrganizationCoreFinderService
 import city.smartb.im.core.organization.domain.command.OrganizationDefineCommand
 import city.smartb.im.core.organization.domain.command.OrganizationSetSomeAttributesCommand
 import city.smartb.im.core.organization.domain.model.Organization
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Service
 class OrganizationAggregateService(
     private val apiKeyAggregateService: ApiKeyAggregateService,
     private val organizationCoreAggregateService: OrganizationCoreAggregateService,
+    private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val organizationFinderService: OrganizationFinderService,
     private val privilegeCoreFinderService: PrivilegeCoreFinderService,
     private val userAggregateService: UserAggregateService,
@@ -129,7 +131,7 @@ class OrganizationAggregateService(
         )
 
         if (command.anonymize) {
-            val organization = organizationFinderService.get(command.id)
+            val organization = organizationCoreFinderService.get(command.id)
             OrganizationDefineCommand(
                 id = command.id,
                 identifier = "anonymous-${command.id}",

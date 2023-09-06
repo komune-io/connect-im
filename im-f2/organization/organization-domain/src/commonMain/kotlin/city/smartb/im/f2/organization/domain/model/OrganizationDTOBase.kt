@@ -3,7 +3,8 @@ package city.smartb.im.f2.organization.domain.model
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.AddressDTO
 import city.smartb.im.core.organization.domain.model.OrganizationId
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
+import city.smartb.im.f2.privilege.domain.role.model.RoleDTO
+import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
@@ -17,7 +18,7 @@ interface OrganizationDTO {
     val address: AddressDTO?
     val website: String?
     val attributes: Map<String, String>
-    val roles: List<RoleIdentifier>
+    val roles: List<RoleDTO>
     val logo: String?
     val enabled: Boolean
     val disabledBy: OrganizationId?
@@ -75,7 +76,7 @@ data class OrganizationDTOBase(
     /**
      * Roles of the organization.
      */
-    override val roles: List<RoleIdentifier>,
+    override val roles: List<RoleDTOBase>,
 
     /**
      * URL pointing to the logo of the organization.
