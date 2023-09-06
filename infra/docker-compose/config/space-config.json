@@ -2,8 +2,8 @@
     "space": "${KC_REALM}",
     "appClients": [
         {
-            "clientId": "${KC_ADMIN_CLIENT_ID}",
-            "clientSecret": "${KC_ADMIN_CLIENT_SECRET}",
+            "clientId": "${KC_APP_CLIENT_ID}",
+            "clientSecret": "${KC_APP_CLIENT_SECRET}",
             "roles": [],
             "realmManagementRoles": [
                 "manage-users",
@@ -15,8 +15,8 @@
     ],
     "webClients": [
         {
-            "clientId": "im-test-web",
-            "webUrl": "http://localhost:3000"
+            "clientId": "${KC_WEB_CLIENT_ID}",
+            "webUrl": "http://localhost:5173"
         }
     ],
     "permissions": [
@@ -82,7 +82,7 @@
             "roles": ["tr_orchestrator"],
             "withApiKey": true,
             "users": [{
-                "email": "admin@admin.com",
+                "email": "connect@smartb.city",
                 "password":  "traceconnect",
                 "firstname": "Admin",
                 "lastname":  "Admin",
