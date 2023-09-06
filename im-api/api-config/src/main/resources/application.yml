@@ -22,17 +22,6 @@ multitenancy:
     security:
         issuer-base-uri: http://localhost:8080/realms/
 
-
-#i2:
-#  issuers:
-#    -
-#      name: master
-#      authUrl: http://keycloak-it:8080
-#      realm: master
-#      im:
-#        clientId: im-root
-#        clientSecret: 6FvV3OotnIUj0BdZKpTDbEmK9jKi0yI3
-
 f2:
   tenant:
     issuer-base-uri: http://keycloak-it:8080

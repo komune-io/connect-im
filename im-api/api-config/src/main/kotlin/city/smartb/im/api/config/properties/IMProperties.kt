@@ -5,7 +5,9 @@ import city.smartb.im.commons.model.AuthRealm
 import city.smartb.im.commons.model.AuthRealmClientSecret
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "connect.im")
+const val IM_URL_PROPERTY = "connect.im"
+
+@ConfigurationProperties(prefix = IM_URL_PROPERTY)
 data class IMProperties (
     val organization: OrganizationProperties?,
     val smtp: Map<String, String>? = null,
