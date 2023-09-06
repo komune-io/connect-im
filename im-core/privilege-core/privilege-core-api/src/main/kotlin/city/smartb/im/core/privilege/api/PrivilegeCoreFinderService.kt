@@ -7,6 +7,8 @@ import city.smartb.im.core.privilege.domain.model.PrivilegeType
 import city.smartb.im.core.privilege.domain.model.Role
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
+import city.smartb.im.infra.redis.CacheName
+import city.smartb.im.infra.redis.CachedService
 import f2.spring.exception.NotFoundException
 import org.keycloak.representations.idm.RoleRepresentation
 import org.springframework.stereotype.Service
@@ -14,11 +16,11 @@ import org.springframework.stereotype.Service
 @Service
 class PrivilegeCoreFinderService(
     private val keycloakClientProvider: KeycloakClientProvider
-) {
-    suspend fun getPrivilegeOrNull(identifier: PrivilegeIdentifier): Privilege? {
+): CachedService(CacheName.Privilege) {
+    suspend fun getPrivilegeOrNull(identifier: PrivilegeIdentifier): Privilege? = query(identifier) {
         val client = keycloakClientProvider.get()
 
-        return try {
+        try {
             client.role(identifier)
                 .toRepresentation()
                 .toPrivilege()

@@ -6,18 +6,19 @@ import city.smartb.im.core.privilege.domain.command.PrivilegeDefineCommand
 import city.smartb.im.core.privilege.domain.command.PrivilegeDefinedEvent
 import city.smartb.im.core.privilege.domain.model.Role
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
+import city.smartb.im.infra.redis.CacheName
+import city.smartb.im.infra.redis.CachedService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import org.springframework.stereotype.Service
 
 @Service
 class PrivilegeCoreAggregateService(
     private val privilegeCoreFinderService: PrivilegeCoreFinderService,
     private val keycloakClientProvider: KeycloakClientProvider
-) {
+): CachedService(CacheName.Privilege) {
 
-    suspend fun define(command: PrivilegeDefineCommand): PrivilegeDefinedEvent = coroutineScope {
+    suspend fun define(command: PrivilegeDefineCommand): PrivilegeDefinedEvent = mutate(command.identifier) {
         val client = keycloakClientProvider.get()
 
         val oldPrivilege = privilegeCoreFinderService.getPrivilegeOrNull(command.identifier)
