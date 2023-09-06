@@ -27,10 +27,10 @@ import i2.keycloak.f2.group.domain.features.query.GroupGetQuery
 import i2.keycloak.f2.group.domain.model.GroupModel
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
 import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
-import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Service
 import java.text.Normalizer
 import java.util.UUID
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 
 @Service
 class ApiKeyAggregateService(
@@ -128,14 +128,11 @@ class ApiKeyAggregateService(
         command: ApikeyRemoveCommand,
     ): ApikeyRemoveEvent {
         val auth = authenticationResolver.getAuth()
-        val group = getOrganization(command.organizationId)
-        ClientGetServiceAccountQuery(
+        val organizationId = ClientGetServiceAccountQuery(
             id = command.id,
             realmId = auth.space,
             auth = auth
-        ).invokeWith(clientGetServiceAccountFunction)
-            .item
-            ?.takeIf { it.attributes["memberOf"] == command.organizationId }
+        ).invokeWith(clientGetServiceAccountFunction).item?.attributes?.get("memberOf")
             ?: throw NotFoundException("Client", command.id)
         try {
             ClientDeleteCommand(
@@ -148,15 +145,16 @@ class ApiKeyAggregateService(
         } catch (e: Exception) {
             logger.error("Error while deleting client", e)
         }
-        val apiKeys = group.toApiKeys()
+
+        val apiKeys = getOrganization(organizationId).toApiKeys()
         setAttributes(
-            id = command.organizationId,
+            id = organizationId,
             attributes = mapOf(GROUP_API_KEYS_FIELD to apiKeys.filter { it.id != command.id }.toJson())
         )
 
         return ApikeyRemoveEvent(
             id = command.id,
-            organizationId = command.organizationId
+            organizationId = organizationId
         )
     }
 
