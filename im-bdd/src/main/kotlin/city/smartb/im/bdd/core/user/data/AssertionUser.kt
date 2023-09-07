@@ -1,12 +1,12 @@
 package city.smartb.im.bdd.core.user.data
 
 import city.smartb.im.commons.model.AddressDTO
-import city.smartb.im.core.organization.domain.model.OrganizationId
-import city.smartb.im.user.api.UserEndpoint
-import city.smartb.im.user.domain.features.query.UserGetByEmailQuery
-import city.smartb.im.user.domain.features.query.UserGetQuery
-import city.smartb.im.user.domain.model.User
-import city.smartb.im.user.domain.model.UserId
+import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.commons.model.UserId
+import city.smartb.im.f2.user.api.UserEndpoint
+import city.smartb.im.f2.user.domain.model.User
+import city.smartb.im.f2.user.domain.query.UserGetByEmailQuery
+import city.smartb.im.f2.user.domain.query.UserGetQuery
 import f2.dsl.fnc.invoke
 import f2.dsl.fnc.invokeWith
 import org.assertj.core.api.Assertions

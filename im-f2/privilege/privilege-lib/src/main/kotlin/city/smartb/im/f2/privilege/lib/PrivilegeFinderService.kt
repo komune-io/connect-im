@@ -1,17 +1,17 @@
 package city.smartb.im.f2.privilege.lib
 
 import city.smartb.im.commons.SimpleCache
+import city.smartb.im.commons.model.PermissionIdentifier
+import city.smartb.im.commons.model.PrivilegeIdentifier
+import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.core.privilege.api.PrivilegeCoreFinderService
 import city.smartb.im.core.privilege.domain.model.Privilege
 import city.smartb.im.core.privilege.domain.model.PrivilegeType
 import city.smartb.im.core.privilege.domain.model.Role
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
-import city.smartb.im.f2.privilege.domain.model.PrivilegeIdentifier
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import city.smartb.im.f2.privilege.lib.model.toDTO
 import f2.spring.exception.NotFoundException
 import org.springframework.stereotype.Service

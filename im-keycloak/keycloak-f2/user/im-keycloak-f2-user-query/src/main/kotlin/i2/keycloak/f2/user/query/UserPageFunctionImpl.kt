@@ -1,6 +1,6 @@
 package i2.keycloak.f2.user.query
 
-import city.smartb.im.commons.auth.OrganizationId
+import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import f2.dsl.cqrs.page.Page
 import i2.keycloak.f2.commons.app.keycloakF2Function

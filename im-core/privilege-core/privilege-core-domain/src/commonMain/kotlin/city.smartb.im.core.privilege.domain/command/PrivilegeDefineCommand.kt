@@ -1,9 +1,9 @@
 package city.smartb.im.core.privilege.domain.command
 
-import city.smartb.im.core.privilege.domain.model.PermissionIdentifier
-import city.smartb.im.core.privilege.domain.model.PrivilegeIdentifier
+import city.smartb.im.commons.model.PermissionIdentifier
+import city.smartb.im.commons.model.PrivilegeIdentifier
+import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.core.privilege.domain.model.PrivilegeType
-import city.smartb.im.core.privilege.domain.model.RoleIdentifier
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import f2.dsl.cqrs.Event
 import kotlinx.serialization.Serializable

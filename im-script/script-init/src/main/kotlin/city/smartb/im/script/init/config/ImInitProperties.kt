@@ -1,6 +1,6 @@
 package city.smartb.im.script.init.config
 
-import city.smartb.im.core.client.domain.model.ClientIdentifier
+import city.smartb.im.commons.model.ClientIdentifier
 
 data class ImInitProperties(
     val imMasterClient: ClientCredentials

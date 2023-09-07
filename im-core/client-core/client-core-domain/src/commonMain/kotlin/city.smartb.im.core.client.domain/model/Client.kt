@@ -1,7 +1,7 @@
 package city.smartb.im.core.client.domain.model
 
-typealias ClientId = String
-typealias ClientIdentifier = String
+import city.smartb.im.commons.model.ClientId
+import city.smartb.im.commons.model.ClientIdentifier
 
 data class Client(
     val id: ClientId,

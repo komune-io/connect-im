@@ -1,9 +1,9 @@
 package city.smartb.im.f2.organization.lib
 
+import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.core.organization.api.OrganizationCoreFinderService
 import city.smartb.im.core.organization.domain.model.Organization
-import city.smartb.im.core.organization.domain.model.OrganizationId
-import city.smartb.im.core.privilege.domain.model.RoleIdentifier
 import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import city.smartb.im.f2.organization.domain.model.OrganizationRef
 import city.smartb.im.f2.organization.lib.model.toDTO

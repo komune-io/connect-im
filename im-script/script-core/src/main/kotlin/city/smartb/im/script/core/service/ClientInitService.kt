@@ -1,11 +1,11 @@
 package city.smartb.im.script.core.service
 
+import city.smartb.im.commons.model.ClientId
 import city.smartb.im.core.client.api.ClientCoreAggregateService
 import city.smartb.im.core.client.api.ClientCoreFinderService
 import city.smartb.im.core.client.domain.command.ClientCreateCommand
 import city.smartb.im.core.client.domain.command.ClientGrantClientRolesCommand
 import city.smartb.im.core.client.domain.command.ClientGrantRealmRolesCommand
-import city.smartb.im.core.client.domain.model.ClientId
 import city.smartb.im.script.core.model.AppClient
 import city.smartb.im.script.core.model.WebClient
 import org.slf4j.LoggerFactory

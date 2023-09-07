@@ -1,9 +1,9 @@
 package city.smartb.im.bdd.core.privilege.permission.data
 
+import city.smartb.im.commons.model.PermissionId
+import city.smartb.im.commons.model.PermissionIdentifier
 import city.smartb.im.core.privilege.domain.model.PrivilegeType
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionId
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.RoleRepresentation

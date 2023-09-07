@@ -1,8 +1,8 @@
 package city.smartb.im.bdd.core.organization.data
 
 import city.smartb.im.commons.model.Address
+import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.commons.utils.parseJson
-import city.smartb.im.core.organization.domain.model.OrganizationId
 import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import city.smartb.im.infra.keycloak.client.KeycloakClient

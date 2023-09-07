@@ -1,12 +1,12 @@
 package city.smartb.im.bdd.core.privilege.role.data
 
+import city.smartb.im.commons.model.PermissionIdentifier
+import city.smartb.im.commons.model.RoleId
+import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.commons.utils.parseJson
 import city.smartb.im.core.privilege.domain.model.PrivilegeType
 import city.smartb.im.core.privilege.domain.model.RoleTarget
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
-import city.smartb.im.f2.privilege.domain.role.model.RoleId
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

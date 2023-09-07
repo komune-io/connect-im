@@ -2,7 +2,7 @@ package city.smartb.im.f2.organization.domain.model
 
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.AddressDTO
-import city.smartb.im.core.organization.domain.model.OrganizationId
+import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTO
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import kotlin.js.JsExport

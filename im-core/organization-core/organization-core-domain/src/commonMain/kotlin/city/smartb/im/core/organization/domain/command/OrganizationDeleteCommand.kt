@@ -1,6 +1,6 @@
 package city.smartb.im.core.organization.domain.command
 
-import city.smartb.im.core.organization.domain.model.OrganizationId
+import city.smartb.im.commons.model.OrganizationId
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import kotlin.js.JsExport

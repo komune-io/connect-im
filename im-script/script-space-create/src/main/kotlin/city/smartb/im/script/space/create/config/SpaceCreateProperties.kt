@@ -1,6 +1,6 @@
 package city.smartb.im.script.space.create.config
 
-import city.smartb.im.f2.space.domain.model.SpaceIdentifier
+import city.smartb.im.commons.model.SpaceIdentifier
 
 data class SpaceCreateProperties(
     val space: SpaceIdentifier,

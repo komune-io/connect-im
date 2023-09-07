@@ -5,7 +5,7 @@
 //import f2.dsl.fnc.F2Function
 //import i2.keycloak.f2.commons.domain.KeycloakF2Command
 //import i2.keycloak.f2.commons.domain.KeycloakF2Result
-//import city.smartb.im.privilege.domain.role.model.RoleIdentifier
+//import city.smartb.im.commons.model.RoleIdentifier
 //import kotlin.js.JsExport
 //import kotlin.js.JsName
 //

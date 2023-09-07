@@ -1,11 +1,11 @@
 package i2.keycloak.f2.client.domain
 
+import city.smartb.im.commons.model.ClientId
+import city.smartb.im.commons.model.ClientIdentifier
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
 
-typealias ClientId = String
-typealias ClientIdentifier = String
 
 @JsExport
 @JsName("ClientModel")

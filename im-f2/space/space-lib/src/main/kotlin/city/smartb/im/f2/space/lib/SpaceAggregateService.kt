@@ -3,6 +3,7 @@ package city.smartb.im.f2.space.lib
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.api.config.properties.IMProperties
 import city.smartb.im.commons.auth.withAuth
+import city.smartb.im.commons.model.SpaceIdentifier
 import city.smartb.im.core.client.api.ClientCoreAggregateService
 import city.smartb.im.core.client.api.ClientCoreFinderService
 import city.smartb.im.core.client.domain.command.ClientGrantClientRolesCommand
@@ -10,7 +11,6 @@ import city.smartb.im.f2.space.domain.command.SpaceCreateCommand
 import city.smartb.im.f2.space.domain.command.SpaceCreatedEvent
 import city.smartb.im.f2.space.domain.command.SpaceDeleteCommand
 import city.smartb.im.f2.space.domain.command.SpaceDeletedEvent
-import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import city.smartb.im.infra.keycloak.client.buildRealmRepresentation
 import city.smartb.im.infra.redis.CacheName

@@ -1,5 +1,6 @@
 package city.smartb.im.f2.privilege.lib.model
 
+import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.core.privilege.domain.model.Permission
 import city.smartb.im.core.privilege.domain.model.Privilege
 import city.smartb.im.core.privilege.domain.model.Role
@@ -7,7 +8,6 @@ import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope

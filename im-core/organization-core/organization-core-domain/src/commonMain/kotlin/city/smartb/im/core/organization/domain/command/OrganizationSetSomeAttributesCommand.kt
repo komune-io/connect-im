@@ -1,6 +1,6 @@
 package city.smartb.im.core.organization.domain.command
 
-import city.smartb.im.core.organization.domain.model.OrganizationId
+import city.smartb.im.commons.model.OrganizationId
 
 data class OrganizationSetSomeAttributesCommand(
     val id: OrganizationId,

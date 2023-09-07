@@ -1,8 +1,8 @@
 package city.smartb.im.f2.space.lib
 
 import city.smartb.im.api.config.PageDefault
+import city.smartb.im.commons.model.SpaceIdentifier
 import city.smartb.im.f2.space.domain.model.Space
-import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.f2.space.domain.query.SpacePageResult
 import city.smartb.im.f2.space.lib.model.toSpace
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider

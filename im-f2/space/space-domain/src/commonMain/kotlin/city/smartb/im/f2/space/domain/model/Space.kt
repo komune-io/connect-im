@@ -1,14 +1,8 @@
 package city.smartb.im.f2.space.domain.model
 
-import city.smartb.im.commons.model.RealmId
+import city.smartb.im.commons.model.SpaceIdentifier
 import kotlin.js.JsExport
 import kotlin.js.JsName
-
-/**
- * @d2 hidden
- * @visual json "85171569-8970-45fb-b52a-85b59f06c292"
- */
-typealias SpaceIdentifier = RealmId
 
 @JsExport
 @JsName("SpaceDTO")

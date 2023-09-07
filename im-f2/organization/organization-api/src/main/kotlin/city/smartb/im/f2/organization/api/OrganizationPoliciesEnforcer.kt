@@ -1,7 +1,7 @@
 package city.smartb.im.f2.organization.api
 
 import city.smartb.im.commons.auth.policies.PolicyEnforcer
-import city.smartb.im.core.organization.domain.model.OrganizationId
+import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.f2.organization.domain.policies.OrganizationPolicies
 import org.springframework.stereotype.Service
 

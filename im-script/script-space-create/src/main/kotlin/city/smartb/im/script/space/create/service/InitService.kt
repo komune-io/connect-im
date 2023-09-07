@@ -1,14 +1,14 @@
 package city.smartb.im.script.space.create.service
 
 import city.smartb.im.commons.model.AuthRealm
-import city.smartb.im.core.client.domain.model.ClientId
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
+import city.smartb.im.commons.model.ClientId
+import city.smartb.im.commons.model.RoleIdentifier
+import city.smartb.im.commons.model.UserId
 import f2.dsl.fnc.invokeWith
 import i2.keycloak.f2.user.domain.features.command.UserCreateCommand
 import i2.keycloak.f2.user.domain.features.command.UserCreateFunction
 import i2.keycloak.f2.user.domain.features.command.UserRolesGrantCommand
 import i2.keycloak.f2.user.domain.features.command.UserRolesGrantFunction
-import i2.keycloak.f2.user.domain.model.UserId
 import org.springframework.stereotype.Service
 
 @Service

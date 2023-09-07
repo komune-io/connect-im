@@ -1,11 +1,11 @@
 package i2.keycloak.f2.user.command
 
+import city.smartb.im.commons.model.UserId
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import i2.keycloak.f2.commons.app.keycloakF2Function
 import i2.keycloak.f2.role.domain.defaultRealmRole
 import i2.keycloak.f2.user.domain.features.command.UserRolesRevokeFunction
 import i2.keycloak.f2.user.domain.features.command.UserRolesRevokedEvent
-import i2.keycloak.f2.user.domain.model.UserId
 import org.keycloak.admin.client.resource.RoleScopeResource
 import org.keycloak.representations.idm.RoleRepresentation
 import org.springframework.context.annotation.Bean

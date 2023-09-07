@@ -1,12 +1,12 @@
 package city.smartb.im.core.organization.api
 
+import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.commons.utils.matches
 import city.smartb.im.commons.utils.page
 import city.smartb.im.core.commons.CoreService
 import city.smartb.im.core.organization.api.model.toOrganization
 import city.smartb.im.core.organization.domain.model.Organization
-import city.smartb.im.core.organization.domain.model.OrganizationId
-import city.smartb.im.core.privilege.domain.model.RoleIdentifier
 import city.smartb.im.infra.redis.CacheName
 import f2.dsl.cqrs.page.OffsetPagination
 import f2.dsl.cqrs.page.PageDTO

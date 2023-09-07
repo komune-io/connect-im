@@ -1,8 +1,8 @@
 package i2.keycloak.f2.user.query.model
 
-import i2.keycloak.f2.user.domain.model.UserId
-import i2.keycloak.f2.user.domain.model.UserModel
+import city.smartb.im.commons.model.UserId
 import i2.keycloak.f2.role.domain.RolesCompositesModel
+import i2.keycloak.f2.user.domain.model.UserModel
 import org.keycloak.representations.idm.UserRepresentation
 
 suspend fun Iterable<UserRepresentation>.asModels(getRealmRoles: suspend (UserId) -> RolesCompositesModel): List<UserModel>

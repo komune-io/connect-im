@@ -1,31 +1,12 @@
 package city.smartb.im.core.privilege.domain.model
 
+import city.smartb.im.commons.model.PermissionId
+import city.smartb.im.commons.model.PermissionIdentifier
+import city.smartb.im.commons.model.PrivilegeId
+import city.smartb.im.commons.model.PrivilegeIdentifier
+import city.smartb.im.commons.model.RoleId
+import city.smartb.im.commons.model.RoleIdentifier
 import kotlinx.serialization.Serializable
-
-typealias PrivilegeId = String
-typealias PrivilegeIdentifier = String
-
-/**
- * @d2 hidden
- * @visual json "868044f8-1852-43eb-897d-067bc4631396"
- */
-typealias PermissionId = PrivilegeId
-
-/**
- * @d2 hidden
- */
-typealias PermissionIdentifier = PrivilegeIdentifier
-
-/**
- * @d2 hidden
- * @visual json "a0c76771-c5f9-4bde-8c30-901a22f570ba"
- */
-typealias RoleId = PrivilegeId
-
-/**
- * @d2 hidden
- */
-typealias RoleIdentifier = PrivilegeIdentifier
 
 @Serializable
 sealed interface Privilege {

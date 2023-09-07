@@ -1,10 +1,10 @@
 package i2.keycloak.f2.user.query.service
 
+import city.smartb.im.commons.model.UserId
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import i2.keycloak.f2.role.domain.RoleCompositeObjType
 import i2.keycloak.f2.role.domain.RolesCompositesModel
 import i2.keycloak.f2.role.query.service.RolesFinderService
-import i2.keycloak.f2.user.domain.model.UserId
 import org.springframework.stereotype.Service
 
 @Service

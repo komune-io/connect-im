@@ -1,19 +1,9 @@
 package city.smartb.im.commons.auth
 
+import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.commons.model.UserId
 import kotlin.js.JsExport
 import kotlin.js.JsName
-
-/**
- * @d2 hidden
- * @visual json "c790642c-4ed2-4cfc-bc45-905a39006e99"
- */
-typealias OrganizationId = String
-
-/**
- * @d2 hidden
- * @visual json "ad4adcc1-2633-4f2b-8b66-aaca39f45146"
- */
-typealias UserId = String
 
 @JsExport
 @JsName("AuthedUserDTO")

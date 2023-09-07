@@ -4,7 +4,9 @@ import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddKeyCommand
 import city.smartb.im.apikey.lib.service.ApiKeyAggregateService
+import city.smartb.im.commons.auth.AuthenticationProvider
 import city.smartb.im.commons.model.Address
+import city.smartb.im.commons.model.PrivilegeIdentifier
 import city.smartb.im.commons.utils.orEmpty
 import city.smartb.im.core.organization.api.OrganizationCoreAggregateService
 import city.smartb.im.core.organization.api.OrganizationCoreFinderService
@@ -13,7 +15,6 @@ import city.smartb.im.core.organization.domain.command.OrganizationSetSomeAttrib
 import city.smartb.im.core.organization.domain.model.Organization
 import city.smartb.im.core.privilege.api.PrivilegeCoreFinderService
 import city.smartb.im.core.privilege.api.model.checkTarget
-import city.smartb.im.core.privilege.domain.model.PrivilegeIdentifier
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
 import city.smartb.im.f2.organization.domain.command.OrganizationCreatedEvent
@@ -28,11 +29,11 @@ import city.smartb.im.f2.organization.domain.command.OrganizationUploadedLogoEve
 import city.smartb.im.f2.organization.domain.model.OrganizationDTO
 import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import city.smartb.im.f2.organization.lib.config.OrganizationFsConfig
-import city.smartb.im.user.domain.features.command.UserDisableCommand
-import city.smartb.im.user.domain.features.command.UserDisabledEvent
-import city.smartb.im.user.domain.features.query.UserPageQuery
-import city.smartb.im.user.lib.service.UserAggregateService
-import city.smartb.im.user.lib.service.UserFinderService
+import city.smartb.im.f2.user.domain.command.UserDisableCommand
+import city.smartb.im.f2.user.domain.command.UserDisabledEvent
+import city.smartb.im.f2.user.domain.query.UserPageQuery
+import city.smartb.im.f2.user.lib.UserAggregateService
+import city.smartb.im.f2.user.lib.UserFinderService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope

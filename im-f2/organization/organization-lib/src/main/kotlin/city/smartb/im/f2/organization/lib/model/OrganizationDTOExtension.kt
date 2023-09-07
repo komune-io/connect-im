@@ -1,11 +1,11 @@
 package city.smartb.im.f2.organization.lib.model
 
+import city.smartb.im.commons.model.RoleIdentifier
+import city.smartb.im.commons.utils.mapAsyncDeferred
 import city.smartb.im.core.organization.domain.model.Organization
 import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import city.smartb.im.f2.organization.domain.model.OrganizationRef
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
-import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 

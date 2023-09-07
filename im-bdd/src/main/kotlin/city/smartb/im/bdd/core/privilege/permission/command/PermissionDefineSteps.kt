@@ -2,9 +2,9 @@ package city.smartb.im.bdd.core.privilege.permission.command
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.privilege.permission.data.permission
+import city.smartb.im.commons.model.PermissionIdentifier
 import city.smartb.im.f2.privilege.api.PermissionEndpoint
 import city.smartb.im.f2.privilege.domain.permission.command.PermissionDefineCommandDTOBase
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import f2.dsl.fnc.invokeWith
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En

@@ -1,7 +1,7 @@
 package city.smartb.im.core.organization.domain.command
 
 import city.smartb.im.commons.model.Address
-import city.smartb.im.core.organization.domain.model.OrganizationId
+import city.smartb.im.commons.model.OrganizationId
 
 data class OrganizationDefineCommand(
     val id: OrganizationId?,

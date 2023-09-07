@@ -1,9 +1,9 @@
 package city.smartb.im.core.client.api
 
+import city.smartb.im.commons.model.ClientId
+import city.smartb.im.commons.model.ClientIdentifier
 import city.smartb.im.core.client.api.model.toClient
 import city.smartb.im.core.client.domain.model.Client
-import city.smartb.im.core.client.domain.model.ClientId
-import city.smartb.im.core.client.domain.model.ClientIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import f2.spring.exception.NotFoundException
 import org.springframework.stereotype.Service

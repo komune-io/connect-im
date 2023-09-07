@@ -1,8 +1,8 @@
 package city.smartb.im.script.space.config.config
 
 import city.smartb.im.commons.model.Address
-import city.smartb.im.core.privilege.domain.model.RoleIdentifier
-import city.smartb.im.f2.space.domain.model.SpaceIdentifier
+import city.smartb.im.commons.model.RoleIdentifier
+import city.smartb.im.commons.model.SpaceIdentifier
 import city.smartb.im.script.core.model.AppClient
 import city.smartb.im.script.core.model.PermissionData
 import city.smartb.im.script.core.model.RoleData

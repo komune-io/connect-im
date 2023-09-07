@@ -1,22 +1,14 @@
-package city.smartb.im.user.domain.model
+package city.smartb.im.f2.user.domain.model
 
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.AddressDTO
+import city.smartb.im.commons.model.RoleIdentifier
+import city.smartb.im.commons.model.UserId
 import city.smartb.im.f2.organization.domain.model.OrganizationRef
 import city.smartb.im.f2.organization.domain.model.OrganizationRefDTO
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import i2.keycloak.f2.role.domain.RolesCompositesModel
 import kotlin.js.JsExport
 import kotlin.js.JsName
-
-/**
- * Unique identifier of a user.
- * @d2 model
- * @parent [city.smartb.im.user.domain.D2UserPage]
- * @order 20
- * @visual json "e8322a0b-b4cf-4643-a398-c442d22504be"
- */
-typealias UserId = String
 
 @JsExport
 @JsName("UserDTO")

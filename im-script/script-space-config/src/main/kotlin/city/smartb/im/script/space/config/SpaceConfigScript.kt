@@ -1,15 +1,18 @@
 package city.smartb.im.script.space.config
 
 import city.smartb.im.commons.auth.AuthContext
+import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.commons.model.SpaceIdentifier
 import city.smartb.im.commons.utils.ParserUtils
-import city.smartb.im.core.organization.domain.model.OrganizationId
 import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
 import city.smartb.im.f2.organization.lib.OrganizationAggregateService
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
-import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.f2.space.lib.SpaceFinderService
+import city.smartb.im.f2.user.domain.command.UserCreateCommand
+import city.smartb.im.f2.user.lib.UserAggregateService
+import city.smartb.im.f2.user.lib.UserFinderService
 import city.smartb.im.script.core.config.properties.ImScriptSpaceProperties
 import city.smartb.im.script.core.config.properties.toAuthRealm
 import city.smartb.im.script.core.model.PermissionData
@@ -18,9 +21,6 @@ import city.smartb.im.script.core.service.ClientInitService
 import city.smartb.im.script.space.config.config.OrganizationData
 import city.smartb.im.script.space.config.config.SpaceConfigProperties
 import city.smartb.im.script.space.config.config.UserData
-import city.smartb.im.user.domain.features.command.UserCreateCommand
-import city.smartb.im.user.lib.service.UserAggregateService
-import city.smartb.im.user.lib.service.UserFinderService
 import f2.spring.exception.ConflictException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

@@ -1,14 +1,10 @@
 package city.smartb.im.core.organization.domain.model
 
-import city.smartb.im.commons.auth.UserId
 import city.smartb.im.commons.model.Address
-import city.smartb.im.core.privilege.domain.model.RoleIdentifier
+import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.commons.model.RoleIdentifier
+import city.smartb.im.commons.model.UserId
 
-/**
- * @d2 hidden
- * @visual json "85171569-8970-45fb-b52a-85b59f06c292"
- */
-typealias OrganizationId = String
 typealias OrganizationIdentifier = String
 
 data class Organization(

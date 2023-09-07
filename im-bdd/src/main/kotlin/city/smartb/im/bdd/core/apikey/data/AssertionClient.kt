@@ -1,9 +1,9 @@
 package city.smartb.im.bdd.core.apikey.data
 
+import city.smartb.im.commons.model.ClientId
+import city.smartb.im.commons.model.ClientIdentifier
+import city.smartb.im.commons.model.PrivilegeIdentifier
 import city.smartb.im.core.client.domain.model.Client
-import city.smartb.im.core.client.domain.model.ClientId
-import city.smartb.im.core.client.domain.model.ClientIdentifier
-import city.smartb.im.f2.privilege.domain.model.PrivilegeIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.ClientRepresentation

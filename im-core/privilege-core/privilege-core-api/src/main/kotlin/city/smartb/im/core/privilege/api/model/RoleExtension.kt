@@ -1,12 +1,12 @@
 package city.smartb.im.core.privilege.api.model
 
+import city.smartb.im.commons.model.RoleId
+import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.commons.utils.parseJson
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.core.privilege.domain.command.RoleDefineCommand
 import city.smartb.im.core.privilege.domain.model.Privilege
 import city.smartb.im.core.privilege.domain.model.Role
-import city.smartb.im.core.privilege.domain.model.RoleId
-import city.smartb.im.core.privilege.domain.model.RoleIdentifier
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import org.keycloak.representations.idm.RoleRepresentation
 

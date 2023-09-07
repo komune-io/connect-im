@@ -3,7 +3,7 @@ package city.smartb.im.bdd.core.organization.command
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.organization.data.organization
 import city.smartb.im.commons.model.Address
-import city.smartb.im.core.organization.domain.model.OrganizationId
+import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.f2.organization.api.OrganizationEndpoint
 import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
 import f2.dsl.fnc.invoke

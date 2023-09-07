@@ -1,7 +1,7 @@
 package city.smartb.im.core.client.domain.command
 
-import city.smartb.im.core.client.domain.model.ClientId
-import city.smartb.im.core.client.domain.model.ClientIdentifier
+import city.smartb.im.commons.model.ClientId
+import city.smartb.im.commons.model.ClientIdentifier
 import kotlinx.serialization.Serializable
 
 @Serializable

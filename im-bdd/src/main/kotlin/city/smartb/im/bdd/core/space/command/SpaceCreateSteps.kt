@@ -4,9 +4,9 @@ import city.smartb.im.api.config.properties.IMProperties
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.apikey.data.client
 import city.smartb.im.bdd.core.space.data.space
+import city.smartb.im.commons.model.SpaceIdentifier
 import city.smartb.im.f2.space.api.SpaceEndpoint
 import city.smartb.im.f2.space.domain.command.SpaceCreateCommand
-import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import f2.dsl.fnc.invokeWith
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
