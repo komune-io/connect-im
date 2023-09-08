@@ -1,7 +1,7 @@
 package city.smartb.im.bdd.core.space.data
 
+import city.smartb.im.commons.model.SpaceIdentifier
 import city.smartb.im.f2.space.domain.model.Space
-import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.RealmRepresentation

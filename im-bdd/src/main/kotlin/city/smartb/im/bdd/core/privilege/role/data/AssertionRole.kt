@@ -1,12 +1,12 @@
 package city.smartb.im.bdd.core.privilege.role.data
 
-import city.smartb.im.commons.utils.parseJsonTo
+import city.smartb.im.commons.model.PermissionIdentifier
+import city.smartb.im.commons.model.RoleId
+import city.smartb.im.commons.model.RoleIdentifier
+import city.smartb.im.commons.utils.parseJson
 import city.smartb.im.core.privilege.domain.model.PrivilegeType
 import city.smartb.im.core.privilege.domain.model.RoleTarget
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
-import city.smartb.im.f2.privilege.domain.role.model.RoleId
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -33,13 +33,13 @@ class AssertionRole(
 
         private val roleBindings: Map<RoleTarget, List<RoleIdentifier>> = role.attributes[RoleDTOBase::bindings.name]
             ?.firstOrNull()
-            ?.parseJsonTo<Map<String, List<RoleIdentifier>>>()
+            ?.parseJson<Map<String, List<RoleIdentifier>>>()
             ?.mapKeys { (target) -> RoleTarget.valueOf(target) }
             .orEmpty()
 
         private val roleLocale: Map<String, String> = role.attributes[RoleDTOBase::locale.name]
             ?.firstOrNull()
-            ?.parseJsonTo()
+            ?.parseJson()
             ?: emptyMap()
 
         private val rolePermissions: List<PermissionIdentifier> = role.attributes[RoleDTOBase::permissions.name]

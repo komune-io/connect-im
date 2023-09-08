@@ -2,8 +2,9 @@ package city.smartb.im.bdd.core.user.command
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.user.data.user
-import city.smartb.im.user.api.UserEndpoint
-import city.smartb.im.user.domain.features.command.UserDisableCommand
+import city.smartb.im.commons.auth.AuthenticationProvider
+import city.smartb.im.f2.user.api.UserEndpoint
+import city.smartb.im.f2.user.domain.command.UserDisableCommandDTOBase
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -15,7 +16,7 @@ class UserDisableSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var userEndpoint: UserEndpoint
 
-    private lateinit var command: UserDisableCommand
+    private lateinit var command: UserDisableCommandDTOBase
 
     init {
         DataTableType(::userDisableParams)
@@ -53,10 +54,10 @@ class UserDisableSteps: En, ImCucumberStepsDefinition() {
 
         Then("The user should be disabled") {
             step {
-                val assertThat = AssertionBdd.user(userEndpoint).assertThat(command.id)
+                val assertThat = AssertionBdd.user(keycloakClient()).assertThatId(command.id)
                 assertThat.hasFields(
                     enabled = false,
-                    disabledBy = command.disabledBy,
+                    disabledBy = command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id,
                 )
 
                 if (command.anonymize) {
@@ -67,7 +68,7 @@ class UserDisableSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun disableUser(params: UserDisableParams) {
-        command = UserDisableCommand(
+        command = UserDisableCommandDTOBase(
             id = context.userIds.safeGet(params.identifier),
             disabledBy = params.disabledBy,
             anonymize = params.anonymize,

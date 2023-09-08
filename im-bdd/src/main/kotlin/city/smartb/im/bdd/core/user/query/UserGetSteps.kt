@@ -1,8 +1,8 @@
 package city.smartb.im.bdd.core.user.query
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
-import city.smartb.im.user.api.UserEndpoint
-import city.smartb.im.user.domain.features.query.UserGetQuery
+import city.smartb.im.f2.user.api.UserEndpoint
+import city.smartb.im.f2.user.domain.query.UserGetQuery
 import f2.dsl.fnc.invokeWith
 import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired

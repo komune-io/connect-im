@@ -1,179 +1,113 @@
 package city.smartb.im.apikey.lib.service
 
-import city.smartb.im.api.config.bean.ImAuthenticationProvider
 import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddKeyCommand
 import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddedEvent
 import city.smartb.im.apikey.domain.features.command.ApikeyRemoveCommand
 import city.smartb.im.apikey.domain.features.command.ApikeyRemoveEvent
 import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.commons.utils.toJson
-import city.smartb.im.infra.redis.RedisCache
-import city.smartb.im.organization.domain.model.OrganizationId
-import f2.dsl.fnc.invoke
-import f2.dsl.fnc.invokeWith
-import f2.spring.exception.NotFoundException
-import i2.keycloak.f2.client.domain.features.command.ClientCreateCommand
-import i2.keycloak.f2.client.domain.features.command.ClientCreateFunction
-import i2.keycloak.f2.client.domain.features.command.ClientDeleteCommand
-import i2.keycloak.f2.client.domain.features.command.ClientDeleteFunction
-import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantCommand
-import i2.keycloak.f2.client.domain.features.command.ClientServiceAccountRolesGrantFunction
-import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountFunction
-import i2.keycloak.f2.client.domain.features.query.ClientGetServiceAccountQuery
-import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesCommand
-import i2.keycloak.f2.group.domain.features.command.GroupSetAttributesFunction
-import i2.keycloak.f2.group.domain.features.query.GroupGetFunction
-import i2.keycloak.f2.group.domain.features.query.GroupGetQuery
-import i2.keycloak.f2.group.domain.model.GroupModel
-import i2.keycloak.f2.user.domain.features.command.UserSetAttributesCommand
-import i2.keycloak.f2.user.domain.features.command.UserSetAttributesFunction
+import city.smartb.im.core.client.api.ClientCoreAggregateService
+import city.smartb.im.core.client.domain.command.ClientCreateCommand
+import city.smartb.im.core.organization.api.OrganizationCoreAggregateService
+import city.smartb.im.core.organization.api.OrganizationCoreFinderService
+import city.smartb.im.core.organization.domain.command.OrganizationSetSomeAttributesCommand
+import city.smartb.im.core.user.api.UserCoreAggregateService
+import city.smartb.im.core.user.api.service.UserRepresentationTransformer
+import city.smartb.im.core.user.domain.command.UserDefineCommand
+import city.smartb.im.core.user.domain.model.User
+import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
+import org.springframework.stereotype.Service
+import s2.spring.utils.logger.Logger
 import java.text.Normalizer
 import java.util.UUID
-import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Service
 
 @Service
 class ApiKeyAggregateService(
-    private val authenticationResolver: ImAuthenticationProvider,
-    private val clientCreateFunction: ClientCreateFunction,
-    private val clientDeleteFunction: ClientDeleteFunction,
-    private val clientGetServiceAccountFunction: ClientGetServiceAccountFunction,
-    private val clientServiceAccountRolesGrantFunction: ClientServiceAccountRolesGrantFunction,
-    private val apikeyFinderService: ApiKeyFinderService,
-    private val groupGetFunction: GroupGetFunction,
-    private val userSetAttributesFunction: UserSetAttributesFunction,
-    private val groupSetAttributesFunction: GroupSetAttributesFunction,
-    private val redisCache: RedisCache,
+    private val clientCoreAggregateService: ClientCoreAggregateService,
+    private val keycloakClientProvider: KeycloakClientProvider,
+    private val organizationCoreAggregateService: OrganizationCoreAggregateService,
+    private val organizationCoreFinderService: OrganizationCoreFinderService,
+    private val userCoreAggregateService: UserCoreAggregateService,
+    private val userRepresentationTransformer: UserRepresentationTransformer
 ) {
-
-    val logger = LoggerFactory.getLogger(ApiKeyAggregateService::class.java)
+    private val logger by Logger()
 
     @Suppress("LongMethod")
     suspend fun addApiKey(
         command: ApiKeyOrganizationAddKeyCommand
     ): ApiKeyOrganizationAddedEvent {
-        val group = getOrganization(command.organizationId)
-        val auth = authenticationResolver.getAuth()
-        val clientIdentifier = Normalizer.normalize("tr-${group.name}-${command.name}-app", Normalizer.Form.NFD)
+        val organization = organizationCoreFinderService.get(command.organizationId)
+        val client = keycloakClientProvider.get()
+
+        val keyIdentifier = Normalizer.normalize("tr-${organization.identifier}-${command.name}-app", Normalizer.Form.NFD)
             .lowercase()
             .replace(Regex("[^a-z0-9]"), "-")
             .replace(Regex("-+"), "-")
-        val clientSecret = UUID.randomUUID().toString()
+        val keySecret = UUID.randomUUID().toString()
 
-        val clientId = ClientCreateCommand(
-            clientIdentifier = clientIdentifier,
-            secret = clientSecret,
+        val keyId = ClientCreateCommand(
+            identifier = keyIdentifier,
+            secret = keySecret,
             isPublicClient = false,
             isDirectAccessGrantsEnabled = false,
             isServiceAccountsEnabled = true,
             authorizationServicesEnabled = false,
             isStandardFlowEnabled = false,
-            protocolMappers = mapOf("memberOf" to command.organizationId),
-            realmId = auth.space,
-            auth = auth
-        ).invokeWith(clientCreateFunction).id
+            additionalAccessTokenClaim = listOf(User::memberOf.name),
+        ).let { clientCoreAggregateService.create(it).id }
 
         val newApiKey = ApiKey(
-            id = clientId,
+            id = keyId,
             name = command.name,
-            identifier = clientIdentifier,
+            identifier = keyIdentifier,
             creationDate = System.currentTimeMillis()
         )
-        val apiKeys = group.toApiKeys() + newApiKey
-        setAttributes(
-            id = group.id,
-            attributes = mapOf(GROUP_API_KEYS_FIELD to (apiKeys).toJson())
-        )
+        val apiKeys = organization.apiKeys() + newApiKey
+        OrganizationSetSomeAttributesCommand(
+            id = organization.id,
+            attributes = mapOf(GROUP_API_KEYS_FIELD to apiKeys.toJson())
+        ).let { organizationCoreAggregateService.setSomeAttributes(it) }
 
-        if (group.roles.assignedRoles.isNotEmpty()) {
-            ClientServiceAccountRolesGrantCommand(
-                id = clientId,
-                roles = group.roles.assignedRoles,
-                realmId = auth.space,
-                auth = auth
-            ).invokeWith(clientServiceAccountRolesGrantFunction)
-        }
-
-        val serviceAccountUser = ClientGetServiceAccountQuery(
-            id = clientId,
-            realmId = auth.space,
-            auth = auth
-        ).invokeWith(clientGetServiceAccountFunction).item!!
-
-        UserSetAttributesCommand(
+        val serviceAccountUser = client.client(keyId).serviceAccountUser
+        UserDefineCommand(
             id = serviceAccountUser.id,
-            attributes = mapOf(
-                "memberOf" to command.organizationId,
-                "display_name" to command.name
-            ),
-            realmId = auth.space,
-            auth = auth
-        ).invokeWith(userSetAttributesFunction)
+            memberOf = command.organizationId,
+            attributes = mapOf("display_name" to command.name),
+            roles = emptyList() // TODO
+        ).let { userCoreAggregateService.define(it) }
 
         return ApiKeyOrganizationAddedEvent(
-            organizationId = group.id,
-            id = clientId,
-            keyIdentifier = clientIdentifier,
-            keySecret = clientSecret
+            organizationId = organization.id,
+            id = keyId,
+            keyIdentifier = keyIdentifier,
+            keySecret = keySecret
         )
     }
 
-    private suspend fun getOrganization(organizationId: OrganizationId): GroupModel {
-        val group = groupGetFunction.invoke(toGroupGetByIdQuery(organizationId)).item
-            ?: throw NotFoundException("Organization", organizationId)
-        return group
-    }
+    suspend fun removeApiKey(command: ApikeyRemoveCommand): ApikeyRemoveEvent {
+        val client = keycloakClientProvider.get()
 
-    suspend fun removeApiKey(
-        command: ApikeyRemoveCommand,
-    ): ApikeyRemoveEvent {
-        val auth = authenticationResolver.getAuth()
-        val organizationId = ClientGetServiceAccountQuery(
-            id = command.id,
-            realmId = auth.space,
-            auth = auth
-        ).invokeWith(clientGetServiceAccountFunction).item?.attributes?.get("memberOf")
-            ?: throw NotFoundException("Client", command.id)
+        val serviceAccountUser = client.client(command.id)
+            .serviceAccountUser
+            .let { userRepresentationTransformer.transform(it) }
+
+        val organizationId = serviceAccountUser.memberOf!!
+
         try {
-            ClientDeleteCommand(
-                id = command.id,
-                realmId = auth.space,
-                auth = auth
-            ).invokeWith(clientDeleteFunction)
-        } catch (e: NotFoundException) {
-            logger.error("Error while deleting client", e)
+            client.client(command.id).remove()
         } catch (e: Exception) {
             logger.error("Error while deleting client", e)
         }
 
-        val apiKeys = getOrganization(organizationId).toApiKeys()
-        setAttributes(
+        val apiKeys = organizationCoreFinderService.get(organizationId).apiKeys()
+        OrganizationSetSomeAttributesCommand(
             id = organizationId,
             attributes = mapOf(GROUP_API_KEYS_FIELD to apiKeys.filter { it.id != command.id }.toJson())
-        )
+        ).let { organizationCoreAggregateService.setSomeAttributes(it) }
 
         return ApikeyRemoveEvent(
             id = command.id,
             organizationId = organizationId
-        )
-    }
-
-    private suspend fun setAttributes(id: OrganizationId, attributes: Map<String, String>) {
-        val auth = authenticationResolver.getAuth()
-        GroupSetAttributesCommand(
-            id = id,
-            attributes = attributes,
-            realmId = auth.space,
-            auth = auth
-        ).invokeWith(groupSetAttributesFunction)
-
-    }
-    private suspend fun toGroupGetByIdQuery(organizationId: OrganizationId  ): GroupGetQuery {
-        val auth = authenticationResolver.getAuth()
-        return GroupGetQuery(
-            id = organizationId,
-            realmId = auth.space,
-            auth = auth
         )
     }
 }

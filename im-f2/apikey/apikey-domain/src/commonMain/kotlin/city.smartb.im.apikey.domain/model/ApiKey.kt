@@ -1,7 +1,7 @@
 package city.smartb.im.apikey.domain.model
 
-import i2.keycloak.f2.client.domain.ClientId
-import i2.keycloak.f2.client.domain.ClientIdentifier
+import city.smartb.im.commons.model.ClientId
+import city.smartb.im.commons.model.ClientIdentifier
 import kotlin.js.JsExport
 import kotlin.js.JsName
 

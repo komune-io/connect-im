@@ -4,6 +4,6 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.keycloakPluginDomain))
+    api(project(Modules.Keycloak.pluginDomain))
     Dependencies.Jvm.ktor(::implementation)
 }

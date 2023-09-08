@@ -1,0 +1,63 @@
+package city.smartb.im.f2.user.domain.command
+
+import city.smartb.im.commons.model.UserId
+import f2.dsl.cqrs.Command
+import f2.dsl.cqrs.Event
+import f2.dsl.fnc.F2Function
+import kotlin.js.JsExport
+import kotlin.js.JsName
+
+/**
+ * Set a new password for a user.
+ * @d2 function
+ * @parent [city.smartb.im.f2.user.domain.D2UserPage]
+ * @order 40
+ */
+typealias UserUpdatePasswordFunction = F2Function<UserUpdatePasswordCommandDTOBase, UserUpdatedPasswordEventDTOBase>
+
+/**
+ * @d2 command
+ * @parent [UserUpdatePasswordFunction]
+ */
+@JsExport
+@JsName("UserUpdatePasswordCommandDTO")
+interface UserUpdatePasswordCommandDTO: Command {
+    /**
+     * Identifier of the user.
+     */
+    val id: UserId
+
+    /**
+     * New password of the user.
+     * @example "vErY_sEcUre_n3wP455W0RD"
+     */
+    val password: String
+}
+
+/**
+ * @d2 inherit
+ */
+data class UserUpdatePasswordCommandDTOBase(
+    override val id: UserId,
+    override val password: String
+): UserUpdatePasswordCommandDTO
+
+/**
+ * @d2 event
+ * @parent [UserUpdatePasswordFunction]
+ */
+@JsExport
+@JsName("UserUpdatedPasswordEventDTO")
+interface UserUpdatedPasswordEventDTO: Event {
+    /**
+     * Identifier of the updated user.
+     */
+    val id: UserId
+}
+
+/**
+ * @d2 inherit
+ */
+data class UserUpdatedPasswordEventDTOBase(
+    override val id: UserId
+): UserUpdatedPasswordEventDTO

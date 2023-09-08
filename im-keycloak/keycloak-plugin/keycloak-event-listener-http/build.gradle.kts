@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.keycloakPluginDomain))
+    implementation(project(Modules.Keycloak.pluginDomain))
     Dependencies.Jvm.ktor(::implementation)
 }

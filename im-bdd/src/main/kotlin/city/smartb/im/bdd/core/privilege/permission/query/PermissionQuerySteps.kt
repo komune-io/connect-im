@@ -2,12 +2,10 @@ package city.smartb.im.bdd.core.privilege.permission.query
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.privilege.permission.data.permission
+import city.smartb.im.commons.utils.mapAsync
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import org.assertj.core.api.Assertions
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
@@ -44,16 +42,16 @@ class PermissionQuerySteps: En, ImCucumberStepsDefinition() {
         }
     }
 
-    private suspend fun assertFetchedPermissions(identifiers: List<TestContextKey>) = coroutineScope {
+    private suspend fun assertFetchedPermissions(identifiers: List<TestContextKey>) {
         val fetchedPermissions = context.fetched.permissions.filter { it.identifier !in context.permanentRoles() }
         val fetchedIdentifiers = fetchedPermissions.map(PermissionDTOBase::identifier)
         val expectedIdentifiers = identifiers.map(context.permissionIdentifiers::safeGet)
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 
         val permissionAsserter = AssertionBdd.permission(keycloakClientProvider.get())
-        fetchedPermissions.map { permission ->
-            async { permissionAsserter.assertThatId(permission.identifier).matches(permission) }
-        }.awaitAll()
+        fetchedPermissions.mapAsync { permission ->
+            permissionAsserter.assertThatId(permission.identifier).matches(permission)
+        }
     }
 
     private fun permissionFetchedParams(entry: Map<String, String>) = PermissionFetchedParams(

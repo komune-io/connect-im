@@ -1,22 +1,12 @@
 package city.smartb.im.f2.privilege.domain.role.model
 
+import city.smartb.im.commons.model.PermissionIdentifier
+import city.smartb.im.commons.model.RoleId
+import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.core.privilege.domain.model.PrivilegeType
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
-import city.smartb.im.f2.privilege.domain.model.PrivilegeIdentifier
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
-
-/**
- * @d2 hidden
- * @visual json "a0c76771-c5f9-4bde-8c30-901a22f570ba"
- */
-typealias RoleId = String
-
-/**
- * @d2 hidden
- */
-typealias RoleIdentifier = PrivilegeIdentifier
 
 /**
  * Named collection of permissions

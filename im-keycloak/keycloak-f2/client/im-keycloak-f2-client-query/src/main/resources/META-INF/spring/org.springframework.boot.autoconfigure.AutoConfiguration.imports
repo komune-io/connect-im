@@ -1,5 +1,0 @@
-i2.keycloak.f2.client.query.ClientGetFunctionImpl
-i2.keycloak.f2.client.query.ClientGetByClientIdentifierFunctionImpl
-i2.keycloak.f2.client.query.ClientPageFunctionImpl
-i2.keycloak.f2.client.query.ClientGetSecretFunctionImpl
-i2.keycloak.f2.client.query.ClientGetServiceAccountFunctionImpl

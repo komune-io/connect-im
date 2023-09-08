@@ -1,10 +1,10 @@
 package city.smartb.im.f2.privilege.domain.permission.model
 
-import city.smartb.im.core.privilege.domain.model.PermissionId
-import city.smartb.im.core.privilege.domain.model.PermissionIdentifier
+import city.smartb.im.commons.model.PermissionId
+import city.smartb.im.commons.model.PermissionIdentifier
+import city.smartb.im.commons.model.PrivilegeIdentifier
 import city.smartb.im.core.privilege.domain.model.PrivilegeType
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
-import city.smartb.im.f2.privilege.domain.model.PrivilegeIdentifier
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
 

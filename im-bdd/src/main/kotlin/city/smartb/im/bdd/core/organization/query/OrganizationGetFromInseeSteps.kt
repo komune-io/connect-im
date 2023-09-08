@@ -1,9 +1,9 @@
 package city.smartb.im.bdd.core.organization.query
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
-import city.smartb.im.organization.api.OrganizationEndpoint
-import city.smartb.im.organization.domain.features.query.OrganizationGetFromInseeQuery
-import city.smartb.im.organization.domain.model.Organization
+import city.smartb.im.f2.organization.api.OrganizationEndpoint
+import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
+import city.smartb.im.f2.organization.domain.query.OrganizationGetFromInseeQuery
 import f2.dsl.fnc.invokeWith
 import io.cucumber.java8.En
 import org.assertj.core.api.Assertions
@@ -14,7 +14,7 @@ class OrganizationGetFromInseeSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var organizationEndpoint: OrganizationEndpoint
 
-    private var organizationFromInsee: Organization? = null
+    private var organizationFromInsee: OrganizationDTOBase? = null
 
     init {
         DataTableType(::organizationGetFromInseeParams)

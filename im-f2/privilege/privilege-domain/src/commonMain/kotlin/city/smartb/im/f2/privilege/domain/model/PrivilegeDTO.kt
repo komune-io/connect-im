@@ -1,9 +1,8 @@
 package city.smartb.im.f2.privilege.domain.model
 
+import city.smartb.im.commons.model.PrivilegeId
+import city.smartb.im.commons.model.PrivilegeIdentifier
 import kotlin.js.JsExport
-
-typealias PrivilegeId = String
-typealias PrivilegeIdentifier = String
 
 /**
  * @d2 hidden

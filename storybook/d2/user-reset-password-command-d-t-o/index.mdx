@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import UserResetPasswordCommandDTODesc from './desc.mdx'
+import UserResetPasswordCommandDTOVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<UserResetPasswordCommandDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={UserResetPasswordCommandDTOVisualJson}
+      language={"json"}
+      title={"Command"}
+    />
+  }
+  rightContainerProps={{}}
+/>

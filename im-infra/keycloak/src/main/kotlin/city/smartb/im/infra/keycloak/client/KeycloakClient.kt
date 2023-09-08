@@ -20,9 +20,9 @@ class KeycloakClient(
     val auth: AuthRealm,
     val realmId: RealmId
 ) {
+    val defaultRealmRole = "default-realm-$realmId"
 
 	/* Client */
-
 	fun clients(): ClientsResource {
 		return realm().clients()
 	}
@@ -36,7 +36,6 @@ class KeycloakClient(
 	}
 
 	/* User */
-
 	fun users(): UsersResource {
 		return realm().users()
 	}
@@ -46,7 +45,6 @@ class KeycloakClient(
 	}
 
 	/* Role */
-
 	fun roles(): RolesResource {
 		return realm().roles()
 	}
@@ -56,7 +54,6 @@ class KeycloakClient(
 	}
 
 	/* Group */
-
 	fun groups(): GroupsResource {
 		return realm().groups()
 	}
@@ -66,7 +63,6 @@ class KeycloakClient(
 	}
 
 	/* Realm */
-
 	fun realm(): RealmResource {
 		return keycloak.realm(realmId)
 	}

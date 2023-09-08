@@ -3,9 +3,9 @@ package city.smartb.im.bdd.core.user.command
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.user.data.user
 import city.smartb.im.commons.model.Address
-import city.smartb.im.organization.domain.model.OrganizationId
-import city.smartb.im.user.api.UserEndpoint
-import city.smartb.im.user.domain.features.command.UserCreateCommand
+import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.f2.user.api.UserEndpoint
+import city.smartb.im.f2.user.domain.command.UserCreateCommandDTOBase
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -19,7 +19,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var userEndpoint: UserEndpoint
 
-    private lateinit var command: UserCreateCommand
+    private lateinit var command: UserCreateCommandDTOBase
 
     init {
         DataTableType(::userCreateParams)
@@ -59,7 +59,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
             step {
                 val userId = context.userIds.lastUsed
 
-                AssertionBdd.user(userEndpoint).assertThat(userId).hasFields(
+                AssertionBdd.user(keycloakClient()).assertThatId(userId).hasFields(
                     email = command.email,
                     givenName = command.givenName,
                     familyName = command.familyName,
@@ -74,13 +74,13 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
 
         Then("The user should not be created") {
             step {
-                AssertionBdd.user(userEndpoint).notExistsByEmail(command.email)
+                AssertionBdd.user(keycloakClient()).notExistsByEmail(command.email)
             }
         }
     }
 
     private suspend fun createUser(params: UserCreateParams) = context.userIds.register(params.identifier) {
-        command = UserCreateCommand(
+        command = UserCreateCommandDTOBase(
             email = params.email,
             password = params.password,
             givenName = params.givenName,

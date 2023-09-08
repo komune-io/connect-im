@@ -9,7 +9,7 @@ fun <T> String.parseJsonTo(targetClass: Class<T>): T {
     return this.parseTo(targetClass)
 }
 
-inline fun <reified T> String.parseJsonTo(): T {
+inline fun <reified T> String.parseJson(): T {
     val mapper = ObjectMapper()
         .enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

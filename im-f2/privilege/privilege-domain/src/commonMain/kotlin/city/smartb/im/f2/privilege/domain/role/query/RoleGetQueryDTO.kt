@@ -1,8 +1,8 @@
 package city.smartb.im.f2.privilege.domain.role.query
 
+import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTO
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
 import f2.dsl.fnc.F2Function
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport

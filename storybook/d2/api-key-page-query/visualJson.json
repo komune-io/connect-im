@@ -2,6 +2,6 @@
   "search" : "SmartB",
   "organizationId" : "c790642c-4ed2-4cfc-bc45-905a39006e99",
   "withDisabled" : false,
-  "page" : 0,
-  "size" : 10
+  "limit" : 10,
+  "offset" : 0
 }

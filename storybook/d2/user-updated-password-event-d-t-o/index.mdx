@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@smartb/g2-documentation'
+import UserUpdatedPasswordEventDTODesc from './desc.mdx'
+import UserUpdatedPasswordEventDTOVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<UserUpdatedPasswordEventDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={UserUpdatedPasswordEventDTOVisualJson}
+      language={"json"}
+      title={"Event"}
+    />
+  }
+  rightContainerProps={{}}
+/>

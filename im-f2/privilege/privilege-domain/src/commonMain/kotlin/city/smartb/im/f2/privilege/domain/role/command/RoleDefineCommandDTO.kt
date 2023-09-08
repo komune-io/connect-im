@@ -1,7 +1,7 @@
 package city.smartb.im.f2.privilege.domain.role.command
 
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
-import city.smartb.im.f2.privilege.domain.role.model.RoleIdentifier
+import city.smartb.im.commons.model.PermissionIdentifier
+import city.smartb.im.commons.model.RoleIdentifier
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlinx.serialization.Serializable

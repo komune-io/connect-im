@@ -2,8 +2,8 @@ package city.smartb.im.bdd.core.organization.command
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.organization.data.organization
-import city.smartb.im.organization.api.OrganizationEndpoint
-import city.smartb.im.organization.domain.features.command.OrganizationDisableCommand
+import city.smartb.im.f2.organization.api.OrganizationEndpoint
+import city.smartb.im.f2.organization.domain.command.OrganizationDisableCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -54,11 +54,11 @@ class OrganizationDisableSteps: En, ImCucumberStepsDefinition() {
         Then("The organization should be disabled") {
             step {
                 val organizationId = context.organizationIds.lastUsed
-                val assertThat = AssertionBdd.organization(organizationEndpoint).assertThat(organizationId)
+                val assertThat = AssertionBdd.organization(keycloakClient()).assertThatId(organizationId)
 
                 assertThat.hasFields(enabled = false)
                 if (command.anonymize) {
-                   assertThat.isAnonymized()
+                   assertThat.isAnonym()
                 }
             }
         }

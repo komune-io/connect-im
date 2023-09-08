@@ -1,7 +1,7 @@
 package city.smartb.im.script.core.model
 
-import city.smartb.im.core.privilege.domain.model.PermissionIdentifier
-import city.smartb.im.core.privilege.domain.model.RoleIdentifier
+import city.smartb.im.commons.model.PermissionIdentifier
+import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommandDTOBase
 

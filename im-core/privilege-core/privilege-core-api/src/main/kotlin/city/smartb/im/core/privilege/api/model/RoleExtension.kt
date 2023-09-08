@@ -1,12 +1,12 @@
 package city.smartb.im.core.privilege.api.model
 
-import city.smartb.im.commons.utils.parseJsonTo
+import city.smartb.im.commons.model.RoleId
+import city.smartb.im.commons.model.RoleIdentifier
+import city.smartb.im.commons.utils.parseJson
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.core.privilege.domain.command.RoleDefineCommand
 import city.smartb.im.core.privilege.domain.model.Privilege
 import city.smartb.im.core.privilege.domain.model.Role
-import city.smartb.im.core.privilege.domain.model.RoleId
-import city.smartb.im.core.privilege.domain.model.RoleIdentifier
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import org.keycloak.representations.idm.RoleRepresentation
 
@@ -16,10 +16,10 @@ fun RoleRepresentation.toRole() = Role(
     description = description.orEmpty(),
     targets = attributes[Role::targets.name].orEmpty().map { RoleTarget.valueOf(it) },
     bindings = attributes[Role::bindings.name]?.firstOrNull()
-        ?.parseJsonTo<Map<String, List<RoleIdentifier>>>()
+        ?.parseJson<Map<String, List<RoleIdentifier>>>()
         ?.mapKeys { (target) -> RoleTarget.valueOf(target) }
         .orEmpty(),
-    locale = attributes[Role::locale.name]?.firstOrNull()?.parseJsonTo<Map<String, String>>().orEmpty(),
+    locale = attributes[Role::locale.name]?.firstOrNull()?.parseJson<Map<String, String>>().orEmpty(),
     permissions = attributes[Role::permissions.name].orEmpty()
 )
 

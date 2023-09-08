@@ -1,15 +1,19 @@
 package city.smartb.im.script.space.config
 
 import city.smartb.im.commons.auth.AuthContext
+import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.commons.model.SpaceIdentifier
 import city.smartb.im.commons.utils.ParserUtils
+import city.smartb.im.commons.utils.mapAsync
+import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
+import city.smartb.im.f2.organization.lib.OrganizationAggregateService
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
-import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.f2.space.lib.SpaceFinderService
-import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
-import city.smartb.im.organization.domain.model.OrganizationId
-import city.smartb.im.organization.lib.OrganizationAggregateService
+import city.smartb.im.f2.user.domain.command.UserCreateCommandDTOBase
+import city.smartb.im.f2.user.lib.UserAggregateService
+import city.smartb.im.f2.user.lib.UserFinderService
 import city.smartb.im.script.core.config.properties.ImScriptSpaceProperties
 import city.smartb.im.script.core.config.properties.toAuthRealm
 import city.smartb.im.script.core.model.PermissionData
@@ -18,13 +22,7 @@ import city.smartb.im.script.core.service.ClientInitService
 import city.smartb.im.script.space.config.config.OrganizationData
 import city.smartb.im.script.space.config.config.SpaceConfigProperties
 import city.smartb.im.script.space.config.config.UserData
-import city.smartb.im.user.domain.features.command.UserCreateCommand
-import city.smartb.im.user.lib.service.UserAggregateService
-import city.smartb.im.user.lib.service.UserFinderService
 import f2.spring.exception.ConflictException
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
 import s2.spring.utils.logger.Logger
@@ -71,22 +69,20 @@ class SpaceConfigScript (
         }
     }
 
-    private suspend fun initPermissions(permissions: List<PermissionData>?) = coroutineScope {
+    private suspend fun initPermissions(permissions: List<PermissionData>?) {
         if (permissions.isNullOrEmpty()) {
-            return@coroutineScope
+            return
         }
 
-        permissions.map { permission ->
-            async {
-                privilegeFinderService.getPrivilegeOrNull(permission.name)
-                    ?: privilegeAggregateService.define(permission.toCommand())
-            }
-        }.awaitAll()
+        permissions.mapAsync { permission ->
+            privilegeFinderService.getPrivilegeOrNull(permission.name)
+                ?: privilegeAggregateService.define(permission.toCommand())
+        }
     }
 
-    private suspend fun initRoles(roles: List<RoleData>?) = coroutineScope {
+    private suspend fun initRoles(roles: List<RoleData>?) {
         if (roles.isNullOrEmpty()) {
-            return@coroutineScope
+            return
         }
 
         val existingRoles = privilegeFinderService.listRoles()
@@ -98,16 +94,13 @@ class SpaceConfigScript (
         var anyRoleInitialized = true
 
         while (remainingRoles.isNotEmpty() && anyRoleInitialized) {
-            remainingRoles.filter { role ->
-                role.permissions.orEmpty().all { it in existingRoles }
-            }.also {
-                anyRoleInitialized = it.isNotEmpty()
-            }.map { role ->
-                async { privilegeAggregateService.define(role.toCommand()) }
-            }.awaitAll().forEach { role ->
-                remainingRoles.removeIf { it.name == role.identifier }
-                existingRoles.add(role.identifier)
-            }
+            remainingRoles.filter { role -> role.permissions.orEmpty().all { it in existingRoles } }
+                .also { anyRoleInitialized = it.isNotEmpty() }
+                .mapAsync { role -> privilegeAggregateService.define(role.toCommand()) }
+                .forEach { role ->
+                    remainingRoles.removeIf { it.name == role.identifier }
+                    existingRoles.add(role.identifier)
+                }
         }
 
         if (remainingRoles.isNotEmpty()) {
@@ -126,48 +119,45 @@ class SpaceConfigScript (
         spaceFinderService.get(spaceIdentifier)
     }
 
-    private suspend fun initOrganizations(organizations: List<OrganizationData>?) = coroutineScope {
-        organizations?.map { organization ->
-            async {
-                val organizationId = try {
-                    OrganizationCreateCommand(
-                        siret = organization.siret,
-                        name = organization.name,
-                        description = organization.description,
-                        address = organization.address,
-                        website = null,
-                        roles = organization.roles,
-                        parentOrganizationId = null,
-                        attributes = organization.attributes,
-                        withApiKey = organization.withApiKey
-                    ).let { organizationAggregateService.create(it).id }
-                } catch (e: ConflictException) {
-                    return@async
-                }
-                logger.info("Initializing Users of Organization [${organization.name}]...")
-                initUsers(organization.users, organizationId)
-                logger.info("Initialized Users of Organization [${organization.name}]...")
+    private suspend fun initOrganizations(organizations: List<OrganizationData>?) {
+        organizations?.mapAsync { organization ->
+            val organizationId = try {
+                OrganizationCreateCommandDTOBase(
+                    siret = organization.siret,
+                    name = organization.name,
+                    description = organization.description,
+                    address = organization.address,
+                    website = null,
+                    roles = organization.roles,
+                    parentOrganizationId = null,
+                    attributes = organization.attributes,
+                    withApiKey = organization.withApiKey
+                ).let { organizationAggregateService.create(it).id }
+            } catch (e: ConflictException) {
+                return@mapAsync
             }
-        }?.awaitAll()
+            logger.info("Initializing Users of Organization [${organization.name}]...")
+            initUsers(organization.users, organizationId)
+            logger.info("Initialized Users of Organization [${organization.name}]...")
+        }
     }
 
-    private suspend fun initUsers(users: List<UserData>?, organizationId: OrganizationId? = null) = coroutineScope {
-        users?.map { user ->
-            async {
-                userFinderService.userGetByEmail(user.email)
-                    ?: UserCreateCommand(
-                        email = user.email,
-                        password = user.password,
-                        givenName = user.firstname,
-                        familyName = user.lastname,
-                        roles = user.roles,
-                        memberOf = organizationId,
-                        attributes = user.attributes,
-                        sendVerifyEmail = false,
-                        isEmailVerified = true,
-                        isPasswordTemporary = false
-                    ).let { userAggregateService.create(it) }
-            }
-        }?.awaitAll()
+    private suspend fun initUsers(users: List<UserData>?, organizationId: OrganizationId? = null) {
+        users?.mapAsync { user ->
+            userFinderService.getByEmailOrNull(user.email)
+                ?: UserCreateCommandDTOBase(
+                    email = user.email,
+                    password = user.password,
+                    givenName = user.firstname,
+                    familyName = user.lastname,
+                    roles = user.roles,
+                    memberOf = organizationId,
+                    attributes = user.attributes,
+                    sendVerifyEmail = false,
+                    isEmailVerified = true,
+                    isPasswordTemporary = false,
+                    sendResetPassword = false
+                ).let { userAggregateService.create(it) }
+        }
     }
 }

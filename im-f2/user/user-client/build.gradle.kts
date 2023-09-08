@@ -6,6 +6,6 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.imCommonsDomain))
+    api(project(Modules.Commons.domain))
     api(project(Modules.F2.userDomain))
 }

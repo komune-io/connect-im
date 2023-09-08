@@ -2,7 +2,7 @@ package city.smartb.im.f2.space.lib.service
 
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.im.api.config.FsConfig
-import city.smartb.im.f2.space.domain.model.SpaceIdentifier
+import city.smartb.im.commons.model.SpaceIdentifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.Configuration
 

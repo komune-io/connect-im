@@ -3,9 +3,9 @@ package city.smartb.im.bdd.core.organization.command
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.organization.data.organization
 import city.smartb.im.commons.model.Address
-import city.smartb.im.organization.api.OrganizationEndpoint
-import city.smartb.im.organization.domain.features.command.OrganizationCreateCommand
-import city.smartb.im.organization.domain.model.OrganizationId
+import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.f2.organization.api.OrganizationEndpoint
+import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -18,7 +18,7 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var organizationEndpoint: OrganizationEndpoint
 
-    private lateinit var command: OrganizationCreateCommand
+    private lateinit var command: OrganizationCreateCommandDTOBase
 
     init {
         DataTableType(::organizationInitParams)
@@ -57,7 +57,7 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
         Then("The organization should be created") {
             step {
                 val organizationId = context.organizationIds.lastUsed
-                AssertionBdd.organization(organizationEndpoint).assertThat(organizationId).hasFields(
+                AssertionBdd.organization(keycloakClient()).assertThatId(organizationId).hasFields(
                     siret = command.siret,
                     name = command.name,
                     description = command.description,
@@ -71,7 +71,7 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun createOrganization(params: OrganizationInitParams) = context.organizationIds.register(params.identifier) {
-        command = OrganizationCreateCommand(
+        command = OrganizationCreateCommandDTOBase(
             siret = params.siret,
             name = params.name,
             description = params.description,

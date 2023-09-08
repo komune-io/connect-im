@@ -1,5 +1,4 @@
-city.smartb.im.user.lib.UserFeaturesImpl
-city.smartb.im.user.lib.config.UserFsConfig
-city.smartb.im.user.lib.service.UserAggregateService
-city.smartb.im.user.lib.service.UserTransformer
-city.smartb.im.user.lib.service.UserFinderService
+city.smartb.im.f2.user.lib.config.UserFsConfig
+city.smartb.im.f2.user.lib.service.UserToDTOTransformer
+city.smartb.im.f2.user.lib.UserAggregateService
+city.smartb.im.f2.user.lib.UserFinderService

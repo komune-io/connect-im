@@ -3,9 +3,10 @@ package city.smartb.im.bdd.core.organization.command
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.organization.data.organization
 import city.smartb.im.commons.model.Address
-import city.smartb.im.organization.api.OrganizationEndpoint
-import city.smartb.im.organization.domain.features.command.OrganizationUpdateCommand
-import city.smartb.im.organization.domain.features.query.OrganizationGetQuery
+import city.smartb.im.f2.organization.api.OrganizationEndpoint
+import city.smartb.im.f2.organization.domain.command.OrganizationUpdateCommand
+import city.smartb.im.f2.organization.domain.query.OrganizationGetQuery
+import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -62,12 +63,12 @@ class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
                     .invoke(OrganizationGetQuery(organizationId))
                     .item!!
 
-                AssertionBdd.organization(organizationEndpoint).assertThat(organizationId).hasFields(
+                AssertionBdd.organization(keycloakClient()).assertThatId(organizationId).hasFields(
                     name = command.name,
                     description = command.description ?: organization.description,
                     address = command.address ?: organization.address,
                     website = command.website ?: organization.website,
-                    roles = command.roles ?: organization.roles,
+                    roles = command.roles ?: organization.roles.map(RoleDTOBase::identifier),
                     attributes = command.attributes ?: organization.attributes
                 )
             }

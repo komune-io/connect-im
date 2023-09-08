@@ -1,7 +1,7 @@
 package city.smartb.im.apikey.domain.features.command
 
 import city.smartb.im.apikey.domain.model.ApiKeyId
-import city.smartb.im.commons.auth.OrganizationId
+import city.smartb.im.commons.model.OrganizationId
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function

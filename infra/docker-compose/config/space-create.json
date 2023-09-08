@@ -9,9 +9,5 @@
         "starttls": "false",
         "auth": "false"
     },
-    "adminUsers": [],
-    "imMasterClient": {
-        "clientId": "${KC_IM_CLIENT_ID}",
-        "clientSecret": "${KC_IM_CLIENT_SECRET}"
-    }
+    "adminUsers": []
 }

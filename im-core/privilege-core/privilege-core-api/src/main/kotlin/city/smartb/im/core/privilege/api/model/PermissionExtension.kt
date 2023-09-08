@@ -1,8 +1,8 @@
 package city.smartb.im.core.privilege.api.model
 
+import city.smartb.im.commons.model.PermissionId
 import city.smartb.im.core.privilege.domain.command.PermissionDefineCommand
 import city.smartb.im.core.privilege.domain.model.Permission
-import city.smartb.im.core.privilege.domain.model.PermissionId
 import city.smartb.im.core.privilege.domain.model.Privilege
 import org.keycloak.representations.idm.RoleRepresentation
 

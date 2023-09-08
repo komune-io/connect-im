@@ -6,19 +6,13 @@ plugins {
 dependencies {
     api(project(Modules.Infra.keycloak))
 
-    api(project(Modules.imCommonsApi))
+    api(project(Modules.Commons.api))
 
     api(project(Modules.Script.core))
 
     implementation(project(Modules.Core.clientApi))
 
+    implementation(project(Modules.F2.privilegeLib))
     implementation(project(Modules.F2.spaceLib))
-
-    api(project(Modules.imKeycloakF2RoleDomain))
-    implementation(project(Modules.imKeycloakF2RoleCommand))
-    implementation(project(Modules.imKeycloakF2RoleQuery))
-
-    api(project(Modules.imKeycloakF2UserDomain))
-    implementation(project(Modules.imKeycloakF2UserCommand))
-    implementation(project(Modules.imKeycloakF2UserQuery))
+    implementation(project(Modules.F2.userLib))
 }

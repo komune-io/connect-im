@@ -7,5 +7,5 @@ plugins {
 dependencies {
     api(project(Modules.Core.clientDomain))
 
-    implementation(project(Modules.imApiConfig))
+    implementation(project(Modules.Api.config))
 }

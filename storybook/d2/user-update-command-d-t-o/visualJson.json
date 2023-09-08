@@ -1,0 +1,15 @@
+{
+  "id" : "ad4adcc1-2633-4f2b-8b66-aaca39f45146",
+  "givenName" : "John",
+  "familyName" : "Deuf",
+  "address" : {
+    "street" : "2 Rue du pavillon",
+    "postalCode" : "34090",
+    "city" : "Montpellier"
+  },
+  "phone" : "0612345678",
+  "roles" : [ "tr_orchestrator_admin" ],
+  "attributes" : {
+    "age" : 42
+  }
+}

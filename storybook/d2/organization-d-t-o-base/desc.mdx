@@ -1,0 +1,114 @@
+
+
+
+## OrganizationDTOBase
+
+
+
+Representation of an organization.
+
+
+
+---
+
+***id*** `String`
+
+Identifier of the organization.
+
+
+
+---
+
+***siret*** `String?`
+
+Siret number of the organization.
+
+
+
+---
+
+***name*** `String`
+
+Official name of the organization.
+
+
+
+---
+
+***description*** `String?`
+
+Description of the organization.
+
+
+
+---
+
+***address*** `Address?`
+
+Address of the organization.
+
+
+
+---
+
+***website*** `String?`
+
+Website of the organization.
+
+
+
+---
+
+***attributes*** `Map<String, String>`
+
+Platform-specific attributes assigned to the organization.
+
+
+
+---
+
+***roles*** [`List<RoleDTO>`](/docs/api-privilege-role--page#roledto)
+
+Roles of the organization.
+
+
+
+---
+
+***logo*** `String?`
+
+URL pointing to the logo of the organization.
+
+
+
+---
+
+***enabled*** `Boolean`
+
+Specifies if the organization is enabled or not
+
+
+
+---
+
+***disabledBy*** `String?`
+
+Identifier of the user that disabled the organization.
+
+
+
+---
+
+***creationDate*** `Long`
+
+Creation date of the organization, as UNIX timestamp in milliseconds.
+
+
+
+---
+
+***disabledDate*** `Long?`
+
+Disabled date of the organization, as UNIX timestamp in milliseconds.
+
+

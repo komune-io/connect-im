@@ -1,8 +1,8 @@
 package city.smartb.im.f2.privilege.domain.permission.query
 
+import city.smartb.im.commons.model.PermissionIdentifier
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTO
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionIdentifier
 import f2.dsl.fnc.F2Function
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport

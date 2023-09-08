@@ -1,5 +1,6 @@
 package city.smartb.im.core.client.api
 
+import city.smartb.im.commons.utils.mapAsync
 import city.smartb.im.core.client.domain.command.ClientCreateCommand
 import city.smartb.im.core.client.domain.command.ClientCreatedEvent
 import city.smartb.im.core.client.domain.command.ClientGrantClientRolesCommand
@@ -8,9 +9,6 @@ import city.smartb.im.core.client.domain.command.ClientGrantedClientRolesEvent
 import city.smartb.im.core.client.domain.command.ClientGrantedRealmRolesEvent
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import city.smartb.im.infra.keycloak.toEntityCreatedId
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import org.keycloak.representations.idm.ClientRepresentation
 import org.keycloak.representations.idm.ProtocolMapperRepresentation
 import org.springframework.stereotype.Service
@@ -44,34 +42,34 @@ class ClientCoreAggregateService(
         )
     }
 
-    suspend fun grantClientRoles(command: ClientGrantClientRolesCommand): ClientGrantedClientRolesEvent = coroutineScope {
+    suspend fun grantClientRoles(command: ClientGrantClientRolesCommand): ClientGrantedClientRolesEvent {
         val keycloakClient = keycloakClientProvider.get()
 
-        val newRoles = command.roles.map { role ->
-            async { keycloakClient.client(command.providerClientId).roles().get(role).toRepresentation() }
-        }.awaitAll()
+        val newRoles = command.roles.mapAsync { role ->
+            keycloakClient.client(command.providerClientId).roles().get(role).toRepresentation()
+        }
 
         keycloakClient.user(keycloakClient.client(command.id).serviceAccountUser.id)
             .roles()
             .clientLevel(command.providerClientId)
             .add(newRoles)
 
-        ClientGrantedClientRolesEvent(command.id)
+        return ClientGrantedClientRolesEvent(command.id)
     }
 
-    suspend fun grantRealmRoles(command: ClientGrantRealmRolesCommand): ClientGrantedRealmRolesEvent = coroutineScope {
+    suspend fun grantRealmRoles(command: ClientGrantRealmRolesCommand): ClientGrantedRealmRolesEvent {
         val keycloakClient = keycloakClientProvider.get()
 
-        val newRoles = command.roles.map { role ->
-            async { keycloakClient.role(role).toRepresentation() }
-        }.awaitAll()
+        val newRoles = command.roles.mapAsync { role ->
+            keycloakClient.role(role).toRepresentation()
+        }
 
         keycloakClient.user(keycloakClient.client(command.id).serviceAccountUser.id)
             .roles()
             .realmLevel()
             .add(newRoles)
 
-        ClientGrantedRealmRolesEvent(command.id)
+        return ClientGrantedRealmRolesEvent(command.id)
     }
 
     private fun accessTokenClaim(name: String): ProtocolMapperRepresentation {

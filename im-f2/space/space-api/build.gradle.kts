@@ -11,6 +11,6 @@ dependencies {
     implementation(project(":im-api:api-config"))
     implementation(project(Modules.Infra.redis))
 
-    implementation(project(Modules.imCommonsAuth))
+    implementation(project(Modules.Commons.auth))
 
 }

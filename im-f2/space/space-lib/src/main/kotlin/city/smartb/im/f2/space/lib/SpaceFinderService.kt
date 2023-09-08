@@ -1,24 +1,21 @@
 package city.smartb.im.f2.space.lib
 
 import city.smartb.im.api.config.PageDefault
+import city.smartb.im.commons.model.SpaceIdentifier
+import city.smartb.im.core.commons.CoreService
 import city.smartb.im.f2.space.domain.model.Space
-import city.smartb.im.f2.space.domain.model.SpaceIdentifier
 import city.smartb.im.f2.space.domain.query.SpacePageResult
 import city.smartb.im.f2.space.lib.model.toSpace
-import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import city.smartb.im.infra.redis.CacheName
-import city.smartb.im.infra.redis.RedisCache
 import f2.dsl.cqrs.page.PagePagination
 import f2.spring.exception.NotFoundException
 import org.keycloak.representations.idm.RealmRepresentation
 import org.springframework.stereotype.Service
 
 @Service
-class SpaceFinderService(
-    private val keycloakClientProvider: KeycloakClientProvider,
-    private val redisCache: RedisCache,
-) {
-    suspend fun getOrNull(id: SpaceIdentifier): Space? = redisCache.getFromCacheOr(CacheName.Space, id) {
+class SpaceFinderService: CoreService(CacheName.Space) {
+
+    suspend fun getOrNull(id: SpaceIdentifier): Space? = query(id) {
         val client = keycloakClientProvider.get()
 
         try {

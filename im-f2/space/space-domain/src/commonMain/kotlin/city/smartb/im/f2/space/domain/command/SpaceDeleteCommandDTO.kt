@@ -1,6 +1,6 @@
 package city.smartb.im.f2.space.domain.command
 
-import city.smartb.im.f2.space.domain.model.SpaceIdentifier
+import city.smartb.im.commons.model.SpaceIdentifier
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
