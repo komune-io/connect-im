@@ -1,0 +1,110 @@
+
+
+
+### Command
+
+Type: `UserCreateCommandDTO`
+
+---
+
+***email*** `String`
+
+Email address.
+
+
+
+---
+
+***password*** `String?` (default: null)
+
+Password of the user.
+
+
+
+---
+
+***givenName*** `String`
+
+First name of the user.
+
+
+
+---
+
+***familyName*** `String`
+
+Family name of the user.
+
+
+
+---
+
+***address*** `Address?` (default: null)
+
+Address of the user.
+
+
+
+---
+
+***phone*** `String?` (default: null)
+
+Phone number of the user.
+
+
+
+---
+
+***roles*** `List<RoleIdentifier>`
+
+Identifier of the [roles](/docs/api-privilege-role--page#roledto) to assign to the user.
+
+
+
+---
+
+***memberOf*** `String?`
+
+Id of the organization to which the user belongs.
+
+
+
+---
+
+***attributes*** `Map<String, String>?` (default: null)
+
+Additional arbitrary attributes assigned to the user.
+
+
+
+---
+
+***isEmailVerified*** `Boolean` (default: false)
+
+False if the user has to verify their email.
+
+
+
+---
+
+***isPasswordTemporary*** `Boolean` (default: false)
+
+True if the given password is temporary and has to be redefined on first login.
+
+
+
+---
+
+***sendResetPassword*** `Boolean` (default: false)
+
+Send a reset_password email to the newly created user.
+
+
+
+---
+
+***sendVerifyEmail*** `Boolean` (default: true)
+
+Send a verify_email email to the newly created user.
+
+

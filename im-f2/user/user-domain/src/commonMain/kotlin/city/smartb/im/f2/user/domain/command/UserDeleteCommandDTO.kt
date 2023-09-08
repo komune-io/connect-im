@@ -11,8 +11,8 @@ import kotlin.js.JsExport
  * Permanently delete a user.
  * @d2 function
  * @parent [city.smartb.im.f2.user.domain.D2UserPage]
- * @child [UserDeleteCommand]
- * @child [UserDeletedEvent]
+ * @child [city.smartb.im.core.user.domain.command.UserDeleteCommandDTO]
+ * @child [city.smartb.im.core.user.domain.command.UserDeletedEventDTO]
  * @order 80
  */
 typealias UserDeleteFunction = F2Function<UserDeleteCommandDTOBase, UserDeletedEventDTOBase>
@@ -20,15 +20,9 @@ typealias UserDeleteFunction = F2Function<UserDeleteCommandDTOBase, UserDeletedE
 @JsExport
 interface UserDeleteCommandDTO: city.smartb.im.core.user.domain.command.UserDeleteCommandDTO, Command
 
-/**
- * @d2 inherit
- */
 typealias UserDeleteCommandDTOBase = UserDeleteCommand
 
 @JsExport
 interface UserDeletedEventDTO: city.smartb.im.core.user.domain.command.UserDeletedEventDTO, Event
 
-/**
- * @d2 inherit
- */
 typealias UserDeletedEventDTOBase = UserDeletedEvent

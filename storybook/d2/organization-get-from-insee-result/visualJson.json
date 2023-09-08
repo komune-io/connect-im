@@ -1,6 +1,6 @@
 {
   "item" : {
-    "id" : "85171569-8970-45fb-b52a-85b59f06c292",
+    "id" : "c790642c-4ed2-4cfc-bc45-905a39006e99",
     "siret" : "84488096300013",
     "name" : "SmartB",
     "description" : "We use technology, design and systems thinking to tackle global sustainability & financing challenges.",
@@ -8,6 +8,67 @@
     "attributes" : {
       "otherWebsite" : "https://smartb.network"
     },
+    "roles" : [ {
+      "id" : "a0c76771-c5f9-4bde-8c30-901a22f570ba",
+      "type" : "ROLE",
+      "identifier" : "tr_orchestrator",
+      "description" : "Main organization role for orchestrators",
+      "targets" : [ "ORGANIZATION" ],
+      "locale" : {
+        "en" : "Orchestrator",
+        "fr" : "Orchestrateur"
+      },
+      "bindings" : {
+        "USER" : [ {
+          "id" : "2a384297-490c-4097-8bf0-ee5e7a233e16",
+          "identifier" : "tr_orchestrator_admin",
+          "description" : "Admin role for orchestrator organization members",
+          "targets" : [ "USER", "API_KEY" ],
+          "locale" : {
+            "en" : "Admin",
+            "fr" : "Admin"
+          },
+          "bindings" : { },
+          "permissions" : [ "im_organization_read", "im_organization_write", "im_user_read", "im_user_write" ]
+        }, {
+          "id" : "3021ebe8-1b28-44ef-97c9-2a6a34f54042",
+          "identifier" : "tr_orchestrator_user",
+          "description" : "User role for orchestrator organization members",
+          "targets" : [ "USER", "API_KEY" ],
+          "locale" : {
+            "en" : "User",
+            "fr" : "Utilisateur"
+          },
+          "bindings" : { },
+          "permissions" : [ "im_organization_read", "im_user_read" ]
+        } ],
+        "API_KEY" : [ {
+          "id" : "2a384297-490c-4097-8bf0-ee5e7a233e16",
+          "identifier" : "tr_orchestrator_admin",
+          "description" : "Admin role for orchestrator organization members",
+          "targets" : [ "USER", "API_KEY" ],
+          "locale" : {
+            "en" : "Admin",
+            "fr" : "Admin"
+          },
+          "bindings" : { },
+          "permissions" : [ "im_organization_read", "im_organization_write", "im_user_read", "im_user_write" ]
+        }, {
+          "id" : "3021ebe8-1b28-44ef-97c9-2a6a34f54042",
+          "identifier" : "tr_orchestrator_user",
+          "description" : "User role for orchestrator organization members",
+          "targets" : [ "USER", "API_KEY" ],
+          "locale" : {
+            "en" : "User",
+            "fr" : "Utilisateur"
+          },
+          "bindings" : { },
+          "permissions" : [ "im_organization_read", "im_user_read" ]
+        } ]
+      },
+      "permissions" : [ [ ] ]
+    } ],
+    "logo" : "https://d1muf25xaso8hp.cloudfront.net/https%3A%2F%2Ff9a8147b117eae8242d081b049108349.cdn.bubble.io%2Ff1673342519429x701902957290415400%2Fsmartb-logo.png?w=192&h=52&auto=compress&dpr=2&fit=max",
     "enabled" : true,
     "disabledBy" : null,
     "creationDate" : 1656938975000,

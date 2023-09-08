@@ -11,7 +11,7 @@ import kotlin.js.JsName
 /**
  * Get a page of organizations.
  * @d2 function
- * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  * @order 30
  */
 typealias OrganizationPageFunction = F2Function<OrganizationPageQuery, OrganizationPageResult>

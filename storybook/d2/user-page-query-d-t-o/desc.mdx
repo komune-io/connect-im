@@ -1,0 +1,62 @@
+
+
+
+### Query
+
+Type: `UserPageQueryDTO`
+
+---
+
+***organizationId*** `String?` (default: null)
+
+Filter on user organization id.
+
+
+
+---
+
+***search*** `String?` (default: null)
+
+Search string filtering on the email, firstname and lastname of the user. Case insensitive.
+
+
+
+---
+
+***role*** `String?` (default: null)
+
+Filter on user roles.
+
+
+
+---
+
+***roles*** `List<String>?` (default: null)
+
+Filter on user roles
+
+
+
+---
+
+***attributes*** `Map<String, String>?` (default: null)
+
+Arbitrary attributes filter.
+
+
+
+---
+
+***withDisabled*** `Boolean` (default: false)
+
+If false, filter out the disabled users.
+
+
+
+---
+
+***offset*** `Int?`
+
+---
+
+***limit*** `Int?`

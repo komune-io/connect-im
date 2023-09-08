@@ -11,7 +11,7 @@ import kotlin.js.JsExport
 /**
  * Get an organization by ID.
  * @d2 function
- * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  * @order 10
  */
 typealias OrganizationGetFunction = F2Function<OrganizationGetQuery, OrganizationGetResult>

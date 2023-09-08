@@ -12,7 +12,7 @@ import kotlin.js.JsName
 /**
  * Update an organization.
  * @d2 function
- * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  * @order 20
  */
 typealias OrganizationUpdateFunction = F2Function<OrganizationUpdateCommand, OrganizationUpdatedResult>
@@ -41,13 +41,13 @@ data class OrganizationUpdateCommand(
 
     /**
      * Official name of the organization.
-     * @example [city.smartb.im.organization.domain.model.OrganizationDTOBase.name]
+     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.name]
      */
     override val name: String,
 
     /**
      * Description of the organization.
-     * @example [city.smartb.im.organization.domain.model.OrganizationDTOBase.description]
+     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.description]
      */
     override val description: String?,
 
@@ -58,19 +58,19 @@ data class OrganizationUpdateCommand(
 
     /**
      * Website of the organization.
-     * @example [city.smartb.im.organization.domain.model.OrganizationDTOBase.website]
+     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.website]
      */
     override val website: String?,
 
     /**
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
-     * @example [city.smartb.im.organization.domain.model.OrganizationDTOBase.roles]
+     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.roles]
      */
     override val roles: List<String>?,
 
     /**
      * Additional arbitrary attributes assigned to the organization.
-     * @example [city.smartb.im.organization.domain.model.OrganizationDTOBase.attributes]
+     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.attributes]
      */
     override val attributes: Map<String, String>?
 ): OrganizationUpdateCommandDTO

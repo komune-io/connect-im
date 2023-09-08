@@ -1,0 +1,114 @@
+
+
+
+## UserDTO
+
+
+
+Representation of a user.
+
+
+
+---
+
+***id*** `String`
+
+Id of the user.
+
+
+
+---
+
+***memberOf*** `OrganizationRefDTO?`
+
+Organization to which the user belongs.
+
+
+
+---
+
+***email*** `String`
+
+Email address.
+
+
+
+---
+
+***givenName*** `String`
+
+First name of the user.
+
+
+
+---
+
+***familyName*** `String`
+
+Family name of the user.
+
+
+
+---
+
+***address*** [`AddressDTO?`](/docs/commons-address--page#model)
+
+Address of the user.
+
+
+
+---
+
+***phone*** `String?`
+
+Phone number of the user.
+
+
+
+---
+
+***roles*** [`List<RoleDTO>`](/docs/api-privilege-role--page#roledto)
+
+Roles assigned to the user.
+
+
+
+---
+
+***attributes*** `Map<String, String>`
+
+Additional arbitrary attributes assigned to the user.
+
+
+
+---
+
+***enabled*** `Boolean`
+
+Specifies if the user is enabled or not.
+
+
+
+---
+
+***disabledBy*** `String?`
+
+Id of the user that disabled the user.
+
+
+
+---
+
+***creationDate*** `Long`
+
+Creation date of the user, as UNIX timestamp in milliseconds.
+
+
+
+---
+
+***disabledDate*** `Long?`
+
+Disabled date of the user, as UNIX timestamp in milliseconds.
+
+

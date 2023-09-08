@@ -30,7 +30,7 @@ import s2.spring.utils.logger.Logger
 
 /**
  * @d2 service
- * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  */
 @RestController
 @RequestMapping

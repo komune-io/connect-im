@@ -10,7 +10,7 @@ import kotlin.js.JsName
 /**
  * Update the logo of an organization.
  * @d2 function
- * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  * @order 30
  */
 typealias OrganizationUploadLogoFunction = F2Function<OrganizationUploadLogoCommand, OrganizationUploadedLogoEvent>

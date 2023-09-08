@@ -11,7 +11,7 @@ import kotlin.js.JsName
 /**
  * Get an organization by Siret from the Insee Sirene API.
  * @d2 function
- * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  * @order 20
  */
 typealias OrganizationGetFromInseeFunction =
@@ -30,7 +30,7 @@ interface OrganizationGetFromInseeQueryDTO: Query {
 data class OrganizationGetFromInseeQuery(
     /**
      * Siret number of the organization.
-     * @example [city.smartb.im.organization.domain.model.OrganizationDTOBase.siret]
+     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.siret]
      */
     override val siret: String
 ): OrganizationGetFromInseeQueryDTO

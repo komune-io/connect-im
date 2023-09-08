@@ -16,7 +16,7 @@ interface OrganizationRefDTO {
 /**
  * Short representation of an organization.
  * @D2 model
- * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  * @order 30
  */
 data class OrganizationRef(

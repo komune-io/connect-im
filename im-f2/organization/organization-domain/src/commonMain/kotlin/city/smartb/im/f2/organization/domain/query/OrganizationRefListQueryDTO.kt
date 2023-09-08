@@ -11,7 +11,7 @@ import kotlin.js.JsName
 /**
  * Get all organization refs.
  * @d2 function
- * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  * @order 40
  */
 typealias OrganizationRefListFunction = F2Function<OrganizationRefListQuery, OrganizationRefListResult>

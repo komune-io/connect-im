@@ -13,7 +13,7 @@
 
 ---
 
-**organizationGet**(query:[`OrganizationGetQuery`](#organization-get)):[`OrganizationGetResult<Organization>`](#organization-get)<br/>
+**organizationGet**(query:[`OrganizationGetQueryDTO`](#organization-get)):[`OrganizationGetResultDTO`](#organization-get)<br/>
 
 Fetch an Organization by its ID.
 
@@ -29,7 +29,7 @@ Fetch an Organization by its siret number from the Insee Sirene API.
 
 ---
 
-**organizationPage**(query:[`OrganizationPageQuery`](#organization-page)):[`OrganizationPageResult<Organization>`](#organization-page)<br/>
+**organizationPage**(query:[`OrganizationPageQuery`](#organization-page)):[`OrganizationPageResultDTO`](#organization-page)<br/>
 
 Fetch a page of organizations.
 
@@ -55,7 +55,7 @@ Fetch all OrganizationRef.
 
 ---
 
-**organizationCreate**(cmd:[`OrganizationCreateCommand`](#organization-create)):[`OrganizationCreatedEvent`](#organization-create)<br/>
+**organizationCreate**(cmd:[`OrganizationCreateCommandDTOBase`](#organization-create)):[`OrganizationCreatedEvent`](#organization-create)<br/>
 
 Create an organization.
 
@@ -71,7 +71,7 @@ Update an organization.
 
 ---
 
-**organizationUploadLogo**(cmd:[`OrganizationUploadLogoCommand`](#organization-upload-logo), file:`FilePart`):[`OrganizationUploadedLogoEvent`](#organization-upload-logo)<br/>
+**organizationUploadLogo**(command:[`OrganizationUploadLogoCommand`](#organization-upload-logo), file:`FilePart`):[`OrganizationUploadedLogoEvent`](#organization-upload-logo)<br/>
 
 Upload a logo for a given organization
 
@@ -87,7 +87,7 @@ Disable an organization and its users.
 
 ---
 
-**organizationDelete**(cmd:[`OrganizationDeleteCommand`](#organization-delete)):[`OrganizationDeletedEvent`](#organization-delete)<br/>
+**organizationDelete**(cmd:[`OrganizationDeleteCommandDTOBase`](#organization-delete)):[`OrganizationDeletedEventDTOBase`](#organization-delete)<br/>
 
 Delete an organization and its users.
 

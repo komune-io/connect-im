@@ -1,0 +1,21 @@
+{
+  "email" : "john.deuf@smartb.city",
+  "password" : "zepasworde",
+  "givenName" : "John",
+  "familyName" : "Deuf",
+  "address" : {
+    "street" : "2 Rue du pavillon",
+    "postalCode" : "34090",
+    "city" : "Montpellier"
+  },
+  "phone" : "0612345678",
+  "roles" : [ "tr_orchestrator_admin" ],
+  "memberOf" : "c790642c-4ed2-4cfc-bc45-905a39006e99",
+  "attributes" : {
+    "age" : 42
+  },
+  "isEmailVerified" : true,
+  "isPasswordTemporary" : true,
+  "sendResetPassword" : true,
+  "sendVerifyEmail" : true
+}

@@ -10,7 +10,7 @@ import kotlin.js.JsName
 /**
  * Disable an organization along with all its users.
  * @d2 function
- * @parent [city.smartb.im.organization.domain.D2OrganizationPage]
+ * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  * @order 40
  */
 typealias OrganizationDisableFunction = F2Function<OrganizationDisableCommand, OrganizationDisabledEvent>
