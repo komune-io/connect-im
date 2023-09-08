@@ -131,7 +131,6 @@ class SpaceConfigScript (
                     roles = organization.roles,
                     parentOrganizationId = null,
                     attributes = organization.attributes,
-                    withApiKey = organization.withApiKey
                 ).let { organizationAggregateService.create(it).id }
             } catch (e: ConflictException) {
                 return@mapAsync
