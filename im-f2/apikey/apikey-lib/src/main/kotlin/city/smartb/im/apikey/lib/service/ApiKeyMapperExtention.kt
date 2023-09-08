@@ -4,7 +4,7 @@ import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.commons.utils.parseJsonTo
 import city.smartb.im.core.organization.domain.model.Organization
 
-const val GROUP_API_KEYS_FIELD = "apiKeys"
+const val ORGANIZATION_FIELD_API_KEYS = "apiKeys"
 fun Organization.apiKeys(): List<ApiKey> {
-    return attributes[GROUP_API_KEYS_FIELD]?.parseJsonTo(Array<ApiKey>::class.java).orEmpty()
+    return attributes[ORGANIZATION_FIELD_API_KEYS]?.parseJsonTo(Array<ApiKey>::class.java).orEmpty()
 }

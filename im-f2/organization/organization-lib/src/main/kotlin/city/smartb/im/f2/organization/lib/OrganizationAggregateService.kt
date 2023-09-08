@@ -2,8 +2,6 @@ package city.smartb.im.f2.organization.lib
 
 import city.smartb.fs.s2.file.client.FileClient
 import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
-import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddKeyCommand
-import city.smartb.im.apikey.lib.service.ApiKeyAggregateService
 import city.smartb.im.commons.auth.AuthenticationProvider
 import city.smartb.im.commons.model.PrivilegeIdentifier
 import city.smartb.im.commons.utils.EmptyAddress
@@ -40,10 +38,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class OrganizationAggregateService(
-    private val apiKeyAggregateService: ApiKeyAggregateService,
     private val organizationCoreAggregateService: OrganizationCoreAggregateService,
     private val organizationCoreFinderService: OrganizationCoreFinderService,
-    private val organizationFinderService: OrganizationFinderService,
     private val privilegeCoreFinderService: PrivilegeCoreFinderService,
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService,
@@ -67,13 +63,6 @@ class OrganizationAggregateService(
                 command.website?.let { OrganizationDTO::website.name to it },
             ).toMap().filterValues { it.isNotBlank() },
         ).let { organizationCoreAggregateService.define(it).id }
-
-        if (command.withApiKey) {
-            apiKeyAggregateService.addApiKey(ApiKeyOrganizationAddKeyCommand(
-                organizationId = organizationId,
-                name = "Default"
-            ))
-        }
 
         OrganizationCreatedEvent(
             id = organizationId,

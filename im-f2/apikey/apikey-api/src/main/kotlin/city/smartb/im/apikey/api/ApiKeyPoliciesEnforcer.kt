@@ -1,8 +1,8 @@
-package city.smartb.im.apikey.api.policies
+package city.smartb.im.apikey.api
 
-import city.smartb.im.apikey.domain.features.query.ApiKeyPageQuery
 import city.smartb.im.apikey.domain.model.ApiKeyId
 import city.smartb.im.apikey.domain.policies.ApiKeyPolicies
+import city.smartb.im.apikey.domain.query.ApiKeyPageQuery
 import city.smartb.im.commons.auth.ImRole
 import city.smartb.im.commons.auth.hasOneOfRoles
 import city.smartb.im.commons.auth.policies.PolicyEnforcer
@@ -23,13 +23,11 @@ class ApiKeyPoliciesEnforcer: PolicyEnforcer() {
         ApiKeyPolicies.canCreate(authedUser)
     }
 
-    suspend fun apiKeyRemove(apikeyId: ApiKeyId) = checkAuthed("delete an apikey") { authedUser ->
+    suspend fun checkRemove(apikeyId: ApiKeyId) = checkAuthed("delete an apikey") { authedUser ->
         ApiKeyPolicies.canDelete(authedUser)
     }
 
     suspend fun enforcePage(query: ApiKeyPageQuery): ApiKeyPageQuery = enforceAuthed { authedUser ->
-        checkPage()
-
         if (authedUser.hasOneOfRoles(ImRole.ORCHESTRATOR) ) {
             query
         } else {

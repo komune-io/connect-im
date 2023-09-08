@@ -11,6 +11,7 @@ dependencies {
 
     implementation(project(Modules.Core.clientApi))
     implementation(project(Modules.Core.organizationApi))
+    implementation(project(Modules.Core.privilegeApi))
     implementation(project(Modules.Core.userApi))
 
     implementation(project(Modules.Infra.redis))
