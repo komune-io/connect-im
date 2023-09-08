@@ -1,101 +1,106 @@
 package city.smartb.im.bdd.core.user.data
 
-import city.smartb.im.commons.model.AddressDTO
+import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.commons.model.UserId
-import city.smartb.im.f2.user.api.UserEndpoint
-import city.smartb.im.f2.user.domain.model.User
-import city.smartb.im.f2.user.domain.query.UserGetByEmailQuery
-import city.smartb.im.f2.user.domain.query.UserGetQuery
-import f2.dsl.fnc.invoke
-import f2.dsl.fnc.invokeWith
+import city.smartb.im.commons.utils.parseJson
+import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
+import city.smartb.im.f2.user.domain.model.UserDTOBase
+import city.smartb.im.infra.keycloak.client.KeycloakClient
 import org.assertj.core.api.Assertions
+import org.keycloak.representations.idm.UserRepresentation
 import s2.bdd.assertion.AssertionBdd
+import s2.bdd.repository.AssertionApiEntity
 
-fun AssertionBdd.user(api: UserEndpoint) = AssertionUser(api)
+fun AssertionBdd.user(client: KeycloakClient) = AssertionUser(client)
 
 class AssertionUser(
-    val api: UserEndpoint
-) {
-
-    suspend fun assertThat(id: UserId): UserAssert {
-        val user = api.userGet().invoke(UserGetQuery(id = id)).item!!
-        return assertThat(user)
+    private val client: KeycloakClient
+): AssertionApiEntity<UserRepresentation, UserId, AssertionUser.UserAssert>() {
+    override suspend fun findById(id: UserId): UserRepresentation? = try {
+        client.user(id).toRepresentation()
+    } catch (e: javax.ws.rs.NotFoundException) {
+        null
     }
 
-    fun assertThat(entity: User) = UserAssert(entity)
-
-    suspend fun notExists(id: UserId) {
-        Assertions.assertThat(get(id)).isNull()
-    }
+    override suspend fun assertThat(entity: UserRepresentation) = UserAssert(entity)
 
     suspend fun notExistsByEmail(email: String) {
         Assertions.assertThat(getByEmail(email)).isNull()
     }
 
-    suspend fun get(id: UserId): User? {
-        return UserGetQuery(id).invokeWith(api.userGet()).item
-    }
-
-    private suspend fun getByEmail(email: String): User? {
-        return UserGetByEmailQuery(email).invokeWith(api.userGetByEmail()).item
+    private fun getByEmail(email: String): UserRepresentation? {
+        return client.users().search("", "", "", email, 0, 1).firstOrNull()
     }
 
     inner class UserAssert(
-        private val user: User
+        private val user: UserRepresentation
     ) {
-        fun hasFields(
-            memberOf: OrganizationId? = user.memberOf?.id,
-            email: String = user.email,
-            givenName: String = user.givenName,
-            familyName: String = user.familyName,
-            address: AddressDTO? = user.address,
-            phone: String? = user.phone,
-            roles: List<String> = user.roles,
-            attributes: Map<String, String> = user.attributes,
-            enabled: Boolean = user.enabled,
-            disabledBy: UserId? = user.disabledBy,
-            creationDate: Long = user.creationDate,
-            disabledDate: Long? = user.disabledDate
-        ) = also {
-            Assertions.assertThat(user.email).isEqualTo(email)
-            Assertions.assertThat(user.givenName).isEqualTo(givenName)
-            Assertions.assertThat(user.familyName).isEqualTo(familyName)
-            Assertions.assertThat(user.phone).isEqualTo(phone)
-            Assertions.assertThat(user.roles).isEqualTo(roles)
-            Assertions.assertThat(user.attributes).containsAnyOf(*attributes.entries.toTypedArray())
-            Assertions.assertThat(user.enabled).isEqualTo(enabled)
-            Assertions.assertThat(user.creationDate).isEqualTo(creationDate)
-            Assertions.assertThat(user.memberOf?.id).isEqualTo(memberOf)
-            Assertions.assertThat(user.disabledBy).isEqualTo(disabledBy)
-            Assertions.assertThat(user.disabledDate).isEqualTo(disabledDate)
-        }.hasAddress(address)
+        private val singleAttributes = user.attributes
+            .mapValues { (_, values) -> values.firstOrNull() }
+            .filterValues { !it.isNullOrBlank() } as Map<String, String>
 
-        fun hasAddress(address: AddressDTO?) = also {
-            Assertions.assertThat(user.address?.city).isEqualTo(address?.city)
-            Assertions.assertThat(user.address?.postalCode).isEqualTo(address?.postalCode)
-            Assertions.assertThat(user.address?.street).isEqualTo(address?.street)
+        private val userMemberOf: OrganizationId? = singleAttributes[UserDTOBase::memberOf.name]
+        private val userAddress: Address? = singleAttributes[UserDTOBase::address.name]?.parseJson()
+        private val userPhone: String? = singleAttributes[UserDTOBase::phone.name]
+        private val userDisabledBy: UserId? = singleAttributes[UserDTOBase::disabledBy.name]
+        private val userDisabledDate: Long? = singleAttributes[UserDTOBase::disabledDate.name]?.toLong()
+        private val userRoles = client.user(user.id)
+            .roles()
+            .realmLevel()
+            .listAll()
+            .map { it.name }
+            .minus(client.defaultRealmRole)
+
+        fun hasFields(
+            memberOf: OrganizationId? = userMemberOf,
+            email: String = user.email,
+            givenName: String = user.firstName,
+            familyName: String = user.lastName,
+            address: Address? = userAddress,
+            phone: String? = userPhone,
+            roles: List<RoleIdentifier> = userRoles,
+            attributes: Map<String, String> = singleAttributes,
+            enabled: Boolean = user.isEnabled,
+            disabledBy: UserId? = userDisabledBy,
+            creationDate: Long = user.createdTimestamp,
+            disabledDate: Long? = userDisabledDate
+        ) = also {
+            Assertions.assertThat(userMemberOf).isEqualTo(memberOf)
+            Assertions.assertThat(user.email).isEqualTo(email)
+            Assertions.assertThat(user.firstName).isEqualTo(givenName)
+            Assertions.assertThat(user.lastName).isEqualTo(familyName)
+            Assertions.assertThat(userAddress).isEqualTo(address)
+            Assertions.assertThat(userPhone).isEqualTo(phone)
+            Assertions.assertThat(userRoles).containsExactlyInAnyOrderElementsOf(roles)
+            Assertions.assertThat(singleAttributes).containsAllEntriesOf(attributes)
+            Assertions.assertThat(user.isEnabled).isEqualTo(enabled)
+            Assertions.assertThat(user.createdTimestamp).isEqualTo(creationDate)
+            Assertions.assertThat(userDisabledBy).isEqualTo(disabledBy)
+            Assertions.assertThat(userDisabledDate).isEqualTo(disabledDate)
         }
 
         fun isAnonymized() = also {
             Assertions.assertThat(user.email).endsWith("@anonymous.com")
-            Assertions.assertThat(user.givenName).isEqualTo("anonymous")
-            Assertions.assertThat(user.familyName).isEqualTo("anonymous")
-            Assertions.assertThat(user.phone).isEqualTo("")
-            Assertions.assertThat(user.roles).isEqualTo(user.roles)
+            Assertions.assertThat(user.firstName).isEqualTo("anonymous")
+            Assertions.assertThat(user.lastName).isEqualTo("anonymous")
+            Assertions.assertThat(userPhone).isEqualTo("")
         }
 
-        fun matches(other: User) = hasFields(
+        fun matches(other: UserDTOBase) = hasFields(
             memberOf = other.memberOf?.id,
             email = other.email,
             givenName = other.givenName,
             familyName = other.familyName,
             address = other.address,
             phone = other.phone,
-            roles = other.roles,
+            roles = other.roles.map(RoleDTOBase::identifier),
             attributes = other.attributes,
             enabled = other.enabled,
-            creationDate = other.creationDate
+            creationDate = other.creationDate,
+            disabledDate = other.disabledDate,
+            disabledBy = other.disabledBy
         )
     }
 }

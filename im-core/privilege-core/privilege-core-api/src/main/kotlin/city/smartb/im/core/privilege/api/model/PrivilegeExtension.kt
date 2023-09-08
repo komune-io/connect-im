@@ -29,7 +29,7 @@ fun PrivilegeDefineCommand.toPrivilege(id: PrivilegeId?): Privilege = when (this
 }
 
 fun Privilege.checkTarget(target: RoleTarget) {
-    if (this !is Role || RoleTarget.ORGANIZATION !in targets) {
+    if (this !is Role || target !in targets) {
         throw PrivilegeWrongTargetException(identifier, target)
     }
 }

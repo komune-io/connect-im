@@ -71,14 +71,14 @@ class OrganizationEndpoint(
         logger.info("organizationPage: $query")
         organizationPoliciesEnforcer.checkPage()
 
-        val roles = listOfNotNull(
-            query.roles,
-            listOfNotNull(query.role)
-        ).flatten().ifEmpty { null }
+        val roles = buildSet {
+            query.roles?.let(::addAll)
+            query.role?.let(::add)
+        }.ifEmpty { null }
 
         organizationFinderService.page(
             search = query.search,
-            roles = roles?.toSet(),
+            roles = roles,
             attributes = query.attributes,
             withDisabled = query.withDisabled ?: false,
             offset = OffsetPagination(

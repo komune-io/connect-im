@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(Modules.imCommonsDomain))
+    commonMainApi(project(Modules.Commons.domain))
 
     //    Dependencies.Jvm.f2Auth(::jvmMainImplementation)
     //TODO replace f2-spring-boot-starter-auth-tenant by  Dependencies.Jvm.f2Auth(::api)

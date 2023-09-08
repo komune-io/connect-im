@@ -1,7 +1,7 @@
 package city.smartb.im.bdd.exception
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
-import city.smartb.im.commons.ExceptionCodes
+import city.smartb.im.commons.exception.ExceptionCodes
 import city.smartb.im.core.privilege.api.exception.PrivilegeWrongTargetException
 import f2.spring.exception.ConflictException
 import f2.spring.exception.ForbiddenAccessException

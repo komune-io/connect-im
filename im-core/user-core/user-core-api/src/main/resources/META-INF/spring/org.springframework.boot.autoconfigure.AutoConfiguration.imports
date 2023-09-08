@@ -1,0 +1,3 @@
+city.smartb.im.core.user.api.service.UserRepresentationTransformer
+city.smartb.im.core.user.api.UserCoreAggregateService
+city.smartb.im.core.user.api.UserCoreFinderService

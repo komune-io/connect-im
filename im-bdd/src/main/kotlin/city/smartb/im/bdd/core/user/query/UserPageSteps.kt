@@ -1,9 +1,9 @@
 package city.smartb.im.bdd.core.user.query
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
-import city.smartb.im.core.organization.domain.model.OrganizationId
-import city.smartb.im.user.api.UserEndpoint
-import city.smartb.im.user.domain.features.query.UserPageQuery
+import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.f2.user.api.UserEndpoint
+import city.smartb.im.f2.user.domain.query.UserPageQuery
 import f2.dsl.fnc.invokeWith
 import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
@@ -35,8 +35,8 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
             search = params.search,
             role = params.role,
             withDisabled = params.withDisable,
-            page = params.page,
-            size = params.size,
+            offset = params.offset,
+            limit = params.limit,
             attributes = null
         ).invokeWith(userEndpoint.userPage()).items
     }
@@ -47,8 +47,8 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
         role = entry?.get("role"),
 //        attributes = entry?.get("attr"),
         withDisable = entry?.get("withDisabled").toBoolean(),
-        page = entry?.get("page")?.toInt(),
-        size = entry?.get("size")?.toInt(),
+        offset = entry?.get("offset")?.toInt(),
+        limit = entry?.get("limit")?.toInt(),
     )
 
     private data class UserPageParams(
@@ -57,7 +57,7 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
         val role: String?,
 //        val attributes: Map<String, String>?,
         val withDisable: Boolean,
-        val page: Int?,
-        val size: Int?
+        val offset: Int?,
+        val limit: Int?
     )
 }

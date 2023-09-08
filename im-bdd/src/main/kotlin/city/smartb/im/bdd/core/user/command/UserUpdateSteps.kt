@@ -3,13 +3,12 @@ package city.smartb.im.bdd.core.user.command
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.user.data.user
 import city.smartb.im.commons.model.Address
-import city.smartb.im.core.organization.domain.model.OrganizationId
-import city.smartb.im.user.api.UserEndpoint
-import city.smartb.im.user.domain.features.command.UserUpdateCommand
+import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.f2.user.api.UserEndpoint
+import city.smartb.im.f2.user.domain.command.UserUpdateCommandDTOBase
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
@@ -19,7 +18,7 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var userEndpoint: UserEndpoint
 
-    private lateinit var command: UserUpdateCommand
+    private lateinit var command: UserUpdateCommandDTOBase
 
     init {
         DataTableType(::userUpdateParams)
@@ -59,35 +58,26 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
             step {
                 val userId = context.userIds.lastUsed
 
-                AssertionBdd.user(userEndpoint).assertThat(userId).hasFields(
+                AssertionBdd.user(keycloakClient()).assertThatId(userId).hasFields(
                     givenName = command.givenName,
                     familyName = command.familyName,
                     address = command.address,
                     phone = command.phone,
                     roles = command.roles,
-                    memberOf = command.memberOf,
-                    attributes = buildAttributesMap(command.attributes, command.memberOf).orEmpty(),
+                    attributes = command.attributes.orEmpty(),
                 )
-            }
-        }
-
-        Then("The user's organization should not be updated") {
-            step {
-                val user = AssertionBdd.user(userEndpoint).get(context.userIds.lastUsed)
-                Assertions.assertThat(user?.memberOf).isNotEqualTo(command.memberOf)
             }
         }
     }
 
     private suspend fun updateUser(params: UserUpdateParams) {
-        command = UserUpdateCommand(
+        command = UserUpdateCommandDTOBase(
             id = context.userIds.safeGet(params.identifier),
             givenName = params.givenName,
             familyName = params.familyName,
             address = params.address,
             phone = params.phone,
             roles = params.roles,
-            memberOf = params.memberOf,
             attributes = params.attributes,
         )
 
@@ -127,10 +117,5 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
         return mapOf(
             "job" to job
         )
-    }
-
-    private fun buildAttributesMap(attributes: Map<String, String>?, memberOf: OrganizationId?): Map<String, String>? {
-        if (memberOf == null) return attributes
-        return command.attributes.orEmpty().plus("memberOf" to memberOf)
     }
 }

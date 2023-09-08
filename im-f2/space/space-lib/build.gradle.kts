@@ -9,6 +9,7 @@ dependencies {
 
     implementation(project(Modules.Core.clientApi))
 
-    implementation(project(":im-api:api-config"))
-    implementation(project(Modules.Infra.redis))
+    implementation(project(Modules.Api.config))
+    api(project(Modules.Infra.redis))
+    api(project(Modules.Core.commons))
 }

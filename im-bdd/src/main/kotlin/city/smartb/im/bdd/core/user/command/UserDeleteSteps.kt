@@ -2,8 +2,9 @@ package city.smartb.im.bdd.core.user.command
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.user.data.user
-import city.smartb.im.user.api.UserEndpoint
-import city.smartb.im.user.domain.features.command.UserDeleteCommand
+import city.smartb.im.core.user.domain.command.UserDeleteCommand
+import city.smartb.im.f2.user.api.UserEndpoint
+import city.smartb.im.f2.user.domain.command.UserDeleteCommandDTOBase
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -15,7 +16,7 @@ class UserDeleteSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var userEndpoint: UserEndpoint
 
-    private lateinit var command: UserDeleteCommand
+    private lateinit var command: UserDeleteCommandDTOBase
 
     init {
         DataTableType(::userDeleteParams)
@@ -53,7 +54,7 @@ class UserDeleteSteps: En, ImCucumberStepsDefinition() {
 
         Then("The user should be deleted") {
             step {
-                AssertionBdd.user(userEndpoint).notExists(command.id)
+                AssertionBdd.user(keycloakClient()).notExists(command.id)
             }
         }
     }

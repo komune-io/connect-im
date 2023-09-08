@@ -5,9 +5,8 @@ import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
 import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddKeyCommand
 import city.smartb.im.apikey.lib.service.ApiKeyAggregateService
 import city.smartb.im.commons.auth.AuthenticationProvider
-import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.PrivilegeIdentifier
-import city.smartb.im.commons.utils.orEmpty
+import city.smartb.im.commons.utils.EmptyAddress
 import city.smartb.im.core.organization.api.OrganizationCoreAggregateService
 import city.smartb.im.core.organization.api.OrganizationCoreFinderService
 import city.smartb.im.core.organization.domain.command.OrganizationDefineCommand
@@ -29,9 +28,8 @@ import city.smartb.im.f2.organization.domain.command.OrganizationUploadedLogoEve
 import city.smartb.im.f2.organization.domain.model.OrganizationDTO
 import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import city.smartb.im.f2.organization.lib.config.OrganizationFsConfig
-import city.smartb.im.f2.user.domain.command.UserDisableCommand
-import city.smartb.im.f2.user.domain.command.UserDisabledEvent
-import city.smartb.im.f2.user.domain.query.UserPageQuery
+import city.smartb.im.f2.user.domain.command.UserDisableCommandDTOBase
+import city.smartb.im.f2.user.domain.command.UserDisabledEventDTOBase
 import city.smartb.im.f2.user.lib.UserAggregateService
 import city.smartb.im.f2.user.lib.UserFinderService
 import kotlinx.coroutines.async
@@ -127,7 +125,7 @@ class OrganizationAggregateService(
     suspend fun disable(command: OrganizationDisableCommand): OrganizationDisabledEvent {
         val newAttributes = mapOf(
             Organization::enabled.name to "false",
-            OrganizationDTOBase::disabledBy.name to command.disabledBy.orEmpty(),
+            OrganizationDTOBase::disabledBy.name to (command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id.orEmpty()),
             OrganizationDTOBase::disabledDate.name to System.currentTimeMillis().toString()
         )
 
@@ -137,7 +135,7 @@ class OrganizationAggregateService(
                 id = command.id,
                 identifier = "anonymous-${command.id}",
                 description = "",
-                address = (null as Address?).orEmpty(),
+                address = EmptyAddress,
                 roles = organization.roles,
                 attributes = newAttributes + mapOf(
                     OrganizationDTO::website.name to ""
@@ -150,28 +148,20 @@ class OrganizationAggregateService(
             ).let { organizationCoreAggregateService.setSomeAttributes(it) }
         }
 
-        val userEvents = UserPageQuery(
-            organizationId = command.id,
-            search = null,
-            role = null,
-            attributes = null,
-            withDisabled = false,
-            page = 0,
-            size = Int.MAX_VALUE
-        ).let { userFinderService.userPage(it) }
-            .items
-            .map { user ->
-                UserDisableCommand(
-                    id = user.id,
-                    disabledBy = command.disabledBy,
-                    anonymize = command.anonymize,
-                    attributes = command.userAttributes
-                ).let { userAggregateService.disable(it) }
-            }
+        val userEvents =  userFinderService.page(
+            organizationIds = listOf(command.id)
+        ).items.map { user ->
+            UserDisableCommandDTOBase(
+                id = user.id,
+                disabledBy = command.disabledBy,
+                anonymize = command.anonymize,
+                attributes = command.userAttributes
+            ).let { userAggregateService.disable(it) }
+        }
 
         return OrganizationDisabledEvent(
             id = command.id,
-            userIds = userEvents.map(UserDisabledEvent::id)
+            userIds = userEvents.map(UserDisabledEventDTOBase::id)
         )
     }
 

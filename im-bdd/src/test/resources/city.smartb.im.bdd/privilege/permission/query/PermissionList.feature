@@ -2,6 +2,10 @@ Feature: PermissionList
 
   Background:
     Given I am authenticated as admin
+    And Some roles are defined:
+      | identifier | permissions    | targets |
+      | r_writer   | im_role_write | USER    |
+      | r_reader   | im_role_read  | USER    |
 
   Scenario: I want to list permissions
     Given Some permissions are defined:
@@ -40,11 +44,11 @@ Feature: PermissionList
       | identifier |
       | p1         |
     And A user is created:
-      | identifier | roles        |
-      | reader     | im_role_read |
+      | identifier | roles    |
+      | u_reader   | r_reader |
     And I am authenticated as:
       | identifier |
-      | reader     |
+      | u_reader   |
     When I list the permissions
     Then I should receive a list of permissions:
       | identifier |
@@ -53,10 +57,10 @@ Feature: PermissionList
   Scenario: I want to be forbidden from listing permissions without the permission im_role_read
     Given A permission is defined
     And A user is created:
-      | identifier | roles         |
-      | writer     | im_role_write |
+      | identifier | roles    |
+      | u_writer   | r_writer |
     And I am authenticated as:
       | identifier |
-      | writer     |
+      | u_writer   |
     When I list the permissions
     Then I should be forbidden to do so

@@ -51,7 +51,7 @@ object Dependencies {
             )
 
             fun serverSpiPrivate(scope: Scope)  = scope.add(
-            "org.keycloak:keycloak-server-spi-private:${Versions.keycloak()}",
+                "org.keycloak:keycloak-server-spi-private:${Versions.keycloak()}",
             )
 
             fun all(scope: Scope)  = scope.add(
@@ -154,11 +154,16 @@ object Dependencies {
 }
 
 object Modules {
-    object Infra {
-        private const val BASE = ":im-infra"
+    object Api {
+        private const val BASE = ":im-api:api"
+        const val config = "$BASE-config"
+    }
 
-        const val keycloak = "$BASE:keycloak"
-        const val redis = "$BASE:redis"
+    object Commons {
+        private const val BASE = ":im-commons:im-commons"
+        const val api = "$BASE-api"
+        const val auth = "$BASE-auth"
+        const val domain = "$BASE-domain"
     }
 
     object Core {
@@ -177,6 +182,10 @@ object Modules {
         private const val PRIVILEGE = "$BASE:privilege-core:privilege-core"
         const val privilegeApi = "$PRIVILEGE-api"
         const val privilegeDomain = "$PRIVILEGE-domain"
+
+        private const val USER = "$BASE:user-core:user-core"
+        const val userApi = "$USER-api"
+        const val userDomain = "$USER-domain"
     }
 
 	object F2 {
@@ -213,6 +222,20 @@ object Modules {
         const val userLib = "$USER-lib"
 	}
 
+    object Keycloak {
+        private const val BASE = ":im-keycloak:keycloak-plugin"
+        const val generateActionToken = "$BASE:keycloak-generate-action-token"
+        const val eventListenerHttp = "$BASE:keycloak-event-listener-http"
+        const val pluginClient = "$BASE:keycloak-plugin-client"
+        const val pluginDomain = "$BASE:keycloak-plugin-domain"
+    }
+
+    object Infra {
+        private const val BASE = ":im-infra"
+        const val keycloak = "$BASE:keycloak"
+        const val redis = "$BASE:redis"
+    }
+
 	object Script {
         const val BASE = ":im-script:script"
         const val core = "$BASE-core"
@@ -221,34 +244,4 @@ object Modules {
         const val spaceConfig = "$BASE-space-config"
 		const val spaceCreate = "$BASE-space-create"
 	}
-
-    const val imApiConfig = ":im-api:api-config"
-
-	const val imCommonsApi = ":im-commons:im-commons-api"
-	const val imCommonsAuth = ":im-commons:im-commons-auth"
-	const val imCommonsDomain = ":im-commons:im-commons-domain"
-
-	const val imKeycloakF2CommonsApi = ":im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-api"
-	const val imKeycloakF2CommonsDomain = ":im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-domain"
-
-	const val imKeycloakF2ClientDomain = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-domain"
-	const val imKeycloakF2ClientCommand = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-command"
-	const val imKeycloakF2ClientQuery = ":im-keycloak:keycloak-f2:client:im-keycloak-f2-client-query"
-
-	const val imKeycloakF2RoleDomain = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-domain"
-	const val imKeycloakF2RoleCommand = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-command"
-	const val imKeycloakF2RoleQuery = ":im-keycloak:keycloak-f2:role:im-keycloak-f2-role-query"
-
-	const val imKeycloakF2UserDomain = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-domain"
-	const val imKeycloakF2UserCommand = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-command"
-	const val imKeycloakF2UserQuery = ":im-keycloak:keycloak-f2:user:im-keycloak-f2-user-query"
-
-	const val keycloakPlugin = ":im-keycloak:keycloak-plugin"
-	const val keycloakGenerateActionToken = ":im-keycloak:keycloak-plugin:keycloak-generate-action-token"
-	const val keycloakEventListenerHttp = ":im-keycloak:keycloak-plugin:keycloak-event-listener-http"
-	const val keycloakPluginClient = ":im-keycloak:keycloak-plugin:keycloak-plugin-client"
-	const val keycloakPluginDomain = ":im-keycloak:keycloak-plugin:keycloak-plugin-domain"
-
-	const val keycloakTestBdd = ":im-keycloak:keycloak-test:test-bdd"
-	const val keycloakTestIt = ":im-keycloak:keycloak-test:test-it"
 }

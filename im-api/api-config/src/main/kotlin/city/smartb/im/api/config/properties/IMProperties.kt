@@ -10,14 +10,10 @@ data class IMProperties (
     val organization: OrganizationProperties?,
     val smtp: Map<String, String>? = null,
     val theme: String? = null,
-    val user: UserProperties?,
     val keycloak: KeycloakProperties
 )
 class OrganizationProperties(
     val insee: InseeProperties?
-)
-class UserProperties(
-    val action: UserActionProperties?
 )
 
 class KeycloakProperties(
@@ -25,10 +21,6 @@ class KeycloakProperties(
     val realm: String,
     val clientId: String,
     val clientSecret: String
-)
-
-class UserActionProperties(
-    val useJwtClientId: Boolean? = false
 )
 
 class InseeProperties(

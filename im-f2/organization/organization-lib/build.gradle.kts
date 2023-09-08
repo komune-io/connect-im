@@ -14,11 +14,6 @@ dependencies {
     implementation(project(Modules.F2.privilegeLib))
     implementation(project(Modules.F2.userLib))
 
-    implementation(project(Modules.imApiConfig))
+    implementation(project(Modules.Api.config))
     implementation(project(Modules.Infra.redis))
-
-    implementation(project(Modules.imKeycloakF2ClientCommand))
-    implementation(project(Modules.imKeycloakF2ClientQuery))
-    implementation(project(Modules.imKeycloakF2ClientCommand))
-    implementation(project(Modules.imKeycloakF2UserCommand))
 }

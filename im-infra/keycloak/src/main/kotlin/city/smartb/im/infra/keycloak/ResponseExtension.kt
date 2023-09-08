@@ -1,9 +1,9 @@
 package city.smartb.im.infra.keycloak
 
+import city.smartb.im.commons.exception.I2ApiError
+import city.smartb.im.commons.exception.asI2Exception
 import f2.spring.exception.ConflictException
 import f2.spring.exception.NotFoundException
-import i2.keycloak.f2.commons.domain.error.I2ApiError
-import i2.keycloak.f2.commons.domain.error.asI2Exception
 import org.apache.http.HttpStatus
 import javax.ws.rs.core.Response
 

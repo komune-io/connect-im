@@ -25,7 +25,7 @@ val imOrganizationAttributes = listOf(
 suspend fun Organization.toDTO(
     getRole: suspend (RoleIdentifier) -> RoleDTOBase
 ) = coroutineScope {
-    val roles = roles.map { async { getRole(it) } }
+    val roles = roles.mapAsyncDeferred(getRole)
 
     OrganizationDTOBase(
         id = id,

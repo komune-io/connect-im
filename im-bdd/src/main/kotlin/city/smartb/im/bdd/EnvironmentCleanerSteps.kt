@@ -1,9 +1,7 @@
 package city.smartb.im.bdd
 
+import city.smartb.im.commons.utils.mapAsync
 import io.cucumber.java8.En
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 
 class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
     init {
@@ -27,29 +25,29 @@ class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
         }
     }
 
-    private suspend fun cleanKeycloakUsers() = coroutineScope {
-        keycloakClientProvider.get().users().list().map { user ->
-            async { keycloakClientProvider.get().user(user.id).remove() }
-        }.awaitAll()
+    private suspend fun cleanKeycloakUsers() {
+        keycloakClientProvider.get().users().list().mapAsync { user ->
+            keycloakClientProvider.get().user(user.id).remove()
+        }
     }
 
-    private suspend fun cleanKeycloakOrganizations() = coroutineScope {
-        keycloakClientProvider.get().groups().groups().map { group ->
-            async { keycloakClientProvider.get().group(group.id).remove() }
-        }.awaitAll()
+    private suspend fun cleanKeycloakOrganizations() {
+        keycloakClientProvider.get().groups().groups().mapAsync { group ->
+            keycloakClientProvider.get().group(group.id).remove()
+        }
     }
 
-    private suspend fun cleanKeycloakRoles() = coroutineScope {
+    private suspend fun cleanKeycloakRoles() {
         keycloakClientProvider.get().roles().list().filter { role ->
             role.name !in context.permanentRoles()
-        }.map { role ->
-            async { keycloakClientProvider.get().role(role.name).remove() }
-        }.awaitAll()
+        }.mapAsync { role ->
+            keycloakClientProvider.get().role(role.name).remove()
+        }
     }
 
-    private suspend fun cleanKeycloakSpaces() = coroutineScope {
-        context.spaceIdentifiers.items.map {
-            async { keycloakClientProvider.get().realm(it).remove() }
-        }.awaitAll()
+    private suspend fun cleanKeycloakSpaces() {
+        context.spaceIdentifiers.items.mapAsync {
+            keycloakClientProvider.get().realm(it).remove()
+        }
     }
 }

@@ -5,8 +5,8 @@ plugins {
 }
 
 dependencies {
-	implementation(project(Modules.imApiConfig))
-    implementation(project(Modules.imCommonsApi))
+	implementation(project(Modules.Api.config))
+    implementation(project(Modules.Commons.api))
     implementation(project(Modules.Infra.keycloak))
 
     implementation(project(Modules.F2.apikeyApi))

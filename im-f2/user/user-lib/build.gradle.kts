@@ -7,10 +7,13 @@ plugins {
 dependencies {
     api(project(Modules.F2.userDomain))
 
-    implementation(project(Modules.imApiConfig))
-    implementation(project(Modules.Core.organizationApi))
-    implementation(project(Modules.Infra.redis))
+    implementation(project(Modules.F2.privilegeLib))
 
-    implementation(project(Modules.imKeycloakF2UserCommand))
-    implementation(project(Modules.imKeycloakF2UserQuery))
+    implementation(project(Modules.Api.config))
+    implementation(project(Modules.Core.organizationApi))
+    implementation(project(Modules.Core.privilegeApi))
+    implementation(project(Modules.Core.userApi))
+
+    implementation(project(Modules.Infra.keycloak))
+    implementation(project(Modules.Infra.redis))
 }

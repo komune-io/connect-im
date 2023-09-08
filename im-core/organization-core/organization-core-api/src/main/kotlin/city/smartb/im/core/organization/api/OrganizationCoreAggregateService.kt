@@ -1,5 +1,6 @@
 package city.smartb.im.core.organization.api
 
+import city.smartb.im.commons.utils.mapAsync
 import city.smartb.im.commons.utils.toJson
 import city.smartb.im.core.commons.CoreService
 import city.smartb.im.core.organization.domain.command.OrganizationDefineCommand
@@ -11,8 +12,6 @@ import city.smartb.im.core.organization.domain.command.OrganizationSetSomeAttrib
 import city.smartb.im.core.organization.domain.model.Organization
 import city.smartb.im.infra.keycloak.handleResponseError
 import city.smartb.im.infra.redis.CacheName
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import org.keycloak.representations.idm.GroupRepresentation
 import org.springframework.stereotype.Service
 
@@ -25,9 +24,9 @@ class OrganizationCoreAggregateService: CoreService(CacheName.Organization) {
         val client = keycloakClientProvider.get()
 
         val existingGroup = command.id?.let { client.group(it).toRepresentation() }
-        val newRoles = command.roles.orEmpty().map {
-            async { client.role(it).toRepresentation() }
-        }.awaitAll()
+        val newRoles = command.roles.orEmpty().mapAsync {
+            client.role(it).toRepresentation()
+        }
 
         val group = (existingGroup ?: GroupRepresentation()).apply {
             name = command.identifier

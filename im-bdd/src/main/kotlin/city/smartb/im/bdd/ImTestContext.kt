@@ -12,7 +12,7 @@ import city.smartb.im.commons.model.UserId
 import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
-import city.smartb.im.f2.user.domain.model.User
+import city.smartb.im.f2.user.domain.model.UserDTOBase
 import org.springframework.stereotype.Component
 import s2.bdd.auth.AuthedUser
 import s2.bdd.data.TestContext
@@ -58,6 +58,6 @@ class ImTestContext: TestContext() {
         lateinit var organizations: List<OrganizationDTOBase>
         lateinit var permissions: List<PermissionDTOBase>
         lateinit var roles: List<RoleDTOBase>
-        lateinit var users: List<User>
+        lateinit var users: List<UserDTOBase>
     }
 }

@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     implementation(project(Modules.Infra.keycloak))
-    implementation(project(Modules.imCommonsApi))
+    implementation(project(Modules.Commons.api))
     implementation(project(Modules.Script.core))
     implementation(project(Modules.Core.clientApi))
 }

@@ -45,9 +45,6 @@ connect:
         realm: master
         clientId: im-root-platform
         clientSecret: secret
-    user:
-      action:
-        useJwtClientId: true
     organization:
       insee:
         token: ${INSEE_TOKEN}

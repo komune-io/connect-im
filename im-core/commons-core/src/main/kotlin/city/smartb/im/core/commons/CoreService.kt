@@ -1,12 +1,12 @@
 package city.smartb.im.core.commons
 
+import city.smartb.im.commons.exception.I2ApiError
+import city.smartb.im.commons.exception.I2Exception
+import city.smartb.im.commons.exception.asI2Exception
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import city.smartb.im.infra.redis.CacheName
 import city.smartb.im.infra.redis.CachedService
 import f2.dsl.cqrs.exception.F2Exception
-import i2.keycloak.f2.commons.domain.error.I2ApiError
-import i2.keycloak.f2.commons.domain.error.I2Exception
-import i2.keycloak.f2.commons.domain.error.asI2Exception
 import kotlinx.coroutines.CoroutineScope
 import org.springframework.beans.factory.annotation.Autowired
 

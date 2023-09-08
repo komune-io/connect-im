@@ -7,8 +7,8 @@ plugins {
 dependencies {
     api(project(Modules.F2.organizationLib))
 
-    implementation(project(Modules.imApiConfig))
-    implementation(project(Modules.imCommonsAuth))
+    implementation(project(Modules.Api.config))
+    implementation(project(Modules.Commons.auth))
     implementation(project(Modules.Infra.redis))
 
     implementation(project(Modules.F2.apikeyLib))

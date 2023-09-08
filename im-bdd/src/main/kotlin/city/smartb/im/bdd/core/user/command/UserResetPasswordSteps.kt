@@ -1,8 +1,8 @@
 package city.smartb.im.bdd.core.user.command
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
-import city.smartb.im.user.api.UserEndpoint
-import city.smartb.im.user.domain.features.command.UserResetPasswordCommand
+import city.smartb.im.f2.user.api.UserEndpoint
+import city.smartb.im.f2.user.domain.command.UserResetPasswordCommandDTOBase
 import f2.dsl.fnc.invoke
 import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +12,7 @@ class UserResetPasswordSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var userEndpoint: UserEndpoint
 
-    private lateinit var command: UserResetPasswordCommand
+    private lateinit var command: UserResetPasswordCommandDTOBase
 
     init {
         DataTableType(::userResetPasswordParams)
@@ -43,7 +43,7 @@ class UserResetPasswordSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun resetUserPassword(params: UserResetPasswordParams) {
-        command = UserResetPasswordCommand(
+        command = UserResetPasswordCommandDTOBase(
             id = context.userIds.safeGet(params.identifier)
         )
         userEndpoint.userResetPassword().invoke(command).id

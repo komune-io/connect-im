@@ -1,5 +1,6 @@
 package city.smartb.im.commons.auth
 
+import city.smartb.f2.spring.boot.auth.AuthenticationProvider
 import kotlinx.coroutines.reactor.ReactorContext
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.security.core.context.SecurityContext
@@ -7,6 +8,8 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import reactor.core.publisher.Mono
 import kotlin.coroutines.coroutineContext
+
+const val AZP_CLAIM_NAME = "azp"
 
 object AuthenticationProvider {
 	suspend fun getSecurityContext(): SecurityContext? {
@@ -34,6 +37,10 @@ object AuthenticationProvider {
 	suspend fun info(): TokenInfo {
 		return TokenInfo(getAuthentication())
 	}
+
+    suspend fun getClientId(): String? {
+        return AuthenticationProvider.getPrincipal()?.getClaim<String>(AZP_CLAIM_NAME)
+    }
 
     suspend fun getAuthedUser(): AuthedUser? = getPrincipal()?.let {
         AuthedUser(

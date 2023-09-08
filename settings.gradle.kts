@@ -33,12 +33,18 @@ include(
 
 include(
     "im-core:commons-core",
+
     "im-core:client-core:client-core-api",
     "im-core:client-core:client-core-domain",
+
     "im-core:organization-core:organization-core-api",
     "im-core:organization-core:organization-core-domain",
+
     "im-core:privilege-core:privilege-core-api",
     "im-core:privilege-core:privilege-core-domain",
+
+    "im-core:user-core:user-core-api",
+    "im-core:user-core:user-core-domain",
 )
 
 include(
@@ -69,29 +75,11 @@ include(
 )
 
 include(
-    "im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-api",
-    "im-keycloak:keycloak-f2:commons:im-keycloak-f2-commons-domain",
-
-    "im-keycloak:keycloak-f2:client:im-keycloak-f2-client-domain",
-    "im-keycloak:keycloak-f2:client:im-keycloak-f2-client-command",
-    "im-keycloak:keycloak-f2:client:im-keycloak-f2-client-query",
-
-    "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-domain",
-    "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-command",
-    "im-keycloak:keycloak-f2:role:im-keycloak-f2-role-query",
-
-    "im-keycloak:keycloak-f2:user:im-keycloak-f2-user-domain",
-    "im-keycloak:keycloak-f2:user:im-keycloak-f2-user-command",
-    "im-keycloak:keycloak-f2:user:im-keycloak-f2-user-query",
-
     "im-keycloak:keycloak-plugin",
     "im-keycloak:keycloak-plugin:keycloak-generate-action-token",
     "im-keycloak:keycloak-plugin:keycloak-event-listener-http",
     "im-keycloak:keycloak-plugin:keycloak-plugin-client",
     "im-keycloak:keycloak-plugin:keycloak-plugin-domain",
-
-    "im-keycloak:keycloak-test:test-bdd",
-    "im-keycloak:keycloak-test:test-it"
 )
 
 include(
