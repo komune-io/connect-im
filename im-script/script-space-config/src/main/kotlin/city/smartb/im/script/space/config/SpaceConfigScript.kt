@@ -49,10 +49,13 @@ class SpaceConfigScript (
             logger.info("Verify Realm[${properties.space}] exists...")
             verifySpace(properties.space)
 
-            logger.info("Initializing Privileges...")
+            logger.info("Initializing Permissions...")
             initPermissions(properties.permissions)
+            logger.info("Initialized Permissions")
+
+            logger.info("Initializing Roles...")
             initRoles(properties.roles)
-            logger.info("Initialized Privileges")
+            logger.info("Initialized Roles")
 
             logger.info("Initializing Clients...")
             properties.webClients.forEach { clientInitService.initWebClient(it) }

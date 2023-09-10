@@ -31,7 +31,7 @@ class InseeProperties(
 )
 
 suspend fun KeycloakProperties.toAuthRealm(): AuthRealm {
-    val space = AuthenticationProvider.getIssuer()?.split("/")?.last()
+    val space = AuthenticationProvider.getSpace()
     return AuthRealmClientSecret(
         serverUrl = url,
         realmId = realm,

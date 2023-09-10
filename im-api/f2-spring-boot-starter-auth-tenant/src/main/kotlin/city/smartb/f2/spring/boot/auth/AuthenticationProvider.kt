@@ -40,6 +40,10 @@ object AuthenticationProvider {
         return getPrincipal()?.getClaim<String>(AZP_CLAIM_NAME)
     }
 
+    suspend fun getSpace(): String? {
+        return getIssuer()?.split("/")?.last()
+    }
+
     suspend fun hasRole(role: String): Boolean {
         return SimpleGrantedAuthority("${WebSecurityConfig.ROLE_PREFIX}$role") in getAuthentication()
             ?.authorities
