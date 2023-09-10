@@ -28,7 +28,6 @@ interface OrganizationCreateCommandDTO: Command {
     val roles: List<String>?
     val parentOrganizationId: OrganizationId?
     val attributes: Map<String, String>?
-    val withApiKey: Boolean
 }
 
 /**
@@ -81,12 +80,6 @@ data class OrganizationCreateCommandDTOBase(
      * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.attributes]
      */
     override val attributes: Map<String, String>? = null,
-
-    /**
-     * Whether to create a default API key for the new organization.
-     * @example false
-     */
-    override val withApiKey: Boolean = false
 ): OrganizationCreateCommandDTO
 
 @JsExport

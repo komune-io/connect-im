@@ -1,7 +1,7 @@
 package city.smartb.im.apikey.domain
 
-import city.smartb.im.apikey.domain.features.command.ApiKeyOrganizationAddFunction
-import city.smartb.im.apikey.domain.features.command.ApikeyRemoveFunction
+import city.smartb.im.apikey.domain.command.ApiKeyOrganizationAddFunction
+import city.smartb.im.apikey.domain.command.ApikeyRemoveFunction
 
 interface ApiKeyCommandFeatures {
     /**

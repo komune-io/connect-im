@@ -80,7 +80,6 @@
                 "city": "Montpellier"
             },
             "roles": ["tr_orchestrator"],
-            "withApiKey": true,
             "users": [{
                 "email": "connect@smartb.city",
                 "password":  "traceconnect",

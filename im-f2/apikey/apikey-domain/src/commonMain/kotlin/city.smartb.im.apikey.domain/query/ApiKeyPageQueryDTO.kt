@@ -1,4 +1,4 @@
-package city.smartb.im.apikey.domain.features.query
+package city.smartb.im.apikey.domain.query
 
 import city.smartb.im.apikey.domain.model.ApiKey
 import city.smartb.im.apikey.domain.model.ApiKeyDTO
@@ -18,79 +18,87 @@ import kotlin.js.JsName
 typealias ApiKeyPageFunction = F2Function<ApiKeyPageQuery, ApiKeyPageResult>
 
 /**
- * TODO Use PageQueryDTO and sub filter object
+ * @d2 query
+ * @parent [ApiKeyPageFunction]
  */
 @JsExport
 @JsName("ApiKeyPageQueryDTO")
 interface ApiKeyPageQueryDTO: Query {
+    /**
+     * Search string filtering on the name of the apikey.
+     * @example "SmartB"
+     */
 	val search: String?
 	val organizationId: OrganizationId?
+
+    /**
+     * Role filter.
+     */
 	val role: String?
+
+    /**
+     * Arbitrary attributes filter.
+     */
 	val attributes: Map<String, String>?
+
+    /**
+     * If false, filter out the disabled apikeys.
+     * @example false
+     * @default false
+     */
 	val withDisabled: Boolean?
+
+    /**
+     * Maximum number of apikeys to fetch.
+     * @example 10
+     * @default 10
+     */
 	val limit: Int?
+
+    /**
+     * Index of the first apikey.
+     * @example 0
+     * @default 0
+     */
 	val offset: Int?
 }
 
 /**
- * @d2 query
- * @parent [ApiKeyPageFunction]
+ * @d2 inherit
  */
 data class ApiKeyPageQuery(
-	/**
-	 * Search string filtering on the name of the apikey.
-	 * @example "SmartB"
-	 */
 	override val search: String? = null,
-
 	override val organizationId: OrganizationId? = null,
-
-	/**
-	 * Role filter.
-	 */
 	override val role: String? = null,
-
-	/**
-	 * Arbitrary attributes filter.
-	 */
 	override val attributes: Map<String, String>? = null,
-
-	/**
-	 * If false, filter out the disabled apikeys. (default: false)
-	 * @example false
-	 */
 	override val withDisabled: Boolean? = false,
-
-	/**
-	 * Number of apikeys.
-	 * @example 10
-	 */
 	override val limit: Int? = 10,
-
-	/**
-	 * Index of the first apikey.
-	 * @example 0
-	 */
 	override val offset: Int? = 0
 ): ApiKeyPageQueryDTO
-
-@JsExport
-@JsName("ApiKeyPageResultDTO")
-interface ApiKeyPageResultDTO: PageDTO<ApiKeyDTO>
 
 /**
  * @d2 result
  * @parent [ApiKeyPageFunction]
  */
-data class ApiKeyPageResult(
+@JsExport
+@JsName("ApiKeyPageResultDTO")
+interface ApiKeyPageResultDTO: PageDTO<ApiKeyDTO> {
     /**
-	 * List of apikeys satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
-	 */
-	override val items: List<ApiKey>,
+     * List of apikeys satisfying the requesting filters. The size of the list is lesser or equal than the requested limit.
+     */
+    override val items: List<ApiKeyDTO>
 
     /**
-	 * The total amount of apikeys satisfying the requesting filters.
-	 * @example 38
-	 */
+     * The total amount of apikeys satisfying the requesting filters.
+     * @example 38
+     */
+    override val total: Int
+}
+
+/**
+ * @d2 inherit
+ */
+data class ApiKeyPageResult(
+	override val items: List<ApiKey>,
 	override val total: Int
 ): ApiKeyPageResultDTO

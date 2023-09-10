@@ -1,4 +1,4 @@
-package city.smartb.im.apikey.domain.features.command
+package city.smartb.im.apikey.domain.command
 
 import city.smartb.im.apikey.domain.model.ApiKeyId
 import city.smartb.im.commons.model.OrganizationId

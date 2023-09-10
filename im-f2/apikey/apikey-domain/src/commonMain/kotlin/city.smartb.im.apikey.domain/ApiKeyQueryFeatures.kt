@@ -1,7 +1,7 @@
 package city.smartb.im.apikey.domain
 
-import city.smartb.im.apikey.domain.features.query.ApiKeyGetFunction
-import city.smartb.im.apikey.domain.features.query.ApiKeyPageFunction
+import city.smartb.im.apikey.domain.query.ApiKeyGetFunction
+import city.smartb.im.apikey.domain.query.ApiKeyPageFunction
 
 interface ApiKeyQueryFeatures {
     /**
