@@ -31,11 +31,18 @@ interface UserPageQueryDTO: Query {
 	val organizationId: OrganizationId?
 
 	/**
-	 * Search string filtering on the email, firstname and lastname of the user. Case insensitive.
+	 * Search string filtering on the firstname and lastname of the user. Case insensitive.
      * @example "john"
      * @default null
      */
-	val search: String?
+	val name: String?
+
+	/**
+	 * Search string filtering on the email of the user. Case insensitive.
+     * @example "john"
+     * @default null
+     */
+	val email: String?
 
 	/**
 	 * Filter on user roles.
@@ -72,7 +79,8 @@ interface UserPageQueryDTO: Query {
  */
 data class UserPageQuery(
     override val organizationId: OrganizationId? = null,
-    override val search: String? = null,
+    override val name: String? = null,
+    override val email: String? = null,
     override val role: String? = null,
     override val attributes: Map<String, String>? = null,
     override val withDisabled: Boolean = false,

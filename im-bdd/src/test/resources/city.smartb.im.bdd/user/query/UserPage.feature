@@ -1,6 +1,8 @@
 Feature: UserPage
+
   Background:
     Given I am authenticated as admin
+
   Scenario: I want to get a page of users
     Given Some users are created:
       | identifier | email          | memberOf |

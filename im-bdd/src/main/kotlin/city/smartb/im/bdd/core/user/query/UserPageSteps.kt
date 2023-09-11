@@ -32,7 +32,8 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
     private suspend fun fetchUserPage(params: UserPageParams) {
         context.fetched.users = UserPageQuery(
             organizationId = params.organizationId,
-            search = params.search,
+            name = params.name,
+            email = params.email,
             role = params.role,
             withDisabled = params.withDisable,
             offset = params.offset,
@@ -43,7 +44,8 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
 
     private fun userPageParams(entry: Map<String, String>?) = UserPageParams(
         organizationId = entry?.get("organizationId").parseNullableOrDefault(context.organizationIds.lastUsedOrNull),
-        search = entry?.get("search"),
+        name = entry?.get("name"),
+        email = entry?.get("email"),
         role = entry?.get("role"),
 //        attributes = entry?.get("attr"),
         withDisable = entry?.get("withDisabled").toBoolean(),
@@ -53,7 +55,8 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
 
     private data class UserPageParams(
         val organizationId: OrganizationId?,
-        val search: String?,
+        val name: String?,
+        val email: String?,
         val role: String?,
 //        val attributes: Map<String, String>?,
         val withDisable: Boolean,
