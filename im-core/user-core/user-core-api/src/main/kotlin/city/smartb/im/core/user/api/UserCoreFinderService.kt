@@ -43,7 +43,8 @@ class UserCoreFinderService(
     suspend fun page(
         ids: Collection<UserId>? = null,
         organizationIds: Collection<OrganizationId>? = null,
-        search: String? = null,
+        name: String? = null,
+        email: String? = null,
         roles: Collection<RoleIdentifier>? = null,
         attributes: Map<String, String>? = null,
         withDisabled: Boolean = false,
@@ -76,7 +77,8 @@ class UserCoreFinderService(
                 && user.memberOf.matches(organizationIds)
                 && (withDisabled || user.enabled)
                 && (attributes == null || attributes.all { (key, value) -> user.attributes[key] == value })
-                && (search == null || ("${user.email}///${user.givenName}///${user.familyName}").contains(search, true))
+                && (email == null || user.email.contains(email, true))
+                && (name == null || ("${user.givenName} ${user.familyName}").contains(name, true))
                 && (user.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles))
         }.sortedByDescending(User::creationDate)
             .page(offset)

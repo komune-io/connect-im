@@ -74,7 +74,8 @@ class UserEndpoint(
         userFinderService.page(
             organizationIds = enforcedQuery.organizationId?.let(::listOf),
             roles = roles,
-            search = enforcedQuery.search,
+            name = enforcedQuery.name,
+            email = enforcedQuery.email,
             attributes = enforcedQuery.attributes,
             withDisabled = enforcedQuery.withDisabled,
             offset = OffsetPagination(

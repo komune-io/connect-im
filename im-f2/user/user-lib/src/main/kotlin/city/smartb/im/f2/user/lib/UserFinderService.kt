@@ -30,7 +30,8 @@ class UserFinderService(
     suspend fun page(
         ids: Collection<UserId>? = null,
         organizationIds: Collection<OrganizationId>? = null,
-        search: String? = null,
+        name: String? = null,
+        email: String? = null,
         roles: Collection<RoleIdentifier>? = null,
         attributes: Map<String, String>? = null,
         withDisabled: Boolean = false,
@@ -39,7 +40,8 @@ class UserFinderService(
         return userCoreFinderService.page(
             ids = ids,
             organizationIds = organizationIds,
-            search = search,
+            name = name,
+            email = email,
             roles = roles,
             attributes = attributes,
             withDisabled = withDisabled,
