@@ -1,10 +1,12 @@
 package city.smartb.im.bdd.core.organization.command
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
+import city.smartb.im.bdd.core.organization.data.extractOrganizationStatus
 import city.smartb.im.bdd.core.organization.data.organization
 import city.smartb.im.commons.model.Address
 import city.smartb.im.f2.organization.api.OrganizationEndpoint
-import city.smartb.im.f2.organization.domain.command.OrganizationUpdateCommand
+import city.smartb.im.f2.organization.domain.command.OrganizationUpdateCommandDTOBase
+import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import city.smartb.im.f2.organization.domain.query.OrganizationGetQuery
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import f2.dsl.fnc.invoke
@@ -20,7 +22,7 @@ class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var organizationEndpoint: OrganizationEndpoint
 
-    private lateinit var command: OrganizationUpdateCommand
+    private lateinit var command: OrganizationUpdateCommandDTOBase
 
     init {
         DataTableType(::organizationUpdateParams)
@@ -69,21 +71,23 @@ class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
                     address = command.address ?: organization.address,
                     website = command.website ?: organization.website,
                     roles = command.roles ?: organization.roles.map(RoleDTOBase::identifier),
-                    attributes = command.attributes ?: organization.attributes
+                    attributes = command.attributes ?: organization.attributes,
+                    status = command.status
                 )
             }
         }
     }
 
     private suspend fun updateOrganization(params: OrganizationUpdateParams) {
-        command = OrganizationUpdateCommand(
+        command = OrganizationUpdateCommandDTOBase(
             id = context.organizationIds.safeGet(params.identifier),
             name = params.name,
             description = params.description,
             address = params.address,
             website = params.website,
             roles = params.roles,
-            attributes = params.attributes
+            attributes = params.attributes,
+            status = params.status.name
         )
         organizationEndpoint.organizationUpdate().invoke(command).id
     }
@@ -105,7 +109,8 @@ class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
             ),
             website = entry?.get("website"),
             roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
-            attributes = organizationAttributesParams(entry)
+            attributes = organizationAttributesParams(entry),
+            status = entry?.extractOrganizationStatus("status") ?: OrganizationStatus.VALIDATED
         )
     }
 
@@ -116,7 +121,8 @@ class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
         val address: Address?,
         val website: String?,
         val roles: List<String>?,
-        val attributes: Map<String, String>?
+        val attributes: Map<String, String>?,
+        val status: OrganizationStatus
     )
 
     private fun organizationAttributesParams(entry: Map<String, String>?): Map<String, String>? {

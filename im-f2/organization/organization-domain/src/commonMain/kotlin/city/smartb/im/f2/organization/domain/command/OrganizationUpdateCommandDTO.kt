@@ -15,79 +15,85 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  * @order 20
  */
-typealias OrganizationUpdateFunction = F2Function<OrganizationUpdateCommand, OrganizationUpdatedResult>
-
-@JsExport
-@JsName("OrganizationUpdateCommandDTO")
-interface OrganizationUpdateCommandDTO: Command {
-    val id: OrganizationId
-    val name: String
-    val description: String?
-    val address: AddressDTO?
-    val website: String?
-    val roles: List<String>?
-    val attributes: Map<String, String>?
-}
+typealias OrganizationUpdateFunction = F2Function<OrganizationUpdateCommandDTOBase, OrganizationUpdatedResult>
 
 /**
  * @d2 command
  * @parent [OrganizationUpdateFunction]
  */
-data class OrganizationUpdateCommand(
+@JsExport
+@JsName("OrganizationUpdateCommandDTO")
+interface OrganizationUpdateCommandDTO: Command {
     /**
-     * Identifier of the organization.
+     * Id of the organization.
      */
-    override val id: OrganizationId,
+    val id: OrganizationId
 
     /**
      * Official name of the organization.
      * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.name]
      */
-    override val name: String,
+    val name: String
 
     /**
      * Description of the organization.
      * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.description]
      */
-    override val description: String?,
+    val description: String?
 
     /**
      * Address of the organization.
      */
-    override val address: Address?,
+    val address: AddressDTO?
 
     /**
      * Website of the organization.
      * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.website]
      */
-    override val website: String?,
+    val website: String?
 
     /**
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
      * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.roles]
      */
-    override val roles: List<String>?,
+    val roles: List<String>?
 
     /**
      * Additional arbitrary attributes assigned to the organization.
      * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.attributes]
      */
-    override val attributes: Map<String, String>?
-): OrganizationUpdateCommandDTO
+    val attributes: Map<String, String>?
 
-@JsExport
-@JsName("OrganizationUpdatedResultDTO")
-interface OrganizationUpdatedResultDTO: Event {
-    val id: OrganizationId
+    /**
+     * @ref [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.status]
+     */
+    val status: String
 }
+
+data class OrganizationUpdateCommandDTOBase(
+    override val id: OrganizationId,
+    override val name: String,
+    override val description: String?,
+    override val address: Address?,
+    override val website: String?,
+    override val roles: List<String>?,
+    override val attributes: Map<String, String>?,
+    override val status: String
+): OrganizationUpdateCommandDTO
 
 /**
  * @d2 event
  * @parent [OrganizationUpdateFunction]
  */
-data class OrganizationUpdatedResult(
+@JsExport
+@JsName("OrganizationUpdatedResultDTO")
+interface OrganizationUpdatedResultDTO: Event {
     /**
-     * Identifier of the organization.
+     * Id of the updated organization.
      */
+    val id: OrganizationId
+}
+
+data class OrganizationUpdatedResult(
     override val id: OrganizationId
 ): OrganizationUpdatedResultDTO

@@ -19,12 +19,13 @@ import city.smartb.im.f2.organization.domain.command.OrganizationDeleteCommandDT
 import city.smartb.im.f2.organization.domain.command.OrganizationDeletedEventDTOBase
 import city.smartb.im.f2.organization.domain.command.OrganizationDisableCommand
 import city.smartb.im.f2.organization.domain.command.OrganizationDisabledEvent
-import city.smartb.im.f2.organization.domain.command.OrganizationUpdateCommand
+import city.smartb.im.f2.organization.domain.command.OrganizationUpdateCommandDTOBase
 import city.smartb.im.f2.organization.domain.command.OrganizationUpdatedResult
 import city.smartb.im.f2.organization.domain.command.OrganizationUploadLogoCommand
 import city.smartb.im.f2.organization.domain.command.OrganizationUploadedLogoEvent
 import city.smartb.im.f2.organization.domain.model.OrganizationDTO
 import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
+import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import city.smartb.im.f2.organization.lib.config.OrganizationFsConfig
 import city.smartb.im.f2.user.domain.command.UserDisableCommandDTOBase
 import city.smartb.im.f2.user.domain.command.UserDisabledEventDTOBase
@@ -61,6 +62,7 @@ class OrganizationAggregateService(
             attributes = command.attributes.orEmpty() + listOfNotNull(
                 command.siret?.let { OrganizationDTO::siret.name to it },
                 command.website?.let { OrganizationDTO::website.name to it },
+                OrganizationDTO::status.name to OrganizationStatus.valueOf(command.status).name
             ).toMap().filterValues { it.isNotBlank() },
         ).let { organizationCoreAggregateService.define(it).id }
 
@@ -70,7 +72,7 @@ class OrganizationAggregateService(
         )
     }
 
-    suspend fun update(command: OrganizationUpdateCommand): OrganizationUpdatedResult {
+    suspend fun update(command: OrganizationUpdateCommandDTOBase): OrganizationUpdatedResult {
         checkRoles(command.roles.orEmpty())
 
         OrganizationDefineCommand(
@@ -82,6 +84,7 @@ class OrganizationAggregateService(
             roles = command.roles,
             attributes = command.attributes.orEmpty() + listOfNotNull(
                 command.website?.let { OrganizationDTO::website.name to it },
+                OrganizationDTO::status.name to OrganizationStatus.valueOf(command.status).name
             ).toMap().filterValues { it.isNotBlank() },
         ).let { organizationCoreAggregateService.define(it).id }
 

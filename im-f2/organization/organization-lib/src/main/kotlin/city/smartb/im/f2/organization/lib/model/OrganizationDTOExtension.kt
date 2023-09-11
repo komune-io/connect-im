@@ -5,9 +5,9 @@ import city.smartb.im.commons.utils.mapAsyncDeferred
 import city.smartb.im.core.organization.domain.model.Organization
 import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import city.smartb.im.f2.organization.domain.model.OrganizationRef
+import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 
 val imOrganizationAttributes = listOf(
     Organization::displayName.name,
@@ -24,10 +24,10 @@ val imOrganizationAttributes = listOf(
 
 suspend fun Organization.toDTO(
     getRole: suspend (RoleIdentifier) -> RoleDTOBase
-) = coroutineScope {
+): OrganizationDTOBase {
     val roles = roles.mapAsyncDeferred(getRole)
 
-    OrganizationDTOBase(
+    return OrganizationDTOBase(
         id = id,
         name = identifier,
         siret = attributes[OrganizationDTOBase::siret.name].orEmpty(),
@@ -37,10 +37,11 @@ suspend fun Organization.toDTO(
         attributes = attributes.filterKeys { key -> key !in imOrganizationAttributes },
         roles = roles.awaitAll(),
         logo = attributes[OrganizationDTOBase::logo.name],
+        status = attributes[OrganizationDTOBase::status.name] ?: OrganizationStatus.PENDING.name,
         enabled = enabled,
         disabledBy = attributes[OrganizationDTOBase::disabledBy.name],
         creationDate = attributes[OrganizationDTOBase::creationDate.name]?.toLong() ?: 0,
-        disabledDate = attributes[OrganizationDTOBase::disabledDate.name]?.toLong()
+        disabledDate = attributes[OrganizationDTOBase::disabledDate.name]?.toLong(),
     )
 }
 

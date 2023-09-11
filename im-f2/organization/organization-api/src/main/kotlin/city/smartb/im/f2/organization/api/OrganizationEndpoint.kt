@@ -8,6 +8,7 @@ import city.smartb.im.f2.organization.domain.command.OrganizationDisableFunction
 import city.smartb.im.f2.organization.domain.command.OrganizationUpdateFunction
 import city.smartb.im.f2.organization.domain.command.OrganizationUploadLogoCommand
 import city.smartb.im.f2.organization.domain.command.OrganizationUploadedLogoEvent
+import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import city.smartb.im.f2.organization.domain.query.OrganizationGetFromInseeFunction
 import city.smartb.im.f2.organization.domain.query.OrganizationGetFromInseeResult
 import city.smartb.im.f2.organization.domain.query.OrganizationGetFunction
@@ -77,9 +78,10 @@ class OrganizationEndpoint(
         }.ifEmpty { null }
 
         organizationFinderService.page(
-            search = query.search,
+            name = query.name,
             roles = roles,
             attributes = query.attributes,
+            status = query.status?.let(OrganizationStatus::valueOf),
             withDisabled = query.withDisabled ?: false,
             offset = OffsetPagination(
                 offset = query.offset ?: 0,

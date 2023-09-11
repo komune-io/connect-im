@@ -1,11 +1,13 @@
 package city.smartb.im.bdd.core.organization.command
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
+import city.smartb.im.bdd.core.organization.data.extractOrganizationStatus
 import city.smartb.im.bdd.core.organization.data.organization
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.f2.organization.api.OrganizationEndpoint
 import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
+import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -64,7 +66,8 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
                     address = command.address,
                     website = command.website,
                     roles = command.roles,
-                    attributes = command.attributes ?: emptyMap()
+                    attributes = command.attributes ?: emptyMap(),
+                    status = command.status
                 )
             }
         }
@@ -79,7 +82,8 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
             website = params.website,
             roles = params.roles,
             parentOrganizationId = params.parentOrganizationId,
-            attributes = params.attributes
+            attributes = params.attributes,
+            status = params.status.name
         )
         organizationEndpoint.organizationCreate().invoke(command).id
     }
@@ -99,7 +103,8 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
             website = entry?.get("website") ?: "https://smartb.network",
             roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
             parentOrganizationId = entry?.get("parentOrganizationId"),
-            attributes = organizationAttributesParams(entry)
+            attributes = organizationAttributesParams(entry),
+            status = entry?.extractOrganizationStatus("status") ?: OrganizationStatus.VALIDATED
         )
     }
 
@@ -112,7 +117,8 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
         val website: String?,
         val roles: List<String>?,
         val parentOrganizationId: OrganizationId?,
-        val attributes: Map<String, String>
+        val attributes: Map<String, String>,
+        val status: OrganizationStatus
     )
 
     private fun organizationAttributesParams(entry: Map<String, String>?): Map<String, String> {

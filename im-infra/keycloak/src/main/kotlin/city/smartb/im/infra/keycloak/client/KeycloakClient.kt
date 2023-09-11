@@ -20,7 +20,7 @@ class KeycloakClient(
     val auth: AuthRealm,
     val realmId: RealmId
 ) {
-    val defaultRealmRole = "default-realm-$realmId"
+    val defaultRealmRole = "default-roles-$realmId"
 
 	/* Client */
 	fun clients(): ClientsResource {
