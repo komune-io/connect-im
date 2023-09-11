@@ -36,6 +36,7 @@ class AssertionOrganization(
         private val groupWebsite: String? = singleAttributes[OrganizationDTOBase::website.name]
         private val groupEnabled: Boolean = singleAttributes[OrganizationDTOBase::enabled.name].toBoolean()
         private val groupCreationDate: Long = singleAttributes[OrganizationDTOBase::creationDate.name]?.toLong() ?: 0
+        private val groupStatus: String = singleAttributes[OrganizationDTOBase::status.name]!!
 
         fun hasFields(
             id: OrganizationId = group.id,
@@ -47,7 +48,8 @@ class AssertionOrganization(
             attributes: Map<String, String> = singleAttributes,
             roles: List<String>? = group.realmRoles,
             enabled: Boolean = groupEnabled,
-            creationDate: Long = groupCreationDate
+            creationDate: Long = groupCreationDate,
+            status: String = groupStatus,
         ) = also {
             Assertions.assertThat(group.id).isEqualTo(id)
             Assertions.assertThat(groupSiret).isEqualTo(siret)
@@ -59,6 +61,7 @@ class AssertionOrganization(
             Assertions.assertThat(roles).isEqualTo(roles)
             Assertions.assertThat(groupEnabled).isEqualTo(enabled)
             Assertions.assertThat(groupCreationDate).isEqualTo(creationDate)
+            Assertions.assertThat(groupStatus).isEqualTo(status)
         }
 
         fun matches(organization: OrganizationDTOBase) = hasFields(
@@ -71,7 +74,8 @@ class AssertionOrganization(
             attributes = organization.attributes,
             roles = organization.roles.map(RoleDTOBase::identifier),
             enabled = organization.enabled,
-            creationDate = organization.creationDate
+            creationDate = organization.creationDate,
+            status = organization.status
         )
 
         fun isAnonym() = also {

@@ -5,7 +5,7 @@ import city.smartb.im.commons.http.ClientJvm
 import city.smartb.im.commons.http.HttpClientBuilderJvm
 import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
 import city.smartb.im.f2.organization.domain.command.OrganizationCreatedEvent
-import city.smartb.im.f2.organization.domain.command.OrganizationUpdateCommand
+import city.smartb.im.f2.organization.domain.command.OrganizationUpdateCommandDTOBase
 import city.smartb.im.f2.organization.domain.command.OrganizationUpdatedResult
 import city.smartb.im.f2.organization.domain.query.OrganizationGetFromInseeQuery
 import city.smartb.im.f2.organization.domain.query.OrganizationGetFromInseeResult
@@ -37,6 +37,6 @@ class OrganizationClient(
     suspend fun organizationCreate(commands: List<OrganizationCreateCommandDTOBase>):
             List<OrganizationCreatedEvent> = post("organizationCreate", commands)
 
-    suspend fun organizationUpdate(commands: List<OrganizationUpdateCommand>):
+    suspend fun organizationUpdate(commands: List<OrganizationUpdateCommandDTOBase>):
             List<OrganizationUpdatedResult> = post("organizationUpdate", commands)
 }
