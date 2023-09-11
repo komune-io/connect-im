@@ -6,6 +6,7 @@ import city.smartb.im.commons.model.SpaceIdentifier
 import city.smartb.im.commons.utils.ParserUtils
 import city.smartb.im.commons.utils.mapAsync
 import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
+import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import city.smartb.im.f2.organization.lib.OrganizationAggregateService
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
@@ -134,6 +135,7 @@ class SpaceConfigScript (
                     roles = organization.roles,
                     parentOrganizationId = null,
                     attributes = organization.attributes,
+                    status = OrganizationStatus.VALIDATED.name
                 ).let { organizationAggregateService.create(it).id }
             } catch (e: ConflictException) {
                 return@mapAsync

@@ -6,7 +6,6 @@ import f2.dsl.cqrs.Query
 import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
-import kotlin.js.JsName
 
 /**
  * Get a page of organizations.
@@ -16,51 +15,56 @@ import kotlin.js.JsName
  */
 typealias OrganizationPageFunction = F2Function<OrganizationPageQuery, OrganizationPageResult>
 
+/**
+ * @d2 query
+ * @parent [OrganizationPageFunction]
+ */
 @JsExport
-@JsName("OrganizationPageQueryDTO")
 interface OrganizationPageQueryDTO: Query {
-	val search: String?
+    /**
+     * Search string filtering on the name of the organization.
+     * @example "SmartB"
+     */
+	val name: String?
+
+    /**
+	 * Role filter.
+	 */
 	val role: String?
-	val roles: List<String>?
-	val attributes: Map<String, String>?
+
+    val roles: List<String>?
+
+    /**
+     * Arbitrary attributes filter.
+     */
+    val attributes: Map<String, String>?
+
+    /**
+     * Status filter. See [OrganizationStatus][city.smartb.im.f2.organization.domain.model.OrganizationStatus]
+     */
+    val status: String?
+
+    /**
+     * If false, filter out the disabled organizations. (default: false)
+     * @example false
+     */
 	val withDisabled: Boolean?
     val offset: Int?
     val limit: Int?
 }
 
 /**
- * @d2 query
+ * @d2 result
  * @parent [OrganizationPageFunction]
  */
 data class OrganizationPageQuery(
-	/**
-	 * Search string filtering on the name of the organization.
-	 * @example "SmartB"
-	 */
-	override val search: String? = null,
-
-	/**
-	 * Role filter.
-	 */
+	override val name: String? = null,
 	override val role: String? = null,
-
-	/**
-	 * Arbitrary attributes filter.
-	 */
 	override val attributes: Map<String, String>? = null,
-
-    /**
-	 * If false, filter out the disabled organizations. (default: false)
-	 * @example false
-	 */
+	override val status: String? = null,
 	override val withDisabled: Boolean? = false,
-
     override val offset: Int?,
     override val limit: Int?,
-
-    /**
-	 * Role filter.
-	 */
 	override val roles: List<String>? = null
 ): OrganizationPageQueryDTO
 
@@ -69,21 +73,23 @@ data class OrganizationPageQuery(
  * @parent [OrganizationPageFunction]
  */
 @JsExport
-@JsName("OrganizationPageResultDTO")
-interface OrganizationPageResultDTO: PageDTO<OrganizationDTO>
+interface OrganizationPageResultDTO: PageDTO<OrganizationDTO> {
+    /**
+     * List of organizations satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
+     */
+    override val items: List<OrganizationDTO>
+
+    /**
+     * The total amount of organization satisfying the requesting filters.
+     * @example 38
+     */
+    override val total: Int
+}
 
 /**
  * @d2 inherit
  */
 data class OrganizationPageResult(
-    /**
-	 * List of organizations satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
-	 */
-	override val items: List<OrganizationDTOBase>,
-
-    /**
-	 * The total amount of organization satisfying the requesting filters.
-	 * @example 38
-	 */
-	override val total: Int
+    override val items: List<OrganizationDTOBase>,
+    override val total: Int
 ): OrganizationPageResultDTO

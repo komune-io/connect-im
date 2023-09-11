@@ -4,8 +4,10 @@ import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.core.organization.api.OrganizationCoreFinderService
 import city.smartb.im.core.organization.domain.model.Organization
+import city.smartb.im.f2.organization.domain.model.OrganizationDTO
 import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import city.smartb.im.f2.organization.domain.model.OrganizationRef
+import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import city.smartb.im.f2.organization.lib.model.toDTO
 import city.smartb.im.f2.organization.lib.model.toOrganization
 import city.smartb.im.f2.organization.lib.model.toRef
@@ -41,16 +43,19 @@ class OrganizationFinderService(
     }
 
     suspend fun page(
-        search: String? = null,
+        name: String? = null,
         roles: Collection<RoleIdentifier>? = null,
         attributes: Map<String, String>? = null,
+        status: OrganizationStatus? = null,
         withDisabled: Boolean = false,
         offset: OffsetPagination? = null,
     ): PageDTO<OrganizationDTOBase> {
         return organizationCoreFinderService.page(
-            search = search,
+            identifier = name,
             roles = roles,
-            attributes = attributes,
+            attributes = attributes.orEmpty() + listOfNotNull(
+                status?.let { OrganizationDTO::status.name to it.name }
+            ).toMap(),
             withDisabled = withDisabled,
             offset = offset,
         ).map { it.toDTOInternal() }

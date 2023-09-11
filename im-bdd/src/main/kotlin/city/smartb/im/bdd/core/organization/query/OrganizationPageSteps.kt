@@ -30,7 +30,7 @@ class OrganizationPageSteps: En, ImCucumberStepsDefinition() {
 
     private suspend fun fetchOrganizationPage(params: OrganizationPageParams) {
         context.fetched.organizations = OrganizationPageQuery(
-            search = params.search,
+            name = params.search,
             role = params.role,
             withDisabled = params.withDisable,
             offset = params.offset ?: 0,
