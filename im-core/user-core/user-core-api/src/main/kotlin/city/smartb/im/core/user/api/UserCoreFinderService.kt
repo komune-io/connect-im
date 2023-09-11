@@ -56,7 +56,29 @@ class UserCoreFinderService(
             role.name to client.role(role.name).realmRoleComposites.mapNotNull { it.name }
         }.toMap()
 
-        val users = when {
+        val users = list(
+            ids = ids,
+            organizationIds = organizationIds
+        )
+
+        return users.filter { user ->
+            user.id.matches(ids)
+                && user.memberOf.matches(organizationIds)
+                && (withDisabled || user.enabled)
+                && (attributes == null || attributes.all { (key, value) -> user.attributes[key] == value })
+                && (email == null || user.email.contains(email, true))
+                && (name == null || ("${user.givenName} ${user.familyName}").contains(name, true))
+                && (user.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles))
+        }.sortedByDescending(User::creationDate)
+            .page(offset)
+    }
+
+    private suspend fun list(
+        ids: Collection<UserId>? = null,
+        organizationIds: Collection<OrganizationId>? = null
+    ): List<User> {
+        val client = keycloakClientProvider.get()
+        return when {
             ids != null -> {
                 ids.mapAsync(::getOrNull).filterNotNull()
             }
@@ -71,16 +93,5 @@ class UserCoreFinderService(
                     .let { userRepresentationTransformer.transform(it) }
             }
         }
-
-        return users.filter { user ->
-            user.id.matches(ids)
-                && user.memberOf.matches(organizationIds)
-                && (withDisabled || user.enabled)
-                && (attributes == null || attributes.all { (key, value) -> user.attributes[key] == value })
-                && (email == null || user.email.contains(email, true))
-                && (name == null || ("${user.givenName} ${user.familyName}").contains(name, true))
-                && (user.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles))
-        }.sortedByDescending(User::creationDate)
-            .page(offset)
     }
 }
