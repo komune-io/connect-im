@@ -3,7 +3,7 @@ package city.smartb.im.core.organization.domain.command
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.OrganizationId
 
-data class OrganizationDefineCommand(
+data class OrganizationCoreDefineCommand(
     val id: OrganizationId?,
     val identifier: String,
     val displayName: String = identifier,
@@ -14,6 +14,6 @@ data class OrganizationDefineCommand(
     val attributes: Map<String, String>?,
 )
 
-data class OrganizationDefinedEvent(
+data class OrganizationCoreDefinedEvent(
     val id: OrganizationId
 )

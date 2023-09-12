@@ -1,8 +1,8 @@
 package city.smartb.im.f2.privilege.domain.role.query
 
 import city.smartb.im.commons.model.RoleIdentifier
+import city.smartb.im.f2.privilege.domain.role.model.Role
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTO
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import f2.dsl.fnc.F2Function
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
@@ -14,7 +14,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.f2.privilege.domain.D2RolePage]
  * @order 10
  */
-typealias RoleGetFunction = F2Function<RoleGetQueryDTOBase, RoleGetResultDTOBase>
+typealias RoleGetFunction = F2Function<RoleGetQuery, RoleGetResult>
 
 /**
  * @d2 query
@@ -25,7 +25,7 @@ typealias RoleGetFunction = F2Function<RoleGetQueryDTOBase, RoleGetResultDTOBase
 interface RoleGetQueryDTO {
     /**
      * Identifier of the role to get.
-     * @example [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.identifier]
+     * @example [city.smartb.im.f2.privilege.domain.role.model.Role.identifier]
      */
     val identifier: RoleIdentifier
 }
@@ -34,7 +34,7 @@ interface RoleGetQueryDTO {
  * @d2 inherit
  */
 @Serializable
-data class RoleGetQueryDTOBase(
+data class RoleGetQuery(
     override val identifier: RoleIdentifier
 ): RoleGetQueryDTO
 
@@ -55,6 +55,6 @@ interface RoleGetResultDTO {
  * @d2 inherit
  */
 @Serializable
-data class RoleGetResultDTOBase(
-    override val item: RoleDTOBase?
+data class RoleGetResult(
+    override val item: Role?
 ): RoleGetResultDTO

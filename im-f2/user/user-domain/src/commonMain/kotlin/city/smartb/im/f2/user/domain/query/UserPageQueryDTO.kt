@@ -1,8 +1,8 @@
 package city.smartb.im.f2.user.domain.query
 
 import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.f2.user.domain.model.User
 import city.smartb.im.f2.user.domain.model.UserDTO
-import city.smartb.im.f2.user.domain.model.UserDTOBase
 import f2.dsl.cqrs.Query
 import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.fnc.F2Function
@@ -111,6 +111,6 @@ interface UserPageResultDTO: PageDTO<UserDTO> {
  * @d2 inherit
  */
 data class UserPageResult(
-    override val items: List<UserDTOBase>,
+    override val items: List<User>,
     override val total: Int
 ): UserPageResultDTO

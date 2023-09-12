@@ -6,9 +6,9 @@ import city.smartb.im.f2.privilege.api.service.PrivilegePoliciesEnforcer
 import city.smartb.im.f2.privilege.domain.RoleApi
 import city.smartb.im.f2.privilege.domain.role.command.RoleDefineFunction
 import city.smartb.im.f2.privilege.domain.role.query.RoleGetFunction
-import city.smartb.im.f2.privilege.domain.role.query.RoleGetResultDTOBase
+import city.smartb.im.f2.privilege.domain.role.query.RoleGetResult
 import city.smartb.im.f2.privilege.domain.role.query.RoleListFunction
-import city.smartb.im.f2.privilege.domain.role.query.RoleListResultDTOBase
+import city.smartb.im.f2.privilege.domain.role.query.RoleListResult
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import org.springframework.context.annotation.Bean
@@ -28,7 +28,7 @@ class RoleEndpoint(
         logger.info("roleGet: $query")
         privilegePoliciesEnforcer.checkGet()
         privilegeFinderService.getRoleOrNull(query.identifier)
-            .let(::RoleGetResultDTOBase)
+            .let(::RoleGetResult)
     }
 
     @Bean
@@ -37,7 +37,7 @@ class RoleEndpoint(
         privilegePoliciesEnforcer.checkList()
         privilegeFinderService.listRoles(
             targets = query.target?.let { listOf(RoleTarget.valueOf(it)) }
-        ).let(::RoleListResultDTOBase)
+        ).let(::RoleListResult)
     }
 
     @Bean

@@ -3,7 +3,7 @@ package city.smartb.im.core.client.api
 import city.smartb.im.commons.model.ClientId
 import city.smartb.im.commons.model.ClientIdentifier
 import city.smartb.im.core.client.api.model.toClient
-import city.smartb.im.core.client.domain.model.Client
+import city.smartb.im.core.client.domain.model.ClientModel
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import f2.spring.exception.NotFoundException
 import org.springframework.stereotype.Service
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 class ClientCoreFinderService(
     private val keycloakClientProvider: KeycloakClientProvider
 ) {
-    suspend fun getOrNull(id: ClientId): Client? {
+    suspend fun getOrNull(id: ClientId): ClientModel? {
         val keycloakClient = keycloakClientProvider.get()
 
         return try {
@@ -24,11 +24,11 @@ class ClientCoreFinderService(
         }
     }
 
-    suspend fun get(id: ClientId): Client {
+    suspend fun get(id: ClientId): ClientModel {
         return getOrNull(id) ?: throw NotFoundException("Client", id)
     }
 
-    suspend fun getByIdentifierOrNull(identifier: ClientIdentifier): Client? {
+    suspend fun getByIdentifierOrNull(identifier: ClientIdentifier): ClientModel? {
         val keycloakClient = keycloakClientProvider.get()
 
         return try {
@@ -38,7 +38,7 @@ class ClientCoreFinderService(
         }
     }
 
-    suspend fun getByIdentifier(identifier: ClientIdentifier): Client {
+    suspend fun getByIdentifier(identifier: ClientIdentifier): ClientModel {
         return getByIdentifierOrNull(identifier) ?: throw NotFoundException("Client with identifier", identifier)
     }
 

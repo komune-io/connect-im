@@ -1,8 +1,8 @@
 package city.smartb.im.f2.privilege.domain.permission.query
 
 import city.smartb.im.commons.model.PermissionIdentifier
+import city.smartb.im.f2.privilege.domain.permission.model.Permission
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTO
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import f2.dsl.fnc.F2Function
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
@@ -14,7 +14,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.f2.privilege.domain.D2PermissionPage]
  * @order 10
  */
-typealias PermissionGetFunction = F2Function<PermissionGetQueryDTOBase, PermissionGetResultDTOBase>
+typealias PermissionGetFunction = F2Function<PermissionGetQuery, PermissionGetResult>
 
 /**
  * @d2 query
@@ -25,13 +25,13 @@ typealias PermissionGetFunction = F2Function<PermissionGetQueryDTOBase, Permissi
 interface PermissionGetQueryDTO {
     /**
      * Identifier of the permission to get.
-     * @example [city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase.identifier]
+     * @example [city.smartb.im.f2.privilege.domain.permission.model.Permission.identifier]
      */
     val identifier: PermissionIdentifier
 }
 
 @Serializable
-data class PermissionGetQueryDTOBase(
+data class PermissionGetQuery(
     override val identifier: PermissionIdentifier
 ): PermissionGetQueryDTO
 
@@ -52,6 +52,6 @@ interface PermissionGetResultDTO {
  * @d2 inherit
  */
 @Serializable
-data class PermissionGetResultDTOBase(
-    override val item: PermissionDTOBase?
+data class PermissionGetResult(
+    override val item: Permission?
 ): PermissionGetResultDTO

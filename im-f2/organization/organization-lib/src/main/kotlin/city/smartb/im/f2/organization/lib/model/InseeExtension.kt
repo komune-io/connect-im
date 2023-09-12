@@ -2,12 +2,12 @@ package city.smartb.im.f2.organization.lib.model
 
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.utils.toJson
-import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
+import city.smartb.im.f2.organization.domain.model.Organization
 import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import city.smartb.im.f2.organization.lib.model.insee.InseeAddress
 import city.smartb.im.f2.organization.lib.model.insee.InseeOrganization
 
-fun InseeOrganization.toOrganization() = OrganizationDTOBase(
+fun InseeOrganization.toOrganization() = Organization(
     id = "",
     siret = siret,
     name = uniteLegale?.denominationUniteLegale.orEmpty(),

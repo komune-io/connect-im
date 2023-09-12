@@ -4,7 +4,7 @@ import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.user.data.user
 import city.smartb.im.commons.auth.AuthenticationProvider
 import city.smartb.im.f2.user.api.UserEndpoint
-import city.smartb.im.f2.user.domain.command.UserDisableCommandDTOBase
+import city.smartb.im.f2.user.domain.command.UserDisableCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -16,7 +16,7 @@ class UserDisableSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var userEndpoint: UserEndpoint
 
-    private lateinit var command: UserDisableCommandDTOBase
+    private lateinit var command: UserDisableCommand
 
     init {
         DataTableType(::userDisableParams)
@@ -68,7 +68,7 @@ class UserDisableSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun disableUser(params: UserDisableParams) {
-        command = UserDisableCommandDTOBase(
+        command = UserDisableCommand(
             id = context.userIds.safeGet(params.identifier),
             disabledBy = params.disabledBy,
             anonymize = params.anonymize,

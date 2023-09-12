@@ -3,15 +3,15 @@ package city.smartb.im.core.user.api
 import city.smartb.im.commons.auth.AuthenticationProvider
 import city.smartb.im.commons.utils.mapAsync
 import city.smartb.im.core.commons.CoreService
-import city.smartb.im.core.user.domain.command.UserDefineCommand
-import city.smartb.im.core.user.domain.command.UserDefinedEvent
-import city.smartb.im.core.user.domain.command.UserDeleteCommand
-import city.smartb.im.core.user.domain.command.UserDeletedEvent
-import city.smartb.im.core.user.domain.command.UserDisableCommand
-import city.smartb.im.core.user.domain.command.UserDisabledEvent
-import city.smartb.im.core.user.domain.command.UserSendEmailCommand
-import city.smartb.im.core.user.domain.command.UserSentEmailEvent
-import city.smartb.im.core.user.domain.model.User
+import city.smartb.im.core.user.domain.command.UserCoreDefineCommand
+import city.smartb.im.core.user.domain.command.UserCoreDefinedEvent
+import city.smartb.im.core.user.domain.command.UserCoreDeleteCommand
+import city.smartb.im.core.user.domain.command.UserCoreDeletedEvent
+import city.smartb.im.core.user.domain.command.UserCoreDisableCommand
+import city.smartb.im.core.user.domain.command.UserCoreDisabledEvent
+import city.smartb.im.core.user.domain.command.UserCoreSendEmailCommand
+import city.smartb.im.core.user.domain.command.UserCoreSentEmailEvent
+import city.smartb.im.core.user.domain.model.UserModel
 import city.smartb.im.infra.keycloak.handleResponseError
 import city.smartb.im.infra.redis.CacheName
 import org.keycloak.representations.idm.CredentialRepresentation
@@ -23,7 +23,7 @@ import java.util.UUID
 @Service
 class UserCoreAggregateService: CoreService(CacheName.User) {
 
-    suspend fun define(command: UserDefineCommand) = mutate(command.id.orEmpty(),
+    suspend fun define(command: UserCoreDefineCommand) = mutate(command.id.orEmpty(),
         "Error while defining user (id: [${command.id}], email: [${command.email}])"
     ) {
         val client = keycloakClientProvider.get()
@@ -46,7 +46,7 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
 
         // enable memberOf update to allow apikeys service accounts to join their organisation
         command.memberOf?.let {
-            if (it !== user.attributes[User::memberOf.name]?.firstOrNull()) {
+            if (it !== user.attributes[UserModel::memberOf.name]?.firstOrNull()) {
                 client.user(userId).joinGroup(it)
             }
         }
@@ -62,10 +62,10 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
 
         newRoles?.let { user.assignRoles(it) }
 
-        UserDefinedEvent(userId)
+        UserCoreDefinedEvent(userId)
     }
 
-    suspend fun sendEmail(command: UserSendEmailCommand) = handleErrors(
+    suspend fun sendEmail(command: UserCoreSendEmailCommand) = handleErrors(
         "Error sending email actions [${command.actions.joinToString(", ")}]" +
             "userId[${command.id}] " +
             "clientId[${AuthenticationProvider.getClientId()}]"
@@ -78,30 +78,30 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
         }
         client.user(command.id).executeActionsEmail(clientId, redirectUri, command.actions.toList())
 
-        UserSentEmailEvent(command.id, command.actions)
+        UserCoreSentEmailEvent(command.id, command.actions)
     }
 
-    suspend fun disable(command: UserDisableCommand) = mutate(command.id,
+    suspend fun disable(command: UserCoreDisableCommand) = mutate(command.id,
         "Error disabling user [${command.id}]"
     ) {
         val client = keycloakClientProvider.get()
         val user = client.user(command.id).toRepresentation()
 
         user.isEnabled = false
-        user.singleAttribute(User::disabledBy.name, command.disabledBy)
-        user.singleAttribute(User::disabledDate.name, System.currentTimeMillis().toString())
+        user.singleAttribute(UserModel::disabledBy.name, command.disabledBy)
+        user.singleAttribute(UserModel::disabledDate.name, System.currentTimeMillis().toString())
 
         client.user(command.id).update(user)
-        UserDisabledEvent(command.id)
+        UserCoreDisabledEvent(command.id)
     }
 
-    suspend fun delete(command: UserDeleteCommand) = mutate(command.id, "Error deleting user [${command.id}]") {
+    suspend fun delete(command: UserCoreDeleteCommand) = mutate(command.id, "Error deleting user [${command.id}]") {
         val client = keycloakClientProvider.get()
         client.user(command.id).remove()
-        UserDeletedEvent(command.id)
+        UserCoreDeletedEvent(command.id)
     }
 
-    private fun UserRepresentation.apply(command: UserDefineCommand) = apply {
+    private fun UserRepresentation.apply(command: UserCoreDefineCommand) = apply {
         username = username ?: UUID.randomUUID().toString()
         command.email?.let { email = it }
         command.givenName?.let { firstName = it }
@@ -110,12 +110,12 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
         isEnabled = true
 
         val baseAttributes = mapOf(
-            User::creationDate.name to System.currentTimeMillis().toString(),
+            UserModel::creationDate.name to System.currentTimeMillis().toString(),
         ).mapValues { (_, values) -> listOf(values) }
 
         val newAttributes = command.attributes.orEmpty().plus(
             listOfNotNull(
-                command.memberOf.takeIf { command.id == null }?.let { User::memberOf.name to command.memberOf },
+                command.memberOf.takeIf { command.id == null }?.let { UserModel::memberOf.name to command.memberOf },
             ).toMap()
         ).mapValues { (_, values) -> listOf(values) }
 

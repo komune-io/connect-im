@@ -17,7 +17,7 @@ interface UserDeleteCommandDTO {
 /**
  * @d2 inherit
  */
-data class UserDeleteCommand(
+data class UserCoreDeleteCommand(
     override val id: UserId
 ): UserDeleteCommandDTO
 
@@ -32,6 +32,6 @@ interface UserDeletedEventDTO {
     val id: UserId
 }
 
-data class UserDeletedEvent(
+data class UserCoreDeletedEvent(
     override val id: UserId
 ): UserDeletedEventDTO

@@ -5,10 +5,10 @@ import city.smartb.im.bdd.core.organization.data.extractOrganizationStatus
 import city.smartb.im.bdd.core.organization.data.organization
 import city.smartb.im.commons.model.Address
 import city.smartb.im.f2.organization.api.OrganizationEndpoint
-import city.smartb.im.f2.organization.domain.command.OrganizationUpdateCommandDTOBase
+import city.smartb.im.f2.organization.domain.command.OrganizationUpdateCommand
 import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import city.smartb.im.f2.organization.domain.query.OrganizationGetQuery
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
+import city.smartb.im.f2.privilege.domain.role.model.Role
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -22,7 +22,7 @@ class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var organizationEndpoint: OrganizationEndpoint
 
-    private lateinit var command: OrganizationUpdateCommandDTOBase
+    private lateinit var command: OrganizationUpdateCommand
 
     init {
         DataTableType(::organizationUpdateParams)
@@ -70,7 +70,7 @@ class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
                     description = command.description ?: organization.description,
                     address = command.address ?: organization.address,
                     website = command.website ?: organization.website,
-                    roles = command.roles ?: organization.roles.map(RoleDTOBase::identifier),
+                    roles = command.roles ?: organization.roles.map(Role::identifier),
                     attributes = command.attributes ?: organization.attributes,
                     status = command.status
                 )
@@ -79,7 +79,7 @@ class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun updateOrganization(params: OrganizationUpdateParams) {
-        command = OrganizationUpdateCommandDTOBase(
+        command = OrganizationUpdateCommand(
             id = context.organizationIds.safeGet(params.identifier),
             name = params.name,
             description = params.description,

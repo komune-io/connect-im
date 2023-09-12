@@ -4,7 +4,7 @@ import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.commons.model.UserId
 
-data class User(
+data class UserModel(
     val id: UserId,
     val memberOf: OrganizationId?,
     val email: String,

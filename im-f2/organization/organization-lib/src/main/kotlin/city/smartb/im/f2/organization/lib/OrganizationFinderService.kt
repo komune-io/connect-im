@@ -3,9 +3,9 @@ package city.smartb.im.f2.organization.lib
 import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.core.organization.api.OrganizationCoreFinderService
-import city.smartb.im.core.organization.domain.model.Organization
+import city.smartb.im.core.organization.domain.model.OrganizationModel
+import city.smartb.im.f2.organization.domain.model.Organization
 import city.smartb.im.f2.organization.domain.model.OrganizationDTO
-import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import city.smartb.im.f2.organization.domain.model.OrganizationRef
 import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import city.smartb.im.f2.organization.lib.model.toDTO
@@ -24,15 +24,15 @@ class OrganizationFinderService(
     private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val privilegeFinderService: PrivilegeFinderService
 ) {
-    suspend fun getOrNull(id: OrganizationId): OrganizationDTOBase? {
+    suspend fun getOrNull(id: OrganizationId): Organization? {
         return organizationCoreFinderService.getOrNull(id)?.toDTOInternal()
     }
 
-    suspend fun get(id: OrganizationId): OrganizationDTOBase {
+    suspend fun get(id: OrganizationId): Organization {
         return organizationCoreFinderService.get(id).toDTOInternal()
     }
 
-    suspend fun getFromInsee(siret: String): OrganizationDTOBase? {
+    suspend fun getFromInsee(siret: String): Organization? {
         return try {
             inseeHttpClient?.getOrganizationBySiret(siret)
                 ?.etablissement
@@ -49,7 +49,7 @@ class OrganizationFinderService(
         status: OrganizationStatus? = null,
         withDisabled: Boolean = false,
         offset: OffsetPagination? = null,
-    ): PageDTO<OrganizationDTOBase> {
+    ): PageDTO<Organization> {
         return organizationCoreFinderService.page(
             identifier = name,
             roles = roles,
@@ -64,10 +64,10 @@ class OrganizationFinderService(
     suspend fun listRefs(withDisabled: Boolean = false): List<OrganizationRef> {
         return organizationCoreFinderService.page(
             withDisabled = withDisabled,
-        ).items.map(Organization::toRef)
+        ).items.map(OrganizationModel::toRef)
     }
 
-    private suspend fun Organization.toDTOInternal() = toDTO(
+    private suspend fun OrganizationModel.toDTOInternal() = toDTO(
         getRole = privilegeFinderService::getRole
     )
 }

@@ -9,7 +9,7 @@ import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.commons.utils.page
 import city.smartb.im.core.organization.api.OrganizationCoreFinderService
 import city.smartb.im.core.user.api.service.UserRepresentationTransformer
-import city.smartb.im.core.user.domain.model.User
+import city.smartb.im.core.user.domain.model.UserModel
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import f2.dsl.cqrs.page.OffsetPagination
 import org.springframework.stereotype.Service
@@ -28,7 +28,7 @@ class ApiKeyFinderService(
         )
     }
 
-    suspend fun getUserOfKey(id: ApiKeyId): User {
+    suspend fun getUserOfKey(id: ApiKeyId): UserModel {
         val client = keycloakClientProvider.get()
         return client.client(id).serviceAccountUser
             .let { userRepresentationTransformer.transform(it) }

@@ -4,7 +4,7 @@ import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.commons.model.UserId
 
-data class UserDefineCommand(
+data class UserCoreDefineCommand(
     val id: UserId?,
     val email: String? = null,
     val password: String? = null,
@@ -17,6 +17,6 @@ data class UserDefineCommand(
     val isPasswordTemporary: Boolean = false
 )
 
-data class UserDefinedEvent(
+data class UserCoreDefinedEvent(
     val id: UserId
 )

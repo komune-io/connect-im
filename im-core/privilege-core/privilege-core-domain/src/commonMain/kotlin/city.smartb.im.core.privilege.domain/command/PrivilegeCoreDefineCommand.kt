@@ -9,34 +9,34 @@ import f2.dsl.cqrs.Event
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface PrivilegeDefineCommand {
+sealed interface PrivilegeCoreDefineCommand {
     val identifier: PrivilegeIdentifier
     val description: String
     val type: PrivilegeType
 }
 
 @Serializable
-data class PermissionDefineCommand(
+data class PermissionCoreDefineCommand(
     override val identifier: PermissionIdentifier,
     override val description: String
-): PrivilegeDefineCommand {
+): PrivilegeCoreDefineCommand {
     override val type = PrivilegeType.PERMISSION
 }
 
 @Serializable
-data class RoleDefineCommand(
+data class RoleCoreDefineCommand(
     override val identifier: RoleIdentifier,
     override val description: String,
     val targets: List<RoleTarget>,
     val locale: Map<String, String>,
     val bindings: Map<RoleTarget, List<RoleIdentifier>>?,
     val permissions: List<PermissionIdentifier>?
-): PrivilegeDefineCommand {
+): PrivilegeCoreDefineCommand {
     override val type = PrivilegeType.ROLE
 }
 
 @Serializable
-data class PrivilegeDefinedEvent(
+data class PrivilegeCoreDefinedEvent(
     val identifier: PrivilegeIdentifier,
     val type: PrivilegeType
 ): Event

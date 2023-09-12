@@ -13,7 +13,7 @@ import kotlin.js.JsExport
  * @parent [city.smartb.im.f2.privilege.domain.D2RolePage]
  * @order 10
  */
-typealias RoleDefineFunction = F2Function<RoleDefineCommandDTOBase, RoleDefinedEventDTOBase>
+typealias RoleDefineFunction = F2Function<RoleDefineCommand, RoleDefinedEvent>
 
 /**
  * @d2 command
@@ -22,32 +22,32 @@ typealias RoleDefineFunction = F2Function<RoleDefineCommandDTOBase, RoleDefinedE
 @JsExport
 interface RoleDefineCommandDTO {
     /**
-     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.identifier]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.Role.identifier]
      */
     val identifier: RoleIdentifier
 
     /**
-     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.description]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.Role.description]
      */
     val description: String
 
     /**
-     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.targets]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.Role.targets]
      */
     val targets: List<String>
 
     /**
-     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.locale]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.Role.locale]
      */
     val locale: Map<String, String>
 
     /**
-     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.bindings]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.Role.bindings]
      */
     val bindings: Map<String, List<RoleIdentifier>>?
 
     /**
-     * @ref [city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase.permissions]
+     * @ref [city.smartb.im.f2.privilege.domain.role.model.Role.permissions]
      */
     val permissions: List<PermissionIdentifier>?
 }
@@ -56,7 +56,7 @@ interface RoleDefineCommandDTO {
  * @d2 inherit
  */
 @Serializable
-data class RoleDefineCommandDTOBase(
+data class RoleDefineCommand(
     override val identifier: RoleIdentifier,
     override val description: String,
     override val targets: List<String>,
@@ -81,6 +81,6 @@ interface RoleDefinedEventDTO: Event {
  * @d2 inherit
  */
 @Serializable
-data class RoleDefinedEventDTOBase(
+data class RoleDefinedEvent(
     override val identifier: RoleIdentifier
 ): RoleDefinedEventDTO

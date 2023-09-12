@@ -55,7 +55,7 @@ interface PermissionDTO: PrivilegeDTO {
  * @d2 inherit
  */
 @Serializable
-data class PermissionDTOBase(
+data class Permission(
     override val id: PermissionId,
     override val identifier: PermissionIdentifier,
     override val description: String

@@ -5,8 +5,8 @@ import city.smartb.im.commons.model.AddressDTO
 import city.smartb.im.commons.model.UserId
 import city.smartb.im.f2.organization.domain.model.OrganizationRef
 import city.smartb.im.f2.organization.domain.model.OrganizationRefDTO
+import city.smartb.im.f2.privilege.domain.role.model.Role
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTO
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import kotlin.js.JsExport
 
 /**
@@ -104,7 +104,7 @@ interface UserDTO {
 /**
  * @d2 inherit
  */
-data class UserDTOBase(
+data class User(
     override val id: UserId,
     override val memberOf: OrganizationRef?,
     override val email: String,
@@ -112,7 +112,7 @@ data class UserDTOBase(
     override val familyName: String,
     override val address: Address?,
     override val phone: String?,
-    override val roles: List<RoleDTOBase>,
+    override val roles: List<Role>,
     override val attributes: Map<String, String>,
     override val enabled: Boolean,
     override val disabledBy: UserId?,

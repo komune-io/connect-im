@@ -15,7 +15,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  * @order 10
  */
-typealias OrganizationCreateFunction = F2Function<OrganizationCreateCommandDTOBase, OrganizationCreatedEvent>
+typealias OrganizationCreateFunction = F2Function<OrganizationCreateCommand, OrganizationCreatedEvent>
 
 /**
  * @d2 command
@@ -25,19 +25,19 @@ typealias OrganizationCreateFunction = F2Function<OrganizationCreateCommandDTOBa
 interface OrganizationCreateCommandDTO: Command {
     /**
      * Siret number of the organization.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.siret]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.siret]
      */
     val siret: String?
 
     /**
      * Official name of the organization.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.name]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.name]
      */
     val name: String
 
     /**
      * Description of the organization.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.description]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.description]
      */
     val description: String?
 
@@ -48,13 +48,13 @@ interface OrganizationCreateCommandDTO: Command {
 
     /**
      * Website of the organization.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.website]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.website]
      */
     val website: String?
 
     /**
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.roles]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.roles]
      */
     val roles: List<String>?
 
@@ -65,17 +65,17 @@ interface OrganizationCreateCommandDTO: Command {
 
     /**
      * Additional arbitrary attributes assigned to the organization.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.attributes]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.attributes]
      */
     val attributes: Map<String, String>?
 
     /**
-     * @ref [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.status]
+     * @ref [city.smartb.im.f2.organization.domain.model.Organization.status]
      */
     val status: String
 }
 
-data class OrganizationCreateCommandDTOBase(
+data class OrganizationCreateCommand(
     override val siret: String? = null,
     override val name: String,
     override val description: String? = null,

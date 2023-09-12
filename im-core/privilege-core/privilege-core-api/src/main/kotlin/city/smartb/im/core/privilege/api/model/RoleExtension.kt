@@ -4,40 +4,40 @@ import city.smartb.im.commons.model.RoleId
 import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.commons.utils.parseJson
 import city.smartb.im.commons.utils.toJson
-import city.smartb.im.core.privilege.domain.command.RoleDefineCommand
+import city.smartb.im.core.privilege.domain.command.RoleCoreDefineCommand
 import city.smartb.im.core.privilege.domain.model.Privilege
-import city.smartb.im.core.privilege.domain.model.Role
+import city.smartb.im.core.privilege.domain.model.RoleModel
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import org.keycloak.representations.idm.RoleRepresentation
 
-fun RoleRepresentation.toRole() = Role(
+fun RoleRepresentation.toRole() = RoleModel(
     id = id,
     identifier = name,
     description = description.orEmpty(),
-    targets = attributes[Role::targets.name].orEmpty().map { RoleTarget.valueOf(it) },
-    bindings = attributes[Role::bindings.name]?.firstOrNull()
+    targets = attributes[RoleModel::targets.name].orEmpty().map { RoleTarget.valueOf(it) },
+    bindings = attributes[RoleModel::bindings.name]?.firstOrNull()
         ?.parseJson<Map<String, List<RoleIdentifier>>>()
         ?.mapKeys { (target) -> RoleTarget.valueOf(target) }
         .orEmpty(),
-    locale = attributes[Role::locale.name]?.firstOrNull()?.parseJson<Map<String, String>>().orEmpty(),
-    permissions = attributes[Role::permissions.name].orEmpty()
+    locale = attributes[RoleModel::locale.name]?.firstOrNull()?.parseJson<Map<String, String>>().orEmpty(),
+    permissions = attributes[RoleModel::permissions.name].orEmpty()
 )
 
-fun Role.toRoleRepresentation() = RoleRepresentation().also {
+fun RoleModel.toRoleRepresentation() = RoleRepresentation().also {
     it.id = id.ifEmpty { null }
     it.name = identifier
     it.description = description
     it.clientRole = false
     it.attributes = mapOf(
         Privilege::type.name to listOf(type.name),
-        Role::targets.name to targets.map(RoleTarget::name).distinct(),
-        Role::locale.name to listOf(locale.toJson()),
-        Role::bindings.name to listOf(bindings.toJson()),
-        Role::permissions.name to permissions.distinct()
+        RoleModel::targets.name to targets.map(RoleTarget::name).distinct(),
+        RoleModel::locale.name to listOf(locale.toJson()),
+        RoleModel::bindings.name to listOf(bindings.toJson()),
+        RoleModel::permissions.name to permissions.distinct()
     )
 }
 
-fun RoleDefineCommand.toRole(id: RoleId?) = Role(
+fun RoleCoreDefineCommand.toRole(id: RoleId?) = RoleModel(
     id = id.orEmpty(),
     identifier = identifier,
     description = description,

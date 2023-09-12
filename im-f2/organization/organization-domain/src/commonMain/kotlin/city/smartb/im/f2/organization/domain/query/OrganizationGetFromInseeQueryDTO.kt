@@ -1,7 +1,7 @@
 package city.smartb.im.f2.organization.domain.query
 
+import city.smartb.im.f2.organization.domain.model.Organization
 import city.smartb.im.f2.organization.domain.model.OrganizationDTO
-import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
@@ -30,7 +30,7 @@ interface OrganizationGetFromInseeQueryDTO: Query {
 data class OrganizationGetFromInseeQuery(
     /**
      * Siret number of the organization.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.siret]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.siret]
      */
     override val siret: String
 ): OrganizationGetFromInseeQueryDTO
@@ -49,5 +49,5 @@ data class OrganizationGetFromInseeResult(
     /**
      * The organization.
      */
-    override val item: OrganizationDTOBase?
+    override val item: Organization?
 ): OrganizationGetFromInseeResultDTO

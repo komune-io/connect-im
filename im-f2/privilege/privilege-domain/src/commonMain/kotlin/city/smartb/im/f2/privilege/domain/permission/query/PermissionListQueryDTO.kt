@@ -1,7 +1,7 @@
 package city.smartb.im.f2.privilege.domain.permission.query
 
+import city.smartb.im.f2.privilege.domain.permission.model.Permission
 import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTO
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
 import f2.dsl.fnc.F2Function
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
@@ -13,7 +13,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.f2.privilege.domain.D2PermissionPage]
  * @order 20
  */
-typealias PermissionListFunction = F2Function<PermissionListQueryDTOBase, PermissionListResultDTOBase>
+typealias PermissionListFunction = F2Function<PermissionListQuery, PermissionListResult>
 
 /**
  * @d2 query
@@ -27,7 +27,7 @@ interface PermissionListQueryDTO
  * @d2 inherit
  */
 @Serializable
-class PermissionListQueryDTOBase: PermissionListQueryDTO
+class PermissionListQuery: PermissionListQueryDTO
 
 /**
  * @d2 result
@@ -46,6 +46,6 @@ interface PermissionListResultDTO {
  * @d2 inherit
  */
 @Serializable
-data class PermissionListResultDTOBase(
-    override val items: List<PermissionDTOBase>
+data class PermissionListResult(
+    override val items: List<Permission>
 ): PermissionListResultDTO

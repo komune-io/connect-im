@@ -3,7 +3,7 @@ package city.smartb.im.script.core.model
 import city.smartb.im.commons.model.PermissionIdentifier
 import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.core.privilege.domain.model.RoleTarget
-import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommandDTOBase
+import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommand
 
 data class RoleData(
     val name: String,
@@ -13,7 +13,7 @@ data class RoleData(
     val bindings: Map<RoleTarget, List<RoleIdentifier>>?,
     val permissions: List<PermissionIdentifier>?
 ) {
-    fun toCommand() = RoleDefineCommandDTOBase(
+    fun toCommand() = RoleDefineCommand(
         identifier = name,
         description = description,
         targets = targets?.map(RoleTarget::name).orEmpty(),

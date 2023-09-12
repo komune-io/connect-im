@@ -5,9 +5,9 @@ import city.smartb.im.f2.privilege.api.service.PrivilegePoliciesEnforcer
 import city.smartb.im.f2.privilege.domain.PermissionApi
 import city.smartb.im.f2.privilege.domain.permission.command.PermissionDefineFunction
 import city.smartb.im.f2.privilege.domain.permission.query.PermissionGetFunction
-import city.smartb.im.f2.privilege.domain.permission.query.PermissionGetResultDTOBase
+import city.smartb.im.f2.privilege.domain.permission.query.PermissionGetResult
 import city.smartb.im.f2.privilege.domain.permission.query.PermissionListFunction
-import city.smartb.im.f2.privilege.domain.permission.query.PermissionListResultDTOBase
+import city.smartb.im.f2.privilege.domain.permission.query.PermissionListResult
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import org.springframework.context.annotation.Bean
@@ -27,14 +27,14 @@ class PermissionEndpoint(
         logger.info("permissionGet: $query")
         privilegePoliciesEnforcer.checkGet()
         privilegeFinderService.getPermissionOrNull(query.identifier)
-            .let(::PermissionGetResultDTOBase)
+            .let(::PermissionGetResult)
     }
 
     @Bean
     override fun permissionList(): PermissionListFunction = f2Function { query ->
         logger.info("permissionList: $query")
         privilegePoliciesEnforcer.checkList()
-        privilegeFinderService.listPermissions().let(::PermissionListResultDTOBase)
+        privilegeFinderService.listPermissions().let(::PermissionListResult)
     }
 
     @Bean

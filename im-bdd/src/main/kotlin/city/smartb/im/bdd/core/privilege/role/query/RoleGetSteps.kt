@@ -2,7 +2,7 @@ package city.smartb.im.bdd.core.privilege.role.query
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.f2.privilege.api.RoleEndpoint
-import city.smartb.im.f2.privilege.domain.role.query.RoleGetQueryDTOBase
+import city.smartb.im.f2.privilege.domain.role.query.RoleGetQuery
 import f2.dsl.fnc.invokeWith
 import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,7 +31,7 @@ class RoleGetSteps: En, ImCucumberStepsDefinition() {
 
     private suspend fun roleGet(params: RoleGetParams) {
         context.fetched.roles = listOfNotNull(
-            RoleGetQueryDTOBase(
+            RoleGetQuery(
                 identifier = context.roleIdentifiers[params.identifier] ?: params.identifier
             ).invokeWith(roleEndpoint.roleGet()).item
         )

@@ -17,7 +17,7 @@ sealed interface Privilege {
 }
 
 @Serializable
-data class Permission(
+data class PermissionModel(
     override val id: PermissionId,
     override val identifier: PermissionIdentifier,
     override val description: String
@@ -26,7 +26,7 @@ data class Permission(
 }
 
 @Serializable
-data class Role(
+data class RoleModel(
     override val id: RoleId,
     override val identifier: RoleIdentifier,
     override val description: String,

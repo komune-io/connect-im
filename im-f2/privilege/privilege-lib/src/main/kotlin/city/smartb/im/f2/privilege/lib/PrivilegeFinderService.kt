@@ -7,11 +7,11 @@ import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.core.privilege.api.PrivilegeCoreFinderService
 import city.smartb.im.core.privilege.domain.model.Privilege
 import city.smartb.im.core.privilege.domain.model.PrivilegeType
-import city.smartb.im.core.privilege.domain.model.Role
+import city.smartb.im.core.privilege.domain.model.RoleModel
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
+import city.smartb.im.f2.privilege.domain.permission.model.Permission
+import city.smartb.im.f2.privilege.domain.role.model.Role
 import city.smartb.im.f2.privilege.lib.model.toDTO
 import f2.spring.exception.NotFoundException
 import org.springframework.stereotype.Service
@@ -30,41 +30,41 @@ class PrivilegeFinderService(
             .toDTOCached()
     }
 
-    suspend fun getRoleOrNull(identifier: RoleIdentifier): RoleDTOBase? {
+    suspend fun getRoleOrNull(identifier: RoleIdentifier): Role? {
         return getPrivilegeOrNull(identifier)
-            ?.takeIf { it is RoleDTOBase } as RoleDTOBase?
+            ?.takeIf { it is Role } as Role?
     }
 
-    suspend fun getRole(identifier: RoleIdentifier): RoleDTOBase {
+    suspend fun getRole(identifier: RoleIdentifier): Role {
         return getRoleOrNull(identifier) ?: throw NotFoundException("Role", identifier)
     }
 
-    suspend fun getPermissionOrNull(identifier: PermissionIdentifier): PermissionDTOBase? {
+    suspend fun getPermissionOrNull(identifier: PermissionIdentifier): Permission? {
         return getPrivilegeOrNull(identifier)
-            ?.takeIf { it is PermissionDTOBase } as PermissionDTOBase?
+            ?.takeIf { it is Permission } as Permission?
     }
 
-    suspend fun getPermission(identifier: PermissionIdentifier): PermissionDTOBase {
+    suspend fun getPermission(identifier: PermissionIdentifier): Permission {
         return getPermissionOrNull(identifier) ?: throw NotFoundException("Permission", identifier)
     }
 
     suspend fun listRoles(
         targets: Collection<RoleTarget>? = null
-    ): List<RoleDTOBase> {
+    ): List<Role> {
         val cache = Cache()
         return privilegeCoreFinderService.list(
             types = listOf(PrivilegeType.ROLE),
             targets = targets
         ).onEach { role ->
-            cache.roles.register(role.identifier, role as Role)
-        }.map { it.toDTOCached(cache) as RoleDTOBase }
+            cache.roles.register(role.identifier, role as RoleModel)
+        }.map { it.toDTOCached(cache) as Role }
     }
 
-    suspend fun listPermissions(): List<PermissionDTOBase> {
+    suspend fun listPermissions(): List<Permission> {
         val cache = Cache()
         return privilegeCoreFinderService.list(
             types = listOf(PrivilegeType.PERMISSION)
-        ).map { it.toDTOCached(cache) as PermissionDTOBase }
+        ).map { it.toDTOCached(cache) as Permission }
     }
 
     private suspend fun Privilege.toDTOCached(cache: Cache = Cache()): PrivilegeDTO = toDTO(
@@ -72,9 +72,9 @@ class PrivilegeFinderService(
     )
 
     private inner class Cache {
-        val roles = SimpleCache<RoleIdentifier, Role> { privilegeCoreFinderService.getPrivilege(it) as Role }
-        val roleDTOs = SimpleCache<RoleIdentifier, RoleDTOBase> { roleIdentifier ->
-            roles.get(roleIdentifier).toDTOCached(this) as RoleDTOBase
+        val roles = SimpleCache<RoleIdentifier, RoleModel> { privilegeCoreFinderService.getPrivilege(it) as RoleModel }
+        val roleDTOs = SimpleCache<RoleIdentifier, Role> { roleIdentifier ->
+            roles.get(roleIdentifier).toDTOCached(this) as Role
         }
     }
 }

@@ -5,8 +5,8 @@ import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.commons.model.UserId
 import city.smartb.im.commons.utils.parseJson
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
-import city.smartb.im.f2.user.domain.model.UserDTOBase
+import city.smartb.im.f2.privilege.domain.role.model.Role
+import city.smartb.im.f2.user.domain.model.User
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.UserRepresentation
@@ -41,11 +41,11 @@ class AssertionUser(
             .mapValues { (_, values) -> values.firstOrNull() }
             .filterValues { !it.isNullOrBlank() } as Map<String, String>
 
-        private val userMemberOf: OrganizationId? = singleAttributes[UserDTOBase::memberOf.name]
-        private val userAddress: Address? = singleAttributes[UserDTOBase::address.name]?.parseJson()
-        private val userPhone: String? = singleAttributes[UserDTOBase::phone.name]
-        private val userDisabledBy: UserId? = singleAttributes[UserDTOBase::disabledBy.name]
-        private val userDisabledDate: Long? = singleAttributes[UserDTOBase::disabledDate.name]?.toLong()
+        private val userMemberOf: OrganizationId? = singleAttributes[User::memberOf.name]
+        private val userAddress: Address? = singleAttributes[User::address.name]?.parseJson()
+        private val userPhone: String? = singleAttributes[User::phone.name]
+        private val userDisabledBy: UserId? = singleAttributes[User::disabledBy.name]
+        private val userDisabledDate: Long? = singleAttributes[User::disabledDate.name]?.toLong()
         private val userRoles = client.user(user.id)
             .roles()
             .realmLevel()
@@ -88,14 +88,14 @@ class AssertionUser(
             Assertions.assertThat(userPhone).isEqualTo("")
         }
 
-        fun matches(other: UserDTOBase) = hasFields(
+        fun matches(other: User) = hasFields(
             memberOf = other.memberOf?.id,
             email = other.email,
             givenName = other.givenName,
             familyName = other.familyName,
             address = other.address,
             phone = other.phone,
-            roles = other.roles.map(RoleDTOBase::identifier),
+            roles = other.roles.map(Role::identifier),
             attributes = other.attributes,
             enabled = other.enabled,
             creationDate = other.creationDate,

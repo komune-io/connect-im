@@ -2,9 +2,9 @@ package city.smartb.im.bdd.core.user.command
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.user.data.user
-import city.smartb.im.core.user.domain.command.UserDeleteCommand
+import city.smartb.im.core.user.domain.command.UserCoreDeleteCommand
 import city.smartb.im.f2.user.api.UserEndpoint
-import city.smartb.im.f2.user.domain.command.UserDeleteCommandDTOBase
+import city.smartb.im.f2.user.domain.command.UserDeleteCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -16,7 +16,7 @@ class UserDeleteSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var userEndpoint: UserEndpoint
 
-    private lateinit var command: UserDeleteCommandDTOBase
+    private lateinit var command: UserDeleteCommand
 
     init {
         DataTableType(::userDeleteParams)
@@ -60,7 +60,7 @@ class UserDeleteSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun deleteUser(params: UserDeleteParams) {
-        command = UserDeleteCommand(
+        command = UserCoreDeleteCommand(
             id = context.userIds.safeGet(params.identifier)
         )
         userEndpoint.userDelete().invoke(command).id

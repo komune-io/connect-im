@@ -1,9 +1,9 @@
 package city.smartb.im.core.client.api.model
 
-import city.smartb.im.core.client.domain.model.Client
+import city.smartb.im.core.client.domain.model.ClientModel
 import org.keycloak.representations.idm.ClientRepresentation
 
-fun ClientRepresentation.toClient() = Client(
+fun ClientRepresentation.toClient() = ClientModel(
     id = id,
     identifier = clientId,
     isDirectAccessGrantsEnabled = isDirectAccessGrantsEnabled,

@@ -12,7 +12,7 @@ import kotlin.js.JsExport
  * @parent [city.smartb.im.f2.user.domain.D2UserPage]
  * @order 30
  */
-typealias UserUpdateEmailFunction = F2Function<UserUpdateEmailCommandDTOBase, UserUpdatedEmailEventDTOBase>
+typealias UserUpdateEmailFunction = F2Function<UserUpdateEmailCommand, UserUpdatedEmailEvent>
 
 /**
  * @d2 command
@@ -40,7 +40,7 @@ interface UserUpdateEmailCommandDTO: Command {
 /**
  * @d2 inherit
  */
-data class UserUpdateEmailCommandDTOBase(
+data class UserUpdateEmailCommand(
     override val id: UserId,
     override val email: String,
     override val sendVerificationEmail: Boolean = true
@@ -61,6 +61,6 @@ interface UserUpdatedEmailEventDTO: Event {
 /**
  * @d2 inherit
  */
-data class UserUpdatedEmailEventDTOBase(
+data class UserUpdatedEmailEvent(
     override val id: UserId
 ): UserUpdatedEmailEventDTO

@@ -106,13 +106,13 @@ interface RoleDTO: PrivilegeDTO {
  * @d2 inherit
  */
 @Serializable
-data class RoleDTOBase(
+data class Role(
     override val id: RoleId,
     override val identifier: RoleIdentifier,
     override val description: String,
     override val targets: List<String>,
     override val locale: Map<String, String>,
-    override val bindings: Map<String, List<RoleDTOBase>>,
+    override val bindings: Map<String, List<Role>>,
     override val permissions: List<PermissionIdentifier>
 ): RoleDTO {
     override val type = PrivilegeType.ROLE.name

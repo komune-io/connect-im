@@ -3,7 +3,7 @@ package city.smartb.im.bdd.core.organization.query
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.organization.data.organization
 import city.smartb.im.f2.organization.api.OrganizationEndpoint
-import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
+import city.smartb.im.f2.organization.domain.model.Organization
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.assertj.core.api.Assertions
@@ -54,7 +54,7 @@ class OrganizationFinderSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun assertOrganizationsFetched(identifiers: List<TestContextKey>) {
-        val fetchedIds = context.fetched.organizations.map(OrganizationDTOBase::id)
+        val fetchedIds = context.fetched.organizations.map(Organization::id)
         val expectedIds = identifiers.map(context.organizationIds::safeGet).toTypedArray()
         Assertions.assertThat(fetchedIds).containsExactlyInAnyOrder(*expectedIds)
 

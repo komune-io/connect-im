@@ -3,7 +3,7 @@ package city.smartb.im.core.client.domain.model
 import city.smartb.im.commons.model.ClientId
 import city.smartb.im.commons.model.ClientIdentifier
 
-data class Client(
+data class ClientModel(
     val id: ClientId,
     val identifier: ClientIdentifier,
     val isDirectAccessGrantsEnabled: Boolean,

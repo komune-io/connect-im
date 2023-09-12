@@ -7,7 +7,7 @@ import city.smartb.im.commons.model.UserId
 
 typealias OrganizationIdentifier = String
 
-data class Organization(
+data class OrganizationModel(
     val id: OrganizationId,
     val identifier: OrganizationIdentifier,
     val displayName: String,

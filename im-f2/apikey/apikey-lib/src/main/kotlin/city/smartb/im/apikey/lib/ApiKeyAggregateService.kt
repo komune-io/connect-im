@@ -14,13 +14,13 @@ import city.smartb.im.core.client.api.ClientCoreAggregateService
 import city.smartb.im.core.client.domain.command.ClientCreateCommand
 import city.smartb.im.core.organization.api.OrganizationCoreAggregateService
 import city.smartb.im.core.organization.api.OrganizationCoreFinderService
-import city.smartb.im.core.organization.domain.command.OrganizationSetSomeAttributesCommand
+import city.smartb.im.core.organization.domain.command.OrganizationCoreSetSomeAttributesCommand
 import city.smartb.im.core.privilege.api.PrivilegeCoreFinderService
 import city.smartb.im.core.privilege.api.model.checkTarget
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.core.user.api.UserCoreAggregateService
-import city.smartb.im.core.user.domain.command.UserDefineCommand
-import city.smartb.im.core.user.domain.model.User
+import city.smartb.im.core.user.domain.command.UserCoreDefineCommand
+import city.smartb.im.core.user.domain.model.UserModel
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import org.springframework.stereotype.Service
 import s2.spring.utils.logger.Logger
@@ -61,7 +61,7 @@ class ApiKeyAggregateService(
             isServiceAccountsEnabled = true,
             authorizationServicesEnabled = false,
             isStandardFlowEnabled = false,
-            additionalAccessTokenClaim = listOf(User::memberOf.name),
+            additionalAccessTokenClaim = listOf(UserModel::memberOf.name),
         ).let { clientCoreAggregateService.create(it).id }
 
         val newApiKey = ApiKey(
@@ -71,13 +71,13 @@ class ApiKeyAggregateService(
             creationDate = System.currentTimeMillis()
         )
         val apiKeys = organization.apiKeys() + newApiKey
-        OrganizationSetSomeAttributesCommand(
+        OrganizationCoreSetSomeAttributesCommand(
             id = organization.id,
             attributes = mapOf(ORGANIZATION_FIELD_API_KEYS to apiKeys.toJson())
         ).let { organizationCoreAggregateService.setSomeAttributes(it) }
 
         val serviceAccountUser = client.client(keyId).serviceAccountUser
-        UserDefineCommand(
+        UserCoreDefineCommand(
             id = serviceAccountUser.id,
             memberOf = command.organizationId,
             attributes = mapOf("display_name" to command.name),
@@ -105,7 +105,7 @@ class ApiKeyAggregateService(
         }
 
         val apiKeys = organizationCoreFinderService.get(organizationId).apiKeys()
-        OrganizationSetSomeAttributesCommand(
+        OrganizationCoreSetSomeAttributesCommand(
             id = organizationId,
             attributes = mapOf(ORGANIZATION_FIELD_API_KEYS to apiKeys.filter { it.id != command.id }.toJson())
         ).let { organizationCoreAggregateService.setSomeAttributes(it) }
