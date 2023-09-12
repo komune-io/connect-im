@@ -4,7 +4,7 @@ import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.privilege.role.data.extractRoleTarget
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.f2.privilege.api.RoleEndpoint
-import city.smartb.im.f2.privilege.domain.role.query.RoleListQueryDTOBase
+import city.smartb.im.f2.privilege.domain.role.query.RoleListQuery
 import f2.dsl.fnc.invokeWith
 import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,7 +31,7 @@ class RoleListSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun roleList(params: RoleListParams) {
-        context.fetched.roles = RoleListQueryDTOBase(
+        context.fetched.roles = RoleListQuery(
             target = params.target?.name
         ).invokeWith(roleEndpoint.roleList()).items
     }

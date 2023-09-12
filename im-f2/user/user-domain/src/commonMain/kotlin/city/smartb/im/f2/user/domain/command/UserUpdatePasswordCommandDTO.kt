@@ -13,7 +13,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.f2.user.domain.D2UserPage]
  * @order 40
  */
-typealias UserUpdatePasswordFunction = F2Function<UserUpdatePasswordCommandDTOBase, UserUpdatedPasswordEventDTOBase>
+typealias UserUpdatePasswordFunction = F2Function<UserUpdatePasswordCommand, UserUpdatedPasswordEvent>
 
 /**
  * @d2 command
@@ -37,7 +37,7 @@ interface UserUpdatePasswordCommandDTO: Command {
 /**
  * @d2 inherit
  */
-data class UserUpdatePasswordCommandDTOBase(
+data class UserUpdatePasswordCommand(
     override val id: UserId,
     override val password: String
 ): UserUpdatePasswordCommandDTO
@@ -58,6 +58,6 @@ interface UserUpdatedPasswordEventDTO: Event {
 /**
  * @d2 inherit
  */
-data class UserUpdatedPasswordEventDTOBase(
+data class UserUpdatedPasswordEvent(
     override val id: UserId
 ): UserUpdatedPasswordEventDTO

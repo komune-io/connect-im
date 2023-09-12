@@ -5,7 +5,7 @@ import city.smartb.im.commons.utils.matches
 import city.smartb.im.core.privilege.api.model.toPrivilege
 import city.smartb.im.core.privilege.domain.model.Privilege
 import city.smartb.im.core.privilege.domain.model.PrivilegeType
-import city.smartb.im.core.privilege.domain.model.Role
+import city.smartb.im.core.privilege.domain.model.RoleModel
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import city.smartb.im.infra.redis.CacheName
@@ -44,7 +44,7 @@ class PrivilegeCoreFinderService(
             .filter { privilege ->
                 listOf(
                     privilege.type.matches(types),
-                    targets == null || (privilege is Role && privilege.targets.matches(targets))
+                    targets == null || (privilege is RoleModel && privilege.targets.matches(targets))
                 ).all { it }
             }
     }

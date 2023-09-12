@@ -2,9 +2,9 @@ package city.smartb.im.core.privilege.api
 
 import city.smartb.im.core.privilege.api.model.toPrivilege
 import city.smartb.im.core.privilege.api.model.toRoleRepresentation
-import city.smartb.im.core.privilege.domain.command.PrivilegeDefineCommand
-import city.smartb.im.core.privilege.domain.command.PrivilegeDefinedEvent
-import city.smartb.im.core.privilege.domain.model.Role
+import city.smartb.im.core.privilege.domain.command.PrivilegeCoreDefineCommand
+import city.smartb.im.core.privilege.domain.command.PrivilegeCoreDefinedEvent
+import city.smartb.im.core.privilege.domain.model.RoleModel
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
 import city.smartb.im.infra.redis.CacheName
 import city.smartb.im.infra.redis.CachedService
@@ -18,14 +18,14 @@ class PrivilegeCoreAggregateService(
     private val keycloakClientProvider: KeycloakClientProvider
 ): CachedService(CacheName.Privilege) {
 
-    suspend fun define(command: PrivilegeDefineCommand): PrivilegeDefinedEvent = mutate(command.identifier) {
+    suspend fun define(command: PrivilegeCoreDefineCommand): PrivilegeCoreDefinedEvent = mutate(command.identifier) {
         val client = keycloakClientProvider.get()
 
         val oldPrivilege = privilegeCoreFinderService.getPrivilegeOrNull(command.identifier)
         val newPrivilege = command.toPrivilege(oldPrivilege?.id)
 
-        val oldPrivilegePermissions = (oldPrivilege as? Role)?.permissions.orEmpty().toSet()
-        val newPrivilegePermissions = (newPrivilege as? Role)?.permissions.orEmpty().toSet()
+        val oldPrivilegePermissions = (oldPrivilege as? RoleModel)?.permissions.orEmpty().toSet()
+        val newPrivilegePermissions = (newPrivilege as? RoleModel)?.permissions.orEmpty().toSet()
 
         val removedPermissions = oldPrivilegePermissions.filter { it !in newPrivilegePermissions }
             .map { permissionIdentifier ->
@@ -52,7 +52,7 @@ class PrivilegeCoreAggregateService(
             client.role(newPrivilege.identifier).deleteComposites(removedPermissions)
         }
 
-        PrivilegeDefinedEvent(
+        PrivilegeCoreDefinedEvent(
             identifier = command.identifier,
             type = command.type
         )

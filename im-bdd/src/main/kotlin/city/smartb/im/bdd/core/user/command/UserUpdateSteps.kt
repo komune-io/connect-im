@@ -5,7 +5,7 @@ import city.smartb.im.bdd.core.user.data.user
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.f2.user.api.UserEndpoint
-import city.smartb.im.f2.user.domain.command.UserUpdateCommandDTOBase
+import city.smartb.im.f2.user.domain.command.UserUpdateCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -18,7 +18,7 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var userEndpoint: UserEndpoint
 
-    private lateinit var command: UserUpdateCommandDTOBase
+    private lateinit var command: UserUpdateCommand
 
     init {
         DataTableType(::userUpdateParams)
@@ -71,7 +71,7 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun updateUser(params: UserUpdateParams) {
-        command = UserUpdateCommandDTOBase(
+        command = UserUpdateCommand(
             id = context.userIds.safeGet(params.identifier),
             givenName = params.givenName,
             familyName = params.familyName,

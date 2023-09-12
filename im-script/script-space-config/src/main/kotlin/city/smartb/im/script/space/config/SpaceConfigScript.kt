@@ -5,14 +5,14 @@ import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.commons.model.SpaceIdentifier
 import city.smartb.im.commons.utils.ParserUtils
 import city.smartb.im.commons.utils.mapAsync
-import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
+import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommand
 import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import city.smartb.im.f2.organization.lib.OrganizationAggregateService
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import city.smartb.im.f2.space.lib.SpaceFinderService
-import city.smartb.im.f2.user.domain.command.UserCreateCommandDTOBase
+import city.smartb.im.f2.user.domain.command.UserCreateCommand
 import city.smartb.im.f2.user.lib.UserAggregateService
 import city.smartb.im.f2.user.lib.UserFinderService
 import city.smartb.im.script.core.config.properties.ImScriptSpaceProperties
@@ -126,7 +126,7 @@ class SpaceConfigScript (
     private suspend fun initOrganizations(organizations: List<OrganizationData>?) {
         organizations?.mapAsync { organization ->
             val organizationId = try {
-                OrganizationCreateCommandDTOBase(
+                OrganizationCreateCommand(
                     siret = organization.siret,
                     name = organization.name,
                     description = organization.description,
@@ -149,7 +149,7 @@ class SpaceConfigScript (
     private suspend fun initUsers(users: List<UserData>?, organizationId: OrganizationId? = null) {
         users?.mapAsync { user ->
             userFinderService.getByEmailOrNull(user.email)
-                ?: UserCreateCommandDTOBase(
+                ?: UserCreateCommand(
                     email = user.email,
                     password = user.password,
                     givenName = user.firstname,

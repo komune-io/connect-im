@@ -1,7 +1,7 @@
 package city.smartb.im.f2.privilege.domain.role.query
 
+import city.smartb.im.f2.privilege.domain.role.model.Role
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTO
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import f2.dsl.fnc.F2Function
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
@@ -13,7 +13,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.f2.privilege.domain.D2RolePage]
  * @order 20
  */
-typealias RoleListFunction = F2Function<RoleListQueryDTOBase, RoleListResultDTOBase>
+typealias RoleListFunction = F2Function<RoleListQuery, RoleListResult>
 
 /**
  * @d2 query
@@ -33,7 +33,7 @@ interface RoleListQueryDTO {
  * @d2 inherit
  */
 @Serializable
-data class RoleListQueryDTOBase(
+data class RoleListQuery(
     override val target: String?
 ): RoleListQueryDTO
 
@@ -54,6 +54,6 @@ interface RoleListResultDTO {
  * @d2 inherit
  */
 @Serializable
-data class RoleListResultDTOBase(
-    override val items: List<RoleDTOBase>
+data class RoleListResult(
+    override val items: List<Role>
 ): RoleListResultDTO

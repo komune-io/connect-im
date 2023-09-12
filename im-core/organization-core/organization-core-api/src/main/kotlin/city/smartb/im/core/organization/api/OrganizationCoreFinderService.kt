@@ -6,7 +6,7 @@ import city.smartb.im.commons.utils.matches
 import city.smartb.im.commons.utils.page
 import city.smartb.im.core.commons.CoreService
 import city.smartb.im.core.organization.api.model.toOrganization
-import city.smartb.im.core.organization.domain.model.Organization
+import city.smartb.im.core.organization.domain.model.OrganizationModel
 import city.smartb.im.infra.redis.CacheName
 import f2.dsl.cqrs.page.OffsetPagination
 import f2.dsl.cqrs.page.PageDTO
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 @Service
 class OrganizationCoreFinderService: CoreService(CacheName.Organization) {
 
-    suspend fun getOrNull(id: OrganizationId): Organization? = query(id, "Error while fetching organization [$id]") {
+    suspend fun getOrNull(id: OrganizationId): OrganizationModel? = query(id, "Error while fetching organization [$id]") {
         val client = keycloakClientProvider.get()
         try {
             client.group(id).toRepresentation().toOrganization()
@@ -26,7 +26,7 @@ class OrganizationCoreFinderService: CoreService(CacheName.Organization) {
         }
     }
 
-    suspend fun get(id: OrganizationId): Organization {
+    suspend fun get(id: OrganizationId): OrganizationModel {
         return getOrNull(id) ?: throw NotFoundException("Organization", id)
     }
 
@@ -37,7 +37,7 @@ class OrganizationCoreFinderService: CoreService(CacheName.Organization) {
         attributes: Map<String, String>? = null,
         withDisabled: Boolean = false,
         offset: OffsetPagination? = null,
-    ): PageDTO<Organization> {
+    ): PageDTO<OrganizationModel> {
         val client = keycloakClientProvider.get()
 
         val compositeRoles = client.roles().list().associate { role ->
@@ -54,7 +54,7 @@ class OrganizationCoreFinderService: CoreService(CacheName.Organization) {
                     && (attributes == null || attributes.all { (key, value) -> organization.attributes[key] == value })
                     && (identifier == null || organization.identifier.contains(identifier, true))
                     && (organization.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles))
-            }.sortedByDescending(Organization::creationDate)
+            }.sortedByDescending(OrganizationModel::creationDate)
 
         return groups.page(offset)
     }

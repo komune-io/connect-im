@@ -8,7 +8,7 @@ import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.commons.utils.parseJson
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.f2.privilege.api.RoleEndpoint
-import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommandDTOBase
+import city.smartb.im.f2.privilege.domain.role.command.RoleDefineCommand
 import f2.dsl.fnc.invokeWith
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -22,7 +22,7 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var roleEndpoint: RoleEndpoint
 
-    private lateinit var command: RoleDefineCommandDTOBase
+    private lateinit var command: RoleDefineCommand
 
     init {
         DataTableType(::roleDefineParams)
@@ -73,7 +73,7 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun defineRole(params: RoleDefineParams) = context.roleIdentifiers.register(params.identifier) {
-        command = RoleDefineCommandDTOBase(
+        command = RoleDefineCommand(
             identifier = params.identifier,
             description = params.description,
             targets = params.targets.map { it.name },

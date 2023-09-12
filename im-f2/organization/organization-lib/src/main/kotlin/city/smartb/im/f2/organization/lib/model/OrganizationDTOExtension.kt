@@ -2,50 +2,50 @@ package city.smartb.im.f2.organization.lib.model
 
 import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.commons.utils.mapAsyncDeferred
-import city.smartb.im.core.organization.domain.model.Organization
-import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
+import city.smartb.im.core.organization.domain.model.OrganizationModel
+import city.smartb.im.f2.organization.domain.model.Organization
 import city.smartb.im.f2.organization.domain.model.OrganizationRef
 import city.smartb.im.f2.organization.domain.model.OrganizationStatus
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
+import city.smartb.im.f2.privilege.domain.role.model.Role
 import kotlinx.coroutines.awaitAll
 
 val imOrganizationAttributes = listOf(
-    Organization::displayName.name,
-    OrganizationDTOBase::address.name,
-    OrganizationDTOBase::creationDate.name,
-    OrganizationDTOBase::description.name,
-    OrganizationDTOBase::disabledBy.name,
-    OrganizationDTOBase::disabledDate.name,
-    OrganizationDTOBase::enabled.name,
-    OrganizationDTOBase::logo.name,
-    OrganizationDTOBase::siret.name,
-    OrganizationDTOBase::website.name,
+    OrganizationModel::displayName.name,
+    Organization::address.name,
+    Organization::creationDate.name,
+    Organization::description.name,
+    Organization::disabledBy.name,
+    Organization::disabledDate.name,
+    Organization::enabled.name,
+    Organization::logo.name,
+    Organization::siret.name,
+    Organization::website.name,
 )
 
-suspend fun Organization.toDTO(
-    getRole: suspend (RoleIdentifier) -> RoleDTOBase
-): OrganizationDTOBase {
+suspend fun OrganizationModel.toDTO(
+    getRole: suspend (RoleIdentifier) -> Role
+): Organization {
     val roles = roles.mapAsyncDeferred(getRole)
 
-    return OrganizationDTOBase(
+    return Organization(
         id = id,
         name = identifier,
-        siret = attributes[OrganizationDTOBase::siret.name].orEmpty(),
+        siret = attributes[Organization::siret.name].orEmpty(),
         address = address,
         description = description,
-        website = attributes[OrganizationDTOBase::website.name],
+        website = attributes[Organization::website.name],
         attributes = attributes.filterKeys { key -> key !in imOrganizationAttributes },
         roles = roles.awaitAll(),
-        logo = attributes[OrganizationDTOBase::logo.name],
-        status = attributes[OrganizationDTOBase::status.name] ?: OrganizationStatus.PENDING.name,
+        logo = attributes[Organization::logo.name],
+        status = attributes[Organization::status.name] ?: OrganizationStatus.PENDING.name,
         enabled = enabled,
-        disabledBy = attributes[OrganizationDTOBase::disabledBy.name],
-        creationDate = attributes[OrganizationDTOBase::creationDate.name]?.toLong() ?: 0,
-        disabledDate = attributes[OrganizationDTOBase::disabledDate.name]?.toLong(),
+        disabledBy = attributes[Organization::disabledBy.name],
+        creationDate = attributes[Organization::creationDate.name]?.toLong() ?: 0,
+        disabledDate = attributes[Organization::disabledDate.name]?.toLong(),
     )
 }
 
-fun Organization.toRef() = OrganizationRef(
+fun OrganizationModel.toRef() = OrganizationRef(
     id = id,
     name = identifier,
     roles = roles

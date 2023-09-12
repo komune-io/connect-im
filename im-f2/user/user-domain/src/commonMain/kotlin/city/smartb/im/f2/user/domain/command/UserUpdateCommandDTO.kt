@@ -16,7 +16,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.f2.user.domain.D2UserPage]
  * @order 20
  */
-typealias UserUpdateFunction = F2Function<UserUpdateCommandDTOBase, UserUpdatedEventDTOBase>
+typealias UserUpdateFunction = F2Function<UserUpdateCommand, UserUpdatedEvent>
 
 /**
  * @d2 command
@@ -65,7 +65,7 @@ interface UserUpdateCommandDTO: Command {
 /**
  * @d2 inherit
  */
-data class UserUpdateCommandDTOBase(
+data class UserUpdateCommand(
     override val id: UserId,
     override val givenName: String,
     override val familyName: String,
@@ -90,6 +90,6 @@ interface UserUpdatedEventDTO: Event {
 /**
  * @d2 inherit
  */
-data class UserUpdatedEventDTOBase(
+data class UserUpdatedEvent(
     override val id: UserId
 ): UserUpdatedEventDTO

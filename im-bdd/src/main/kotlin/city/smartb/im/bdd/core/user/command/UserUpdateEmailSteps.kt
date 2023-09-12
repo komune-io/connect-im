@@ -3,7 +3,7 @@ package city.smartb.im.bdd.core.user.command
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.user.data.user
 import city.smartb.im.f2.user.api.UserEndpoint
-import city.smartb.im.f2.user.domain.command.UserUpdateEmailCommandDTOBase
+import city.smartb.im.f2.user.domain.command.UserUpdateEmailCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +14,7 @@ class UserUpdateEmailSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var userEndpoint: UserEndpoint
 
-    private lateinit var command: UserUpdateEmailCommandDTOBase
+    private lateinit var command: UserUpdateEmailCommand
 
     init {
         DataTableType(::userUpdateEmailParams)
@@ -55,7 +55,7 @@ class UserUpdateEmailSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun updateEmailUser(params: UserUpdateEmailParams) {
-        command = UserUpdateEmailCommandDTOBase(
+        command = UserUpdateEmailCommand(
             id = context.userIds.safeGet(params.identifier),
             email = params.email
         )

@@ -16,7 +16,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.f2.user.domain.D2UserPage]
  * @order 10
  */
-typealias UserCreateFunction = F2Function<UserCreateCommandDTOBase, UserCreatedEventDTOBase>
+typealias UserCreateFunction = F2Function<UserCreateCommand, UserCreatedEvent>
 
 /**
  * @d2 command
@@ -108,7 +108,7 @@ interface UserCreateCommandDTO: Command {
 /**
  * @d2 inherit
  */
-data class UserCreateCommandDTOBase(
+data class UserCreateCommand(
     override val email: String,
     override val password: String? = null,
     override val givenName: String,
@@ -139,6 +139,6 @@ interface UserCreatedEventDTO: Event {
 /**
  * @d2 inherit
  */
-data class UserCreatedEventDTOBase(
+data class UserCreatedEvent(
     override val id: UserId
 ): UserCreatedEventDTO

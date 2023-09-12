@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 const val IM_URL_PROPERTY = "connect.im"
 
 @ConfigurationProperties(prefix = IM_URL_PROPERTY)
-data class IMProperties (
+data class IMProperties(
     val organization: OrganizationProperties?,
     val smtp: Map<String, String>? = null,
     val theme: String? = null,

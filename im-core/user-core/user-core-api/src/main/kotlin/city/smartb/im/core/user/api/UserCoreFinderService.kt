@@ -8,7 +8,7 @@ import city.smartb.im.commons.utils.matches
 import city.smartb.im.commons.utils.page
 import city.smartb.im.core.commons.CoreService
 import city.smartb.im.core.user.api.service.UserRepresentationTransformer
-import city.smartb.im.core.user.domain.model.User
+import city.smartb.im.core.user.domain.model.UserModel
 import city.smartb.im.infra.redis.CacheName
 import f2.dsl.cqrs.page.OffsetPagination
 import f2.dsl.cqrs.page.PageDTO
@@ -20,7 +20,7 @@ class UserCoreFinderService(
     private val userRepresentationTransformer: UserRepresentationTransformer
 ): CoreService(CacheName.User) {
 
-    suspend fun getOrNull(id: UserId): User? = query(id, "Error while fetching user [$id]") {
+    suspend fun getOrNull(id: UserId): UserModel? = query(id, "Error while fetching user [$id]") {
         val client = keycloakClientProvider.get()
         try {
             client.user(id).toRepresentation().let { userRepresentationTransformer.transform(it) }
@@ -29,11 +29,11 @@ class UserCoreFinderService(
         }
     }
 
-    suspend fun get(id: UserId): User {
+    suspend fun get(id: UserId): UserModel {
         return getOrNull(id) ?: throw NotFoundException("User", id)
     }
 
-    suspend fun getByEmailOrNull(email: String): User? = handleErrors("Error while fetching user by email [$email]") {
+    suspend fun getByEmailOrNull(email: String): UserModel? = handleErrors("Error while fetching user by email [$email]") {
         val client = keycloakClientProvider.get()
         client.users().search(null, null, null, email, null, null, true, false)
             .firstOrNull { it.email == email }
@@ -49,7 +49,7 @@ class UserCoreFinderService(
         attributes: Map<String, String>? = null,
         withDisabled: Boolean = false,
         offset: OffsetPagination? = null
-    ): PageDTO<User> {
+    ): PageDTO<UserModel> {
         val client = keycloakClientProvider.get()
 
         val compositeRoles = client.roles().list().mapAsync { role ->
@@ -69,14 +69,14 @@ class UserCoreFinderService(
                 && (email == null || user.email.contains(email, true))
                 && (name == null || ("${user.givenName} ${user.familyName}").contains(name, true))
                 && (user.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles))
-        }.sortedByDescending(User::creationDate)
+        }.sortedByDescending(UserModel::creationDate)
             .page(offset)
     }
 
     private suspend fun list(
         ids: Collection<UserId>? = null,
         organizationIds: Collection<OrganizationId>? = null
-    ): List<User> {
+    ): List<UserModel> {
         val client = keycloakClientProvider.get()
         return when {
             ids != null -> {

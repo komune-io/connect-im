@@ -3,7 +3,7 @@ package city.smartb.im.bdd.core.privilege.permission.query
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.privilege.permission.data.permission
 import city.smartb.im.commons.utils.mapAsync
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
+import city.smartb.im.f2.privilege.domain.permission.model.Permission
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.assertj.core.api.Assertions
@@ -44,7 +44,7 @@ class PermissionQuerySteps: En, ImCucumberStepsDefinition() {
 
     private suspend fun assertFetchedPermissions(identifiers: List<TestContextKey>) {
         val fetchedPermissions = context.fetched.permissions.filter { it.identifier !in context.permanentRoles() }
-        val fetchedIdentifiers = fetchedPermissions.map(PermissionDTOBase::identifier)
+        val fetchedIdentifiers = fetchedPermissions.map(Permission::identifier)
         val expectedIdentifiers = identifiers.map(context.permissionIdentifiers::safeGet)
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 

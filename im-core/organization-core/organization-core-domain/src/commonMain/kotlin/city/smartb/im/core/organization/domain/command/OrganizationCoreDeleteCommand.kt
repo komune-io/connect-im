@@ -19,7 +19,7 @@ interface OrganizationDeleteCommandDTO: Command {
 /**
  * @d2 inherit
  */
-data class OrganizationDeleteCommand(
+data class OrganizationCoreDeleteCommand(
     override val id: OrganizationId
 ): OrganizationDeleteCommandDTO
 
@@ -37,6 +37,6 @@ interface OrganizationDeletedEventDTO: Event {
 /**
  * @d2 inherit
  */
-data class OrganizationDeletedEvent(
+data class OrganizationCoreDeletedEvent(
     override val id: OrganizationId
 ): OrganizationDeletedEventDTO

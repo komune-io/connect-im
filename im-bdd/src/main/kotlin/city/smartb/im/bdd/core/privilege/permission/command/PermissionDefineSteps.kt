@@ -4,7 +4,7 @@ import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.privilege.permission.data.permission
 import city.smartb.im.commons.model.PermissionIdentifier
 import city.smartb.im.f2.privilege.api.PermissionEndpoint
-import city.smartb.im.f2.privilege.domain.permission.command.PermissionDefineCommandDTOBase
+import city.smartb.im.f2.privilege.domain.permission.command.PermissionDefineCommand
 import f2.dsl.fnc.invokeWith
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -17,7 +17,7 @@ class PermissionDefineSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var permissionEndpoint: PermissionEndpoint
 
-    private lateinit var command: PermissionDefineCommandDTOBase
+    private lateinit var command: PermissionDefineCommand
 
     init {
         DataTableType(::permissionDefineParams)
@@ -64,7 +64,7 @@ class PermissionDefineSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun definePermission(params: PermissionDefineParams) = context.permissionIdentifiers.register(params.identifier) {
-        command = PermissionDefineCommandDTOBase(
+        command = PermissionDefineCommand(
             identifier = params.identifier,
             description = params.description,
         )

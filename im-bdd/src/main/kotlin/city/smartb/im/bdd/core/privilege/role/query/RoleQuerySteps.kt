@@ -2,7 +2,7 @@ package city.smartb.im.bdd.core.privilege.role.query
 
 import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.privilege.role.data.role
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
+import city.smartb.im.f2.privilege.domain.role.model.Role
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import kotlinx.coroutines.async
@@ -46,7 +46,7 @@ class RoleQuerySteps: En, ImCucumberStepsDefinition() {
 
     private suspend fun assertFetchedRoles(identifiers: List<TestContextKey>) = coroutineScope {
         val fetchedRoles = context.fetched.roles.filter { it.identifier !in context.permanentRoles() }
-        val fetchedIdentifiers = fetchedRoles.map(RoleDTOBase::identifier)
+        val fetchedIdentifiers = fetchedRoles.map(Role::identifier)
         val expectedIdentifiers = identifiers.map { context.roleIdentifiers[it] ?: it }
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 

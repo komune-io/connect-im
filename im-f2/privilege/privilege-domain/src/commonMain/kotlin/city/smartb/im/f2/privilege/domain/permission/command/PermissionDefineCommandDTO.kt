@@ -12,7 +12,7 @@ import kotlin.js.JsExport
  * @parent [city.smartb.im.f2.privilege.domain.D2PermissionPage]
  * @order 10
  */
-typealias PermissionDefineFunction = F2Function<PermissionDefineCommandDTOBase, PermissionDefinedEventDTOBase>
+typealias PermissionDefineFunction = F2Function<PermissionDefineCommand, PermissionDefinedEvent>
 
 /**
  * @d2 command
@@ -21,12 +21,12 @@ typealias PermissionDefineFunction = F2Function<PermissionDefineCommandDTOBase, 
 @JsExport
 interface PermissionDefineCommandDTO {
     /**
-     * @ref [city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase.identifier]
+     * @ref [city.smartb.im.f2.privilege.domain.permission.model.Permission.identifier]
      */
     val identifier: PermissionIdentifier
 
     /**
-     * @ref [city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase.description]
+     * @ref [city.smartb.im.f2.privilege.domain.permission.model.Permission.description]
      */
     val description: String
 }
@@ -35,7 +35,7 @@ interface PermissionDefineCommandDTO {
  * @d2 inherit
  */
 @Serializable
-data class PermissionDefineCommandDTOBase(
+data class PermissionDefineCommand(
     override val identifier: PermissionIdentifier,
     override val description: String,
 ): PermissionDefineCommandDTO
@@ -56,6 +56,6 @@ interface PermissionDefinedEventDTO: Event {
  * @d2 inherit
  */
 @Serializable
-data class PermissionDefinedEventDTOBase(
+data class PermissionDefinedEvent(
     override val identifier: PermissionIdentifier
 ): PermissionDefinedEventDTO

@@ -6,27 +6,27 @@ import city.smartb.im.commons.utils.EmptyAddress
 import city.smartb.im.commons.utils.mapAsync
 import city.smartb.im.commons.utils.parseJsonTo
 import city.smartb.im.core.organization.api.OrganizationCoreFinderService
-import city.smartb.im.core.user.domain.model.User
+import city.smartb.im.core.user.domain.model.UserModel
 import city.smartb.im.f2.organization.domain.model.OrganizationRef
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
-import city.smartb.im.f2.user.domain.model.UserDTOBase
+import city.smartb.im.f2.user.domain.model.User
 import org.springframework.stereotype.Service
 
 @Service
 class UserToDTOTransformer(
     private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val privilegeFinderService: PrivilegeFinderService,
-): Transformer<User, UserDTOBase>() {
+): Transformer<UserModel, User>() {
     companion object {
         val IM_USER_ATTRIBUTES = listOf(
-            UserDTOBase::address.name,
-            UserDTOBase::disabledBy.name,
-            UserDTOBase::disabledDate.name,
-            UserDTOBase::phone.name,
+            User::address.name,
+            User::disabledBy.name,
+            User::disabledDate.name,
+            User::phone.name,
         )
     }
 
-    override suspend fun transform(item: User): UserDTOBase {
+    override suspend fun transform(item: UserModel): User {
         val roles = item.roles.mapAsync(privilegeFinderService::getRole)
         val attributes = item.attributes.filterKeys { key -> key !in IM_USER_ATTRIBUTES }
         val organizationRef = item.memberOf?.let {
@@ -39,20 +39,20 @@ class UserToDTOTransformer(
             )
         }
 
-		return UserDTOBase(
+		return User(
 			id = item.id,
 			memberOf = organizationRef,
 			email = item.email,
 			givenName = item.givenName,
 			familyName = item.familyName,
-			address = item.attributes[UserDTOBase::address.name]?.parseJsonTo(Address::class.java) ?: EmptyAddress,
-			phone = item.attributes[UserDTOBase::phone.name],
+			address = item.attributes[User::address.name]?.parseJsonTo(Address::class.java) ?: EmptyAddress,
+			phone = item.attributes[User::phone.name],
 			roles = roles,
 			attributes = attributes,
 			enabled = item.enabled,
-			disabledBy = item.attributes[UserDTOBase::disabledBy.name],
+			disabledBy = item.attributes[User::disabledBy.name],
 			creationDate = item.creationDate,
-			disabledDate = item.attributes[UserDTOBase::disabledDate.name]?.toLong()
+			disabledDate = item.attributes[User::disabledDate.name]?.toLong()
 		)
 	}
 	

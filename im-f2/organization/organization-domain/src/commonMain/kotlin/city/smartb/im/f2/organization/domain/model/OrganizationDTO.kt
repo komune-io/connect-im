@@ -3,8 +3,8 @@ package city.smartb.im.f2.organization.domain.model
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.AddressDTO
 import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.f2.privilege.domain.role.model.Role
 import city.smartb.im.f2.privilege.domain.role.model.RoleDTO
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
 import kotlin.js.JsExport
 
 
@@ -101,7 +101,7 @@ interface OrganizationDTO {
 /**
  * @d2 inherit
  */
-data class OrganizationDTOBase(
+data class Organization(
     override val id: OrganizationId,
     override val siret: String?,
     override val name: String,
@@ -109,7 +109,7 @@ data class OrganizationDTOBase(
     override val address: Address?,
     override val website: String?,
     override val attributes: Map<String, String>,
-    override val roles: List<RoleDTOBase>,
+    override val roles: List<Role>,
     override val logo: String?,
     override val status: String,
     override val enabled: Boolean,

@@ -1,7 +1,8 @@
 package city.smartb.im.f2.user.domain.command
 
-import city.smartb.im.core.user.domain.command.UserDeleteCommand
-import city.smartb.im.core.user.domain.command.UserDeletedEvent
+import city.smartb.im.core.user.domain.command.UserCoreDeleteCommand
+import city.smartb.im.core.user.domain.command.UserCoreDeletedEvent
+import city.smartb.im.core.user.domain.command.UserDeleteCommandDTO
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
@@ -15,14 +16,14 @@ import kotlin.js.JsExport
  * @child [city.smartb.im.core.user.domain.command.UserDeletedEventDTO]
  * @order 80
  */
-typealias UserDeleteFunction = F2Function<UserDeleteCommandDTOBase, UserDeletedEventDTOBase>
+typealias UserDeleteFunction = F2Function<UserDeleteCommand, UserDeletedEvent>
 
 @JsExport
-interface UserDeleteCommandDTO: city.smartb.im.core.user.domain.command.UserDeleteCommandDTO, Command
+interface UserDeleteCommandDTO: UserDeleteCommandDTO, Command
 
-typealias UserDeleteCommandDTOBase = UserDeleteCommand
+typealias UserDeleteCommand = UserCoreDeleteCommand
 
 @JsExport
 interface UserDeletedEventDTO: city.smartb.im.core.user.domain.command.UserDeletedEventDTO, Event
 
-typealias UserDeletedEventDTOBase = UserDeletedEvent
+typealias UserDeletedEvent = UserCoreDeletedEvent

@@ -15,7 +15,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.f2.organization.domain.D2OrganizationPage]
  * @order 20
  */
-typealias OrganizationUpdateFunction = F2Function<OrganizationUpdateCommandDTOBase, OrganizationUpdatedResult>
+typealias OrganizationUpdateFunction = F2Function<OrganizationUpdateCommand, OrganizationUpdatedResult>
 
 /**
  * @d2 command
@@ -31,13 +31,13 @@ interface OrganizationUpdateCommandDTO: Command {
 
     /**
      * Official name of the organization.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.name]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.name]
      */
     val name: String
 
     /**
      * Description of the organization.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.description]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.description]
      */
     val description: String?
 
@@ -48,29 +48,29 @@ interface OrganizationUpdateCommandDTO: Command {
 
     /**
      * Website of the organization.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.website]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.website]
      */
     val website: String?
 
     /**
      * Effective roles assigned to the organization. Multiple effective roles can be contained in a role.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.roles]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.roles]
      */
     val roles: List<String>?
 
     /**
      * Additional arbitrary attributes assigned to the organization.
-     * @example [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.attributes]
+     * @example [city.smartb.im.f2.organization.domain.model.Organization.attributes]
      */
     val attributes: Map<String, String>?
 
     /**
-     * @ref [city.smartb.im.f2.organization.domain.model.OrganizationDTOBase.status]
+     * @ref [city.smartb.im.f2.organization.domain.model.Organization.status]
      */
     val status: String
 }
 
-data class OrganizationUpdateCommandDTOBase(
+data class OrganizationUpdateCommand(
     override val id: OrganizationId,
     override val name: String,
     override val description: String?,

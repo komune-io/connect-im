@@ -2,13 +2,13 @@ package city.smartb.im.script.space.create
 
 import city.smartb.im.commons.auth.AuthContext
 import city.smartb.im.commons.utils.ParserUtils
-import city.smartb.im.f2.privilege.domain.permission.model.PermissionDTOBase
+import city.smartb.im.f2.privilege.domain.permission.model.Permission
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
 import city.smartb.im.f2.space.domain.command.SpaceCreateCommand
 import city.smartb.im.f2.space.lib.SpaceAggregateService
 import city.smartb.im.f2.space.lib.SpaceFinderService
-import city.smartb.im.f2.user.domain.command.UserCreateCommandDTOBase
+import city.smartb.im.f2.user.domain.command.UserCreateCommand
 import city.smartb.im.f2.user.lib.UserAggregateService
 import city.smartb.im.f2.user.lib.UserFinderService
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
@@ -81,12 +81,12 @@ class SpaceCreateScript(
         val password = properties.password ?: UUID.randomUUID().toString()
         logger.info("Creating user admin with password: $password")
 
-        val userId = UserCreateCommandDTOBase(
+        val userId = UserCreateCommand(
             email = properties.email,
             password = password,
             givenName = properties.firstName.orEmpty(),
             familyName = properties.lastName.orEmpty(),
-            roles = permissions.map(PermissionDTOBase::identifier),
+            roles = permissions.map(Permission::identifier),
             isPasswordTemporary = false,
             isEmailVerified = true,
             sendVerifyEmail = false,

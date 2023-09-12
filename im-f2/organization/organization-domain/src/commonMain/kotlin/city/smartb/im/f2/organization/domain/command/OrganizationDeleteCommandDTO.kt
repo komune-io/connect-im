@@ -1,7 +1,7 @@
 package city.smartb.im.f2.organization.domain.command
 
-import city.smartb.im.core.organization.domain.command.OrganizationDeleteCommand
-import city.smartb.im.core.organization.domain.command.OrganizationDeletedEvent
+import city.smartb.im.core.organization.domain.command.OrganizationCoreDeleteCommand
+import city.smartb.im.core.organization.domain.command.OrganizationCoreDeletedEvent
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
@@ -15,15 +15,15 @@ import kotlin.js.JsName
  * @child [city.smartb.im.core.organization.domain.command.OrganizationDeletedEventDTO]
  * @order 50
  */
-typealias OrganizationDeleteFunction = F2Function<OrganizationDeleteCommandDTOBase, OrganizationDeletedEventDTOBase>
+typealias OrganizationDeleteFunction = F2Function<OrganizationDeleteCommand, OrganizationDeletedEvent>
 
 @JsExport
 interface OrganizationDeleteCommandDTO: city.smartb.im.core.organization.domain.command.OrganizationDeleteCommandDTO
 
-typealias OrganizationDeleteCommandDTOBase = OrganizationDeleteCommand
+typealias OrganizationDeleteCommand = OrganizationCoreDeleteCommand
 
 @JsExport
 @JsName("OrganizationDeletedEventDTO")
 interface OrganizationDeletedEventDTO: Event, city.smartb.im.core.organization.domain.command.OrganizationDeletedEventDTO
 
-typealias OrganizationDeletedEventDTOBase = OrganizationDeletedEvent
+typealias OrganizationDeletedEvent = OrganizationCoreDeletedEvent

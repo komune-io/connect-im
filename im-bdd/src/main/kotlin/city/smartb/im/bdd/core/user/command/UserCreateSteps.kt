@@ -5,7 +5,7 @@ import city.smartb.im.bdd.core.user.data.user
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.f2.user.api.UserEndpoint
-import city.smartb.im.f2.user.domain.command.UserCreateCommandDTOBase
+import city.smartb.im.f2.user.domain.command.UserCreateCommand
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -19,7 +19,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var userEndpoint: UserEndpoint
 
-    private lateinit var command: UserCreateCommandDTOBase
+    private lateinit var command: UserCreateCommand
 
     init {
         DataTableType(::userCreateParams)
@@ -80,7 +80,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun createUser(params: UserCreateParams) = context.userIds.register(params.identifier) {
-        command = UserCreateCommandDTOBase(
+        command = UserCreateCommand(
             email = params.email,
             password = params.password,
             givenName = params.givenName,

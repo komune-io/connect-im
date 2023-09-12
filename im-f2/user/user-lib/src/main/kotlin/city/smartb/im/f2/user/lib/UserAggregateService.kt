@@ -11,23 +11,23 @@ import city.smartb.im.core.privilege.api.PrivilegeCoreFinderService
 import city.smartb.im.core.privilege.api.model.checkTarget
 import city.smartb.im.core.privilege.domain.model.RoleTarget
 import city.smartb.im.core.user.api.UserCoreAggregateService
-import city.smartb.im.core.user.domain.command.UserDefineCommand
-import city.smartb.im.core.user.domain.command.UserDisableCommand
-import city.smartb.im.core.user.domain.command.UserSendEmailCommand
-import city.smartb.im.f2.user.domain.command.UserCreateCommandDTOBase
-import city.smartb.im.f2.user.domain.command.UserCreatedEventDTOBase
-import city.smartb.im.f2.user.domain.command.UserDeleteCommandDTOBase
-import city.smartb.im.f2.user.domain.command.UserDeletedEventDTOBase
-import city.smartb.im.f2.user.domain.command.UserDisableCommandDTOBase
-import city.smartb.im.f2.user.domain.command.UserDisabledEventDTOBase
-import city.smartb.im.f2.user.domain.command.UserResetPasswordCommandDTOBase
-import city.smartb.im.f2.user.domain.command.UserResetPasswordEventDTOBase
-import city.smartb.im.f2.user.domain.command.UserUpdateCommandDTOBase
-import city.smartb.im.f2.user.domain.command.UserUpdateEmailCommandDTOBase
-import city.smartb.im.f2.user.domain.command.UserUpdatePasswordCommandDTOBase
-import city.smartb.im.f2.user.domain.command.UserUpdatedEmailEventDTOBase
-import city.smartb.im.f2.user.domain.command.UserUpdatedEventDTOBase
-import city.smartb.im.f2.user.domain.command.UserUpdatedPasswordEventDTOBase
+import city.smartb.im.core.user.domain.command.UserCoreDefineCommand
+import city.smartb.im.core.user.domain.command.UserCoreDisableCommand
+import city.smartb.im.core.user.domain.command.UserCoreSendEmailCommand
+import city.smartb.im.f2.user.domain.command.UserCreateCommand
+import city.smartb.im.f2.user.domain.command.UserCreatedEvent
+import city.smartb.im.f2.user.domain.command.UserDeleteCommand
+import city.smartb.im.f2.user.domain.command.UserDeletedEvent
+import city.smartb.im.f2.user.domain.command.UserDisableCommand
+import city.smartb.im.f2.user.domain.command.UserDisabledEvent
+import city.smartb.im.f2.user.domain.command.UserResetPasswordCommand
+import city.smartb.im.f2.user.domain.command.UserResetPasswordEvent
+import city.smartb.im.f2.user.domain.command.UserUpdateCommand
+import city.smartb.im.f2.user.domain.command.UserUpdateEmailCommand
+import city.smartb.im.f2.user.domain.command.UserUpdatePasswordCommand
+import city.smartb.im.f2.user.domain.command.UserUpdatedEmailEvent
+import city.smartb.im.f2.user.domain.command.UserUpdatedEvent
+import city.smartb.im.f2.user.domain.command.UserUpdatedPasswordEvent
 import city.smartb.im.f2.user.domain.model.UserDTO
 import org.keycloak.events.EventType
 import org.springframework.stereotype.Service
@@ -38,11 +38,11 @@ class UserAggregateService(
     private val privilegeCoreFinderService: PrivilegeCoreFinderService,
     private val userCoreAggregateService: UserCoreAggregateService,
 ) {
-    suspend fun create(command: UserCreateCommandDTOBase): UserCreatedEventDTOBase {
+    suspend fun create(command: UserCreateCommand): UserCreatedEvent {
         checkOrganizationExist(command.memberOf)
         checkRoles(command.roles)
 
-        val userId = UserDefineCommand(
+        val userId = UserCoreDefineCommand(
             id = null,
             email = command.email,
             givenName = command.givenName,
@@ -64,36 +64,36 @@ class UserAggregateService(
         ).map(EventType::name)
 
         if (actions.isNotEmpty()) {
-            UserSendEmailCommand(
+            UserCoreSendEmailCommand(
                 id = userId,
                 actions = actions
             ).let { userCoreAggregateService.sendEmail(it) }
         }
 
-        return UserCreatedEventDTOBase(userId)
+        return UserCreatedEvent(userId)
     }
 
-    suspend fun resetPassword(command: UserResetPasswordCommandDTOBase): UserResetPasswordEventDTOBase {
-        UserSendEmailCommand(
+    suspend fun resetPassword(command: UserResetPasswordCommand): UserResetPasswordEvent {
+        UserCoreSendEmailCommand(
             id = command.id,
             actions = listOf(EventType.UPDATE_PASSWORD.name)
         ).let { userCoreAggregateService.sendEmail(it) }
-        return UserResetPasswordEventDTOBase(command.id)
+        return UserResetPasswordEvent(command.id)
     }
 
-    suspend fun updatePassword(command: UserUpdatePasswordCommandDTOBase): UserUpdatedPasswordEventDTOBase {
-        UserDefineCommand(
+    suspend fun updatePassword(command: UserUpdatePasswordCommand): UserUpdatedPasswordEvent {
+        UserCoreDefineCommand(
             id = command.id,
             password = command.password,
             isPasswordTemporary = false
         ).let { userCoreAggregateService.define(it) }
-        return UserUpdatedPasswordEventDTOBase(command.id)
+        return UserUpdatedPasswordEvent(command.id)
     }
 
-    suspend fun update(command: UserUpdateCommandDTOBase): UserUpdatedEventDTOBase {
+    suspend fun update(command: UserUpdateCommand): UserUpdatedEvent {
         checkRoles(command.roles)
 
-        UserDefineCommand(
+        UserCoreDefineCommand(
             id = command.id,
             givenName = command.givenName,
             familyName = command.familyName,
@@ -104,34 +104,34 @@ class UserAggregateService(
             )).toMap(),
         ).let { userCoreAggregateService.define(it) }
 
-        return UserUpdatedEventDTOBase(command.id)
+        return UserUpdatedEvent(command.id)
     }
 
-    suspend fun updateEmail(command: UserUpdateEmailCommandDTOBase): UserUpdatedEmailEventDTOBase {
-        UserDefineCommand(
+    suspend fun updateEmail(command: UserUpdateEmailCommand): UserUpdatedEmailEvent {
+        UserCoreDefineCommand(
             id = command.id,
             email = command.email,
             isEmailVerified = false
         ).let { userCoreAggregateService.define(it) }
 
         if (command.sendVerificationEmail) {
-            UserSendEmailCommand(
+            UserCoreSendEmailCommand(
                 id = command.id,
                 actions = listOf(EventType.VERIFY_EMAIL.name)
             ).let { userCoreAggregateService.sendEmail(it) }
         }
 
-        return UserUpdatedEmailEventDTOBase(command.id)
+        return UserUpdatedEmailEvent(command.id)
     }
 
-    suspend fun disable(command: UserDisableCommandDTOBase): UserDisabledEventDTOBase {
-        UserDisableCommand(
+    suspend fun disable(command: UserDisableCommand): UserDisabledEvent {
+        UserCoreDisableCommand(
             id = command.id,
             disabledBy = command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id ?: ""
         ).let { userCoreAggregateService.disable(it) }
 
         if (command.anonymize) {
-            UserDefineCommand(
+            UserCoreDefineCommand(
                 id = command.id,
                 email = "${command.id}@anonymous.com",
                 givenName = "anonymous",
@@ -144,10 +144,10 @@ class UserAggregateService(
             ).let { userCoreAggregateService.define(it) }
         }
 
-        return UserDisabledEventDTOBase(command.id)
+        return UserDisabledEvent(command.id)
     }
 
-    suspend fun delete(command: UserDeleteCommandDTOBase): UserDeletedEventDTOBase {
+    suspend fun delete(command: UserDeleteCommand): UserDeletedEvent {
         return userCoreAggregateService.delete(command)
     }
 

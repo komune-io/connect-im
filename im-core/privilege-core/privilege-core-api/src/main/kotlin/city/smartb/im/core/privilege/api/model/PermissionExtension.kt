@@ -1,18 +1,18 @@
 package city.smartb.im.core.privilege.api.model
 
 import city.smartb.im.commons.model.PermissionId
-import city.smartb.im.core.privilege.domain.command.PermissionDefineCommand
-import city.smartb.im.core.privilege.domain.model.Permission
+import city.smartb.im.core.privilege.domain.command.PermissionCoreDefineCommand
+import city.smartb.im.core.privilege.domain.model.PermissionModel
 import city.smartb.im.core.privilege.domain.model.Privilege
 import org.keycloak.representations.idm.RoleRepresentation
 
-fun RoleRepresentation.toPermission() = Permission(
+fun RoleRepresentation.toPermission() = PermissionModel(
     id = id,
     identifier = name,
     description = description.orEmpty(),
 )
 
-fun Permission.toRoleRepresentation() = RoleRepresentation().also {
+fun PermissionModel.toRoleRepresentation() = RoleRepresentation().also {
     it.id = id.ifEmpty { null }
     it.name = identifier
     it.description = description
@@ -22,7 +22,7 @@ fun Permission.toRoleRepresentation() = RoleRepresentation().also {
     )
 }
 
-fun PermissionDefineCommand.toPermission(id: PermissionId?) = Permission(
+fun PermissionCoreDefineCommand.toPermission(id: PermissionId?) = PermissionModel(
     id = id.orEmpty(),
     identifier = identifier,
     description = description,

@@ -1,8 +1,8 @@
 package city.smartb.im.f2.organization.domain.query
 
 import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.f2.organization.domain.model.Organization
 import city.smartb.im.f2.organization.domain.model.OrganizationDTO
-import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
 import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
@@ -51,5 +51,5 @@ interface OrganizationGetResultDTO: Event {
  * @d2 inherit
  */
 data class OrganizationGetResult(
-    override val item: OrganizationDTOBase?
+    override val item: Organization?
 ): OrganizationGetResultDTO

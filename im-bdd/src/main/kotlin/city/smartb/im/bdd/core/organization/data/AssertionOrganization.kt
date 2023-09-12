@@ -3,8 +3,8 @@ package city.smartb.im.bdd.core.organization.data
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.commons.utils.parseJson
-import city.smartb.im.f2.organization.domain.model.OrganizationDTOBase
-import city.smartb.im.f2.privilege.domain.role.model.RoleDTOBase
+import city.smartb.im.f2.organization.domain.model.Organization
+import city.smartb.im.f2.privilege.domain.role.model.Role
 import city.smartb.im.infra.keycloak.client.KeycloakClient
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.GroupRepresentation
@@ -30,13 +30,13 @@ class AssertionOrganization(
             .mapValues { (_, values) -> values.firstOrNull() }
             .filterValues { !it.isNullOrBlank() } as Map<String, String>
 
-        private val groupSiret: String? = singleAttributes[OrganizationDTOBase::siret.name]
-        private val groupDescription: String? = singleAttributes[OrganizationDTOBase::description.name]
-        private val groupAddress: Address? = singleAttributes[OrganizationDTOBase::address.name]?.parseJson()
-        private val groupWebsite: String? = singleAttributes[OrganizationDTOBase::website.name]
-        private val groupEnabled: Boolean = singleAttributes[OrganizationDTOBase::enabled.name].toBoolean()
-        private val groupCreationDate: Long = singleAttributes[OrganizationDTOBase::creationDate.name]?.toLong() ?: 0
-        private val groupStatus: String = singleAttributes[OrganizationDTOBase::status.name]!!
+        private val groupSiret: String? = singleAttributes[Organization::siret.name]
+        private val groupDescription: String? = singleAttributes[Organization::description.name]
+        private val groupAddress: Address? = singleAttributes[Organization::address.name]?.parseJson()
+        private val groupWebsite: String? = singleAttributes[Organization::website.name]
+        private val groupEnabled: Boolean = singleAttributes[Organization::enabled.name].toBoolean()
+        private val groupCreationDate: Long = singleAttributes[Organization::creationDate.name]?.toLong() ?: 0
+        private val groupStatus: String = singleAttributes[Organization::status.name]!!
 
         fun hasFields(
             id: OrganizationId = group.id,
@@ -64,7 +64,7 @@ class AssertionOrganization(
             Assertions.assertThat(groupStatus).isEqualTo(status)
         }
 
-        fun matches(organization: OrganizationDTOBase) = hasFields(
+        fun matches(organization: Organization) = hasFields(
             id = organization.id,
             siret = organization.siret,
             name = organization.name,
@@ -72,7 +72,7 @@ class AssertionOrganization(
             address = organization.address,
             website = organization.website,
             attributes = organization.attributes,
-            roles = organization.roles.map(RoleDTOBase::identifier),
+            roles = organization.roles.map(Role::identifier),
             enabled = organization.enabled,
             creationDate = organization.creationDate,
             status = organization.status

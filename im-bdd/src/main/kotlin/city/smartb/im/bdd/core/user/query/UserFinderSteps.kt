@@ -4,7 +4,7 @@ import city.smartb.im.bdd.ImCucumberStepsDefinition
 import city.smartb.im.bdd.core.user.data.user
 import city.smartb.im.commons.utils.mapAsync
 import city.smartb.im.f2.user.api.UserEndpoint
-import city.smartb.im.f2.user.domain.model.UserDTOBase
+import city.smartb.im.f2.user.domain.model.User
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.assertj.core.api.Assertions
@@ -53,7 +53,7 @@ class UserFinderSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun assertUsersFetched(identifiers: List<TestContextKey>) {
-        val fetchedIds = context.fetched.users.map(UserDTOBase::id)
+        val fetchedIds = context.fetched.users.map(User::id)
         val expectedIds = identifiers.map(context.userIds::safeGet).toTypedArray()
         Assertions.assertThat(fetchedIds).containsExactlyInAnyOrder(*expectedIds)
 

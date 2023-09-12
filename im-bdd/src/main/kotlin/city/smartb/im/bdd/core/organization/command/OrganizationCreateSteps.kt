@@ -6,7 +6,7 @@ import city.smartb.im.bdd.core.organization.data.organization
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.f2.organization.api.OrganizationEndpoint
-import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommandDTOBase
+import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommand
 import city.smartb.im.f2.organization.domain.model.OrganizationStatus
 import f2.dsl.fnc.invoke
 import io.cucumber.datatable.DataTable
@@ -20,7 +20,7 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var organizationEndpoint: OrganizationEndpoint
 
-    private lateinit var command: OrganizationCreateCommandDTOBase
+    private lateinit var command: OrganizationCreateCommand
 
     init {
         DataTableType(::organizationInitParams)
@@ -74,7 +74,7 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun createOrganization(params: OrganizationInitParams) = context.organizationIds.register(params.identifier) {
-        command = OrganizationCreateCommandDTOBase(
+        command = OrganizationCreateCommand(
             siret = params.siret,
             name = params.name,
             description = params.description,

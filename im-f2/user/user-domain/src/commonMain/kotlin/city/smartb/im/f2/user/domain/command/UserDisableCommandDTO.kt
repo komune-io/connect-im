@@ -13,7 +13,7 @@ import kotlin.js.JsName
  * @parent [city.smartb.im.f2.user.domain.D2UserPage]
  * @order 70
  */
-typealias UserDisableFunction = F2Function<UserDisableCommandDTOBase, UserDisabledEventDTOBase>
+typealias UserDisableFunction = F2Function<UserDisableCommand, UserDisabledEvent>
 
 /**
  * @d2 command
@@ -51,7 +51,7 @@ interface UserDisableCommandDTO: Command {
 /**
  * @d2 inherit
  */
-data class UserDisableCommandDTOBase(
+data class UserDisableCommand(
     override val id: UserId,
     override val disabledBy: UserId?,
     override val anonymize: Boolean,
@@ -73,6 +73,6 @@ interface UserDisabledEventDTO: Event {
 /**
  * @d2 inherit
  */
-data class UserDisabledEventDTOBase(
+data class UserDisabledEvent(
     override val id: UserId
 ): UserDisabledEventDTO
