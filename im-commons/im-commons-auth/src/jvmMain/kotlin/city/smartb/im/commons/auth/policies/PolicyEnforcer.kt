@@ -10,7 +10,10 @@ open class PolicyEnforcer {
 
     protected suspend fun check(action: String, hasAccess: suspend (AuthedUser?) -> Boolean) = enforce { authedUser ->
         if (!hasAccess(authedUser)) {
-            throw ForbiddenAccessException(action)
+            val userIdentity = authedUser
+                ?.let { "User [${it.id}] [${it.identifier}]" }
+                ?: "Unauthenticated user"
+            throw ForbiddenAccessException("$userIdentity is not authorized to $action")
         }
     }
 
