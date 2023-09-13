@@ -46,16 +46,19 @@ class OrganizationFinderService(
         name: String? = null,
         roles: Collection<RoleIdentifier>? = null,
         attributes: Map<String, String>? = null,
-        status: OrganizationStatus? = null,
+        status: Collection<OrganizationStatus>? = null,
         withDisabled: Boolean = false,
         offset: OffsetPagination? = null,
     ): PageDTO<Organization> {
+        val attributesFilters = attributes.orEmpty().mapValues { (_, filter) -> ({ attribute: String? -> attribute == filter }) }
+        val additionalAttributesFilters = listOfNotNull(
+            status?.let { OrganizationDTO::status.name to ({ attribute: String? -> attribute in status.map(OrganizationStatus::name) }) }
+        ).toMap()
+
         return organizationCoreFinderService.page(
             identifier = name,
             roles = roles,
-            attributes = attributes.orEmpty() + listOfNotNull(
-                status?.let { OrganizationDTO::status.name to it.name }
-            ).toMap(),
+            attributes = attributesFilters + additionalAttributesFilters,
             withDisabled = withDisabled,
             offset = offset,
         ).map { it.toDTOInternal() }
