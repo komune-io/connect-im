@@ -42,7 +42,7 @@ interface OrganizationPageQueryDTO: Query {
     /**
      * Status filter. See [OrganizationStatus][city.smartb.im.f2.organization.domain.model.OrganizationStatus]
      */
-    val status: String?
+    val status: List<String>?
 
     /**
      * If false, filter out the disabled organizations. (default: false)
@@ -61,7 +61,7 @@ data class OrganizationPageQuery(
 	override val name: String? = null,
 	override val role: String? = null,
 	override val attributes: Map<String, String>? = null,
-	override val status: String? = null,
+	override val status: List<String>? = null,
 	override val withDisabled: Boolean? = false,
     override val offset: Int?,
     override val limit: Int?,

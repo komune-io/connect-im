@@ -34,7 +34,7 @@ class OrganizationCoreFinderService: CoreService(CacheName.Organization) {
         ids: Collection<OrganizationId>? = null,
         identifier: String? = null,
         roles: Collection<RoleIdentifier>? = null,
-        attributes: Map<String, String>? = null,
+        attributes: Map<String, (String?) -> Boolean>? = null,
         withDisabled: Boolean = false,
         offset: OffsetPagination? = null,
     ): PageDTO<OrganizationModel> {
@@ -51,7 +51,7 @@ class OrganizationCoreFinderService: CoreService(CacheName.Organization) {
             .filter { organization ->
                 organization.id.matches(ids)
                     && (withDisabled || organization.enabled)
-                    && (attributes == null || attributes.all { (key, value) -> organization.attributes[key] == value })
+                    && (attributes == null || attributes.all { (key, match) -> match(organization.attributes[key]) })
                     && (identifier == null || organization.identifier.contains(identifier, true))
                     && (organization.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles))
             }.sortedByDescending(OrganizationModel::creationDate)

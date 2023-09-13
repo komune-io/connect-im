@@ -81,7 +81,7 @@ class OrganizationEndpoint(
             name = query.name,
             roles = roles,
             attributes = query.attributes,
-            status = query.status?.let(OrganizationStatus::valueOf),
+            status = query.status?.map(OrganizationStatus::valueOf),
             withDisabled = query.withDisabled ?: false,
             offset = OffsetPagination(
                 offset = query.offset ?: 0,

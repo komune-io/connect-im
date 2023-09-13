@@ -45,7 +45,7 @@ class ApiKeyFinderService(
         val organizations = organizationCoreFinderService.page(
             ids = organizationId?.let(::setOf),
             roles = role?.let(::setOf),
-            attributes = attributes,
+            attributes = attributes.orEmpty().mapValues { (_, filter) -> ({ attribute: String? -> attribute == filter }) },
             withDisabled = withDisabled ?: false
         ).items
 
