@@ -82,7 +82,8 @@ class ApiKeyAggregateService(
             id = serviceAccountUser.id,
             memberOf = command.organizationId,
             attributes = mapOf("display_name" to command.name),
-            roles = command.roles
+            roles = command.roles,
+            isApiKey = true
         ).let { userCoreAggregateService.define(it) }
 
         return ApiKeyOrganizationAddedEvent(

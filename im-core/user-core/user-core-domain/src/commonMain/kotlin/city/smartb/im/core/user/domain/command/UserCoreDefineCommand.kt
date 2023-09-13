@@ -14,7 +14,8 @@ data class UserCoreDefineCommand(
     val memberOf: OrganizationId? = null,
     val attributes: Map<String, String>? = null,
     val isEmailVerified: Boolean? = null,
-    val isPasswordTemporary: Boolean = false
+    val isPasswordTemporary: Boolean = false,
+    val isApiKey: Boolean = false
 )
 
 data class UserCoreDefinedEvent(

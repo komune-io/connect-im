@@ -44,10 +44,11 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
             existingUser.id
         }
 
-        // enable memberOf update to allow apikeys service accounts to join their organisation
-        command.memberOf?.let {
-            if (it !== user.attributes[UserModel::memberOf.name]?.firstOrNull()) {
-                client.user(userId).joinGroup(it)
+        if (command.canUpdateMemberOf()) {
+            command.memberOf?.let {
+                if (it !== user.attributes[UserModel::memberOf.name]?.firstOrNull()) {
+                    client.user(userId).joinGroup(it)
+                }
             }
         }
 
@@ -115,7 +116,7 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
 
         val newAttributes = command.attributes.orEmpty().plus(
             listOfNotNull(
-                command.memberOf.takeIf { command.id == null }?.let { UserModel::memberOf.name to command.memberOf },
+                command.memberOf.takeIf { command.canUpdateMemberOf() } ?.let { UserModel::memberOf.name to command.memberOf },
             ).toMap()
         ).mapValues { (_, values) -> listOf(values) }
 
@@ -131,5 +132,9 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
             remove(listAll())
             add(roles)
         }
+    }
+
+    private fun UserCoreDefineCommand.canUpdateMemberOf(): Boolean {
+        return id == null || isApiKey
     }
 }
