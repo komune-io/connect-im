@@ -9,6 +9,8 @@ dependencies {
 
     implementation(project(Modules.Api.config))
 
+    implementation(project(Modules.F2.privilegeLib))
+
     implementation(project(Modules.Core.clientApi))
     implementation(project(Modules.Core.organizationApi))
     implementation(project(Modules.Core.privilegeApi))

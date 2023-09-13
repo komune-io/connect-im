@@ -43,9 +43,11 @@ object AuthenticationProvider {
     }
 
     suspend fun getAuthedUser(): AuthedUser? = getPrincipal()?.let {
+        val tokenInfo = info()
         AuthedUser(
             id = getPrincipal()!!.subject.orEmpty(),
-            memberOf = info().getOrganizationId(),
+            identifier = tokenInfo.getEmail() ?: tokenInfo.getClientId(),
+            memberOf = tokenInfo.getOrganizationId(),
             roles = getAuthentication()!!.authorities
                 .map { it.authority.removePrefix("ROLE_") }
                 .toTypedArray()
@@ -57,6 +59,10 @@ class TokenInfo(private val authentication: JwtAuthenticationToken?) {
 
 	fun getEmail(): String? {
 		return authentication?.token?.getClaimAsString("email")
+	}
+
+	fun getClientId(): String? {
+		return authentication?.token?.getClaimAsString("clientId")
 	}
 
 	fun getUsername(): String? {

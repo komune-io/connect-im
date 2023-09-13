@@ -9,12 +9,14 @@ import kotlin.js.JsName
 @JsName("AuthedUserDTO")
 interface AuthedUserDTO {
     val id: UserId
+    val identifier: String?
     val memberOf: OrganizationId?
     val roles: Array<String>
 }
 
 data class AuthedUser(
     override val id: UserId,
+    override val identifier: String?,
     override val memberOf: OrganizationId?,
     override val roles: Array<String>
 ): AuthedUserDTO

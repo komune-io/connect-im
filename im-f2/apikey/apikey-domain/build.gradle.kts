@@ -5,4 +5,5 @@ plugins {
 
 dependencies {
     commonMainApi(project(Modules.Commons.domain))
+    commonMainApi(project(Modules.F2.privilegeDomain))
 }
