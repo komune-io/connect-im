@@ -8,7 +8,7 @@ import city.smartb.im.core.client.domain.command.ClientGrantRealmRolesCommand
 import city.smartb.im.core.client.domain.command.ClientGrantedClientRolesEvent
 import city.smartb.im.core.client.domain.command.ClientGrantedRealmRolesEvent
 import city.smartb.im.infra.keycloak.client.KeycloakClientProvider
-import city.smartb.im.infra.keycloak.toEntityCreatedId
+import city.smartb.im.infra.keycloak.handleResponseError
 import org.keycloak.representations.idm.ClientRepresentation
 import org.keycloak.representations.idm.ProtocolMapperRepresentation
 import org.springframework.stereotype.Service
@@ -37,7 +37,7 @@ class ClientCoreAggregateService(
         }.let { keycloakClient.clients().create(it) }
 
         return ClientCreatedEvent(
-            id = response.toEntityCreatedId(),
+            id = response.handleResponseError("Client"),
             identifier = command.identifier
         )
     }
