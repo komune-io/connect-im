@@ -3,6 +3,7 @@ package city.smartb.im.apikey.api
 import city.smartb.im.apikey.domain.command.ApiKeyOrganizationAddFunction
 import city.smartb.im.apikey.domain.command.ApikeyRemoveFunction
 import city.smartb.im.apikey.domain.query.ApiKeyGetFunction
+import city.smartb.im.apikey.domain.query.ApiKeyGetResult
 import city.smartb.im.apikey.domain.query.ApiKeyPageFunction
 import city.smartb.im.apikey.lib.ApiKeyAggregateService
 import city.smartb.im.apikey.lib.ApiKeyFinderService
@@ -35,7 +36,7 @@ class ApiKeyEndpoint(
     fun apiKeyGet(): ApiKeyGetFunction = f2Function { query ->
         logger.info("apiKeyGet: $query")
         apikeyPoliciesEnforcer.checkGet(query.id)
-        apiKeyFinderService.get(query.id)
+        apiKeyFinderService.getOrNull(query.id).let(::ApiKeyGetResult)
     }
 
     /**

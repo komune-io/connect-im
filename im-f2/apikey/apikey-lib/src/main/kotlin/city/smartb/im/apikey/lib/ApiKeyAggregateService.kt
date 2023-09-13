@@ -4,7 +4,7 @@ import city.smartb.im.apikey.domain.command.ApiKeyOrganizationAddKeyCommand
 import city.smartb.im.apikey.domain.command.ApiKeyOrganizationAddedEvent
 import city.smartb.im.apikey.domain.command.ApikeyRemoveCommand
 import city.smartb.im.apikey.domain.command.ApikeyRemoveEvent
-import city.smartb.im.apikey.domain.model.ApiKey
+import city.smartb.im.apikey.domain.model.ApiKeyModel
 import city.smartb.im.apikey.lib.service.ORGANIZATION_FIELD_API_KEYS
 import city.smartb.im.apikey.lib.service.apiKeys
 import city.smartb.im.commons.model.PrivilegeIdentifier
@@ -64,10 +64,11 @@ class ApiKeyAggregateService(
             additionalAccessTokenClaim = listOf(UserModel::memberOf.name),
         ).let { clientCoreAggregateService.create(it).id }
 
-        val newApiKey = ApiKey(
+        val newApiKey = ApiKeyModel(
             id = keyId,
             name = command.name,
             identifier = keyIdentifier,
+            roles = command.roles,
             creationDate = System.currentTimeMillis()
         )
         val apiKeys = organization.apiKeys() + newApiKey
