@@ -66,7 +66,10 @@ class SpaceCreateScript(
         if (spaceFinderService.getOrNull(properties.space) != null) {
             logger.info("Realm already created")
         } else {
-            spaceAggregateService.create(SpaceCreateCommand(properties.space))
+            spaceAggregateService.create(SpaceCreateCommand(
+                identifier = properties.space,
+                theme = properties.theme
+            ))
         }
     }
 

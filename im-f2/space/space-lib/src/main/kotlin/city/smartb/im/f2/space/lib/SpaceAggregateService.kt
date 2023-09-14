@@ -28,7 +28,7 @@ class SpaceAggregateService(
         val realms = buildRealmRepresentation(
             realm = command.identifier,
             smtpServer = imProperties.smtp,
-            theme = imProperties.theme,
+            theme = command.theme,
             locale = null
         )
         client.realms().create(realms)
