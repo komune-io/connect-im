@@ -6,6 +6,5 @@ plugins {
 
 dependencies {
     commonMainApi(project(Modules.F2.privilegeDomain))
-    jvmMainImplementation(project(Modules.Commons.api))
     Dependencies.Mpp.f2Client(::commonMainApi)
 }

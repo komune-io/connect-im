@@ -2,7 +2,10 @@ subprojects {
     plugins.withType(JavaPlugin::class.java).whenPluginAdded {
         dependencies {
             val implementation by configurations
-            if (!project.path.endsWith("-client")) {
+            if (!project.path.endsWith("-client") && !project.path.endsWith("-domain")) {
+                println("/////////////////////////////////////////////////")
+                println(project.path)
+                println("/////////////////////////////////////////////////")
                 implementation(project(Modules.Infra.keycloak))
                 implementation(project(Modules.Infra.redis))
                 implementation(project(Modules.Commons.api))
