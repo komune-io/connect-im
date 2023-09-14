@@ -46,9 +46,7 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
 
         if (command.canUpdateMemberOf()) {
             command.memberOf?.let {
-                if (it !== user.attributes[UserModel::memberOf.name]?.firstOrNull()) {
-                    client.user(userId).joinGroup(it)
-                }
+                client.user(userId).joinGroup(it)
             }
         }
 
