@@ -15,9 +15,20 @@ fun AssertionBdd.client(keycloakClient: KeycloakClient) = AssertionClient(keyclo
 class AssertionClient(
     private val keycloakClient: KeycloakClient
 ): AssertionApiEntity<ClientRepresentation, ClientId, AssertionClient.ClientAssert>() {
-    override suspend fun findById(id: ClientId): ClientRepresentation? = keycloakClient.client(id).toRepresentation()
-    suspend fun findByIdentifier(identifier: ClientIdentifier): ClientRepresentation? = keycloakClient.getClientByIdentifier(identifier)
+    override suspend fun findById(id: ClientId): ClientRepresentation? = try {
+        keycloakClient.client(id).toRepresentation()
+    } catch (e: javax.ws.rs.NotFoundException) {
+        null
+    }
+
+    fun findByIdentifier(identifier: ClientIdentifier): ClientRepresentation? = try {
+        keycloakClient.getClientByIdentifier(identifier)
+    } catch (e: javax.ws.rs.NotFoundException) {
+        null
+    }
+
     override suspend fun assertThat(entity: ClientRepresentation) = ClientAssert(entity)
+
     suspend fun assertThatIdentifier(identifier: ClientIdentifier): ClientAssert {
         val entity = findByIdentifier(identifier)
         Assertions.assertThat(entity).isNotNull
@@ -30,14 +41,26 @@ class AssertionClient(
         fun hasFields(
             id: ClientId = client.id,
             identifier: ClientIdentifier = client.clientId,
+            isPublicClient: Boolean = client.isPublicClient,
+            isDirectAccessGrantsEnabled: Boolean = client.isDirectAccessGrantsEnabled,
+            isServiceAccountsEnabled: Boolean = client.isServiceAccountsEnabled,
+            isStandardFlowEnabled: Boolean = client.isStandardFlowEnabled
         ) = also {
             Assertions.assertThat(client.id).isEqualTo(id)
             Assertions.assertThat(client.clientId).isEqualTo(identifier)
+            Assertions.assertThat(client.isPublicClient).isEqualTo(isPublicClient)
+            Assertions.assertThat(client.isDirectAccessGrantsEnabled).isEqualTo(isDirectAccessGrantsEnabled)
+            Assertions.assertThat(client.isServiceAccountsEnabled).isEqualTo(isServiceAccountsEnabled)
+            Assertions.assertThat(client.isStandardFlowEnabled).isEqualTo(isStandardFlowEnabled)
         }
 
         fun matches(client: ClientModel) = hasFields(
             id = client.id,
-            identifier = client.identifier
+            identifier = client.identifier,
+            isPublicClient = client.isPublicClient,
+            isDirectAccessGrantsEnabled = client.isDirectAccessGrantsEnabled,
+            isServiceAccountsEnabled = client.isServiceAccountsEnabled,
+            isStandardFlowEnabled = client.isStandardFlowEnabled
         )
 
         fun hasClientRoles(clientId: ClientId, roles: Collection<PrivilegeIdentifier>) {

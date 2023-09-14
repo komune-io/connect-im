@@ -36,9 +36,13 @@ class ApiKeyFinderService(
     }
 
     suspend fun getUserOfKey(id: ApiKeyId): UserModel {
-        val client = keycloakClientProvider.get()
-        return client.client(id).serviceAccountUser
-            .let { userRepresentationTransformer.transform(it) }
+        try {
+            val client = keycloakClientProvider.get()
+            return client.client(id).serviceAccountUser
+                .let { userRepresentationTransformer.transform(it) }
+        } catch (e: javax.ws.rs.NotFoundException) {
+            throw NotFoundException("User of ApiKey", id)
+        }
     }
 
     suspend fun page(

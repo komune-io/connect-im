@@ -12,6 +12,7 @@ class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
                     cleanKeycloakUsers()
                     cleanKeycloakOrganizations()
                     cleanKeycloakRoles()
+                    cleanKeycloakClients()
                 }
 
             }
@@ -42,6 +43,14 @@ class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
             role.name !in context.permanentRoles()
         }.mapAsync { role ->
             keycloakClientProvider.get().role(role.name).remove()
+        }
+    }
+
+    private suspend fun cleanKeycloakClients() {
+        keycloakClientProvider.get().clients().findAll().mapAsync { client ->
+            if (client.clientId.startsWith("tr-")) {
+                keycloakClientProvider.get().client(client.id).remove()
+            }
         }
     }
 

@@ -55,9 +55,9 @@ class AssertionUser(
 
         fun hasFields(
             memberOf: OrganizationId? = userMemberOf,
-            email: String = user.email,
-            givenName: String = user.firstName,
-            familyName: String = user.lastName,
+            email: String = user.email.orEmpty(),
+            givenName: String = user.firstName.orEmpty(),
+            familyName: String = user.lastName.orEmpty(),
             address: Address? = userAddress,
             phone: String? = userPhone,
             roles: List<RoleIdentifier> = userRoles,
@@ -68,9 +68,9 @@ class AssertionUser(
             disabledDate: Long? = userDisabledDate
         ) = also {
             Assertions.assertThat(userMemberOf).isEqualTo(memberOf)
-            Assertions.assertThat(user.email).isEqualTo(email)
-            Assertions.assertThat(user.firstName).isEqualTo(givenName)
-            Assertions.assertThat(user.lastName).isEqualTo(familyName)
+            Assertions.assertThat(user.email.orEmpty()).isEqualTo(email)
+            Assertions.assertThat(user.firstName.orEmpty()).isEqualTo(givenName)
+            Assertions.assertThat(user.lastName.orEmpty()).isEqualTo(familyName)
             Assertions.assertThat(userAddress).isEqualTo(address)
             Assertions.assertThat(userPhone).isEqualTo(phone)
             Assertions.assertThat(userRoles).containsExactlyInAnyOrderElementsOf(roles)
