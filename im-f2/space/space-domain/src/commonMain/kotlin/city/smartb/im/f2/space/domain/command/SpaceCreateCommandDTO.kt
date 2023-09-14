@@ -26,13 +26,20 @@ interface SpaceCreateCommandDTO: Command {
      * Identifier of the space to create.
      */
     val identifier: SpaceIdentifier
+
+    /**
+     * Name of the theme to use for the space
+     * @example "im"
+     */
+    val theme: String?
 }
 
 /**
  * @d2 inherit
  */
 data class SpaceCreateCommand(
-    override val identifier: String
+    override val identifier: String,
+    override val theme: String?
 ): SpaceCreateCommandDTO
 
 /**
