@@ -73,6 +73,7 @@ class UserEndpoint(
 
         userFinderService.page(
             organizationIds = enforcedQuery.organizationId?.let(::listOf),
+            organizationName = enforcedQuery.organizationName,
             roles = roles,
             name = enforcedQuery.name,
             email = enforcedQuery.email,
