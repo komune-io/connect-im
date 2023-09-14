@@ -22,9 +22,9 @@ class UserRepresentationTransformer(
         return UserModel(
             id = item.id,
             memberOf = item.attributes[UserModel::memberOf.name]?.firstOrNull(),
-            email = item.email,
-            givenName = item.firstName,
-            familyName = item.lastName,
+            email = item.email.orEmpty(),
+            givenName = item.firstName.orEmpty(),
+            familyName = item.lastName.orEmpty(),
             roles = roles,
             attributes = item.attributes.orEmpty().mapValues { (_, value) -> value.first() },
             enabled = item.isEnabled,
