@@ -6,7 +6,7 @@ import city.smartb.im.bdd.core.apikey.data.client
 import city.smartb.im.bdd.core.space.data.space
 import city.smartb.im.commons.model.SpaceIdentifier
 import city.smartb.im.f2.space.api.SpaceEndpoint
-import city.smartb.im.f2.space.domain.command.SpaceCreateCommand
+import city.smartb.im.f2.space.domain.command.SpaceDefineCommand
 import f2.dsl.fnc.invokeWith
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -21,7 +21,7 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
     @Autowired
     private lateinit var spaceEndpoint: SpaceEndpoint
 
-    private lateinit var command: SpaceCreateCommand
+    private lateinit var command: SpaceDefineCommand
 
     init {
         DataTableType(::spaceCreateParams)
@@ -73,10 +73,12 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun createSpace(params: SpaceCreateParams) = context.spaceIdentifiers.register(params.identifier) {
-        command = SpaceCreateCommand(
-            identifier = params.identifier
+        command = SpaceDefineCommand(
+            identifier = params.identifier,
+            theme = null,
+            locales = null
         )
-        command.invokeWith(spaceEndpoint.spaceCreate()).identifier
+        command.invokeWith(spaceEndpoint.spaceDefine()).identifier
     }
 
     private fun spaceCreateParams(entry: Map<String, String>?): SpaceCreateParams {

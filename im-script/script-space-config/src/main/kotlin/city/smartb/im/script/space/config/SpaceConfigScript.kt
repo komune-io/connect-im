@@ -2,7 +2,6 @@ package city.smartb.im.script.space.config
 
 import city.smartb.im.commons.auth.AuthContext
 import city.smartb.im.commons.model.OrganizationId
-import city.smartb.im.commons.model.SpaceIdentifier
 import city.smartb.im.commons.utils.ParserUtils
 import city.smartb.im.commons.utils.mapAsync
 import city.smartb.im.f2.organization.domain.command.OrganizationCreateCommand
@@ -11,6 +10,8 @@ import city.smartb.im.f2.organization.lib.OrganizationAggregateService
 import city.smartb.im.f2.privilege.domain.model.PrivilegeDTO
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
+import city.smartb.im.f2.space.domain.command.SpaceDefineCommand
+import city.smartb.im.f2.space.lib.SpaceAggregateService
 import city.smartb.im.f2.space.lib.SpaceFinderService
 import city.smartb.im.f2.user.domain.command.UserCreateCommand
 import city.smartb.im.f2.user.lib.UserAggregateService
@@ -35,9 +36,10 @@ class SpaceConfigScript (
     private val organizationAggregateService: OrganizationAggregateService,
     private val privilegeAggregateService: PrivilegeAggregateService,
     private val privilegeFinderService: PrivilegeFinderService,
+    private val spaceFinderService: SpaceFinderService,
+    private val spaceAggregateService: SpaceAggregateService,
     private val userAggregateService: UserAggregateService,
-    private val userFinderService: UserFinderService,
-    private val spaceFinderService: SpaceFinderService
+    private val userFinderService: UserFinderService
 ) {
     private val logger by Logger()
 
@@ -47,8 +49,8 @@ class SpaceConfigScript (
 
         val auth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
         withContext(AuthContext(auth)) {
-            logger.info("Verify Realm[${properties.space}] exists...")
-            verifySpace(properties.space)
+            logger.info("Verify Realm[${properties.space}] exists and update it if needed...")
+            verifyAndUpdateSpace(properties)
 
             logger.info("Initializing Permissions...")
             initPermissions(properties.permissions)
@@ -119,8 +121,15 @@ class SpaceConfigScript (
         }
     }
 
-    private suspend fun verifySpace(spaceIdentifier: SpaceIdentifier) {
-        spaceFinderService.get(spaceIdentifier)
+    private suspend fun verifyAndUpdateSpace(properties: SpaceConfigProperties) {
+        val space = spaceFinderService.get(properties.space)
+        if (properties.theme != null || properties.locales != null) {
+            SpaceDefineCommand(
+                identifier = space.identifier,
+                theme = properties.theme ?: space.theme,
+                locales = properties.locales ?: space.locales
+            ).let { spaceAggregateService.define(it) }
+        }
     }
 
     private suspend fun initOrganizations(organizations: List<OrganizationData>?) {

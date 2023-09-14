@@ -27,7 +27,7 @@ object SpacePolicies {
     /**
      * User can create a space
      */
-    fun canCreate(authedUser: AuthedUserDTO): Boolean {
+    fun canDefine(authedUser: AuthedUserDTO): Boolean {
         return authedUser.hasRole(ImRole.IM_SPACE_WRITE)
     }
 

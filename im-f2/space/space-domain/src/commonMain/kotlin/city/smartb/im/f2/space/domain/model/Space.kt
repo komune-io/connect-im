@@ -4,22 +4,36 @@ import city.smartb.im.commons.model.SpaceIdentifier
 import kotlin.js.JsExport
 import kotlin.js.JsName
 
-@JsExport
-@JsName("SpaceDTO")
-interface SpaceDTO {
-    val identifier: SpaceIdentifier?
-}
-
 /**
  * Representation of a space.
  * @D2 model
- * @parent [city.smartb.im.space.domain.D2SpacePage]
+ * @parent [city.smartb.im.f2.space.domain.D2SpacePage]
  * @order 10
  */
-data class Space(
+@JsExport
+@JsName("SpaceDTO")
+interface SpaceDTO {
     /**
      * Identifier of the space.
-     * @example "SmartB"
+     * @example "sb-dev"
      */
+    val identifier: SpaceIdentifier?
+
+    /**
+     * Theme used by the space.
+     * @example "im"
+     */
+    val theme: String?
+
+    /**
+     * Locales supported by the space.
+     * @example [["en", "fr"]]
+     */
+    val locales: List<String>?
+}
+
+data class Space(
     override val identifier: SpaceIdentifier,
+    override val theme: String?,
+    override val locales: List<String>?
 ): SpaceDTO

@@ -1,13 +1,6 @@
 {
     "space": "${KC_REALM}",
     "theme": "${KC_REALM_THEME}",
-    "smtp": {
-        "host": "${SMTP_HOST}",
-        "port": "${SMTP_POST}",
-        "from": "noreply@smartb.city",
-        "ssl": "false",
-        "starttls": "false",
-        "auth": "false"
-    },
+    "locales": ["en", "fr"],
     "adminUsers": []
 }

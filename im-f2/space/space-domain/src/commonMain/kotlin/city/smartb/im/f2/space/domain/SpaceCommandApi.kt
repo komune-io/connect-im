@@ -1,6 +1,6 @@
 package city.smartb.im.f2.space.domain
 
-import city.smartb.im.f2.space.domain.command.SpaceCreateFunction
+import city.smartb.im.f2.space.domain.command.SpaceDefineFunction
 import city.smartb.im.f2.space.domain.command.SpaceDeleteFunction
 import city.smartb.im.f2.space.domain.query.SpaceGetFunction
 import city.smartb.im.f2.space.domain.query.SpacePageFunction
@@ -12,8 +12,8 @@ import city.smartb.im.f2.space.domain.query.SpacePageFunction
 interface SpaceApi: SpaceCommandApi, SpaceQueryApi
 
 interface SpaceCommandApi {
-    /** Create a space. */
-    fun spaceCreate(): SpaceCreateFunction
+    /** Create or update a space. */
+    fun spaceDefine(): SpaceDefineFunction
     /** Delete a space. */
     fun spaceDelete(): SpaceDeleteFunction
 }
