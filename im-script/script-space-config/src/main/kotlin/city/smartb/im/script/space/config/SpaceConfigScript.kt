@@ -1,5 +1,7 @@
 package city.smartb.im.script.space.config
 
+import city.smartb.im.apikey.domain.command.ApiKeyOrganizationAddKeyCommand
+import city.smartb.im.apikey.lib.ApiKeyAggregateService
 import city.smartb.im.commons.auth.AuthContext
 import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.commons.utils.ParserUtils
@@ -21,6 +23,7 @@ import city.smartb.im.script.core.config.properties.toAuthRealm
 import city.smartb.im.script.core.model.PermissionData
 import city.smartb.im.script.core.model.RoleData
 import city.smartb.im.script.core.service.ClientInitService
+import city.smartb.im.script.space.config.config.ApiKeyData
 import city.smartb.im.script.space.config.config.OrganizationData
 import city.smartb.im.script.space.config.config.SpaceConfigProperties
 import city.smartb.im.script.space.config.config.UserData
@@ -31,6 +34,7 @@ import s2.spring.utils.logger.Logger
 
 @Service
 class SpaceConfigScript (
+    private val apiKeyAggregateService: ApiKeyAggregateService,
     private val clientInitService: ClientInitService,
     private val imScriptSpaceProperties: ImScriptSpaceProperties,
     private val organizationAggregateService: OrganizationAggregateService,
@@ -152,6 +156,9 @@ class SpaceConfigScript (
             logger.info("Initializing Users of Organization [${organization.name}]...")
             initUsers(organization.users, organizationId)
             logger.info("Initialized Users of Organization [${organization.name}]...")
+            logger.info("Initializing ApiKeys of Organization [${organization.name}]...")
+            initApiKeys(organization.apiKeys, organizationId)
+            logger.info("Initialized ApiKeys of Organization [${organization.name}]...")
         }
     }
 
@@ -171,6 +178,17 @@ class SpaceConfigScript (
                     isPasswordTemporary = false,
                     sendResetPassword = false
                 ).let { userAggregateService.create(it) }
+        }
+    }
+
+    private suspend fun initApiKeys(keys: List<ApiKeyData>?, organizationId: OrganizationId) {
+        // do not make async, as it saves the keys in organization attributes
+        keys?.forEach { key ->
+            ApiKeyOrganizationAddKeyCommand(
+                organizationId = organizationId,
+                name = key.name,
+                roles = key.roles.orEmpty()
+            ).let { apiKeyAggregateService.create(it) }
         }
     }
 }

@@ -10,6 +10,7 @@ dependencies {
     api(project(Modules.Commons.api))
     api(project(Modules.Script.core))
 
+    implementation(project(Modules.F2.apikeyLib))
     implementation(project(Modules.F2.organizationLib))
     implementation(project(Modules.F2.spaceLib))
     implementation(project(Modules.F2.userLib))
