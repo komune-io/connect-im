@@ -3,7 +3,7 @@ package city.smartb.im.f2.space.api
 import city.smartb.im.commons.auth.policies.f2Function
 import city.smartb.im.f2.space.api.service.SpacePoliciesEnforcer
 import city.smartb.im.f2.space.domain.SpaceApi
-import city.smartb.im.f2.space.domain.command.SpaceCreateFunction
+import city.smartb.im.f2.space.domain.command.SpaceDefineFunction
 import city.smartb.im.f2.space.domain.command.SpaceDeleteFunction
 import city.smartb.im.f2.space.domain.query.SpaceGetFunction
 import city.smartb.im.f2.space.domain.query.SpaceGetResult
@@ -45,10 +45,10 @@ class SpaceEndpoint(
     }
 
     @Bean
-    override fun spaceCreate(): SpaceCreateFunction = f2Function { command ->
-        logger.info("spaceCreate: $command")
-        spacePoliciesEnforcer.checkCreate()
-        spaceAggregateService.create(command)
+    override fun spaceDefine(): SpaceDefineFunction = f2Function { command ->
+        logger.info("spaceDefine: $command")
+        spacePoliciesEnforcer.checkDefine()
+        spaceAggregateService.define(command)
     }
 
     @Bean

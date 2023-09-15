@@ -1,5 +1,6 @@
 {
     "space": "${KC_REALM}",
+    "theme": "${KC_REALM_THEME}",
     "appClients": [
         {
             "clientId": "${KC_APP_CLIENT_ID}",

@@ -16,8 +16,8 @@ class SpacePoliciesEnforcer: PolicyEnforcer() {
         SpacePolicies.canPage(authedUser)
     }
 
-    suspend fun checkCreate() = checkAuthed("create a space") { authedUser ->
-        SpacePolicies.canCreate(authedUser)
+    suspend fun checkDefine() = checkAuthed("define a space") { authedUser ->
+        SpacePolicies.canDefine(authedUser)
     }
 
     suspend fun checkDelete(spaceIdentifier: SpaceIdentifier) = checkAuthed("delete a space") { authedUser ->

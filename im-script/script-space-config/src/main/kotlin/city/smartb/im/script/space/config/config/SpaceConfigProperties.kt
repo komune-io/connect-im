@@ -10,6 +10,8 @@ import city.smartb.im.script.core.model.WebClient
 
 data class SpaceConfigProperties(
     val space: SpaceIdentifier,
+    val theme: String?,
+    val locales: List<String>?,
     val appClients: List<AppClient>,
     val webClients: List<WebClient>,
     val permissions: List<PermissionData>?,

@@ -5,7 +5,7 @@ import city.smartb.im.commons.utils.ParserUtils
 import city.smartb.im.f2.privilege.domain.permission.model.Permission
 import city.smartb.im.f2.privilege.lib.PrivilegeAggregateService
 import city.smartb.im.f2.privilege.lib.PrivilegeFinderService
-import city.smartb.im.f2.space.domain.command.SpaceCreateCommand
+import city.smartb.im.f2.space.domain.command.SpaceDefineCommand
 import city.smartb.im.f2.space.lib.SpaceAggregateService
 import city.smartb.im.f2.space.lib.SpaceFinderService
 import city.smartb.im.f2.user.domain.command.UserCreateCommand
@@ -66,9 +66,10 @@ class SpaceCreateScript(
         if (spaceFinderService.getOrNull(properties.space) != null) {
             logger.info("Realm already created")
         } else {
-            spaceAggregateService.create(SpaceCreateCommand(
+            spaceAggregateService.define(SpaceDefineCommand(
                 identifier = properties.space,
-                theme = properties.theme
+                theme = properties.theme,
+                locales = properties.locales ?: listOf("en", "fr")
             ))
         }
     }
