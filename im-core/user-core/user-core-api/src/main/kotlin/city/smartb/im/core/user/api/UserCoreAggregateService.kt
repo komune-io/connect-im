@@ -36,6 +36,7 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
         val user = (existingUser ?: UserRepresentation()).apply(command)
 
         val userId = if (existingUser == null) {
+            user.isEnabled = true
             val userId = client.users().create(user).handleResponseError("User")
             user.id = userId
             userId
@@ -106,7 +107,6 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
         command.givenName?.let { firstName = it }
         command.familyName?.let { lastName = it }
         command.isEmailVerified?.let { isEmailVerified = it }
-        isEnabled = true
 
         val baseAttributes = mapOf(
             UserModel::creationDate.name to System.currentTimeMillis().toString(),
