@@ -3,6 +3,7 @@ package city.smartb.im.f2.organization.domain.command
 import city.smartb.im.commons.model.Address
 import city.smartb.im.commons.model.AddressDTO
 import city.smartb.im.commons.model.OrganizationId
+import city.smartb.im.f2.organization.domain.model.OrganizationStatusValues
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
@@ -71,8 +72,9 @@ interface OrganizationCreateCommandDTO: Command {
 
     /**
      * @ref [city.smartb.im.f2.organization.domain.model.Organization.status]
+     * @default "PENDING"
      */
-    val status: String
+    val status: String?
 }
 
 data class OrganizationCreateCommand(
@@ -84,7 +86,7 @@ data class OrganizationCreateCommand(
     override val roles: List<String>? = null,
     override val parentOrganizationId: OrganizationId? = null,
     override val attributes: Map<String, String>? = null,
-    override val status: String
+    override val status: String = OrganizationStatusValues.pending()
 ): OrganizationCreateCommandDTO
 
 @JsExport

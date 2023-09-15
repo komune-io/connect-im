@@ -67,7 +67,7 @@ interface OrganizationUpdateCommandDTO: Command {
     /**
      * @ref [city.smartb.im.f2.organization.domain.model.Organization.status]
      */
-    val status: String
+    val status: String?
 }
 
 data class OrganizationUpdateCommand(
@@ -78,7 +78,7 @@ data class OrganizationUpdateCommand(
     override val website: String?,
     override val roles: List<String>?,
     override val attributes: Map<String, String>?,
-    override val status: String
+    override val status: String?
 ): OrganizationUpdateCommandDTO
 
 /**
