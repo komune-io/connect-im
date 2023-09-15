@@ -21,6 +21,17 @@ Feature: ApiKeyCreate
       | keyIdentifier        | organization | name   |
       | tr-smartb-ze-key-app | o1           | ze key |
 
+  Scenario: I want to create an API key with a secret
+    Given A role is defined:
+      | identifier | targets |
+      | r1         | API_KEY |
+    When I create an API key:
+      | organization | name   | roles | secret|
+      | o1           | ze key | r1    | verySecret |
+    Then The API key should be created:
+      | keyIdentifier        | organization | name   | secret |
+      | tr-smartb-ze-key-app | o1           | ze key | verySecret |
+
   Scenario: I want to receive an error when creating an API key for an organization that does not exist
     When I create an API key:
       | organization |

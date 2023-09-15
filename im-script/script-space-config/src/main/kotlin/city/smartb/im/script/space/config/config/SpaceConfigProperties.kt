@@ -42,5 +42,6 @@ data class OrganizationData(
 
 data class ApiKeyData(
     val name: String,
+    val secret: String?,
     val roles: List<RoleIdentifier>?
 )

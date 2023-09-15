@@ -51,7 +51,7 @@ class ApiKeyAggregateService(
             .lowercase()
             .replace(Regex("[^a-z0-9]"), "-")
             .replace(Regex("-+"), "-")
-        val keySecret = UUID.randomUUID().toString()
+        val keySecret = command.secret ?: UUID.randomUUID().toString()
 
         val keyId = ClientCreateCommand(
             identifier = keyIdentifier,

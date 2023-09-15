@@ -65,6 +65,7 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
                     keyIdentifier = null,
                     organization = null,
                     name = command.name,
+                    secret = command.secret,
                     roles = command.roles
                 )
                 assertApiKey(params)
@@ -131,6 +132,7 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
         keyIdentifier = entry["keyIdentifier"],
         organization = entry["organization"],
         name = entry["name"],
+        secret = entry["secret"],
         roles = entry.extractList("roles")
     )
 
@@ -138,6 +140,7 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
         val identifier: TestContextKey,
         val organization: TestContextKey,
         val name: String,
+        val secret: String? = null,
         val roles: List<TestContextKey>
     )
 
@@ -146,6 +149,7 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
         val keyIdentifier: ApiKeyIdentifier?,
         val organization: TestContextKey?,
         val name: String?,
+        val secret: String?,
         val roles: List<TestContextKey>?
     )
 }

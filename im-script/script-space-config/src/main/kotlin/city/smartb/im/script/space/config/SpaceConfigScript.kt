@@ -187,6 +187,7 @@ class SpaceConfigScript (
             ApiKeyOrganizationAddKeyCommand(
                 organizationId = organizationId,
                 name = key.name,
+                secret = key.secret,
                 roles = key.roles.orEmpty()
             ).let { apiKeyAggregateService.create(it) }
         }

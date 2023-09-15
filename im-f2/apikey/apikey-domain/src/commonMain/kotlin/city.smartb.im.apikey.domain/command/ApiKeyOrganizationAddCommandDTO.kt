@@ -34,6 +34,11 @@ interface ApiKeyOrganizationAddCommandDTO: Command {
     val name: String
 
     /**
+     * Secret of the key.
+     */
+    val secret: String?
+
+    /**
      * Roles to assign to the key.
      * @example [["tr_orchestrator_user"]]
      */
@@ -46,6 +51,7 @@ interface ApiKeyOrganizationAddCommandDTO: Command {
 data class ApiKeyOrganizationAddKeyCommand(
     override val organizationId: OrganizationId,
     override val name: String,
+    override val secret: String? = null,
     override val roles: List<RoleIdentifier>
 ): ApiKeyOrganizationAddCommandDTO
 
