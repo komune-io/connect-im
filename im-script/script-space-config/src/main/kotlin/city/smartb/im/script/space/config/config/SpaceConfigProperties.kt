@@ -36,5 +36,11 @@ data class OrganizationData(
     val address: Address?,
     val roles: List<RoleIdentifier>?,
     val attributes: Map<String, String>?,
-    val users: List<UserData>?
+    val users: List<UserData>?,
+    val apiKeys: List<ApiKeyData>?
+)
+
+data class ApiKeyData(
+    val name: String,
+    val roles: List<RoleIdentifier>?
 )

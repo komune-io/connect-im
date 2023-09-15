@@ -99,6 +99,10 @@
                 "attributes": {
                     "job": "Frileuse"
                 }
+            }],
+            "apiKeys": [{
+                "name": "apikey",
+                "roles": ["tr_orchestrator_admin"]
             }]
         }, {
             "name": "Monsstrai Company",
