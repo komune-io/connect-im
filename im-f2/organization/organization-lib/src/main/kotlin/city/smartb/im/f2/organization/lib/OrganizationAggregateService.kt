@@ -84,7 +84,7 @@ class OrganizationAggregateService(
             roles = command.roles,
             attributes = command.attributes.orEmpty() + listOfNotNull(
                 command.website?.let { OrganizationDTO::website.name to it },
-                OrganizationDTO::status.name to OrganizationStatus.valueOf(command.status).name
+                command.status?.let { OrganizationDTO::status.name to OrganizationStatus.valueOf(it).name }
             ).toMap().filterValues { it.isNotBlank() },
         ).let { organizationCoreAggregateService.define(it).id }
 

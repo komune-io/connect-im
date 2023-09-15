@@ -44,6 +44,10 @@ object OrganizationPolicies {
                 || authedUser.hasRole(ImRole.IM_MY_ORGANIZATION_WRITE) && authedUser.memberOf == organizationId
     }
 
+    fun canUpdateStatus(authedUser: AuthedUserDTO): Boolean {
+        return authedUser.hasRole(ImRole.ORCHESTRATOR)
+    }
+
     /**
      * User can disable an organization
      */

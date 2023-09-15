@@ -113,7 +113,9 @@ class OrganizationEndpoint(
     fun organizationCreate(): OrganizationCreateFunction = f2Function { command ->
         logger.info("organizationCreate: $command")
         organizationPoliciesEnforcer.checkCreate()
-        organizationAggregateService.create(command)
+        organizationAggregateService.create(
+            organizationPoliciesEnforcer.enforceCommand(command)
+        )
     }
 
     /**
@@ -123,7 +125,9 @@ class OrganizationEndpoint(
     fun organizationUpdate(): OrganizationUpdateFunction = f2Function { command ->
         logger.info("organizationUpdate: $command")
         organizationPoliciesEnforcer.checkUpdate(command.id)
-        organizationAggregateService.update(command)
+        organizationAggregateService.update(
+            organizationPoliciesEnforcer.enforceCommand(command)
+        )
     }
 
     /**
