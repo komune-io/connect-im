@@ -49,7 +49,7 @@ class AssertionOrganization(
             roles: List<String>? = group.realmRoles,
             enabled: Boolean = groupEnabled,
             creationDate: Long = groupCreationDate,
-            status: String = groupStatus,
+            status: String? = groupStatus,
         ) = also {
             Assertions.assertThat(group.id).isEqualTo(id)
             Assertions.assertThat(groupSiret).isEqualTo(siret)
