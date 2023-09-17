@@ -47,7 +47,7 @@ class ApiKeyAggregateService(
         val organization = organizationCoreFinderService.get(command.organizationId)
         val client = keycloakClientProvider.get()
 
-        val keyIdentifier = Normalizer.normalize("tr-${organization.identifier}-${command.name}-app", Normalizer.Form.NFD)
+        val keyIdentifier = Normalizer.normalize("tr-${organization.identifier}-${command.name}-api-key", Normalizer.Form.NFD)
             .lowercase()
             .replace(Regex("[^a-z0-9]"), "-")
             .replace(Regex("-+"), "-")
