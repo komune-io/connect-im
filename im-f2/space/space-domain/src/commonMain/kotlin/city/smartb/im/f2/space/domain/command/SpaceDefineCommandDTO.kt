@@ -32,6 +32,12 @@ interface SpaceDefineCommandDTO: Command {
     val theme: String?
 
     /**
+     * SMTP is a variable that represents the configuration of the Simple Mail Transfer Protocol (SMTP) settings as a map.
+     *
+     */
+    val smtp: Map<String, String>?
+
+    /**
      * List of supported locales.
      * @example [["en", "fr"]]
      */
@@ -44,6 +50,7 @@ interface SpaceDefineCommandDTO: Command {
 data class SpaceDefineCommand(
     override val identifier: String,
     override val theme: String?,
+    override val smtp: Map<String, String>?,
     override val locales: List<String>?
 ): SpaceDefineCommandDTO
 

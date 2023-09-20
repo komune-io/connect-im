@@ -75,6 +75,7 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
     private suspend fun createSpace(params: SpaceCreateParams) = context.spaceIdentifiers.register(params.identifier) {
         command = SpaceDefineCommand(
             identifier = params.identifier,
+            smtp = null,
             theme = null,
             locales = null
         )

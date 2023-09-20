@@ -5,6 +5,7 @@ import city.smartb.im.commons.model.SpaceIdentifier
 data class SpaceCreateProperties(
     val space: SpaceIdentifier,
     val theme: String?,
+    val smtp: Map<String, String>?,
     val locales: List<String>?,
     val adminUsers: List<AdminUserData>
 )

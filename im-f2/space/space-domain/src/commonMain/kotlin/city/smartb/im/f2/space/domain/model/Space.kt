@@ -19,6 +19,8 @@ interface SpaceDTO {
      */
     val identifier: SpaceIdentifier?
 
+    val smtp: Map<String, String>?
+
     /**
      * Theme used by the space.
      * @example "im"
@@ -35,5 +37,6 @@ interface SpaceDTO {
 data class Space(
     override val identifier: SpaceIdentifier,
     override val theme: String?,
+    override val smtp: Map<String, String>?,
     override val locales: List<String>?
 ): SpaceDTO

@@ -1,7 +1,6 @@
 package city.smartb.im.f2.space.lib
 
 import city.smartb.im.api.config.bean.ImAuthenticationProvider
-import city.smartb.im.api.config.properties.IMProperties
 import city.smartb.im.commons.auth.withAuth
 import city.smartb.im.core.client.api.ClientCoreAggregateService
 import city.smartb.im.core.client.api.ClientCoreFinderService
@@ -19,9 +18,9 @@ import org.springframework.stereotype.Service
 class SpaceAggregateService(
     private val clientCoreAggregateService: ClientCoreAggregateService,
     private val clientCoreFinderService: ClientCoreFinderService,
-    private val authenticationResolver: ImAuthenticationProvider,
-    private val imProperties: IMProperties,
+    private val authenticationResolver: ImAuthenticationProvider
 ): CoreService(CacheName.Space) {
+
 
     companion object {
         const val ACCESS_TOKEN_LIFESPAN = 28800
@@ -104,7 +103,7 @@ class SpaceAggregateService(
     private fun RealmRepresentation.apply(command: SpaceDefineCommand) = apply {
         realm = command.identifier
         displayName = command.identifier
-        smtpServer = imProperties.smtp
+        smtpServer = command.smtp
         loginTheme = command.theme
         emailTheme = command.theme
         supportedLocales = command.locales?.toSet()

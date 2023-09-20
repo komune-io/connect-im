@@ -42,7 +42,7 @@ class SpaceCreateScript(
 
         val masterAuth = imScriptSpaceProperties.auth.toAuthRealm()
         withContext(AuthContext(masterAuth)) {
-            logger.info("Initializing Space [${properties.space}]...")
+            logger.info("Initializing Space[${properties.space}]...")
             initRealm(properties)
             logger.info("Initialized Space")
         }
@@ -64,11 +64,13 @@ class SpaceCreateScript(
 
     private suspend fun initRealm(properties: SpaceCreateProperties) {
         if (spaceFinderService.getOrNull(properties.space) != null) {
-            logger.info("Realm already created")
+            logger.info("Space[${properties.space}] already created")
         } else {
+            logger.info("Space create: $${properties}")
             spaceAggregateService.define(SpaceDefineCommand(
                 identifier = properties.space,
                 theme = properties.theme,
+                smtp = properties.smtp,
                 locales = properties.locales ?: listOf("en", "fr")
             ))
         }

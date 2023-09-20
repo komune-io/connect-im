@@ -54,7 +54,7 @@ class SpaceConfigScript (
         val auth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
         withContext(AuthContext(auth)) {
             logger.info("Verify Realm[${properties.space}] exists and update it if needed...")
-            verifyAndUpdateSpace(properties)
+            properties.verifyAndUpdateSpace()
 
             logger.info("Initializing Permissions...")
             initPermissions(properties.permissions)
@@ -125,13 +125,14 @@ class SpaceConfigScript (
         }
     }
 
-    private suspend fun verifyAndUpdateSpace(properties: SpaceConfigProperties) {
-        val space = spaceFinderService.get(properties.space)
-        if (properties.theme != null || properties.locales != null) {
+    private suspend fun SpaceConfigProperties.verifyAndUpdateSpace() {
+        val space = spaceFinderService.get(space)
+        if (theme != null || locales != null) {
             SpaceDefineCommand(
                 identifier = space.identifier,
-                theme = properties.theme ?: space.theme,
-                locales = properties.locales ?: space.locales
+                theme = theme ?: space.theme,
+                smtp = space.smtp,
+                locales = locales ?: space.locales
             ).let { spaceAggregateService.define(it) }
         }
     }

@@ -6,5 +6,6 @@ import org.keycloak.representations.idm.RealmRepresentation
 fun RealmRepresentation.toSpace() = Space(
     identifier = realm,
     theme = loginTheme,
+    smtp = smtpServer,
     locales = supportedLocales?.toList()
 )
