@@ -15,5 +15,6 @@ data class UserModel(
     val enabled: Boolean,
     val disabledBy: UserId?,
     val creationDate: Long,
-    val disabledDate: Long?
+    val disabledDate: Long?,
+    val isApiKey: Boolean
 )

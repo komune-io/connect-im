@@ -68,6 +68,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
                     roles = command.roles,
                     memberOf = command.memberOf,
                     attributes = buildAttributesMap(command.attributes, command.memberOf).orEmpty(),
+                    isApiKey = false
                 )
             }
         }
@@ -88,7 +89,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
             address = params.address,
             phone = params.phone,
             roles = params.roles,
-            memberOf = params.memberOf,
+            memberOf = params.memberOf?.let { context.organizationIds[it] ?: it },
             attributes = params.attributes,
             isEmailVerified = params.isEmailVerified,
             sendResetPassword = false,
@@ -113,7 +114,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
             phone = entry?.get("phone") ?: "0600000000",
             roles = entry?.extractList("roles")?.map { context.roleIdentifiers[it] ?: it }.orEmpty(),
             sendEmailLink = false,
-            memberOf = entry?.get("memberOf").parseNullableOrDefault(context.organizationIds.lastUsedOrNull),
+            memberOf = entry?.get("memberOf").parseNullableOrDefault(null),
             attributes = userAttributesParams(entry),
             isEmailVerified = true
         )

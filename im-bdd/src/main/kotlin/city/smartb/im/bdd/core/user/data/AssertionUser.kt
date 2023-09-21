@@ -5,6 +5,7 @@ import city.smartb.im.commons.model.OrganizationId
 import city.smartb.im.commons.model.RoleIdentifier
 import city.smartb.im.commons.model.UserId
 import city.smartb.im.commons.utils.parseJson
+import city.smartb.im.core.user.domain.model.UserModel
 import city.smartb.im.f2.privilege.domain.role.model.Role
 import city.smartb.im.f2.user.domain.model.User
 import city.smartb.im.infra.keycloak.client.KeycloakClient
@@ -46,6 +47,7 @@ class AssertionUser(
         private val userPhone: String? = singleAttributes[User::phone.name]
         private val userDisabledBy: UserId? = singleAttributes[User::disabledBy.name]
         private val userDisabledDate: Long? = singleAttributes[User::disabledDate.name]?.toLong()
+        private val userIsApiKey: Boolean = singleAttributes[UserModel::isApiKey.name].toBoolean()
         private val userRoles = client.user(user.id)
             .roles()
             .realmLevel()
@@ -65,7 +67,8 @@ class AssertionUser(
             enabled: Boolean = user.isEnabled,
             disabledBy: UserId? = userDisabledBy,
             creationDate: Long = user.createdTimestamp,
-            disabledDate: Long? = userDisabledDate
+            disabledDate: Long? = userDisabledDate,
+            isApiKey: Boolean = userIsApiKey
         ) = also {
             Assertions.assertThat(userMemberOf).isEqualTo(memberOf)
             Assertions.assertThat(user.email.orEmpty()).isEqualTo(email)
@@ -79,6 +82,7 @@ class AssertionUser(
             Assertions.assertThat(user.createdTimestamp).isEqualTo(creationDate)
             Assertions.assertThat(userDisabledBy).isEqualTo(disabledBy)
             Assertions.assertThat(userDisabledDate).isEqualTo(disabledDate)
+            Assertions.assertThat(userIsApiKey).isEqualTo(isApiKey)
         }
 
         fun isAnonymized() = also {

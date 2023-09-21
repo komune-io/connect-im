@@ -113,7 +113,8 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
         AssertionBdd.user(kcClient).assertThat(user).hasFields(
             memberOf = params.organization?.let(context.organizationIds::safeGet) ?: user.attributes["memberOf"]?.firstOrNull(),
             roles = params.roles ?: apiKey.roles,
-            enabled = true
+            enabled = true,
+            isApiKey = true
         )
     }
 

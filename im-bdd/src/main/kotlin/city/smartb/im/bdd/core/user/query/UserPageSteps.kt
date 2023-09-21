@@ -31,7 +31,7 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
 
     private suspend fun fetchUserPage(params: UserPageParams) {
         context.fetched.users = UserPageQuery(
-            organizationId = params.organizationId,
+            organizationId = params.organizationId?.let { context.organizationIds[it] ?: it },
             name = params.name,
             email = params.email,
             role = params.role,
@@ -43,7 +43,7 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
     }
 
     private fun userPageParams(entry: Map<String, String>?) = UserPageParams(
-        organizationId = entry?.get("organizationId").parseNullableOrDefault(context.organizationIds.lastUsedOrNull),
+        organizationId = entry?.get("organizationId").parseNullableOrDefault(null),
         name = entry?.get("name"),
         email = entry?.get("email"),
         role = entry?.get("role"),

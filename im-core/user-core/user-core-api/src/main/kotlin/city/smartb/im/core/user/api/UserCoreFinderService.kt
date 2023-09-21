@@ -84,7 +84,9 @@ class UserCoreFinderService(
             }
             organizationIds != null -> {
                 organizationIds.mapAsync { organizationId ->
-                    client.group(organizationId).members(0, Int.MAX_VALUE, false)
+                    client.group(organizationId)
+                        .members(0, Int.MAX_VALUE, false)
+                        .filter { it.serviceAccountClientId == null }
                 }.flatten().let { userRepresentationTransformer.transform(it) }
             }
             else -> {
@@ -92,6 +94,6 @@ class UserCoreFinderService(
                     .search("", 0, Int.MAX_VALUE, false)
                     .let { userRepresentationTransformer.transform(it) }
             }
-        }
+        }.filter { !it.isApiKey }
     }
 }
