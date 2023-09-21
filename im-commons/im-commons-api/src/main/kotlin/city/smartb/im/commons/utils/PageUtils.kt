@@ -10,10 +10,12 @@ fun <T> List<T>.page(offset: OffsetPagination?): PageDTO<T> {
 }
 
 fun <T> List<T>.page(offset: Int?, limit: Int?): PageDTO<T> {
+    val start = offset ?: 0
+    val end = limit?.let { start + it } ?: size
     return Page(
         items = subList(
-            min(offset ?: 0, size),
-            min(limit ?: size, size)
+            min(start, size),
+            min(end, size)
         ),
         total = size
     )
