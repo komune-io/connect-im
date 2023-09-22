@@ -53,18 +53,22 @@ object UserPolicies {
      * User can disable a user
      */
     fun canDisable(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return canWriteUser(authedUser, user)
+        return canWriteUser(authedUser, user) && isNotMySelf(authedUser, user)
     }
 
     /**
      * User can delete a user
      */
     fun canDelete(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return canWriteUser(authedUser, user)
+        return canWriteUser(authedUser, user) && isNotMySelf(authedUser, user)
     }
 
     private fun canWriteUser(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
         return (authedUser.id == user.id || authedUser.hasRole(ImRole.IM_USER_WRITE))
             && (authedUser.memberOf == user.memberOf?.id || authedUser.hasRole(ImRole.IM_ORGANIZATION_WRITE))
+    }
+    private fun isNotMySelf(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
+        return authedUser.id != user.id
+
     }
 }
