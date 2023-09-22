@@ -115,6 +115,7 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
         val newAttributes = command.attributes.orEmpty().plus(
             listOfNotNull(
                 command.memberOf.takeIf { command.canUpdateMemberOf() } ?.let { UserModel::memberOf.name to command.memberOf },
+                UserModel::isApiKey.name to command.isApiKey.toString(),
             ).toMap()
         ).mapValues { (_, values) -> listOf(values) }
 

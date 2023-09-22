@@ -23,6 +23,7 @@ class UserToDTOTransformer(
             User::disabledBy.name,
             User::disabledDate.name,
             User::phone.name,
+            UserModel::isApiKey.name
         )
     }
 

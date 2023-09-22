@@ -31,6 +31,7 @@ class UserRepresentationTransformer(
             creationDate = item.createdTimestamp,
             disabledBy = item.attributes[UserModel::disabledBy.name]?.firstOrNull(),
             disabledDate = item.attributes[UserModel::disabledDate.name]?.firstOrNull()?.toLong(),
+            isApiKey = item.attributes[UserModel::isApiKey.name]?.firstOrNull().toBoolean()
         )
     }
 }
