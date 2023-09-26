@@ -1,0 +1,97 @@
+<style type="text/css">
+  @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
+  /* Change the menu items appearence */
+  .sidebar-item {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+    font-size: 14px !important;
+    line-height: normal !important;
+    display: flex !important;
+    align-items: center !important;
+    font-weight: 500;
+    border-radius: 6px !important;
+    transition: 0.3s;
+    color: #353945 !important;
+  }
+
+  .sidebar-item:hover {
+    background: #f9eecd !important;
+  }
+
+  /* Change the expander icons on the expandable menu items  */
+  .sidebar-item > span,
+  .sidebar-subheading span {
+    margin-top: 0px !important;
+    margin-left: 4px !important;
+    margin-right: 9px !important;
+    color: #353945 !important;
+    border-radius: 10px !important;
+    border-top: 5px solid transparent !important;
+    border-bottom: 5px solid transparent !important;
+    border-left: 5px solid !important;
+  }
+
+  .sidebar-subheading span {
+    margin-top: 2px !important;
+  }
+
+  /* Change the selected menu item  */
+  .sidebar-item[data-selected="true"] {
+    background: #f9eecd !important;
+  }
+
+  /* Change the sub items of the expanded menu items 
+  .sidebar-item[data-parent-id*="-"] {
+    color: #9e9e9e !important;
+    padding-left: 18px !important;
+    margin-left: 16px !important;
+  }
+
+  /* Add a line to the sub items
+  .sidebar-item[data-parent-id*="-"]::before {
+    content: " ";
+    width: 1px;
+    height: calc(100% + 4px);
+    margin-left: -26px;
+    margin-top: -4px;
+    position: absolute;
+    background: #bdbdbd;
+  } */
+
+  /* Add a padding to the menu  */
+  #storybook-explorer-tree > div > div {
+    padding: 16px;
+  }
+
+  /* Remove the menu items icons */
+  .sidebar-svg-icon,
+  .sidebar-item svg {
+    display: none;
+  }
+
+  /* Change the header divider */
+  .sidebar-subheading {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 10px !important;
+    margin-left: -16px !important;
+    margin-bottom: 8px !important;
+    color: #353945 !important;
+    width: calc(100% + 32px);
+  }
+
+  #storybook-explorer-tree .sidebar-subheading:not(:first-child) {
+    margin-top: 30px !important;
+  }
+
+  /* logo placement tweaks */
+  .sidebar-header > div {
+    margin-right: 0 !important;
+  }
+
+  .sidebar-header a {
+    margin: 6px 0 !important;
+  }
+</style>
