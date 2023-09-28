@@ -3,28 +3,32 @@
   "version": "1.0.0",
   "license": "Apache-2.0",
   "description": "IM Storybook Documentation",
+  "type": "module",
   "main": "src/index.ts",
   "source": "src/index.ts",
   "types": "src/index.ts",
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@smartb/g2": "1.0.0-alpha.156",
-    "@smartb/g2-storybook-documentation": "1.0.0-alpha.156",
-    "@storybook/addon-actions": "^6.5.16",
-    "@storybook/addon-docs": "^6.5.16",
-    "@storybook/addon-essentials": "^6.5.16",
-    "@storybook/addon-links": "^6.5.16",
-    "@storybook/react": "^6.5.16",
-    "storybook-react-i18next": "^1.0.20",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-i18next": "^11.8.13",
-    "@mui/material": "^5.2.7",
+    "@smartb/g2": "1.0.0-alpha.176",
+    "@smartb/g2-storybook-documentation": "1.0.0-alpha.176",
+    "@storybook/addon-actions": "7.4.5",
+    "@storybook/addon-docs": "7.4.5",
+    "@storybook/addon-essentials": "7.4.5",
+    "@storybook/addon-links": "7.4.5",
+    "@storybook/react": "7.4.5",
+    "@storybook/react-webpack5": "7.4.5",
+    "storybook": "7.4.5",
     "@emotion/css": "^11.10.6",
-    "@emotion/styled": "^11.10.6"
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/material": "^5.11.12",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "scripts": {
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "resolutions": {
+    "jackspeak": "2.1.1"
   }
 }
