@@ -76,7 +76,7 @@ object Dependencies {
 
 		object Fs {
 			fun client(scope: Scope) = scope.add(
-				"city.smartb.fs:file-client:${Versions.fs}"
+				"city.smartb.fs:fs-file-client:${Versions.fs}"
 			)
 		}
 
