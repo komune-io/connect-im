@@ -27,65 +27,65 @@ include(
 )
 
 include(
-    "im-infra:keycloak",
-    "im-infra:redis"
+    "im-infra:im-keycloak",
+    "im-infra:im-redis"
 )
 
 include(
-    "im-core:commons-core",
+    "im-core:im-commons-core",
 
-    "im-core:client-core:client-core-api",
-    "im-core:client-core:client-core-domain",
+    "im-core:client-core:im-client-core-api",
+    "im-core:client-core:im-client-core-domain",
 
-    "im-core:organization-core:organization-core-api",
-    "im-core:organization-core:organization-core-domain",
+    "im-core:organization-core:im-organization-core-api",
+    "im-core:organization-core:im-organization-core-domain",
 
-    "im-core:privilege-core:privilege-core-api",
-    "im-core:privilege-core:privilege-core-domain",
+    "im-core:privilege-core:im-privilege-core-api",
+    "im-core:privilege-core:im-privilege-core-domain",
 
-    "im-core:user-core:user-core-api",
-    "im-core:user-core:user-core-domain",
+    "im-core:user-core:im-user-core-api",
+    "im-core:user-core:im-user-core-domain",
 )
 
 include(
-    "im-f2:apikey:apikey-api",
-    "im-f2:apikey:apikey-domain",
-    "im-f2:apikey:apikey-client",
-    "im-f2:apikey:apikey-lib",
+    "im-f2:apikey:im-apikey-api",
+    "im-f2:apikey:im-apikey-domain",
+    "im-f2:apikey:im-apikey-client",
+    "im-f2:apikey:im-apikey-lib",
 
-    "im-f2:organization:organization-api",
-    "im-f2:organization:organization-domain",
-    "im-f2:organization:organization-client",
-    "im-f2:organization:organization-lib",
+    "im-f2:organization:im-organization-api",
+    "im-f2:organization:im-organization-domain",
+    "im-f2:organization:im-organization-client",
+    "im-f2:organization:im-organization-lib",
 
-    "im-f2:privilege:privilege-api",
-    "im-f2:privilege:privilege-client",
-    "im-f2:privilege:privilege-domain",
-    "im-f2:privilege:privilege-lib",
+    "im-f2:privilege:im-privilege-api",
+    "im-f2:privilege:im-privilege-client",
+    "im-f2:privilege:im-privilege-domain",
+    "im-f2:privilege:im-privilege-lib",
 
-    "im-f2:space:space-api",
-    "im-f2:space:space-client",
-    "im-f2:space:space-domain",
-    "im-f2:space:space-lib",
+    "im-f2:space:im-space-api",
+    "im-f2:space:im-space-client",
+    "im-f2:space:im-space-domain",
+    "im-f2:space:im-space-lib",
 
-    "im-f2:user:user-api",
-    "im-f2:user:user-domain",
-    "im-f2:user:user-client",
-    "im-f2:user:user-lib",
+    "im-f2:user:im-user-api",
+    "im-f2:user:im-user-domain",
+    "im-f2:user:im-user-client",
+    "im-f2:user:im-user-lib",
 )
 
 include(
     "im-keycloak:keycloak-plugin",
-    "im-keycloak:keycloak-plugin:keycloak-generate-action-token",
-    "im-keycloak:keycloak-plugin:keycloak-event-listener-http",
-    "im-keycloak:keycloak-plugin:keycloak-plugin-client",
-    "im-keycloak:keycloak-plugin:keycloak-plugin-domain",
+    "im-keycloak:keycloak-plugin:im-keycloak-generate-action-token",
+    "im-keycloak:keycloak-plugin:im-keycloak-event-listener-http",
+    "im-keycloak:keycloak-plugin:im-keycloak-plugin-client",
+    "im-keycloak:keycloak-plugin:im-keycloak-plugin-domain",
 )
 
 include(
-    "im-script:script-core",
-    "im-script:script-gateway",
-    "im-script:script-init",
-    "im-script:script-space-config",
-    "im-script:script-space-create",
+    "im-script:im-script-core",
+    "im-script:im-script-gateway",
+    "im-script:im-script-init",
+    "im-script:im-script-space-config",
+    "im-script:im-script-space-create",
 )

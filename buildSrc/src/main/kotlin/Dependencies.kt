@@ -169,21 +169,21 @@ object Modules {
     object Core {
         private const val BASE = ":im-core"
 
-        const val commons = "$BASE:commons-core"
+        const val commons = "$BASE:im-commons-core"
 
-        private const val CLIENT = "$BASE:client-core:client-core"
+        private const val CLIENT = "$BASE:client-core:im-client-core"
         const val clientApi = "$CLIENT-api"
         const val clientDomain = "$CLIENT-domain"
 
-        private const val ORGANIZATION = "$BASE:organization-core:organization-core"
+        private const val ORGANIZATION = "$BASE:organization-core:im-organization-core"
         const val organizationApi = "$ORGANIZATION-api"
         const val organizationDomain = "$ORGANIZATION-domain"
 
-        private const val PRIVILEGE = "$BASE:privilege-core:privilege-core"
+        private const val PRIVILEGE = "$BASE:privilege-core:im-privilege-core"
         const val privilegeApi = "$PRIVILEGE-api"
         const val privilegeDomain = "$PRIVILEGE-domain"
 
-        private const val USER = "$BASE:user-core:user-core"
+        private const val USER = "$BASE:user-core:im-user-core"
         const val userApi = "$USER-api"
         const val userDomain = "$USER-domain"
     }
@@ -191,31 +191,31 @@ object Modules {
 	object F2 {
         private const val BASE = ":im-f2"
 
-        private const val API_KEY = "$BASE:apikey:apikey"
+        private const val API_KEY = "$BASE:apikey:im-apikey"
         const val apikeyApi = "$API_KEY-api"
         const val apikeyClient = "$API_KEY-client"
         const val apikeyDomain = "$API_KEY-domain"
         const val apikeyLib = "$API_KEY-lib"
 
-        private const val ORGANIZATION = "$BASE:organization:organization"
+        private const val ORGANIZATION = "$BASE:organization:im-organization"
 		const val organizationApi = "$ORGANIZATION-api"
         const val organizationClient = "$ORGANIZATION-client"
         const val organizationDomain = "$ORGANIZATION-domain"
 		const val organizationLib = "$ORGANIZATION-lib"
 
-        private const val PRIVILEGE = "$BASE:privilege:privilege"
+        private const val PRIVILEGE = "$BASE:privilege:im-privilege"
 		const val privilegeApi = "$PRIVILEGE-api"
         const val privilegeClient = "$PRIVILEGE-client"
         const val privilegeDomain = "$PRIVILEGE-domain"
         const val privilegeLib = "$PRIVILEGE-lib"
 
-        private const val SPACE = "$BASE:space:space"
+        private const val SPACE = "$BASE:space:im-space"
         val spaceApi = "$SPACE-api"
         val spaceDomain = "$SPACE-domain"
         val spaceClient = "$SPACE-client"
         val spaceLib = "$SPACE-lib"
 
-        private const val USER = "$BASE:user:user"
+        private const val USER = "$BASE:user:im-user"
         const val userApi = "$USER-api"
         const val userClient = "$USER-client"
         const val userDomain = "$USER-domain"
@@ -224,20 +224,20 @@ object Modules {
 
     object Keycloak {
         private const val BASE = ":im-keycloak:keycloak-plugin"
-        const val generateActionToken = "$BASE:keycloak-generate-action-token"
-        const val eventListenerHttp = "$BASE:keycloak-event-listener-http"
-        const val pluginClient = "$BASE:keycloak-plugin-client"
-        const val pluginDomain = "$BASE:keycloak-plugin-domain"
+        const val generateActionToken = "$BASE:im-keycloak-generate-action-token"
+        const val eventListenerHttp = "$BASE:im-keycloak-event-listener-http"
+        const val pluginClient = "$BASE:im-keycloak-plugin-client"
+        const val pluginDomain = "$BASE:im-keycloak-plugin-domain"
     }
 
     object Infra {
         private const val BASE = ":im-infra"
-        const val keycloak = "$BASE:keycloak"
-        const val redis = "$BASE:redis"
+        const val keycloak = "$BASE:im-keycloak"
+        const val redis = "$BASE:im-redis"
     }
 
 	object Script {
-        const val BASE = ":im-script:script"
+        const val BASE = ":im-script:im-script"
         const val core = "$BASE-core"
         const val gateway = "$BASE-gateway"
         const val init = "$BASE-init"
