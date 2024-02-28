@@ -1,5 +1,5 @@
 
-rootProject.name = "im"
+rootProject.name = "connect-im"
 
 include(
     "im-api:api-config",

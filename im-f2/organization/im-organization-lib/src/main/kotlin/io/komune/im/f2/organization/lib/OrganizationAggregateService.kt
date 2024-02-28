@@ -1,7 +1,7 @@
 package io.komune.im.f2.organization.lib
 
-import city.smartb.fs.s2.file.client.FileClient
-import city.smartb.fs.s2.file.domain.features.command.FileUploadCommand
+import io.komune.fs.s2.file.client.FileClient
+import io.komune.fs.s2.file.domain.features.command.FileUploadCommand
 import io.komune.im.commons.auth.AuthenticationProvider
 import io.komune.im.commons.model.PrivilegeIdentifier
 import io.komune.im.commons.utils.EmptyAddress

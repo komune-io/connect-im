@@ -6,7 +6,7 @@ import io.komune.gradle.dependencies.add
 
 object Framework {
 	val fixers = FixersPluginVersions.fixers
-	val connect = "0.15.0-RC1"
+	val connect = "0.15.0-SNAPSHOT"
 }
 
 object PluginVersions {
@@ -76,7 +76,7 @@ object Dependencies {
 
 		object Fs {
 			fun client(scope: Scope) = scope.add(
-				"city.smartb.fs:fs-file-client:${Versions.fs}"
+				"io.komune.fs:fs-file-client:${Versions.fs}"
 			)
 		}
 

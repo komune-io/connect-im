@@ -48,7 +48,7 @@ class AuthenticationSteps: En, ImCucumberStepsDefinition() {
     }
 
     private fun authenticationParams(entry: Map<String, String>) =
-        io.komune.im.bdd.AuthenticationSteps.AuthenticationParams(
+        AuthenticationParams(
             identifier = entry.safeExtract("identifier")
         )
 

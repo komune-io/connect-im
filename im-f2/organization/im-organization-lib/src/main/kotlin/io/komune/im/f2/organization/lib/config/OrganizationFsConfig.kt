@@ -1,8 +1,8 @@
 package io.komune.im.f2.organization.lib.config
 
-import city.smartb.fs.s2.file.client.FileClient
-import city.smartb.fs.s2.file.domain.features.command.FileInitPublicDirectoryCommand
-import city.smartb.fs.s2.file.domain.model.FilePath
+import io.komune.fs.s2.file.client.FileClient
+import io.komune.fs.s2.file.domain.features.command.FileInitPublicDirectoryCommand
+import io.komune.fs.s2.file.domain.model.FilePath
 import io.komune.im.api.config.FsConfig
 import io.komune.im.commons.model.OrganizationId
 import kotlinx.coroutines.runBlocking

@@ -1,6 +1,6 @@
 package io.komune.im.f2.space.lib.service
 
-import city.smartb.fs.s2.file.client.FileClient
+import io.komune.fs.s2.file.client.FileClient
 import io.komune.im.api.config.FsConfig
 import io.komune.im.commons.model.SpaceIdentifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
