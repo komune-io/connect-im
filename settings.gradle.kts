@@ -1,12 +1,3 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        mavenLocal()
-        maven { url = uri("https://oss.sonatype.org/service/local/repositories/releases/content") }
-        maven { url = uri("https://oss.sonatype.org/content/repositories/releases") }
-        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
-    }
-}
 
 rootProject.name = "im"
 

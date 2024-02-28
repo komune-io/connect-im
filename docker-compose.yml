@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   im-gateway:
-    image: smartbcity/im-gateway:next
+    image: komune-io/im-gateway:next
     environment:
       - i2_issuers[0]_uri=https://auth.smart-b.io/auth/realms/test2
       - i2_issuers[0]_authUrl=https://auth.smart-b.io/auth

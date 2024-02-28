@@ -1,1 +1,1 @@
-city.smartb.im.infra.keycloak.client.KeycloakClientProvider
+io.komune.im.infra.keycloak.client.KeycloakClientProvider

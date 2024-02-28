@@ -1,2 +1,2 @@
-city.smartb.im.api.config.IMConfig
-city.smartb.im.api.config.FsConfig
+io.komune.im.api.config.IMConfig
+io.komune.im.api.config.FsConfig

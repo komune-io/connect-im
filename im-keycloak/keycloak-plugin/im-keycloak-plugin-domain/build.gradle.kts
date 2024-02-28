@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("city.smartb.fixers.gradle.publish")
+    id("io.komune.fixers.gradle.publish")
 }
 
 dependencies {

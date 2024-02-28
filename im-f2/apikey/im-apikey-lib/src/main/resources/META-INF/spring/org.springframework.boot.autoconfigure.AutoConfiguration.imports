@@ -1,3 +1,3 @@
-city.smartb.im.apikey.lib.service.ApiKeyToDTOTransformer
-city.smartb.im.apikey.lib.ApiKeyAggregateService
-city.smartb.im.apikey.lib.ApiKeyFinderService
+io.komune.im.apikey.lib.service.ApiKeyToDTOTransformer
+io.komune.im.apikey.lib.ApiKeyAggregateService
+io.komune.im.apikey.lib.ApiKeyFinderService
