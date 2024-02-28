@@ -67,6 +67,30 @@ docker-keycloak-auth-build:
 docker-keycloak-auth-push:
 	@docker push ${KEYCLOAK_AUTH_IMG}
 
+## New
+
+lint: lint-libs
+build: build-libs
+test: test-libs
+package: package-libs
+
+lint-libs:
+	echo 'No Lint'
+	#./gradlew detekt
+
+build-libs:
+	./gradlew build --scan -x test
+
+test-libs:
+	echo 'No Tests'
+#	./gradlew test
+
+package-libs: build-libs
+	./gradlew publishToMavenLocal publish
+
+version:
+	@VERSION=$$(cat VERSION); \
+	echo "$$VERSION"
 
 help:
 	@echo '/////////////////////////////////'

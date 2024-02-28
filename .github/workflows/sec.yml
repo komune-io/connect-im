@@ -1,0 +1,15 @@
+name: Sec
+
+on: [push]
+
+jobs:
+  Sec:
+    uses: komune-io/fixers-gradle/.github/workflows/sec-workflow.yml@feat/HardforkToKomune
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      PKG_MAVEN_USERNAME: ${{ secrets.PKG_MAVEN_USERNAME }}
+      PKG_MAVEN_TOKEN: ${{ secrets.PKG_MAVEN_TOKEN }}
+    permissions:
+      contents: write
+      pull-requests: read
+      security-events: write
