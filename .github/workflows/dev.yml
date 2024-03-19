@@ -1,13 +1,10 @@
 name: Dev
 
 on: [push]
-#on:
-#  push:
-#    branches: [ main ]
 
 jobs:
-  Dev:
-    uses: komune-io/fixers-gradle/.github/workflows/dev-workflow.yml@feat/HardforkToKomune
+  dev:
+    uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@main
     permissions:
       contents: read
       packages: write
@@ -16,3 +13,19 @@ jobs:
       GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
       PKG_MAVEN_USERNAME: ${{ secrets.PKG_MAVEN_USERNAME }}
       PKG_MAVEN_TOKEN: ${{ secrets.PKG_MAVEN_TOKEN }}
+
+  docs:
+    uses: komune-io/fixers-gradle/.github/workflows/publish-storybook-workflow.yml@main
+    permissions:
+      contents: read
+      packages: write
+      pages: write
+      id-token: write
+    with:
+      with-chromatic: false
+      storybook-dir: storybook
+      storybook-static-dir: storybook-static
+    secrets:
+      NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+
