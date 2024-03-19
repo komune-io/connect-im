@@ -1,2 +1,2 @@
-city.smartb.im.core.organization.api.OrganizationCoreAggregateService
-city.smartb.im.core.organization.api.OrganizationCoreFinderService
+io.komune.im.core.organization.api.OrganizationCoreAggregateService
+io.komune.im.core.organization.api.OrganizationCoreFinderService

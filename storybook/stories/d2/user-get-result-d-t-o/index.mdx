@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@komune-io/g2-documentation'
+import UserGetResultDTODesc from './desc.mdx'
+import UserGetResultDTOVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<UserGetResultDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={UserGetResultDTOVisualJson}
+      language={"json"}
+      title={"Result"}
+    />
+  }
+  rightContainerProps={{}}
+/>

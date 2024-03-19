@@ -1,23 +1,23 @@
 include ./gradle.properties
 
 STORYBOOK_DOCKERFILE	:= infra/docker/storybook/Dockerfile
-STORYBOOK_NAME	   	 	:= smartbcity/im-storybook
+STORYBOOK_NAME	   	 	:= komune-io/im-storybook
 STORYBOOK_IMG	    	:= ${STORYBOOK_NAME}:${VERSION}
 
-IM_APP_NAME	   	 	:= smartbcity/im-gateway
+IM_APP_NAME	   	 	:= komune-io/im-gateway
 IM_APP_IMG	    	:= ${IM_APP_NAME}:${VERSION}
 IM_APP_PACKAGE	   	:= :im-api:api-gateway:bootBuildImage
 
-IM_SCRIPT_NAME	   	:= smartbcity/im-script
+IM_SCRIPT_NAME	   	:= komune-io/im-script
 IM_SCRIPT_IMG	    := ${IM_SCRIPT_NAME}:${VERSION}
 IM_SCRIPT_PACKAGE	:= :im-script:im-script-gateway:bootBuildImage
 
 KEYCLOAK_DOCKERFILE	:= infra/docker/keycloak/Dockerfile
 
-KEYCLOAK_NAME	    := smartbcity/im-keycloak
+KEYCLOAK_NAME	    := komune-io/im-keycloak
 KEYCLOAK_IMG        := ${KEYCLOAK_NAME}:${VERSION}
 
-KEYCLOAK_AUTH_NAME	:= smartbcity/im-keycloak-auth
+KEYCLOAK_AUTH_NAME	:= komune-io/im-keycloak-auth
 KEYCLOAK_AUTH_IMG   := ${KEYCLOAK_AUTH_NAME}:${VERSION}
 
 libs: package-kotlin
@@ -67,6 +67,30 @@ docker-keycloak-auth-build:
 docker-keycloak-auth-push:
 	@docker push ${KEYCLOAK_AUTH_IMG}
 
+## New
+
+lint: lint-libs
+build: build-libs
+test: test-libs
+package: package-libs
+
+lint-libs:
+	echo 'No Lint'
+	#./gradlew detekt
+
+build-libs:
+	./gradlew build --scan -x test
+
+test-libs:
+	echo 'No Tests'
+#	./gradlew test
+
+package-libs: build-libs
+	./gradlew publishToMavenLocal publish
+
+version:
+	@VERSION=$$(cat VERSION); \
+	echo "$$VERSION"
 
 help:
 	@echo '/////////////////////////////////'

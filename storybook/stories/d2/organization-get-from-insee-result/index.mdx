@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@komune-io/g2-documentation'
+import OrganizationGetFromInseeResultDesc from './desc.mdx'
+import OrganizationGetFromInseeResultVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<OrganizationGetFromInseeResultDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={OrganizationGetFromInseeResultVisualJson}
+      language={"json"}
+      title={"Result"}
+    />
+  }
+  rightContainerProps={{}}
+/>

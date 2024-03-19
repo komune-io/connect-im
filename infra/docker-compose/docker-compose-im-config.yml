@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   im-config:
-    image: smartbcity/im-script:${VERSION_IM}
+    image: komune-io/im-script:${VERSION_IM}
     container_name: im-config
     environment:
       - im_script_space_auth_serverUrl=${AUTH_HOST_URL}

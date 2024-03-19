@@ -1,1 +1,1 @@
-i2.keycloak.plugin.event.listener.http.HttpEventListenerProviderFactory
+io.komune.im.keycloak.plugin.event.listener.http.HttpEventListenerProviderFactory

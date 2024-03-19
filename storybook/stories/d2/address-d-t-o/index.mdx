@@ -1,0 +1,22 @@
+import AddressDTODesc from './desc.mdx'
+import AddressDTOVisualJson from './visualJson.json'
+import { CodeHighlighter, SegmentedContainer } from '@komune-io/g2-documentation'
+
+<SegmentedContainer
+  leftElement={<AddressDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={AddressDTOVisualJson}
+      language={"json"}
+      title={"Model"}
+    />
+  }
+  rightContainerProps={{}}
+/>
+
+<div
+  class={"spacer"}
+/>
+
+

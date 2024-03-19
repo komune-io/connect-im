@@ -1,1 +1,1 @@
-city.smartb.f2.spring.boot.auth.config.WebSecurityConfig
+io.komune.f2.spring.boot.auth.config.WebSecurityConfig

@@ -1,0 +1,22 @@
+import { CodeHighlighter, SegmentedContainer } from '@komune-io/g2-documentation'
+import UserDTODesc from './desc.mdx'
+import UserDTOVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<UserDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={UserDTOVisualJson}
+      language={"json"}
+      title={"UserDTO"}
+    />
+  }
+  rightContainerProps={{}}
+/>
+
+<div
+  class={"spacer"}
+/>
+
+

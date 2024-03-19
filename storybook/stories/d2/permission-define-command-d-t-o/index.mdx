@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@komune-io/g2-documentation'
+import PermissionDefineCommandDTODesc from './desc.mdx'
+import PermissionDefineCommandDTOVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<PermissionDefineCommandDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={PermissionDefineCommandDTOVisualJson}
+      language={"json"}
+      title={"Command"}
+    />
+  }
+  rightContainerProps={{}}
+/>

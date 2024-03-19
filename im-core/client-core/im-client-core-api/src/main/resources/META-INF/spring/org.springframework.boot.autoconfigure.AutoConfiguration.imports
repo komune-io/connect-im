@@ -1,2 +1,2 @@
-city.smartb.im.core.client.api.ClientCoreAggregateService
-city.smartb.im.core.client.api.ClientCoreFinderService
+io.komune.im.core.client.api.ClientCoreAggregateService
+io.komune.im.core.client.api.ClientCoreFinderService

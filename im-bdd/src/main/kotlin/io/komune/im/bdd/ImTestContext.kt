@@ -1,0 +1,63 @@
+package io.komune.im.bdd
+
+import io.komune.im.apikey.domain.model.ApiKey
+import io.komune.im.apikey.domain.model.ApiKeyId
+import io.komune.im.commons.auth.ImRole
+import io.komune.im.commons.model.OrganizationId
+import io.komune.im.commons.model.PermissionIdentifier
+import io.komune.im.commons.model.RealmId
+import io.komune.im.commons.model.RoleIdentifier
+import io.komune.im.commons.model.SpaceIdentifier
+import io.komune.im.commons.model.UserId
+import io.komune.im.f2.organization.domain.model.Organization
+import io.komune.im.f2.privilege.domain.permission.model.Permission
+import io.komune.im.f2.privilege.domain.role.model.Role
+import io.komune.im.f2.user.domain.model.User
+import org.springframework.stereotype.Component
+import s2.bdd.auth.AuthedUser
+import s2.bdd.data.TestContext
+import s2.bdd.data.TestContextKey
+
+@Component
+class ImTestContext: TestContext() {
+    val apikeyIds = testEntities<TestContextKey, ApiKeyId>("ApiKey")
+    val organizationIds = testEntities<TestContextKey, OrganizationId>("Organization")
+    val permissionIdentifiers = testEntities<TestContextKey, PermissionIdentifier>("Permission")
+    val realmIds = testEntities<TestContextKey, RealmId>("Realm")
+    val roleIdentifiers = testEntities<TestContextKey, RoleIdentifier>("Role")
+    val spaceIdentifiers = testEntities<TestContextKey, SpaceIdentifier>("Space")
+    val userIds = testEntities<TestContextKey, UserId>("User")
+
+    var realmId: RealmId = "im-test"
+
+    private val permanentRoles = ImRole.values()
+        .asSequence()
+        .map(ImRole::identifier)
+        .plus("uma_authorization")
+        .plus("offline_access")
+        .toSet()
+
+    suspend fun permanentRoles(space: String? = realmId) = permanentRoles + "default-roles-${space}"
+
+    final var fetched = FetchContext()
+        private set
+
+    override fun resetEnv() {
+        fetched = FetchContext()
+        realmId = "im-test"
+        // needed to define issuer with realmId
+        authedUser = AuthedUser(
+            id = "",
+            roles = emptyArray(),
+            memberOf = null
+        )
+    }
+
+    class FetchContext {
+        lateinit var apikeys: List<ApiKey>
+        lateinit var organizations: List<Organization>
+        lateinit var permissions: List<Permission>
+        lateinit var roles: List<Role>
+        lateinit var users: List<User>
+    }
+}

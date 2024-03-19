@@ -82,7 +82,7 @@
             },
             "roles": ["tr_orchestrator"],
             "users": [{
-                "email": "connect@smartb.city",
+                "email": "connect@komune.io",
                 "password":  "traceconnect",
                 "firstname": "Admin",
                 "lastname":  "Admin",

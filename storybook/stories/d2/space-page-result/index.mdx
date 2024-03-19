@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@komune-io/g2-documentation'
+import SpacePageResultDesc from './desc.mdx'
+import SpacePageResultVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<SpacePageResultDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={SpacePageResultVisualJson}
+      language={"json"}
+      title={"Result"}
+    />
+  }
+  rightContainerProps={{}}
+/>
