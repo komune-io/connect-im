@@ -42,7 +42,7 @@ connect:
     smtp:
         host: connect-fake-smtp,
         port: 1025,
-        from: noreply@smartb.city,
+        from: noreply@komune.io,
         ssl: false,
         starttls: false,
         auth: false

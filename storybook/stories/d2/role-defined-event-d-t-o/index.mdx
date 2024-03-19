@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@komune-io/g2-documentation'
+import RoleDefinedEventDTODesc from './desc.mdx'
+import RoleDefinedEventDTOVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<RoleDefinedEventDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={RoleDefinedEventDTOVisualJson}
+      language={"json"}
+      title={"Event"}
+    />
+  }
+  rightContainerProps={{}}
+/>

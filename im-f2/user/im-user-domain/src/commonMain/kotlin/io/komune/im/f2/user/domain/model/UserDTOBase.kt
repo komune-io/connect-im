@@ -29,7 +29,7 @@ interface UserDTO {
 
     /**
      * Email address.
-     * @example "john.deuf@smartb.city"
+     * @example "john.deuf@komune.io"
      */
     val email: String
 

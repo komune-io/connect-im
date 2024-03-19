@@ -1,5 +1,5 @@
-import { ThemeContextProvider } from "@smartb/g2-themes";
-import { StorybookCanvas } from "@smartb/g2-storybook-documentation";
+import { ThemeContextProvider } from "@komune-io/g2-themes";
+import { StorybookCanvas } from "@komune-io/g2-storybook-documentation";
 
 import "./default.css";
 
@@ -18,10 +18,7 @@ const defaultTheme = {
 
 export const parameters = {
   docs: {
-    container: StorybookCanvas,
-    // components: {
-    //   Canvas: StorybookCanvas,
-    // },
+    container: StorybookCanvas
   }
 };
 

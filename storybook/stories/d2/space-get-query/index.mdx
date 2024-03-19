@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@komune-io/g2-documentation'
+import SpaceGetQueryDesc from './desc.mdx'
+import SpaceGetQueryVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<SpaceGetQueryDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={SpaceGetQueryVisualJson}
+      language={"json"}
+      title={"Query"}
+    />
+  }
+  rightContainerProps={{}}
+/>
