@@ -1,3 +1,13 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenLocal()
+        mavenCentral()
+        maven { url = uri("https://s01.oss.sonatype.org/service/local/repositories/releases/content") }
+        maven { url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots") }
+    }
+}
+
 
 rootProject.name = "connect-im"
 
