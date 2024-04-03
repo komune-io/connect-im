@@ -72,21 +72,25 @@ docker-keycloak-auth-push:
 lint: lint-libs
 build: build-libs
 test: test-libs
-package: package-libs
+publish: publish-libs
+promote: promote-libs
 
 lint-libs:
 	echo 'No Lint'
 	#./gradlew detekt
 
 build-libs:
-	./gradlew build --scan -x test
+	./gradlew build publishToMavenLocal -x test
 
 test-libs:
 	echo 'No Tests'
 #	./gradlew test
 
-package-libs: build-libs
-	./gradlew publishToMavenLocal publish
+publish-libs:
+	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish --info
+
+promote-libs:
+	VERSION=$(VERSION) PKG_MAVEN_REPO=sonatype_oss ./gradlew publish
 
 version:
 	@VERSION=$$(cat VERSION); \

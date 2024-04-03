@@ -27,6 +27,7 @@ jobs:
       with-chromatic: false
       storybook-dir: storybook
       storybook-static-dir: storybook-static
+      with-setup-npm-github-pkg: 'true'
     secrets:
       NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
