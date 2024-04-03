@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   sec:
-    uses: ./.github/workflows/sec-workflow.yml
+    uses: komune-io/fixers-gradle/.github/workflows/sec-workflow.yml@main
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       PKG_GITHUB_USERNAME: ${{ secrets.PKG_GITHUB_USERNAME }}
