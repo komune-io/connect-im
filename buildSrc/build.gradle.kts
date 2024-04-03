@@ -8,6 +8,14 @@ dependencies {
     implementation("io.komune.fixers.gradle:dependencies:0.17.0-SNAPSHOT")
 }
 
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url = uri("https://s01.oss.sonatype.org/service/local/repositories/releases/content") }
+    maven { url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots") }
+}
+
+
 loadGradleProperties()
 fun Project.loadGradleProperties() {
   File("${project.rootProject.rootDir}/../gradle.properties").inputStream().use { stream ->
