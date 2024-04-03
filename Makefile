@@ -1,3 +1,5 @@
+VERSION = $(shell cat VERSION)
+
 include ./gradle.properties
 
 STORYBOOK_DOCKERFILE	:= infra/docker/storybook/Dockerfile
