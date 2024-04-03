@@ -1079,7 +1079,7 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.15.4", "@babel/runtime@^7.17.8", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.13", "@babel/runtime@^7.20.6", "@babel/runtime@^7.21.0", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.9", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.15.4", "@babel/runtime@^7.17.8", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.13", "@babel/runtime@^7.21.0", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.9", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.24.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.24.0.tgz#584c450063ffda59697021430cb47101b085951e"
   integrity sha512-Chk32uHMg6TnQdvw2e9IlqPpFX/6NLuK0Ys2PqLb7/gL5uFn9mXvK715FGLlOLQrcO4qIkNHkvPGktzzXexsFw==
@@ -1162,7 +1162,7 @@
     source-map "^0.5.7"
     stylis "4.2.0"
 
-"@emotion/cache@*", "@emotion/cache@^11.10.5", "@emotion/cache@^11.11.0":
+"@emotion/cache@*", "@emotion/cache@^11.11.0":
   version "11.11.0"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-11.11.0.tgz#809b33ee6b1cb1a625fef7a45bc568ccd9b8f3ff"
   integrity sha512-P34z9ssTCBi3e9EI1ZsWpNHcfY1r09ZO0rZbRO2ob3ZQMnFI35jB536qoXbkdesr5EUhYi22anuEJuyxifaqAQ==
@@ -1676,25 +1676,14 @@
     vis-data "^7.1.9"
     vis-network "^9.1.9"
 
-"@komune-io/g2-storybook-documentation@^0.5.0-alpha.1":
-  version "0.5.0-alpha.1"
-  resolved "https://npm.pkg.github.com/download/@komune-io/g2-storybook-documentation/0.5.0-alpha.1/516ab9a57be15c89d82081706c5950caac358080#516ab9a57be15c89d82081706c5950caac358080"
-  integrity sha512-eaJhJOrBf6R8/pf83DvKmDRJlu40Zda7fyWCnmn3nhgUEU9+t9ZwlmCIZcjdICSJi/apASbVcTQ8KrZCK4Yu9g==
+"@komune-io/g2-storybook-documentation@^0.5.0-alpha.ef48e24":
+  version "0.5.0-alpha.ef48e24"
+  resolved "https://registry.npmjs.org/@komune-io/g2-storybook-documentation/-/g2-storybook-documentation-0.5.0-alpha.ef48e24.tgz#3602178df5ce54aebe1d982783864fb1b584f5bd"
+  integrity sha512-rzIh2eHFyoZ24WzDcCNXaESnl42sRj/ixAYzA5Hoax4AslXBXm9QviWgb19NRXgsRxKo3btQFdwSXCfv53LGBA==
   dependencies:
-    "@komune-io/g2-themes" "0.5.0-alpha.1"
-    "@komune-io/g2-utils" "0.5.0-alpha.1"
-    "@storybook/addon-docs" "^7.2.1"
-
-"@komune-io/g2-themes@0.5.0-alpha.1":
-  version "0.5.0-alpha.1"
-  resolved "https://npm.pkg.github.com/download/@komune-io/g2-themes/0.5.0-alpha.1/0cbf9d1d2b9f9c8f016323960b45c9581cc09637#0cbf9d1d2b9f9c8f016323960b45c9581cc09637"
-  integrity sha512-kJTfaBIOYwcP7Witd2xQY+Gzvslgr/7v516n6rqBNdVv1ZkpS8WPOI7F2Mlk44ssbW9r71u9FmzyU46ndtRT9g==
-  dependencies:
-    "@emotion/cache" "^11.10.5"
-    "@mantine/hooks" "^4.2.12"
-    ramda "^0.28.0"
-    tinycolor2 "^1.6.0"
-    tss-react "^3.7.0"
+    "@komune-io/g2-themes" "0.5.0-alpha.ef48e24"
+    "@komune-io/g2-utils" "0.5.0-alpha.ef48e24"
+    "@storybook/addon-docs" "^7.6.17"
 
 "@komune-io/g2-themes@0.5.0-alpha.ef48e24":
   version "0.5.0-alpha.ef48e24"
@@ -1706,16 +1695,6 @@
     tinycolor2 "^1.6.0"
     tss-react "^4.9.6"
 
-"@komune-io/g2-utils@0.5.0-alpha.1":
-  version "0.5.0-alpha.1"
-  resolved "https://npm.pkg.github.com/download/@komune-io/g2-utils/0.5.0-alpha.1/d5985b69890c7a57e4b53b089f05d75c3eb98312#d5985b69890c7a57e4b53b089f05d75c3eb98312"
-  integrity sha512-D3Mepcm33Xzk7aX7uw3ud31JuKDQ7IMZsj1BZt5QB2B3VPGuExqpFksMe5QGPhjF31S8JjrPUOLBdVevxYYb9w==
-  dependencies:
-    "@mantine/hooks" "^4.2.12"
-    "@tanstack/react-query" "^4.32.5"
-    i18next "^22.4.11"
-    lodash "^4.17.21"
-
 "@komune-io/g2-utils@0.5.0-alpha.ef48e24":
   version "0.5.0-alpha.ef48e24"
   resolved "https://registry.npmjs.org/@komune-io/g2-utils/-/g2-utils-0.5.0-alpha.ef48e24.tgz#da07b17c5e97dc8850e46e94a2a508f0a194e7f5"
@@ -1726,7 +1705,7 @@
     i18next "^23.10.1"
     lodash "^4.17.21"
 
-"@komune-io/g2@^0.5.0-alpha.1":
+"@komune-io/g2@^0.5.0-alpha.ef48e24":
   version "0.5.0-alpha.ef48e24"
   resolved "https://registry.npmjs.org/@komune-io/g2/-/g2-0.5.0-alpha.ef48e24.tgz#1fa3638ad44c0fb36c21c720cf8d48cb100e33cd"
   integrity sha512-3d20qjDL9f/jCmAG3lJ4MOoNUHFLZfJtsC3Ztf9hxA0YooBLv5cptTjwwLoSyCAQXviYDFEtf04bFK+R/7fgdg==
@@ -1762,11 +1741,6 @@
   integrity sha512-B5DmWGX0F7yDem+Y+fQy4ZIBy/DkTd9TmlqPhCy8MYdC33I3GSv9o/MAnqbeG0tEnS0X1Aw6h5mnqnsVFYpf2w==
   dependencies:
     react-dropzone-esm "15.0.1"
-
-"@mantine/hooks@^4.2.12":
-  version "4.2.12"
-  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-4.2.12.tgz#8dfbd23763959b721f5c5c784b3c412bb7c9823a"
-  integrity sha512-/2GOsgv1tAUFBXOUV0YBZdDZHj3pHN82Sv1oI/hJMjfIT3ZkGeeiJO8Cw9cBcn76t6caP6Czi3hcuKhjz71O+A==
 
 "@mantine/hooks@^7.6.2", "@mantine/hooks@^7.7.0":
   version "7.7.1"
@@ -2402,9 +2376,9 @@
     remark-slug "^6.0.0"
     ts-dedent "^2.0.0"
 
-"@storybook/addon-docs@^7.2.1":
+"@storybook/addon-docs@^7.6.17":
   version "7.6.17"
-  resolved "https://registry.yarnpkg.com/@storybook/addon-docs/-/addon-docs-7.6.17.tgz#ea62be2da8b31df2c80a47cac4c30f66af4d2fbf"
+  resolved "https://registry.npmjs.org/@storybook/addon-docs/-/addon-docs-7.6.17.tgz#ea62be2da8b31df2c80a47cac4c30f66af4d2fbf"
   integrity sha512-FKa4Mdy7nhgvEVZJHpMkHriDzpVHbohn87zv9NCL+Ctjs1iAmzGwxEm0culszyDS1HN2ToVoY0h8CSi2RSSZqA==
   dependencies:
     "@jest/transform" "^29.3.1"
@@ -3401,23 +3375,10 @@
   resolved "https://registry.yarnpkg.com/@swc/types/-/types-0.1.5.tgz#043b731d4f56a79b4897a3de1af35e75d56bc63a"
   integrity sha512-myfUej5naTBWnqOCc/MdVOLVjXUXtIA+NpDrDBKJtLLg2shUjBu3cZmB/85RyitKc55+lUUyl7oRfLOvkr2hsw==
 
-"@tanstack/query-core@4.36.1":
-  version "4.36.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.36.1.tgz#79f8c1a539d47c83104210be2388813a7af2e524"
-  integrity sha512-DJSilV5+ytBP1FbFcEJovv4rnnm/CokuVvrBEtW/Va9DvuJ3HksbXUJEpI0aV1KtuL4ZoO9AVE6PyNLzF7tLeA==
-
 "@tanstack/query-core@5.28.13":
   version "5.28.13"
   resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.28.13.tgz#15c187c23b87a393e91d0fd2ea6dfc22b8a85b75"
   integrity sha512-C3+CCOcza+mrZ7LglQbjeYEOTEC3LV0VN0eYaIN6GvqAZ8Foegdgch7n6QYPtT4FuLae5ALy+m+ZMEKpD6tMCQ==
-
-"@tanstack/react-query@^4.32.5":
-  version "4.36.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.36.1.tgz#acb589fab4085060e2e78013164868c9c785e5d2"
-  integrity sha512-y7ySVHFyyQblPl3J3eQBWpXZkliroki3ARnBKsdJchlgt7yJLRDUcf4B8soufgiYt3pEQIkBWBx1N9/ZPIeUWw==
-  dependencies:
-    "@tanstack/query-core" "4.36.1"
-    use-sync-external-store "^1.2.0"
 
 "@tanstack/react-query@^5.28.6":
   version "5.28.14"
@@ -6476,13 +6437,6 @@ i18next-http-backend@^2.5.0:
   dependencies:
     cross-fetch "4.0.0"
 
-i18next@^22.4.11:
-  version "22.5.1"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-22.5.1.tgz#99df0b318741a506000c243429a7352e5f44d424"
-  integrity sha512-8TGPgM3pAD+VRsMtUMNknRz3kzqwp/gPALrWMsDnmC1mKqJwpWyooQRLMcbTwq8z8YwSmuj+ZYvc+xCuEpkssA==
-  dependencies:
-    "@babel/runtime" "^7.20.6"
-
 i18next@^23.10.1:
   version "23.10.1"
   resolved "https://registry.npmjs.org/i18next/-/i18next-23.10.1.tgz#217ce93b75edbe559ac42be00a20566b53937df6"
@@ -8468,11 +8422,6 @@ ramda@0.29.0:
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.29.0.tgz#fbbb67a740a754c8a4cbb41e2a6e0eb8507f55fb"
   integrity sha512-BBea6L67bYLtdbOqfp8f58fPMqEwx0doL+pAi8TZyp2YWz8R9G8z9x75CZI8W+ftqhFHCpEX2cRnUUXK130iKA==
 
-ramda@^0.28.0:
-  version "0.28.0"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.28.0.tgz#acd785690100337e8b063cab3470019be427cc97"
-  integrity sha512-9QnLuG/kPVgWvMQ4aODhsBUFKOUmnbUnsSXACv+NCQZcHbeb+v8Lodp8OVxtRULN1/xOyYLLaL6npE6dMq5QTA==
-
 ramda@^0.29.1:
   version "0.29.1"
   resolved "https://registry.npmjs.org/ramda/-/ramda-0.29.1.tgz#408a6165b9555b7ba2fc62555804b6c5a2eca196"
@@ -9604,15 +9553,6 @@ tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.4.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
-tss-react@^3.7.0:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/tss-react/-/tss-react-3.7.1.tgz#119647731490f9e7e62c7f6a38a78df981929a4b"
-  integrity sha512-dfWUoxBlKZfIG9UC1A2h02OmcE/Ni0itCmmZu94E9g+KyBhKMHKcsKvUm0bNlRqTmYjXiCgPJDmj5fyc8CSrLg==
-  dependencies:
-    "@emotion/cache" "*"
-    "@emotion/serialize" "*"
-    "@emotion/utils" "*"
-
 tss-react@^4.9.6:
   version "4.9.6"
   resolved "https://registry.npmjs.org/tss-react/-/tss-react-4.9.6.tgz#0d0862599ecf132da63df65bddefbf59bfe8affd"
@@ -9854,11 +9794,6 @@ use-sidecar@^1.1.2:
   dependencies:
     detect-node-es "^1.1.0"
     tslib "^2.0.0"
-
-use-sync-external-store@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
-  integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
