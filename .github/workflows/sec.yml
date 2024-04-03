@@ -1,14 +1,14 @@
-name: Sec
+name: Security Analysis Workflow
 
 on: [push]
 
 jobs:
-  Sec:
+  sec:
     uses: komune-io/fixers-gradle/.github/workflows/sec-workflow.yml@main
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      PKG_MAVEN_USERNAME: ${{ secrets.PKG_MAVEN_USERNAME }}
-      PKG_MAVEN_TOKEN: ${{ secrets.PKG_MAVEN_TOKEN }}
+      PKG_GITHUB_USERNAME: ${{ secrets.PKG_GITHUB_USERNAME }}
+      PKG_GITHUB_TOKEN: ${{ secrets.PKG_GITHUB_TOKEN }}
     permissions:
       contents: write
       pull-requests: read
