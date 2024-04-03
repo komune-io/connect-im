@@ -1,0 +1,22 @@
+import { CodeHighlighter, SegmentedContainer } from '@komune-io/g2-documentation'
+import OrganizationRefDesc from './desc.mdx'
+import OrganizationRefVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<OrganizationRefDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={OrganizationRefVisualJson}
+      language={"json"}
+      title={"OrganizationRef"}
+    />
+  }
+  rightContainerProps={{}}
+/>
+
+<div
+  class={"spacer"}
+/>
+
+

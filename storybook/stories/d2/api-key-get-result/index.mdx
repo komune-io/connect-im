@@ -1,0 +1,16 @@
+import ApiKeyGetResultDesc from './desc.mdx'
+import ApiKeyGetResultVisualJson from './visualJson.json'
+import { CodeHighlighter, SegmentedContainer } from '@komune-io/g2-documentation'
+
+<SegmentedContainer
+  leftElement={<ApiKeyGetResultDesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={ApiKeyGetResultVisualJson}
+      language={"json"}
+      title={"Result"}
+    />
+  }
+  rightContainerProps={{}}
+/>

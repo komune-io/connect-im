@@ -16,13 +16,13 @@ IM interacts with Keycloak using [Keycloak’s Admin Client](https://mvnreposito
 
 # Getting started
 
-IM works with a running Keycloak instance. It can easily be deployed as a docker container, within a docker-compose file: ([link to docker repo](https://hub.docker.com/r/smartbcity/i2-gateway))
+IM works with a running Keycloak instance. It can easily be deployed as a docker container, within a docker-compose file: ([link to docker repo](https://hub.docker.com/r/komune-io/i2-gateway))
 
 ```yaml
 version: "3.7"
 services:
   im-gateway:
-    image: smartbcity/im-gateway:${VERSION}
+    image: komune-io/im-gateway:${VERSION}
     container_name: im-gateway
     environment:
       server_port: 8004
@@ -39,25 +39,25 @@ Functionalities are divided into 3 entities: User, Organization and Role.
 
 If you are in a java environment all the necessary models and commands for an entity can be found here:
 
-- [User SDK](https://mvnrepository.com/artifact/city.smartb.im/user-domain)
-- [Organization SDK](https://mvnrepository.com/artifact/city.smartb.im/organization-domain)
-- [Role SDK](https://mvnrepository.com/artifact/city.smartb.im/role-domain)
+- [User SDK](https://mvnrepository.com/artifact/io.komune.im/user-domain)
+- [Organization SDK](https://mvnrepository.com/artifact/io.komune.im/organization-domain)
+- [Role SDK](https://mvnrepository.com/artifact/io.komune.im/role-domain)
 
 ```kotlin
-implementation("city.smartb.im:user-domain:${Versions.im}")
-implementation("city.smartb.im:organization-domain:${Versions.im}")
-implementation("city.smartb.im:role-domain:${Versions.im}")
+implementation("io.komune.im:user-domain:${Versions.im}")
+implementation("io.komune.im:organization-domain:${Versions.im}")
+implementation("io.komune.im:role-domain:${Versions.im}")
 ```
 
 SDK that sugarcoats the http requests are also available:
-- [User Client](https://mvnrepository.com/artifact/city.smartb.im/user-client)
-- [OrganizationClient](https://mvnrepository.com/artifact/city.smartb.im/organization-client)
-- [Role Client](https://mvnrepository.com/artifact/city.smartb.im/role-client)
+- [User Client](https://mvnrepository.com/artifact/io.komune.im/user-client)
+- [OrganizationClient](https://mvnrepository.com/artifact/io.komune.im/organization-client)
+- [Role Client](https://mvnrepository.com/artifact/io.komune.im/role-client)
 
 ```kotlin
-implementation("city.smartb.im:user-client:${Versions.im}")
-implementation("city.smartb.im:organization-client:${Versions.im}")
-implementation("city.smartb.im:role-client:${Versions.im}")
+implementation("io.komune.im:user-client:${Versions.im}")
+implementation("io.komune.im:organization-client:${Versions.im}")
+implementation("io.komune.im:role-client:${Versions.im}")
 ```
 
 The client provided in the SDK uses Ktor under the hood and should be a singleton in your application in order to prevent any memory leak. Ex:
@@ -129,7 +129,7 @@ i2:
 version: "3.7"
 services:
   im-gateway:
-    image: smartbcity/im-gateway:${VERSION}
+    image: komune-io/im-gateway:${VERSION}
     container_name: im-gateway
     environment:
       server_port: 8004

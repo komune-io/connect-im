@@ -1,12 +1,12 @@
-import city.smartb.gradle.dependencies.FixersDependencies
-import city.smartb.gradle.dependencies.FixersPluginVersions
-import city.smartb.gradle.dependencies.FixersVersions
-import city.smartb.gradle.dependencies.Scope
-import city.smartb.gradle.dependencies.add
+import io.komune.gradle.dependencies.FixersDependencies
+import io.komune.gradle.dependencies.FixersPluginVersions
+import io.komune.gradle.dependencies.FixersVersions
+import io.komune.gradle.dependencies.Scope
+import io.komune.gradle.dependencies.add
 
 object Framework {
 	val fixers = FixersPluginVersions.fixers
-	val connect = "0.15.0-RC1"
+	val connect = "0.15.0-SNAPSHOT"
 }
 
 object PluginVersions {
@@ -63,11 +63,11 @@ object Dependencies {
             )
 		}
 		fun f2(scope: Scope) = scope.add(
-			"city.smartb.f2:f2-spring-boot-starter-function-http:${Versions.f2}"
+			"io.komune.f2:f2-spring-boot-starter-function-http:${Versions.f2}"
 		)
 
 		fun f2Function(scope: Scope) = scope.add(
-			"city.smartb.f2:f2-spring-boot-starter-function:${Versions.f2}"
+			"io.komune.f2:f2-spring-boot-starter-function:${Versions.f2}"
 		)
 
 		fun slf4j(scope: Scope) = scope.add(
@@ -76,16 +76,16 @@ object Dependencies {
 
 		object Fs {
 			fun client(scope: Scope) = scope.add(
-				"city.smartb.fs:fs-file-client:${Versions.fs}"
+				"io.komune.fs:fs-file-client:${Versions.fs}"
 			)
 		}
 
 		fun f2Auth(scope: Scope) = scope.add(
-//			"city.smartb.i2:i2-spring-boot-starter-auth:${Versions.i2}"
+//			"io.komune.i2:i2-spring-boot-starter-auth:${Versions.i2}"
 		)
 
 		fun i2AuthClient(scope: Scope) = scope.add(
-//			"city.smartb.i2:keycloak-auth-client:${Versions.i2}"
+//			"io.komune.i2:keycloak-auth-client:${Versions.i2}"
 		)
 
 		fun ktor(scope: Scope) = scope.add(
@@ -98,7 +98,6 @@ object Dependencies {
 
 		fun cucumber(scope: Scope) = FixersDependencies.Jvm.Test.cucumber(scope)
 			.add(
-//                "city.smartb.s2:s2-test-bdd:${Versions.s2}",
 				"io.cucumber:cucumber-spring:${FixersVersions.Test.cucumber}",
 				"org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}"
 			)
@@ -130,12 +129,12 @@ object Dependencies {
 
 	object Mpp {
 		fun f2(scope: Scope) = scope.add(
-			"city.smartb.f2:f2-dsl-cqrs:${Versions.f2}",
-			"city.smartb.f2:f2-dsl-function:${Versions.f2}"
+			"io.komune.f2:f2-dsl-cqrs:${Versions.f2}",
+			"io.komune.f2:f2-dsl-function:${Versions.f2}"
 		)
 
         fun f2Client(scope: Scope) = scope.add(
-            "city.smartb.f2:f2-client-ktor:${Versions.f2}",
+            "io.komune.f2:f2-client-ktor:${Versions.f2}",
             "io.ktor:ktor-client-auth:${Versions.ktor}"
         )
 
@@ -148,7 +147,7 @@ object Dependencies {
 			"io.ktor:ktor-client-serialization:${Versions.ktor}"
 		)
 		fun s2(scope: Scope) = scope.add(
-			"city.smartb.s2:s2-automate-dsl:${Versions.s2}"
+			"io.komune.s2:s2-automate-dsl:${Versions.s2}"
 		)
 	}
 }

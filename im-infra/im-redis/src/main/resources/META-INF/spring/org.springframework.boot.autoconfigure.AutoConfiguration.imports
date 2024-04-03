@@ -1,2 +1,2 @@
-city.smartb.im.infra.redis.config.RedisCacheAutoconfigure
-city.smartb.im.infra.redis.config.RedisNoCacheAutoconfigure
+io.komune.im.infra.redis.config.RedisCacheAutoconfigure
+io.komune.im.infra.redis.config.RedisNoCacheAutoconfigure

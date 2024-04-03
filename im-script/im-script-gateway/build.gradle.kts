@@ -1,6 +1,6 @@
 plugins {
     id("org.springframework.boot")
-    id("city.smartb.fixers.gradle.kotlin.jvm")
+    id("io.komune.fixers.gradle.kotlin.jvm")
     kotlin("plugin.spring")
 //    id("org.graalvm.buildtools.native")
 }
@@ -14,5 +14,5 @@ dependencies {
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
-    imageName.set("smartbcity/im-script:${this.project.version}")
+    imageName.set("komune-io/im-script:${this.project.version}")
 }

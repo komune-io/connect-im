@@ -1,0 +1,16 @@
+import { CodeHighlighter, SegmentedContainer } from '@komune-io/g2-documentation'
+import SpaceCreateCommandDTODesc from './desc.mdx'
+import SpaceCreateCommandDTOVisualJson from './visualJson.json'
+
+<SegmentedContainer
+  leftElement={<SpaceCreateCommandDTODesc />}
+  leftContainerProps={{}}
+  rightElement={
+    <CodeHighlighter
+      object={SpaceCreateCommandDTOVisualJson}
+      language={"json"}
+      title={"Command"}
+    />
+  }
+  rightContainerProps={{}}
+/>

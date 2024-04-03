@@ -1,3 +1,3 @@
-city.smartb.im.core.user.api.service.UserRepresentationTransformer
-city.smartb.im.core.user.api.UserCoreAggregateService
-city.smartb.im.core.user.api.UserCoreFinderService
+io.komune.im.core.user.api.service.UserRepresentationTransformer
+io.komune.im.core.user.api.UserCoreAggregateService
+io.komune.im.core.user.api.UserCoreFinderService

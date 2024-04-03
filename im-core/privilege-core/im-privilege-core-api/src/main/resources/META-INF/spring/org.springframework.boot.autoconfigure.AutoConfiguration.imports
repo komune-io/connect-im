@@ -1,2 +1,2 @@
-city.smartb.im.core.privilege.api.PrivilegeCoreAggregateService
-city.smartb.im.core.privilege.api.PrivilegeCoreFinderService
+io.komune.im.core.privilege.api.PrivilegeCoreAggregateService
+io.komune.im.core.privilege.api.PrivilegeCoreFinderService

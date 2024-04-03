@@ -1,6 +1,6 @@
 plugins {
-    id("city.smartb.fixers.gradle.kotlin.mpp")
-    id("city.smartb.fixers.gradle.publish")
+    id("io.komune.fixers.gradle.kotlin.mpp")
+    id("io.komune.fixers.gradle.publish")
 }
 
 dependencies {
