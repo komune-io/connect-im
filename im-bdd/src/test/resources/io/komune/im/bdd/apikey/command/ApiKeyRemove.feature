@@ -4,7 +4,7 @@ Feature: ApiKeyRemove
     Given I am authenticated as admin
     And An organization is created:
       | identifier | name   |
-      | o1         | SmartB |
+      | o1         | Komune |
     And Some roles are defined:
       | identifier | permissions     | targets |
       | r_writer   | im_apikey_write | USER    |

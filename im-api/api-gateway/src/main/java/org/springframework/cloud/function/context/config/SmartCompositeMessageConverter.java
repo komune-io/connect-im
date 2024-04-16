@@ -39,7 +39,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * FIX SMARTB - https://github.com/spring-cloud/spring-cloud-function/issues/901.
+ * FIX Komune - https://github.com/spring-cloud/spring-cloud-function/issues/901.
  * Try to return an error instead of log a warnin when an object can't be parsed
  * @author Oleg Zhurakousky
  * @author Salvatore Bernardo
@@ -67,12 +67,12 @@ public class SmartCompositeMessageConverter extends CompositeMessageConverter {
                     return result;
                 }
             }
-            // SmartB Modification
+            // Komune Modification
             // force message conversion error propagation
             catch (ResponseStatusException e) {
                 throw e;
             }
-            // SmartB End Of Modification
+            // Komune End Of Modification
             catch (Exception e) {
                 if (logger.isWarnEnabled()) {
                     logger.warn("Failure during type conversion by " + converter + ". Will try the next converter.", e);

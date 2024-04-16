@@ -35,7 +35,7 @@ interface SpacePageQueryDTO: Query {
 data class SpacePageQuery(
 	/**
 	 * Search string filtering on the name of the space.
-	 * @example "SmartB"
+	 * @example "Komune"
 	 */
 	override val search: String? = null,
     /**

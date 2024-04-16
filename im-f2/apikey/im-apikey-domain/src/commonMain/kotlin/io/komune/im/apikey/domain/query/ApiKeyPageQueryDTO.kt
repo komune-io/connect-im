@@ -26,7 +26,7 @@ typealias ApiKeyPageFunction = F2Function<ApiKeyPageQuery, ApiKeyPageResult>
 interface ApiKeyPageQueryDTO: Query {
     /**
      * Search string filtering on the name of the apikey.
-     * @example "SmartB"
+     * @example "Komune"
      */
 	val search: String?
 	val organizationId: OrganizationId?

@@ -12,7 +12,7 @@ It allows you to create and manage: Users, Organizations and Roles. These Users 
 
 IM interacts with Keycloak using [Keycloak’s Admin Client](https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client). IM also exposes entrypoints to allow communications with any applications.
 
-<img src="https://docs.smartb.city/s3/docs/im/diagrams/architecture.png" alt="drawing" width="300"/>
+<img src="https://docs.komune.io/s3/docs/im/diagrams/architecture.png" alt="drawing" width="300"/>
 
 # Getting started
 
@@ -97,8 +97,8 @@ Properties prefix: `i2.issuers[]`
 
 | Property                   | Description                             | Example                                  | Default                                |
 |----------------------------|-----------------------------------------|------------------------------------------|----------------------------------------|
-| uri                        | Issuer URI accepted by IM               | https://auth.smart-b.io/auth/realms/development | http://keycloak-it:8080/realms/test |
-| authUrl                    | Keycloak server URL                     | https://auth.smart-b.io/auth             | http://keycloak-it:8080             |
+| uri                        | Issuer URI accepted by IM               | https://auth.komune.io/auth/realms/development | http://keycloak-it:8080/realms/test |
+| authUrl                    | Keycloak server URL                     | https://auth.komune.io/auth             | http://keycloak-it:8080             |
 | realm                      | Keycloak realm to authenticate to       | development                              | test                                   |
 | clientId     | Client ID used to authenticate with     | smartclient                              | i2-api                                 |
 | clientSecret | Client Secret used to authenticate with | smartsecret                              | xxxxx                                  |

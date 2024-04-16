@@ -29,7 +29,7 @@ interface OrganizationDTO {
 
     /**
      * Official name of the organization.
-     * @example "SmartB"
+     * @example "Komune"
      */
     val name: String
 
@@ -46,13 +46,13 @@ interface OrganizationDTO {
 
     /**
      * Website of the organization.
-     * @example "https://smartb.city/"
+     * @example "https://komune.io/"
      */
     val website: String?
 
     /**
      * Platform-specific attributes assigned to the organization.
-     * @example { "otherWebsite": "https://smartb.network" }
+     * @example { "otherWebsite": "https://komune.io" }
      */
     val attributes: Map<String, String>
 
@@ -63,7 +63,7 @@ interface OrganizationDTO {
 
     /**
      * URL pointing to the logo of the organization.
-     * @example "https://d1muf25xaso8hp.cloudfront.net/https%3A%2F%2Ff9a8147b117eae8242d081b049108349.cdn.bubble.io%2Ff1673342519429x701902957290415400%2Fsmartb-logo.png?w=192&h=52&auto=compress&dpr=2&fit=max"
+     * @example "https://d1muf25xaso8hp.cloudfront.net/https%3A%2F%2Ff9a8147b117eae8242d081b049108349.cdn.bubble.io%2Ff1673342519429x701902957290415400%2Fkomune-logo.png?w=192&h=52&auto=compress&dpr=2&fit=max"
      */
     val logo: String?
 

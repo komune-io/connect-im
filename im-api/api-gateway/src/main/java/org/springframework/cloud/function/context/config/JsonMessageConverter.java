@@ -121,7 +121,7 @@ public class JsonMessageConverter extends AbstractMessageConverter {
 			try {
 				return this.jsonMapper.fromJson(message.getPayload(), convertToType);
 			}
-			// SmartB Modification
+			// Komune Modification
 			// force message conversion error propagation
 			catch (IllegalStateException e) {
 				if ("application/json".equals(message.getHeaders().get("Content-Type")) && e.getCause() instanceof JsonMappingException) {
@@ -129,7 +129,7 @@ public class JsonMessageConverter extends AbstractMessageConverter {
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error parsing json", (Throwable) cause);
 				}
 			}
-			// SmartB End Of Modification
+			// Komune End Of Modification
 			catch (Exception e) {
 				if (message.getPayload() instanceof byte[] && String.class.isAssignableFrom(targetClass)) {
 					return new String((byte[]) message.getPayload(), StandardCharsets.UTF_8);
