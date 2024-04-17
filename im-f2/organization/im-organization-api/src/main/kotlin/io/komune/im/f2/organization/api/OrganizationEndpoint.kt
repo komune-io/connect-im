@@ -20,6 +20,7 @@ import io.komune.im.f2.organization.domain.query.OrganizationRefListResult
 import io.komune.im.f2.organization.lib.OrganizationAggregateService
 import io.komune.im.f2.organization.lib.OrganizationFinderService
 import f2.dsl.cqrs.page.OffsetPagination
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.stereotype.Service
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
-import s2.spring.utils.logger.Logger
 
 /**
  * @d2 service
@@ -41,7 +41,7 @@ class OrganizationEndpoint(
     private val organizationFinderService: OrganizationFinderService,
     private val organizationPoliciesEnforcer: OrganizationPoliciesEnforcer,
 ) {
-    private val logger by Logger()
+    private val logger = LoggerFactory.getLogger(OrganizationEndpoint::class.java)
 
     /**
      * Fetch an Organization by its ID.

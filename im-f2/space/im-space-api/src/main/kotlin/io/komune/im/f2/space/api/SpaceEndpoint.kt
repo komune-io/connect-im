@@ -10,9 +10,9 @@ import io.komune.im.f2.space.domain.query.SpaceGetResult
 import io.komune.im.f2.space.domain.query.SpacePageFunction
 import io.komune.im.f2.space.lib.SpaceAggregateService
 import io.komune.im.f2.space.lib.SpaceFinderService
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service
-import s2.spring.utils.logger.Logger
 
 /**
  * @d2 service
@@ -24,7 +24,7 @@ class SpaceEndpoint(
     private val spaceFinderService: SpaceFinderService,
     private val spacePoliciesEnforcer: SpacePoliciesEnforcer,
 ): SpaceApi {
-    private val logger by Logger()
+    private val logger = LoggerFactory.getLogger(SpaceEndpoint::class.java)
 
     @Bean
     override fun spaceGet(): SpaceGetFunction = f2Function { query ->

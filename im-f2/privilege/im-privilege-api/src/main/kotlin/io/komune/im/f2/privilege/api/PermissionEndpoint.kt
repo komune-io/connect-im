@@ -10,9 +10,9 @@ import io.komune.im.f2.privilege.domain.permission.query.PermissionListFunction
 import io.komune.im.f2.privilege.domain.permission.query.PermissionListResult
 import io.komune.im.f2.privilege.lib.PrivilegeAggregateService
 import io.komune.im.f2.privilege.lib.PrivilegeFinderService
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import s2.spring.utils.logger.Logger
 
 @Configuration
 class PermissionEndpoint(
@@ -20,7 +20,7 @@ class PermissionEndpoint(
     private val privilegeFinderService: PrivilegeFinderService,
     private val privilegePoliciesEnforcer: PrivilegePoliciesEnforcer
 ): PermissionApi {
-    private val logger by Logger()
+    private val logger = LoggerFactory.getLogger(PermissionEndpoint::class.java)
 
     @Bean
     override fun permissionGet(): PermissionGetFunction = f2Function { query ->

@@ -11,9 +11,9 @@ import io.komune.im.f2.privilege.domain.role.query.RoleListFunction
 import io.komune.im.f2.privilege.domain.role.query.RoleListResult
 import io.komune.im.f2.privilege.lib.PrivilegeAggregateService
 import io.komune.im.f2.privilege.lib.PrivilegeFinderService
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import s2.spring.utils.logger.Logger
 
 @Configuration
 class RoleEndpoint(
@@ -21,7 +21,7 @@ class RoleEndpoint(
     private val privilegeFinderService: PrivilegeFinderService,
     private val privilegePoliciesEnforcer: PrivilegePoliciesEnforcer
 ): RoleApi {
-    private val logger by Logger()
+    private val logger = LoggerFactory.getLogger(RoleEndpoint::class.java)
 
     @Bean
     override fun roleGet(): RoleGetFunction = f2Function { query ->

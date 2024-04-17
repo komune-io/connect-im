@@ -23,9 +23,9 @@ import io.komune.im.core.user.domain.command.UserCoreDefineCommand
 import io.komune.im.core.user.domain.model.UserModel
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import org.springframework.stereotype.Service
-import s2.spring.utils.logger.Logger
 import java.text.Normalizer
 import java.util.UUID
+import org.slf4j.LoggerFactory
 
 @Service
 class ApiKeyAggregateService(
@@ -37,7 +37,7 @@ class ApiKeyAggregateService(
     private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val userCoreAggregateService: UserCoreAggregateService
 ) {
-    private val logger by Logger()
+    private val logger = LoggerFactory.getLogger(ApiKeyAggregateService::class.java)
 
     @Suppress("LongMethod")
     suspend fun create(
