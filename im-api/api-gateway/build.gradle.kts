@@ -18,6 +18,4 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")
 }
 
-tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
-	imageName.set("komune-io/im-gateway:${this.project.version}")
-}
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {}
