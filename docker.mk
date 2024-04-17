@@ -19,15 +19,13 @@ KEYCLOAK_IMG        := ${KEYCLOAK_NAME}:${VERSION}
 KEYCLOAK_AUTH_NAME	:= ${DOCKER_REPOSITORY}komune-io/im-keycloak-auth
 KEYCLOAK_AUTH_IMG   := ${KEYCLOAK_AUTH_NAME}:${VERSION}
 
+.PHONY: lint build test publish promote
+
 lint: docker-keycloak-lint
-
 build: docker-im-gateway-build docker-script-build docker-keycloak-build docker-keycloak-auth-build
-
 test:
 	echo 'No Tests'
-
 publish: docker-im-gateway-push docker-script-push docker-keycloak-push docker-keycloak-auth-push
-
 promote:
 	echo 'No Tests'
 
@@ -62,11 +60,3 @@ docker-keycloak-auth-build:
 
 docker-keycloak-auth-push:
 	@docker push ${KEYCLOAK_AUTH_IMG}
-
-## New
-version:
-	@VERSION=$$(cat VERSION); \
-	echo "$$VERSION"
-
-## DOCKER-COMPOSE DEV ENVIRONMENT
-include infra/docker-compose/dev-compose.mk

@@ -1,47 +1,27 @@
 VERSION = $(shell cat VERSION)
 
-include ./gradle.properties
+.PHONY: lint build test publish promote
 
 ## New
-lint: lint-libs
-build: build-libs
-test: test-libs
-publish: publish-libs
-promote: promote-libs
+lint:
+	@make -f libs.mk lint
+	@make -f docker.mk lint
 
-lint-libs:
-	echo 'No Lint'
-	#./gradlew detekt
+build:
+	@make -f libs.mk build
+	@make -f docker.mk build
 
-build-libs:
-	./gradlew build publishToMavenLocal -x test
+test:
+	@make -f libs.mk test
+	@make -f docker.mk test
 
-test-libs:
-	echo 'No Tests'
-#	./gradlew test
+publish:
+	@make -f libs.mk publish
+	@make -f docker.mk publish
 
-publish-libs:
-	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish --info
-
-promote-libs:
-	VERSION=$(VERSION) PKG_MAVEN_REPO=sonatype_oss ./gradlew publish
-
-version:
-	@VERSION=$$(cat VERSION); \
-	echo "$$VERSION"
-
-help:
-	@echo '/////////////////////////////////'
-	@echo 'Build tasks:'
-	@echo 'Usage: make [TARGET]'
-	@echo 'Targets:'
-	@echo '  libs: Build kotlin libraries'
-	@echo '  docker: Build and push docker images'
-	@echo '  docs: Build and push docs'
-	@echo ''
-	@echo '/////////////////////////////////'
-	@echo 'Dev Environment tasks: make dev-help'
-	@make -s dev-help
+promote:
+	@make -f libs.mk promote
+	@make -f docker.mk promote
 
 ## DOCKER-COMPOSE DEV ENVIRONMENT
 include infra/docker-compose/dev-compose.mk
