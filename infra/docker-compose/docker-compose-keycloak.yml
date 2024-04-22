@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   im-keycloak:
-    image: komune-io/im-keycloak:next
+    image: ghcr.io/komune-io/im-keycloak:${VERSION_IM}
     container_name: ${KC_HOSTNAME}
     environment:
       KC_DB_URL: 'jdbc:postgresql://im-keycloak-postgres/im-keycloak'

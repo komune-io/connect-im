@@ -29,8 +29,8 @@ import io.komune.im.script.space.config.config.SpaceConfigProperties
 import io.komune.im.script.space.config.config.UserData
 import f2.spring.exception.ConflictException
 import kotlinx.coroutines.withContext
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import s2.spring.utils.logger.Logger
 
 @Service
 class SpaceConfigScript (
@@ -45,7 +45,7 @@ class SpaceConfigScript (
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService
 ) {
-    private val logger by Logger()
+    private val logger = LoggerFactory.getLogger(SpaceConfigScript::class.java)
 
     suspend fun run() {
         val jsonPath = imScriptSpaceProperties.jsonConfig ?: return

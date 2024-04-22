@@ -100,7 +100,7 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
                 postalCode = "12345",
                 city = "city"
             ),
-            website = entry?.get("website") ?: "https://smartb.network",
+            website = entry?.get("website") ?: "https://komune.io",
             roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
             parentOrganizationId = entry?.get("parentOrganizationId"),
             attributes = organizationAttributesParams(entry),

@@ -23,7 +23,7 @@ typealias OrganizationPageFunction = F2Function<OrganizationPageQuery, Organizat
 interface OrganizationPageQueryDTO: Query {
     /**
      * Search string filtering on the name of the organization.
-     * @example "SmartB"
+     * @example "Komune"
      */
 	val name: String?
 

@@ -28,10 +28,7 @@ dependencies {
 	Dependencies.Mpp.s2(::implementation)
 	Dependencies.Jvm.cucumber(::implementation)
 
-    implementation("io.komune.s2:s2-test-bdd:${Versions.s2}") {
-        exclude(group = "io.komune.i2", module = "i2-spring-boot-starter-auth")
-    }
-//	Dependencies.Jvm.i2AuthClient(::implementation)
+    implementation("io.komune.s2:s2-test-bdd:${Versions.s2}")
 
 	Dependencies.Jvm.testcontainers(::testImplementation)
 

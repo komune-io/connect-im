@@ -20,11 +20,11 @@ import io.komune.im.f2.user.domain.query.UserPageResult
 import io.komune.im.f2.user.lib.UserAggregateService
 import io.komune.im.f2.user.lib.UserFinderService
 import f2.dsl.cqrs.page.OffsetPagination
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import s2.spring.utils.logger.Logger
 
 @RestController
 @RequestMapping
@@ -34,7 +34,7 @@ class UserEndpoint(
     private val userFinderService: UserFinderService,
     private val policiesEnforcer: UserPoliciesEnforcer,
 ): UserApi {
-    private val logger by Logger()
+    private val logger = LoggerFactory.getLogger(UserEndpoint::class.java)
 
     @Bean
     override fun userGet(): UserGetFunction = f2Function { query ->

@@ -13,6 +13,4 @@ dependencies {
     Dependencies.Jvm.f2(::implementation)
 }
 
-tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
-    imageName.set("komune-io/im-script:${this.project.version}")
-}
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {}

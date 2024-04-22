@@ -9,11 +9,11 @@ import io.komune.im.apikey.lib.ApiKeyAggregateService
 import io.komune.im.apikey.lib.ApiKeyFinderService
 import io.komune.im.commons.auth.policies.f2Function
 import f2.dsl.cqrs.page.OffsetPagination
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import s2.spring.utils.logger.Logger
 
 /**
  * @d2 service
@@ -27,7 +27,7 @@ class ApiKeyEndpoint(
     private val apiKeyFinderService: ApiKeyFinderService,
     private val apikeyPoliciesEnforcer: ApiKeyPoliciesEnforcer,
 ) {
-    private val logger by Logger()
+    private val logger = LoggerFactory.getLogger(ApiKeyEndpoint::class.java)
 
     /**
      * Fetch an Apikey by its ID.

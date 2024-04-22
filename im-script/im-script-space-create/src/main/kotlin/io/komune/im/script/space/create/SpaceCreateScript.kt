@@ -20,8 +20,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
-import s2.spring.utils.logger.Logger
 import java.util.UUID
+import org.slf4j.LoggerFactory
 
 @Service
 class SpaceCreateScript(
@@ -34,7 +34,7 @@ class SpaceCreateScript(
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService,
 ) {
-    private val logger by Logger()
+    private val logger = LoggerFactory.getLogger(SpaceCreateScript::class.java)
 
     suspend fun run() {
         val jsonPath = imScriptSpaceProperties.jsonCreate ?: return

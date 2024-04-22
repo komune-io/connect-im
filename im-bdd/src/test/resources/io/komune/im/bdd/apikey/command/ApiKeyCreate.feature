@@ -4,7 +4,7 @@ Feature: ApiKeyCreate
     Given I am authenticated as admin
     And An organization is created:
       | identifier | name   |
-      | o1         | SmartB |
+      | o1         | Komune |
     And Some roles are defined:
       | identifier | permissions     | targets |
       | r_writer   | im_apikey_write | USER    |
@@ -19,7 +19,7 @@ Feature: ApiKeyCreate
       | o1           | ze key | r1    |
     Then The API key should be created:
       | keyIdentifier            | organization | name   |
-      | tr-smartb-ze-key-api-key | o1           | ze key |
+      | tr-komune-ze-key-api-key | o1           | ze key |
 
   Scenario: I want to create an API key with a secret
     Given A role is defined:
@@ -30,7 +30,7 @@ Feature: ApiKeyCreate
       | o1           | ze key | r1    | verySecret |
     Then The API key should be created:
       | keyIdentifier            | organization | name   | secret     |
-      | tr-smartb-ze-key-api-key | o1           | ze key | verySecret |
+      | tr-komune-ze-key-api-key | o1           | ze key | verySecret |
 
   Scenario: I want to receive an error when creating an API key for an organization that does not exist
     When I create an API key:

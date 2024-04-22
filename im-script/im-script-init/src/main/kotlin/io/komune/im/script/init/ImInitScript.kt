@@ -11,8 +11,8 @@ import io.komune.im.script.core.model.AppClient
 import io.komune.im.script.core.service.ClientInitService
 import io.komune.im.script.init.config.ImInitProperties
 import kotlinx.coroutines.withContext
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import s2.spring.utils.logger.Logger
 
 @Service
 class ImInitScript(
@@ -21,7 +21,7 @@ class ImInitScript(
     private val clientCoreFinderService: ClientCoreFinderService,
     private val imScriptInitProperties: ImScriptInitProperties,
 ) {
-    private val logger by Logger()
+    private val logger = LoggerFactory.getLogger(ImInitScript::class.java)
 
     suspend fun run() {
         val jsonPath = imScriptInitProperties.json ?: return
