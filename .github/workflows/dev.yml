@@ -15,12 +15,29 @@ jobs:
       contents: read
       packages: write
     with:
-      with-docker-registry-login: 'true'
+      make-file: 'libs.mk'
     secrets:
       GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
       GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
-      PKG_GITHUB_USERNAME: ${{ secrets.PKG_GITHUB_USERNAME }}
-      PKG_GITHUB_TOKEN: ${{ secrets.PKG_GITHUB_TOKEN }}
+      PKG_GITHUB_USERNAME: ${{ github.actor }}
+      PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PKG_SONATYPE_OSS_USERNAME: ${{ secrets.PKG_SONATYPE_OSS_USERNAME }}
+      PKG_SONATYPE_OSS_TOKEN: ${{ secrets.PKG_SONATYPE_OSS_TOKEN }}
+
+  docker:
+    uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@main
+    permissions:
+      contents: read
+      packages: write
+    with:
+      make-file: 'docker.mk'
+      with-docker-registry-login: 'true'
+      docker-buildx-platform: linux/amd64,linux/arm64
+    secrets:
+      GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+      GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
+      PKG_GITHUB_USERNAME: ${{ github.actor }}
+      PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PKG_SONATYPE_OSS_USERNAME: ${{ secrets.PKG_SONATYPE_OSS_USERNAME }}
       PKG_SONATYPE_OSS_TOKEN: ${{ secrets.PKG_SONATYPE_OSS_TOKEN }}
 
