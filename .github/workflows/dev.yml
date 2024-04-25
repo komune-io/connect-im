@@ -38,7 +38,7 @@ jobs:
       PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       DOCKER_PUBLISH_USERNAME: ${{ github.actor }}
       DOCKER_PUBLISH_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      DOCKER_PROMOTE_USERNAME: ${{ github.DOCKER_IO_USERNAME }}
+      DOCKER_PROMOTE_USERNAME: ${{ secrets.DOCKER_IO_USERNAME }}
       DOCKER_PROMOTE_PASSWORD: ${{ secrets.DOCKER_IO_PASSWORD }}
 
 
