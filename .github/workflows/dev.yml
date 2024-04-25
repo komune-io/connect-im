@@ -10,7 +10,7 @@ on:
 
 jobs:
   dev:
-    uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@88ca18652e8b4e832875f0f44604b04ddca7437b
+    uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@main
     permissions:
       contents: read
       packages: write
@@ -25,7 +25,7 @@ jobs:
       PKG_SONATYPE_OSS_TOKEN: ${{ secrets.PKG_SONATYPE_OSS_TOKEN }}
 
   docker:
-    uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@88ca18652e8b4e832875f0f44604b04ddca7437b
+    uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@main
     permissions:
       contents: read
       packages: write
