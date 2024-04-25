@@ -25,7 +25,7 @@ jobs:
       PKG_SONATYPE_OSS_TOKEN: ${{ secrets.PKG_SONATYPE_OSS_TOKEN }}
 
   docker:
-    uses: ./.github/workflows/sec-workflow.yml
+    uses: ./.github/workflows/make-docker-workflow.yml
     permissions:
       contents: read
       packages: write

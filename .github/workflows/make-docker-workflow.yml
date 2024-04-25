@@ -1,4 +1,4 @@
-name: Reusable JVM Development Workflow
+name: Reusable Docker Development Workflow
 
 on:
   workflow_call:
