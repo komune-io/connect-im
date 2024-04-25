@@ -22,7 +22,8 @@ KEYCLOAK_AUTH_IMG   := ${KEYCLOAK_AUTH_NAME}:${VERSION}
 .PHONY: lint build test publish promote
 
 lint: docker-keycloak-lint
-build: docker-im-gateway-build docker-script-build docker-keycloak-build docker-keycloak-auth-build
+#build: docker-im-gateway-build docker-script-build docker-keycloak-build docker-keycloak-auth-build
+build: docker-keycloak-build
 
 test:
 	echo 'No Tests'

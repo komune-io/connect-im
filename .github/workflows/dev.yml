@@ -15,6 +15,22 @@ jobs:
       contents: read
       packages: write
     with:
+      make-file: 'libs.mk'
+    secrets:
+      GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+      GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
+      PKG_GITHUB_USERNAME: ${{ github.actor }}
+      PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PKG_SONATYPE_OSS_USERNAME: ${{ secrets.PKG_SONATYPE_OSS_USERNAME }}
+      PKG_SONATYPE_OSS_TOKEN: ${{ secrets.PKG_SONATYPE_OSS_TOKEN }}
+
+  docker:
+    uses: ./.github/workflows/sec-workflow.yml
+    permissions:
+      contents: read
+      packages: write
+    with:
+      make-file: 'docker.mk'
       with-docker-registry-login: 'true'
     secrets:
       GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
