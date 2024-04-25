@@ -41,7 +41,7 @@ docker-im-gateway-publish:
 	@docker push ghcr.io/komune-io/${IM_APP_IMG}
 
 docker-im-gateway-promote:
-	@docker tag ${IM_APP_IMG} ghcr.io/komune-io/${IM_APP_IMG}
+	@docker tag ${IM_APP_IMG} docker.io/komune/${IM_APP_IMG}
 	@docker push docker.io/komune/${IM_APP_IMG}
 
 ## im-script
@@ -53,7 +53,7 @@ docker-script-publish:
 	@docker push ghcr.io/komune-io/${IM_SCRIPT_IMG}
 
 docker-script-promote:
-	@docker tag ${IM_SCRIPT_IMG} ghcr.io/komune-io/${IM_SCRIPT_IMG}
+	@docker tag ${IM_SCRIPT_IMG} docker.io/komune/${IM_SCRIPT_IMG}
 	@docker push docker.io/komune/${IM_SCRIPT_IMG}
 
 ## Keycloak
