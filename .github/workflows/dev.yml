@@ -25,7 +25,7 @@ jobs:
       PKG_SONATYPE_OSS_TOKEN: ${{ secrets.PKG_SONATYPE_OSS_TOKEN }}
 
   kotkin-js:
-    uses: ./.github/workflows/make-kotlin-npm-workflow.yml
+    uses: komune-io/fixers-gradle/.github/workflows/make-kotlin-npm-workflow.yml@a63758f7640fc47964ea45f832763775e118bfc1
     permissions:
       contents: read
       packages: write
