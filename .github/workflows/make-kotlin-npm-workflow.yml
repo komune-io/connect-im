@@ -15,12 +15,6 @@ on:
         default: true
         type: "boolean"
 
-      with-docker-registry-login:
-        description: 'Flag to enable Docker login to the Docker registry.'
-        required: false
-        default: 'false'
-        type: "string"
-
       make-file:
         description: "The Makefile to execute."
         required: false
@@ -57,23 +51,6 @@ on:
         type: "string"
         default: "promote"
 
-      docker-buildx-platform:
-        description: "Specify the target platforms for Docker buildx, such as 'linux/amd64,linux/arm64'. Leave empty to use the default platform."
-        required: false
-        type: "string"
-
-      docker-publish-repository:
-        description: "The Docker registry to which images should be published. Defaults to GitHub Container Registry (ghcr.io)."
-        required: false
-        type: "string"
-        default: "ghcr.io"
-
-      docker-promote-repository:
-        description: "The Docker registry to which images should be promoted. Defaults to Docker Hub (docker.io)."
-        required: false
-        type: "string"
-        default: "docker.io"
-
       artifact-name:
         description: "The name for the uploaded artifact, if needed."
         required: false
@@ -91,21 +68,13 @@ on:
         default: ".${GITHUB_SHA:0:7}"
 
     secrets:
-      GPG_SIGNING_KEY:
-        required: false
-      GPG_SIGNING_PASSWORD:
-        required: false
       PKG_GITHUB_USERNAME:
         required: false
       PKG_GITHUB_TOKEN:
         required: false
-      PKG_SONATYPE_OSS_USERNAME:
+      NPM_PKG_PUBLISH_TOKEN:
         required: false
-      PKG_SONATYPE_OSS_TOKEN:
-        required: false
-      NPM_PKG_GITHUB_TOKEN:
-        required: false
-      NPM_PKG_NPMJS_TOKEN:
+      NPM_PKG_PROMOTE_TOKEN:
         required: false
 
 jobs:
@@ -158,13 +127,6 @@ jobs:
           make-file: ${{ inputs.make-file }}
           make-step: ${{ inputs.make-test-task }}
 
-#      - if: (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'publish'))
-#        name: Setup Npm with GitHub Packages
-#        id: setup_npm_github_pkg
-#        uses: komune-io/fixers-gradle/.github/actions/setup-npm-github-pkg@main
-#        with:
-#          npm-auth-token: ${{ secrets.NPM_PKG_GITHUB_TOKEN }}
-
       - name: Execute Make Publish Task
         if: (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'publish'))
         uses: komune-io/fixers-gradle/.github/actions/make-step-prepost@main
@@ -172,15 +134,7 @@ jobs:
           make-file: ${{ inputs.make-file }}
           make-step: ${{ inputs.make-publish-task }}
         env:
-          NPM_TOKEN: ${{ secrets.NPM_PKG_GITHUB_TOKEN }}
-
-#      - if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
-#        name: Setup Npm with NpmJs Repository
-#        id: setup_npm_npmjs_pkg
-#        uses: komune-io/fixers-gradle/.github/actions/setup-npm-github-pkg@main
-#        with:
-#          npm-auth-token: ${{ secrets.NPM_PKG_NPMJS_TOKEN }}
-#          npm-registry: registry.npmjs.org
+          NPM_TOKEN: ${{ secrets.NPM_PKG_PUBLISH_TOKEN }}
 
       - name: Execute Make Promote Task
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
@@ -189,7 +143,7 @@ jobs:
           make-file: ${{ inputs.make-file }}
           make-step: ${{ inputs.make-promote-task }}
         env:
-          NPM_TOKEN: ${{ secrets.NPM_PKG_NPMJS_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_PKG_PROMOTE_TOKEN }}
 
       - name: Upload Artifact if Specified
         if: inputs.artifact-name != '' && inputs.artifact-path != ''

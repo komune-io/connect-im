@@ -34,8 +34,8 @@ jobs:
       with-docker-registry-login: 'true'
       docker-buildx-platform: linux/amd64,linux/arm64
     secrets:
-      NPM_PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      NPM_PKG_NPMJS_TOKEN: ${{ secrets.NPM_PKG_NPMJS_TOKEN}}
+      NPM_PKG_PUBLISH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_PKG_PROMOTE_TOKEN: ${{ secrets.NPM_PKG_NPMJS_TOKEN}}
 
   docker:
     uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@main
