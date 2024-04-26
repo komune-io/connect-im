@@ -126,7 +126,7 @@ jobs:
           use-snapshot: false
           with-main-pre-release-tag: '-alpha-SNAPSHOT'
           with-release-pre-release-tag: '-alpha-SNAPSHOT'
-          with-snapshot-tag: ${{ inputs.version-with-snapshot-tag }}
+          with-snapshot-tag: false
 
       - name: Execute Make Lint Task
         uses: komune-io/fixers-gradle/.github/actions/make-step-prepost@main
@@ -152,7 +152,7 @@ jobs:
           make-file: ${{ inputs.make-file }}
           make-step: ${{ inputs.make-test-task }}
 
-      - if: (inputs.with-docker-registry-login == 'true' && ((github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'publish'))))
+      - if: (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'publish'))
         name: Setup Npm with GitHub Packages
         id: setup_npm_github_pkg
         uses: komune-io/fixers-gradle/.github/actions/setup-npm-github-pkg@main
@@ -166,7 +166,7 @@ jobs:
           make-file: ${{ inputs.make-file }}
           make-step: ${{ inputs.make-publish-task }}
 
-      - if: (inputs.with-docker-registry-login == 'true' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')))
+      - if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
         name: Setup Npm with NpmJs Repository
         id: setup_npm_npmjs_pkg
         uses: komune-io/fixers-gradle/.github/actions/setup-npm-github-pkg@main
