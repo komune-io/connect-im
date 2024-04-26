@@ -11,6 +11,7 @@ plugins {
     id("io.komune.fixers.gradle.kotlin.mpp") version PluginVersions.fixers apply false
     id("io.komune.fixers.gradle.kotlin.jvm") version PluginVersions.fixers apply false
     id("io.komune.fixers.gradle.publish") version PluginVersions.fixers apply false
+    id("io.komune.fixers.gradle.npm") version PluginVersions.fixers apply false
 }
 
 allprojects {
@@ -39,5 +40,7 @@ fixers {
     kt2Ts {
         outputDirectory = "ts/"
     }
-
+    npm {
+        organization = "komune-io"
+    }
 }

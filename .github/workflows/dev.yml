@@ -24,6 +24,17 @@ jobs:
       PKG_SONATYPE_OSS_USERNAME: ${{ secrets.PKG_SONATYPE_OSS_USERNAME }}
       PKG_SONATYPE_OSS_TOKEN: ${{ secrets.PKG_SONATYPE_OSS_TOKEN }}
 
+  kotkin-js:
+    uses: komune-io/fixers-gradle/.github/workflows/make-kotlin-npm-workflow.yml@main
+    permissions:
+      contents: read
+      packages: write
+    with:
+      make-file: 'libsJs.mk'
+    secrets:
+      NPM_PKG_PUBLISH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_PKG_PROMOTE_TOKEN: ${{ secrets.NPM_PKG_NPMJS_TOKEN}}
+
   docker:
     uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@main
     permissions:
