@@ -1,0 +1,189 @@
+name: Reusable JVM Development Workflow
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: "The Java version to use."
+        required: false
+        type: "string"
+        default: "17"
+
+      with-gradle-build-scan-publish:
+        description: "Flag to enable gradle build scan publish"
+        required: false
+        default: true
+        type: "boolean"
+
+      with-docker-registry-login:
+        description: 'Flag to enable Docker login to the Docker registry.'
+        required: false
+        default: 'false'
+        type: "string"
+
+      make-file:
+        description: "The Makefile to execute."
+        required: false
+        type: "string"
+        default: "Makefile"
+
+      make-lint-task:
+        description: "The Make command to execute for linting."
+        required: false
+        type: "string"
+        default: "lint"
+
+      make-build-task:
+        description: "The Make command to execute for building."
+        required: false
+        type: "string"
+        default: "build"
+
+      make-test-task:
+        description: "The Make command to execute for testing."
+        required: false
+        type: "string"
+        default: "test"
+
+      make-publish-task:
+        description: "The Make command to execute for publishing."
+        required: false
+        type: "string"
+        default: "publish"
+
+      make-promote-task:
+        description: "The Make command to execute for promote."
+        required: false
+        type: "string"
+        default: "promote"
+
+      docker-buildx-platform:
+        description: "Specify the target platforms for Docker buildx, such as 'linux/amd64,linux/arm64'. Leave empty to use the default platform."
+        required: false
+        type: "string"
+
+      docker-publish-repository:
+        description: "The Docker registry to which images should be published. Defaults to GitHub Container Registry (ghcr.io)."
+        required: false
+        type: "string"
+        default: "ghcr.io"
+
+      docker-promote-repository:
+        description: "The Docker registry to which images should be promoted. Defaults to Docker Hub (docker.io)."
+        required: false
+        type: "string"
+        default: "docker.io"
+
+      artifact-name:
+        description: "The name for the uploaded artifact, if needed."
+        required: false
+        type: "string"
+
+      artifact-path:
+        description: "The path to the artifact to upload, if needed."
+        required: false
+        type: "string"
+
+    secrets:
+      GPG_SIGNING_KEY:
+        required: false
+      GPG_SIGNING_PASSWORD:
+        required: false
+      PKG_GITHUB_USERNAME:
+        required: false
+      PKG_GITHUB_TOKEN:
+        required: false
+      PKG_SONATYPE_OSS_USERNAME:
+        required: false
+      PKG_SONATYPE_OSS_TOKEN:
+        required: false
+      NPM_PKG_GITHUB_TOKEN:
+        required: false
+      NPM_PKG_NPMJS_TOKEN:
+        required: false
+
+jobs:
+  run-dev-tasks:
+    runs-on: ubuntu-latest
+    env:
+      GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+      GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
+      PKG_GITHUB_USERNAME: ${{ secrets.PKG_GITHUB_USERNAME }}
+      PKG_GITHUB_TOKEN: ${{ secrets.PKG_GITHUB_TOKEN }}
+      PKG_SONATYPE_OSS_USERNAME: ${{ secrets.PKG_SONATYPE_OSS_USERNAME }}
+      PKG_SONATYPE_OSS_TOKEN: ${{ secrets.PKG_SONATYPE_OSS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Initialize Java and Gradle Environment
+        uses: komune-io/fixers-gradle/.github/actions/jvm@main
+        with:
+          with-gradle-build-scan-publish: ${{ inputs.with-gradle-build-scan-publish }}
+          java-version: ${{ inputs.java-version }}
+
+      - name: Get Version from File
+        uses: komune-io/fixers-gradle/.github/actions/version@main
+        with:
+          use-snapshot: false
+          with-main-pre-release-tag: '-alpha-SNAPSHOT'
+          with-release-pre-release-tag: '-alpha-SNAPSHOT'
+          with-snapshot-tag: ${{ inputs.version-with-snapshot-tag }}
+
+      - name: Execute Make Lint Task
+        uses: komune-io/fixers-gradle/.github/actions/make-step-prepost@main
+        with:
+          make-file: ${{ inputs.make-file }}
+          make-step: ${{ inputs.make-lint-task }}
+
+      - if: inputs.docker-buildx-platform != ''
+        name: Setup Docker Buildx for Specified Platforms
+        uses: docker/setup-buildx-action@v3
+        with:
+          platforms: ${{ inputs.docker-buildx-platform }}
+
+      - name: Execute Make Build Task
+        uses: komune-io/fixers-gradle/.github/actions/make-step-prepost@main
+        with:
+          make-file: ${{ inputs.make-file }}
+          make-step: ${{ inputs.make-build-task }}
+
+      - name: Execute Make Test Task
+        uses: komune-io/fixers-gradle/.github/actions/make-step-prepost@main
+        with:
+          make-file: ${{ inputs.make-file }}
+          make-step: ${{ inputs.make-test-task }}
+
+      - if: (inputs.with-docker-registry-login == 'true' && ((github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'publish'))))
+        name: Setup Npm with GitHub Packages
+        id: setup_npm_github_pkg
+        uses: komune-io/fixers-gradle/.github/actions/setup-npm-github-pkg@main
+        with:
+          npm-auth-token: ${{ secrets.NPM_PKG_GITHUB_TOKEN }}
+
+      - name: Execute Make Publish Task
+        if: (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'publish'))
+        uses: komune-io/fixers-gradle/.github/actions/make-step-prepost@main
+        with:
+          make-file: ${{ inputs.make-file }}
+          make-step: ${{ inputs.make-publish-task }}
+
+      - if: (inputs.with-docker-registry-login == 'true' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')))
+        name: Setup Npm with NpmJs Repository
+        id: setup_npm_npmjs_pkg
+        uses: komune-io/fixers-gradle/.github/actions/setup-npm-github-pkg@main
+        with:
+          npm-auth-token: ${{ secrets.NPM_PKG_NPMJS_TOKEN }}
+          npm-registry: registry.npmjs.org
+
+      - name: Execute Make Promote Task
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
+        uses: komune-io/fixers-gradle/.github/actions/make-step-prepost@main
+        with:
+          make-file: ${{ inputs.make-file }}
+          make-step: ${{ inputs.make-promote-task }}
+
+      - name: Upload Artifact if Specified
+        if: inputs.artifact-name != '' && inputs.artifact-path != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: ${{ inputs.artifact-path }}
