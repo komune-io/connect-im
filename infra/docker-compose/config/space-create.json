@@ -2,5 +2,16 @@
     "space": "${KC_REALM}",
     "theme": "${KC_REALM_THEME}",
     "locales": ["en", "fr"],
-    "adminUsers": []
+    "adminUsers": [],
+    "smtp": {
+        "from": "dev@komune.io",
+        "fromDisplayName": "Dev Komune",
+        "replyTo": "no-reply@komune.io",
+        "replyToDisplayName": "No Reploy Komune",
+        "host": "${SMTP_HOST}",
+        "port": "${SMTP_PORT}",
+        "ssl": "",
+        "starttls": "",
+        "auth": ""
+    }
 }
