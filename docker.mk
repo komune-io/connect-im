@@ -1,5 +1,5 @@
 VERSION = $(shell cat VERSION)
-DOCKER_REPOSITORY = ghcr.io/
+DOCKER_PLATFORM =  linux/arm64,linux/amd64
 
 include ./gradle.properties
 
@@ -64,7 +64,7 @@ docker-keycloak-build:
 	@echo 'Build ${KEYCLOAK_IMG}'
 	./gradlew im-keycloak:keycloak-plugin:shadowJar
 	@docker buildx build \
-		--platform linux/arm64,linux/amd64 \
+		--platform ${DOCKER_PLATFORM} \
 		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/  \
 		--build-arg KEYCLOAK_VERSION=${KEYCLOAK_VERSION} \
 		-f ${KEYCLOAK_DOCKERFILE} \
@@ -72,7 +72,7 @@ docker-keycloak-build:
 
 docker-keycloak-publish:
 	@docker buildx build --push \
-		--platform linux/arm64,linux/amd64 \
+		--platform ${DOCKER_PLATFORM} \
 		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/ \
 		--build-arg KEYCLOAK_VERSION=${KEYCLOAK_VERSION} \
 		-f ${KEYCLOAK_DOCKERFILE} \
@@ -80,7 +80,7 @@ docker-keycloak-publish:
 
 docker-keycloak-promote:
 	@docker buildx build --push \
-		--platform linux/arm64,linux/amd64 \
+		--platform ${DOCKER_PLATFORM} \
 		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/ \
 		--build-arg KEYCLOAK_VERSION=${KEYCLOAK_VERSION} \
 		-f ${KEYCLOAK_DOCKERFILE} \
@@ -92,7 +92,7 @@ docker-keycloak-auth-build:
 	@echo 'Build ${KEYCLOAK_AUTH_IMG}'
 	./gradlew im-keycloak:keycloak-plugin:shadowJar
 	@docker buildx build \
-		--platform linux/arm64,linux/amd64 \
+		--platform ${DOCKER_PLATFORM} \
 		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/  \
 		--build-arg KEYCLOAK_VERSION=${KEYCLOAK_VERSION} \
 		-f ${KEYCLOAK_DOCKERFILE} \
@@ -100,7 +100,7 @@ docker-keycloak-auth-build:
 
 docker-keycloak-auth-publish:
 	@docker buildx build --push \
-		--platform linux/arm64,linux/amd64 \
+		--platform ${DOCKER_PLATFORM} \
 		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/ \
 		--build-arg KEYCLOAK_VERSION=${KEYCLOAK_VERSION} \
 		-f ${KEYCLOAK_DOCKERFILE} \
@@ -108,7 +108,7 @@ docker-keycloak-auth-publish:
 
 docker-keycloak-auth-promote:
 	@docker buildx build --push \
-		--platform linux/arm64,linux/amd64 \
+		--platform ${DOCKER_PLATFORM} \
 		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/ \
 		--build-arg KEYCLOAK_VERSION=${KEYCLOAK_VERSION} \
 		-f ${KEYCLOAK_DOCKERFILE} \
