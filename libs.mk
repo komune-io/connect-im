@@ -6,8 +6,12 @@ lint:
 	echo 'No Lint'
 build:
 	./gradlew build publishToMavenLocal -x test
+
+test-pre:
+	@make dev up
+
 test:
-	echo 'No Tests'
+	./gradlew test
 publish:
 	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish --info
 
