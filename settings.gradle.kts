@@ -76,6 +76,7 @@ include(
 
 include(
     "im-keycloak:keycloak-plugin",
+    "im-keycloak:keycloak-plugin:im-keycloak-db-schema-migration",
     "im-keycloak:keycloak-plugin:im-keycloak-generate-action-token",
     "im-keycloak:keycloak-plugin:im-keycloak-event-listener-http",
     "im-keycloak:keycloak-plugin:im-keycloak-plugin-client",

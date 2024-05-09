@@ -14,7 +14,7 @@ object PluginVersions {
 	const val springBoot = FixersPluginVersions.springBoot
 	const val kotlin = FixersPluginVersions.kotlin
 
-	const val shadowJar = "7.1.2"
+	const val shadowJar = "8.1.1"
 }
 
 object Versions {
@@ -48,6 +48,10 @@ object Dependencies {
 		object Keycloak {
             fun adminClient(scope: Scope) = scope.add(
                 "org.keycloak:keycloak-admin-client:${Versions.keycloak()}"
+            )
+
+            fun modelJpa(scope: Scope)  = scope.add(
+                "org.keycloak:keycloak-model-jpa:${Versions.keycloak()}"
             )
 
             fun serverSpiPrivate(scope: Scope)  = scope.add(
@@ -219,6 +223,7 @@ object Modules {
 
     object Keycloak {
         private const val BASE = ":im-keycloak:keycloak-plugin"
+        const val dbSchemaUpdate = "$BASE:im-keycloak-db-schema-migration"
         const val generateActionToken = "$BASE:im-keycloak-generate-action-token"
         const val eventListenerHttp = "$BASE:im-keycloak-event-listener-http"
         const val pluginClient = "$BASE:im-keycloak-plugin-client"

@@ -29,6 +29,8 @@ services:
       POSTGRES_DB: im-keycloak
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
     networks:
       - net
 
