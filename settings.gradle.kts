@@ -13,8 +13,7 @@ rootProject.name = "connect-im"
 
 include(
     "im-api:api-config",
-    "im-api:api-gateway",
-    "im-api:f2-spring-boot-starter-auth-tenant"
+    "im-api:api-gateway"
 )
 
 include(

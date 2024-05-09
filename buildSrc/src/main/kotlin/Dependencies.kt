@@ -81,11 +81,7 @@ object Dependencies {
 		}
 
 		fun f2Auth(scope: Scope) = scope.add(
-//			"io.komune.i2:i2-spring-boot-starter-auth:${Versions.i2}"
-		)
-
-		fun i2AuthClient(scope: Scope) = scope.add(
-//			"io.komune.i2:keycloak-auth-client:${Versions.i2}"
+			"io.komune.f2:f2-spring-boot-starter-auth-tenant:${Versions.f2}"
 		)
 
 		fun ktor(scope: Scope) = scope.add(
