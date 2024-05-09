@@ -12,6 +12,7 @@ test-pre:
 
 test:
 	./gradlew test
+
 publish:
 	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish --info
 
