@@ -54,7 +54,7 @@ jobs:
 
 
   docs:
-    uses: komune-io/fixers-gradle/.github/workflows/publish-storybook-workflow.yml@68f3090f3f4e79df0c0e1110a97cc809bd19a308
+    uses: komune-io/fixers-gradle/.github/workflows/publish-storybook-workflow.yml@main
     permissions:
       contents: read
       packages: write
