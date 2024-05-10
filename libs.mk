@@ -18,7 +18,7 @@ test:
 	./gradlew test
 
 publish:
-	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish --info -x publishJsPackageToGithubRegistry
+	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish --info -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
 
 promote:
 	VERSION=$(VERSION) PKG_MAVEN_REPO=sonatype_oss ./gradlew publish
