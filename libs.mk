@@ -9,6 +9,9 @@ build:
 
 test-pre:
 	@make dev up
+	@make dev im-init logs
+	@make dev im-config logs
+	@make dev up
 
 test:
 	sudo echo "127.0.0.1 keycloak-it" | sudo tee -a /etc/hosts
