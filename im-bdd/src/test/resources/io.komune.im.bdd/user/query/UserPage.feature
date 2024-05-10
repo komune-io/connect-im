@@ -26,8 +26,8 @@ Feature: UserPage
       | usr2       | user2@test.com | org1     |
     And Some API keys are created:
       | identifier | name | organization |
-      | ak1        | ak1  | org1         |
-      | ak2        | ak2  | org1         |
+      | a1        | a1  | org1         |
+      | a2        | a2  | org1         |
     When I get a page of users:
       | organizationId |
       | org1           |

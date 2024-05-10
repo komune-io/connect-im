@@ -6,10 +6,19 @@ lint:
 	echo 'No Lint'
 build:
 	./gradlew build publishToMavenLocal -x test
+
+test-pre:
+	@make dev up
+	@make dev im-init logs
+	@make dev im-config logs
+	@make dev up
+
 test:
-	echo 'No Tests'
+	sudo echo "127.0.0.1 keycloak-it" | sudo tee -a /etc/hosts
+	./gradlew test
+
 publish:
-	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish --info
+	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish --info -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
 
 promote:
 	VERSION=$(VERSION) PKG_MAVEN_REPO=sonatype_oss ./gradlew publish
