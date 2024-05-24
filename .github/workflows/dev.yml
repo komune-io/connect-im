@@ -7,15 +7,18 @@ on:
     branches:
       - main
       - 'release/*'
+    tags:
+      - '*'
 
 jobs:
-  dev:
+  libs:
     uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@main
     permissions:
       contents: read
       packages: write
     with:
       make-file: 'libs.mk'
+      on-tag: 'promote'
     secrets:
       GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
       GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
@@ -31,6 +34,7 @@ jobs:
       packages: write
     with:
       make-file: 'libsJs.mk'
+      on-tag: 'publish_promote'
     secrets:
       NPM_PKG_PUBLISH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_PKG_PROMOTE_TOKEN: ${{ secrets.NPM_PKG_NPMJS_TOKEN}}
@@ -52,7 +56,6 @@ jobs:
       DOCKER_PROMOTE_USERNAME: ${{ secrets.DOCKER_IO_USERNAME }}
       DOCKER_PROMOTE_PASSWORD: ${{ secrets.DOCKER_IO_PASSWORD }}
 
-
   docs:
     uses: komune-io/fixers-gradle/.github/workflows/publish-storybook-workflow.yml@main
     permissions:
@@ -61,6 +64,7 @@ jobs:
       pages: write
       id-token: write
     with:
+      on-tag: 'publish_promote'
       with-chromatic: false
       storybook-dir: storybook
       storybook-static-dir: storybook-static
