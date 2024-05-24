@@ -21,4 +21,4 @@ publish:
 	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish --info -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
 
 promote:
-	VERSION=$(VERSION) PKG_MAVEN_REPO=sonatype_oss ./gradlew publish
+	VERSION=$(VERSION) PKG_MAVEN_REPO=sonatype_oss ./gradlew publish -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
