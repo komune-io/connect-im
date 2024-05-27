@@ -1,8 +1,8 @@
 package io.komune.im.f2.user.client
 
-import io.komune.im.commons.model.AuthRealm
 import f2.client.F2Client
 import f2.client.function
+import f2.client.ktor.http.plugin.model.AuthRealm
 import f2.dsl.fnc.F2SupplierSingle
 import io.komune.im.f2.user.domain.UserApi
 import io.komune.im.f2.user.domain.command.UserCreateFunction

@@ -7,5 +7,4 @@ plugins {
 
 dependencies {
     commonMainApi(project(Modules.Core.privilegeDomain))
-    commonMainApi(project(Modules.Commons.domain))
 }

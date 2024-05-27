@@ -1,9 +1,9 @@
 package io.komune.im.f2.organization.client
 
-import io.komune.im.commons.model.AuthRealm
 import f2.client.F2Client
 import f2.client.ktor.F2ClientBuilder
 import f2.client.ktor.get
+import f2.client.ktor.http.plugin.model.AuthRealm
 import f2.dsl.fnc.F2SupplierSingle
 
 import f2.dsl.fnc.f2SupplierSingle
