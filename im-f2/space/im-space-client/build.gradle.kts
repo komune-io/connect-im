@@ -1,11 +1,10 @@
 plugins {
-    id("io.komune.fixers.gradle.kotlin.jvm")
+    id("io.komune.fixers.gradle.kotlin.mpp")
     id("io.komune.fixers.gradle.publish")
-    kotlin("plugin.spring")
-    kotlin("plugin.serialization")
+    id("io.komune.fixers.gradle.npm")
 }
 
 dependencies {
-    api(project(Modules.Commons.domain))
-    api(project(Modules.F2.spaceDomain))
+    commonMainApi(project(Modules.Commons.domain))
+    commonMainApi(project(Modules.F2.spaceDomain))
 }
