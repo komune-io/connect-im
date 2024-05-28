@@ -47,6 +47,7 @@ jobs:
     with:
       make-file: 'docker.mk'
       with-docker-registry-login: 'true'
+      on-tag: 'publish_promote'
       docker-buildx-platform: linux/amd64,linux/arm64
     secrets:
       PKG_GITHUB_USERNAME: ${{ github.actor }}
