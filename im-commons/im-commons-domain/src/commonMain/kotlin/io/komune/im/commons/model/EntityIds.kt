@@ -1,5 +1,7 @@
 package io.komune.im.commons.model
 
+import f2.client.ktor.http.plugin.model.RealmId
+
 /**
  * @d2 hidden
  * @visual json "c790642c-4ed2-4cfc-bc45-905a39006e99"

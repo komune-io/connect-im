@@ -1,8 +1,8 @@
 package io.komune.im.script.core.config
 
+import f2.client.ktor.http.plugin.model.RealmId
 import io.komune.im.api.config.bean.ImAuthenticationProvider
 import io.komune.im.commons.auth.currentAuth
-import io.komune.im.commons.model.RealmId
 import io.komune.im.infra.keycloak.client.KeycloakClient
 import io.komune.im.infra.keycloak.client.KeycloakClientBuilder
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
@@ -18,10 +18,10 @@ class KeycloakClientProviderStub(
 
     override suspend fun get(): KeycloakClient {
         val auth = currentAuth()!!
-        val clientCache = cache.getOrPut("${auth.serverUrl} ${auth.clientId}") {
+        val clientCache = cache.getOrPut("${auth.master.serverUrl} ${auth.master.clientId}") {
             KeycloakClientCache(KeycloakClientBuilder.openConnection(auth))
         }
-        return clientCache.clients.getOrPut(auth.space) {
+        return clientCache.clients.getOrPut(auth.master.realmId) {
             clientCache.connection.forAuthedRealm()
         }
     }

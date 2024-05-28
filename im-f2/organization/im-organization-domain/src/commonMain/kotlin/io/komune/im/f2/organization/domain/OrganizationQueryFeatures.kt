@@ -6,7 +6,7 @@ import io.komune.im.f2.organization.domain.query.OrganizationGetFunction
 import io.komune.im.f2.organization.domain.query.OrganizationPageFunction
 import io.komune.im.f2.organization.domain.query.OrganizationRefListFunction
 
-interface OrganizationQueryFeatures<MODEL: OrganizationDTO> {
+interface OrganizationQueryFeatures {
 
     /**
      * Fetch an Organization by its ID.

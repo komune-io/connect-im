@@ -1,7 +1,7 @@
 package io.komune.im.api.config.bean
 
-import io.komune.im.commons.model.AuthRealm
+import io.komune.im.commons.model.AuthSubRealm
 
 interface ImAuthenticationProvider  {
-    suspend fun getAuth(): AuthRealm
+    suspend fun getAuth(): AuthSubRealm
 }
