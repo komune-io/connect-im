@@ -1,8 +1,8 @@
 package io.komune.im.api.config.properties
 
+import io.komune.im.commons.model.AuthSubRealm
+import f2.client.ktor.http.plugin.model.AuthRealmClientSecret
 import io.komune.f2.spring.boot.auth.AuthenticationProvider
-import io.komune.im.commons.model.AuthRealm
-import io.komune.im.commons.model.AuthRealmClientSecret
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 const val IM_URL_PROPERTY = "connect.im"
@@ -29,14 +29,16 @@ class InseeProperties(
     val token: String
 )
 
-suspend fun KeycloakProperties.toAuthRealm(): AuthRealm {
+suspend fun KeycloakProperties.toAuthRealm(): AuthSubRealm {
     val space = AuthenticationProvider.getTenant()
-    return AuthRealmClientSecret(
-        serverUrl = url,
-        realmId = realm,
-        clientId = clientId,
-        clientSecret = clientSecret,
-        redirectUrl = null,
-        space = space ?: realm
+    return AuthSubRealm(
+        space = space ?: realm,
+        master = AuthRealmClientSecret(
+            serverUrl = url,
+            realmId = realm,
+            clientId = clientId,
+            clientSecret = clientSecret,
+            redirectUrl = null
+        )
     )
 }

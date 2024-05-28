@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    implementation("io.komune.fixers.gradle:dependencies:0.18.0")
+    implementation("io.komune.fixers.gradle:dependencies:0.19.0-SNAPSHOT")
 }
 
 repositories {

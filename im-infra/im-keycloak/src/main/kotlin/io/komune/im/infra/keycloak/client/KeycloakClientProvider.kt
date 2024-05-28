@@ -1,8 +1,8 @@
 package io.komune.im.infra.keycloak.client
 
+import f2.client.ktor.http.plugin.model.RealmId
 import io.komune.im.api.config.bean.ImAuthenticationProvider
 import io.komune.im.commons.auth.currentAuth
-import io.komune.im.commons.model.RealmId
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,10 +14,9 @@ open class KeycloakClientProvider(
 
     open suspend fun get(): KeycloakClient {
         val auth = currentAuth() ?: authenticationResolver.getAuth()
-        val keycloakConnection = connection
-            ?: KeycloakClientBuilder.openConnection(auth)
-
         return cache.getOrPut(auth.space) {
+            val keycloakConnection = connection
+                ?: KeycloakClientBuilder.openConnection(auth)
             keycloakConnection.forRealm(auth.space)
         }
     }

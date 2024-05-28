@@ -1,9 +1,9 @@
 package io.komune.im.bdd.mock
 
+import io.komune.im.commons.model.AuthSubRealm
 import io.komune.im.api.config.bean.ImAuthenticationProvider
 import io.komune.im.api.config.properties.IMProperties
 import io.komune.im.api.config.properties.toAuthRealm
-import io.komune.im.commons.model.AuthRealm
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -14,7 +14,7 @@ class AuthenticationProviderStub {
     @Primary
     fun imAuthenticationProvider(imProperties: IMProperties): ImAuthenticationProvider {
         return object: ImAuthenticationProvider {
-            override suspend fun getAuth(): AuthRealm {
+            override suspend fun getAuth(): AuthSubRealm {
                 return imProperties.keycloak.toAuthRealm()
             }
         }

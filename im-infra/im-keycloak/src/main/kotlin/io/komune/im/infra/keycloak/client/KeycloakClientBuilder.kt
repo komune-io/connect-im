@@ -1,9 +1,9 @@
 package io.komune.im.infra.keycloak.client
 
-import io.komune.im.commons.model.AuthRealm
-import io.komune.im.commons.model.AuthRealmClientSecret
-import io.komune.im.commons.model.AuthRealmPassword
-import io.komune.im.commons.model.RealmId
+import io.komune.im.commons.model.AuthSubRealm
+import f2.client.ktor.http.plugin.model.AuthRealmClientSecret
+import f2.client.ktor.http.plugin.model.AuthRealmPassword
+import f2.client.ktor.http.plugin.model.RealmId
 import io.komune.im.infra.keycloak.AuthRealmException
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder
 import org.keycloak.OAuth2Constants
@@ -13,26 +13,27 @@ import org.keycloak.admin.client.KeycloakBuilder
 object KeycloakClientBuilder {
     private const val CONNECTION_POOL_SIZE = 10
 
-    fun openConnection(auth: AuthRealm): KeycloakClientConnection {
-        return when (auth) {
+    fun openConnection(auth: AuthSubRealm): KeycloakClientConnection {
+        val master = auth.master
+        return when (master) {
             is AuthRealmPassword -> openConnection(auth) {
                 grantType(OAuth2Constants.PASSWORD)
-                username(auth.username)
-                password(auth.password)
+                username(master.username)
+                password(master.password)
             }
             is AuthRealmClientSecret -> openConnection(auth) {
                 grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-                clientSecret(auth.clientSecret)
+                clientSecret(master.clientSecret)
             }
             else -> throw AuthRealmException("Invalid AuthRealm type[${auth::class.simpleName}]")
         }
     }
 
-    private fun openConnection(auth: AuthRealm, configure: KeycloakBuilder.() -> KeycloakBuilder): KeycloakClientConnection {
+    private fun openConnection(auth: AuthSubRealm, configure: KeycloakBuilder.() -> KeycloakBuilder): KeycloakClientConnection {
         val keycloak = KeycloakBuilder.builder()
-            .serverUrl(auth.serverUrl)
-            .realm(auth.realmId)
-            .clientId(auth.clientId)
+            .serverUrl(auth.master.serverUrl)
+            .realm(auth.master.realmId)
+            .clientId(auth.master.clientId)
             .resteasyClient(ResteasyClientBuilder().connectionPoolSize(CONNECTION_POOL_SIZE).build())
             .configure()
             .build()
@@ -41,9 +42,9 @@ object KeycloakClientBuilder {
 
     class KeycloakClientConnection(
         val keycloak: Keycloak,
-        val auth: AuthRealm
+        val auth: AuthSubRealm
     ) {
-        fun forRealm(realmId: RealmId?) = KeycloakClient(keycloak, auth, realmId ?: auth.space)
+        fun forRealm(realmId: RealmId?) = KeycloakClient(keycloak, auth.master, realmId ?: auth.space)
         fun forAuthedRealm() = forRealm(null)
     }
 }

@@ -1,11 +1,11 @@
 package io.komune.im.bdd
 
+import f2.client.ktor.http.plugin.model.RealmId
 import io.komune.im.apikey.domain.model.ApiKey
 import io.komune.im.apikey.domain.model.ApiKeyId
 import io.komune.im.commons.auth.ImRole
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.PermissionIdentifier
-import io.komune.im.commons.model.RealmId
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.model.SpaceIdentifier
 import io.komune.im.commons.model.UserId
