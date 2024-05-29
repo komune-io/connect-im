@@ -109,67 +109,67 @@
 
     <!-- ChangeSet to insert corresponding role attributes -->
     <changeSet id="30" author="komune">
-        <insert tableName="public.role_attribute">
+        <insert tableName="role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_user_read')"/>
             <column name="name" value="type"/>
             <column name="value" value="PERMISSION"/>
         </insert>
-        <insert tableName="public.role_attribute">
+        <insert tableName="role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_user_write')"/>
             <column name="name" value="type"/>
             <column name="value" value="PERMISSION"/>
         </insert>
-        <insert tableName="public.role_attribute">
+        <insert tableName="role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_organization_read')"/>
             <column name="name" value="type"/>
             <column name="value" value="PERMISSION"/>
         </insert>
-        <insert tableName="public.role_attribute">
+        <insert tableName="role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_organization_write')"/>
             <column name="name" value="type"/>
             <column name="value" value="PERMISSION"/>
         </insert>
-        <insert tableName="public.role_attribute">
+        <insert tableName="role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_organization_write_own')"/>
             <column name="name" value="type"/>
             <column name="value" value="PERMISSION"/>
         </insert>
-        <insert tableName="public.role_attribute">
+        <insert tableName="role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_role_read')"/>
             <column name="name" value="type"/>
             <column name="value" value="PERMISSION"/>
         </insert>
-        <insert tableName="public.role_attribute">
+        <insert tableName="role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_role_write')"/>
             <column name="name" value="type"/>
             <column name="value" value="PERMISSION"/>
         </insert>
-        <insert tableName="public.role_attribute">
+        <insert tableName="role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_apikey_read')"/>
             <column name="name" value="type"/>
             <column name="value" value="PERMISSION"/>
         </insert>
-        <insert tableName="public.role_attribute">
+        <insert tableName="role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_apikey_write')"/>
             <column name="name" value="type"/>
             <column name="value" value="PERMISSION"/>
         </insert>
-        <insert tableName="public.role_attribute">
+        <insert tableName="role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_space_read')"/>
             <column name="name" value="type"/>
             <column name="value" value="PERMISSION"/>
         </insert>
-        <insert tableName="public.role_attribute">
+        <insert tableName="role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_space_write')"/>
             <column name="name" value="type"/>
