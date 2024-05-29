@@ -6,6 +6,7 @@ import f2.dsl.cqrs.Query
 import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Get a page of organizations.
@@ -57,6 +58,7 @@ interface OrganizationPageQueryDTO: Query {
  * @d2 result
  * @parent [OrganizationPageFunction]
  */
+@Serializable
 data class OrganizationPageQuery(
 	override val name: String? = null,
 	override val role: String? = null,
@@ -89,6 +91,7 @@ interface OrganizationPageResultDTO: PageDTO<OrganizationDTO> {
 /**
  * @d2 inherit
  */
+@Serializable
 data class OrganizationPageResult(
     override val items: List<Organization>,
     override val total: Int

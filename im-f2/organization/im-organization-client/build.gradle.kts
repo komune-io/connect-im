@@ -7,4 +7,5 @@ plugins {
 dependencies {
     commonMainApi(project(Modules.F2.organizationDomain))
     Dependencies.Mpp.f2Client(::commonMainApi)
+    jvmMainImplementation("io.ktor:ktor-serialization-jackson:${Versions.ktor}")
 }

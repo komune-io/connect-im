@@ -7,6 +7,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Get an organization by ID.
@@ -31,6 +32,7 @@ interface OrganizationGetQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@Serializable
 data class OrganizationGetQuery(
     override val id: OrganizationId
 ): OrganizationGetQueryDTO
@@ -50,6 +52,7 @@ interface OrganizationGetResultDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class OrganizationGetResult(
     override val item: Organization?
 ): OrganizationGetResultDTO

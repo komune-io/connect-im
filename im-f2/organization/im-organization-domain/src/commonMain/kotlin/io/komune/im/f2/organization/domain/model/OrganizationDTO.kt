@@ -6,6 +6,7 @@ import io.komune.im.commons.model.OrganizationId
 import io.komune.im.f2.privilege.domain.role.model.Role
 import io.komune.im.f2.privilege.domain.role.model.RoleDTO
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 
 /**
@@ -101,6 +102,7 @@ interface OrganizationDTO {
 /**
  * @d2 inherit
  */
+@Serializable
 data class Organization(
     override val id: OrganizationId,
     override val siret: String?,

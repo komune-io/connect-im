@@ -7,6 +7,7 @@ import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Get an organization by Siret from the Insee Sirene API.
@@ -45,6 +46,7 @@ interface OrganizationGetFromInseeResultDTO: Event {
  * @d2 result
  * @parent [OrganizationGetFromInseeFunction]
  */
+@Serializable
 data class OrganizationGetFromInseeResult(
     /**
      * The organization.
