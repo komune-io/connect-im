@@ -5,8 +5,15 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
+    <!-- ChangeSet to enable uuid-ossp extension -->
+    <changeSet id="0" author="komune">
+        <sql>
+            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+        </sql>
+    </changeSet>
+
     <!-- ChangeSet to update role names -->
-    <changeSet id="1" author="komune">
+    <changeSet id="10" author="komune">
         <update tableName="keycloak_role">
             <column name="name" value="im_user_read"/>
             <where>name = 'im_read_user'</where>
@@ -42,7 +49,7 @@
     </changeSet>
 
     <!-- ChangeSet to insert missing roles into keycloak_role table -->
-    <changeSet id="2" author="komune">
+    <changeSet id="20" author="komune">
         <insert tableName="keycloak_role">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="name" value="im_user_read"/>
@@ -101,7 +108,7 @@
     </changeSet>
 
     <!-- ChangeSet to insert corresponding role attributes -->
-    <changeSet id="3" author="komune">
+    <changeSet id="30" author="komune">
         <insert tableName="public.role_attribute">
             <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
             <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_user_read')"/>
