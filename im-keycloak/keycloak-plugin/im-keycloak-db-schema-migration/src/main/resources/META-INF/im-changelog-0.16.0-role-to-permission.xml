@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- ChangeSet to update role names -->
+    <changeSet id="1" author="komune">
+        <update tableName="keycloak_role">
+            <column name="name" value="im_user_read"/>
+            <where>name = 'im_read_user'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_role_read"/>
+            <where>name = 'im_read_role'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_apikey_read"/>
+            <where>name = 'im_read_apikey'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_organization_read"/>
+            <where>name = 'im_read_organization'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_organization_write"/>
+            <where>name = 'im_write_organization'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_apikey_write"/>
+            <where>name = 'im_write_apikey'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_user_write"/>
+            <where>name = 'im_write_user'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_role_write"/>
+            <where>name = 'im_write_role'</where>
+        </update>
+    </changeSet>
+
+    <!-- ChangeSet to insert missing roles into keycloak_role table -->
+    <changeSet id="2" author="komune">
+        <insert tableName="keycloak_role">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="name" value="im_user_read"/>
+            <column name="description" value="Ability to view any user data"/>
+        </insert>
+        <insert tableName="keycloak_role">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="name" value="im_user_write"/>
+            <column name="description" value="Ability to modify any user data"/>
+        </insert>
+        <insert tableName="keycloak_role">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="name" value="im_organization_read"/>
+            <column name="description" value="Ability to view any organization data"/>
+        </insert>
+        <insert tableName="keycloak_role">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="name" value="im_organization_write"/>
+            <column name="description" value="Ability to modify any organization data"/>
+        </insert>
+        <insert tableName="keycloak_role">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="name" value="im_organization_write_own"/>
+            <column name="description" value="Ability to modify own organization data"/>
+        </insert>
+        <insert tableName="keycloak_role">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="name" value="im_role_read"/>
+            <column name="description" value="Ability to view any role data"/>
+        </insert>
+        <insert tableName="keycloak_role">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="name" value="im_role_write"/>
+            <column name="description" value="Ability to modify any role data"/>
+        </insert>
+        <insert tableName="keycloak_role">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="name" value="im_apikey_read"/>
+            <column name="description" value="Ability to view API keys"/>
+        </insert>
+        <insert tableName="keycloak_role">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="name" value="im_apikey_write"/>
+            <column name="description" value="Ability to modify API keys"/>
+        </insert>
+        <insert tableName="keycloak_role">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="name" value="im_space_read"/>
+            <column name="description" value="Ability to view space data"/>
+        </insert>
+        <insert tableName="keycloak_role">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="name" value="im_space_write"/>
+            <column name="description" value="Ability to modify space data"/>
+        </insert>
+    </changeSet>
+
+    <!-- ChangeSet to insert corresponding role attributes -->
+    <changeSet id="3" author="komune">
+        <insert tableName="public.role_attribute">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_user_read')"/>
+            <column name="name" value="type"/>
+            <column name="value" value="PERMISSION"/>
+        </insert>
+        <insert tableName="public.role_attribute">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_user_write')"/>
+            <column name="name" value="type"/>
+            <column name="value" value="PERMISSION"/>
+        </insert>
+        <insert tableName="public.role_attribute">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_organization_read')"/>
+            <column name="name" value="type"/>
+            <column name="value" value="PERMISSION"/>
+        </insert>
+        <insert tableName="public.role_attribute">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_organization_write')"/>
+            <column name="name" value="type"/>
+            <column name="value" value="PERMISSION"/>
+        </insert>
+        <insert tableName="public.role_attribute">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_organization_write_own')"/>
+            <column name="name" value="type"/>
+            <column name="value" value="PERMISSION"/>
+        </insert>
+        <insert tableName="public.role_attribute">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_role_read')"/>
+            <column name="name" value="type"/>
+            <column name="value" value="PERMISSION"/>
+        </insert>
+        <insert tableName="public.role_attribute">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_role_write')"/>
+            <column name="name" value="type"/>
+            <column name="value" value="PERMISSION"/>
+        </insert>
+        <insert tableName="public.role_attribute">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_apikey_read')"/>
+            <column name="name" value="type"/>
+            <column name="value" value="PERMISSION"/>
+        </insert>
+        <insert tableName="public.role_attribute">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_apikey_write')"/>
+            <column name="name" value="type"/>
+            <column name="value" value="PERMISSION"/>
+        </insert>
+        <insert tableName="public.role_attribute">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_space_read')"/>
+            <column name="name" value="type"/>
+            <column name="value" value="PERMISSION"/>
+        </insert>
+        <insert tableName="public.role_attribute">
+            <column name="id" valueComputed="(SELECT uuid_generate_v4())"/>
+            <column name="role_id" value="(SELECT id FROM keycloak_role WHERE name='im_space_write')"/>
+            <column name="name" value="type"/>
+            <column name="value" value="PERMISSION"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

@@ -15,7 +15,7 @@
     </changeSet>
 
     <!-- ChangeSet for modifying 'value' column in 'user_attribute' table -->
-    <changeSet id="0.15.0-002" author="yourUsername">
+    <changeSet id="0.15.0-002" author="komune">
         <preConditions onFail="MARK_RAN">
             <columnExists tableName="user_attribute" columnName="value"/>
         </preConditions>
