@@ -27,7 +27,6 @@ object Versions {
 
 	const val springBoot = PluginVersions.springBoot
 	const val springData = FixersVersions.Spring.data
-	const val springSecurity = "6.1.3"
 
 	const val kdatetime = "0.1.1"
 
@@ -36,8 +35,8 @@ object Versions {
         println("Keycloak version: $version")
     }
 
-	const val mockito = "4.6.1"
-	const val testcontainers = "1.18.0"
+	const val mockito = "4.11.0"
+	const val testcontainers = FixersVersions.Test.testcontainers
 
 	const val slf4j = FixersVersions.Logging.slf4j
 }
