@@ -93,7 +93,7 @@ docker-keycloak-auth-build:
 	./gradlew im-keycloak:keycloak-plugin:shadowJar
 	@docker buildx build \
 		--platform ${DOCKER_PLATFORM} \
-		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/  \
+		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/auth  \
 		--build-arg KEYCLOAK_VERSION=${KEYCLOAK_VERSION} \
 		-f ${KEYCLOAK_DOCKERFILE} \
 		-t ${KEYCLOAK_AUTH_IMG} .
@@ -101,7 +101,7 @@ docker-keycloak-auth-build:
 docker-keycloak-auth-publish:
 	@docker buildx build --push \
 		--platform ${DOCKER_PLATFORM} \
-		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/ \
+		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/auth \
 		--build-arg KEYCLOAK_VERSION=${KEYCLOAK_VERSION} \
 		-f ${KEYCLOAK_DOCKERFILE} \
 		-t ghcr.io/komune-io/${KEYCLOAK_AUTH_IMG} .
@@ -109,7 +109,7 @@ docker-keycloak-auth-publish:
 docker-keycloak-auth-promote:
 	@docker buildx build --push \
 		--platform ${DOCKER_PLATFORM} \
-		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/ \
+		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/auth \
 		--build-arg KEYCLOAK_VERSION=${KEYCLOAK_VERSION} \
 		-f ${KEYCLOAK_DOCKERFILE} \
 		-t docker.io/komune/${KEYCLOAK_AUTH_IMG} .
