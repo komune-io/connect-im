@@ -9,6 +9,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Create a new organization.
@@ -77,6 +78,7 @@ interface OrganizationCreateCommandDTO: Command {
     val status: String?
 }
 
+@Serializable
 data class OrganizationCreateCommand(
     override val siret: String? = null,
     override val name: String,
@@ -100,6 +102,7 @@ interface OrganizationCreatedEventDTO: Event {
  * @d2 event
  * @parent [OrganizationCreateFunction]
  */
+@Serializable
 data class OrganizationCreatedEvent(
     /**
      * Identifier of the organization.

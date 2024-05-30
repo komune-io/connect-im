@@ -28,6 +28,7 @@ interface OrganizationGetFromInseeQueryDTO: Query {
  * @d2 query
  * @parent [OrganizationGetFromInseeFunction]
  */
+@Serializable
 data class OrganizationGetFromInseeQuery(
     /**
      * Siret number of the organization.

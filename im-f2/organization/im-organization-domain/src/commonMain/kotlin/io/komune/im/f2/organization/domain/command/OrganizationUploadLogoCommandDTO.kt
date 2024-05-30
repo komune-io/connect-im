@@ -6,6 +6,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Update the logo of an organization.
@@ -25,6 +26,7 @@ interface OrganizationUploadLogoCommandDTO: Command {
  * @d2 command
  * @parent [OrganizationUploadLogoFunction]
  */
+@Serializable
 data class OrganizationUploadLogoCommand(
     /**
      * Identifier of the organization.
@@ -43,6 +45,7 @@ interface OrganizationUploadedLogoEventDTO: Event {
  * @d2 event
  * @parent [OrganizationUploadLogoFunction]
  */
+@Serializable
 data class OrganizationUploadedLogoEvent(
     /**
      * Identifier of the organization.

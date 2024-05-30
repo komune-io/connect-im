@@ -27,6 +27,7 @@ interface OrganizationRefListQueryDTO: Query {
  * @d2 query
  * @parent [OrganizationRefListFunction]
  */
+@Serializable
 data class OrganizationRefListQuery(
 	/**
 	 * If false, filter out the disabled organizations. (default: false)

@@ -27,7 +27,7 @@ actual fun organizationClient(
 
     ): F2SupplierSingle<OrganizationClient> = f2SupplierSingle {
     OrganizationClient(
-        F2ClientBuilder.get(urlBase, json = null) {
+        F2ClientBuilder.get(urlBase, json = json) {
             install(HttpTimeout) {
                 @Suppress("MagicNumber")
                 requestTimeoutMillis = 60000
