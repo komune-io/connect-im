@@ -4,6 +4,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Check if a user exists by email.
@@ -29,6 +30,7 @@ interface UserExistsByEmailQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserExistsByEmailQuery(
     override val email: String
 ): UserExistsByEmailQueryDTO
@@ -49,6 +51,7 @@ interface UserExistsByEmailResultDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserExistsByEmailResult(
     override val item: Boolean
 ): UserExistsByEmailResultDTO

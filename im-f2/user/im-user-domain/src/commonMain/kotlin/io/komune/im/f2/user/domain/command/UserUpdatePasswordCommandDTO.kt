@@ -6,6 +6,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Set a new password for a user.
@@ -37,6 +38,7 @@ interface UserUpdatePasswordCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserUpdatePasswordCommand(
     override val id: UserId,
     override val password: String
@@ -58,6 +60,7 @@ interface UserUpdatedPasswordEventDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserUpdatedPasswordEvent(
     override val id: UserId
 ): UserUpdatedPasswordEventDTO

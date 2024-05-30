@@ -8,6 +8,7 @@ import io.komune.im.f2.organization.domain.model.OrganizationRefDTO
 import io.komune.im.f2.privilege.domain.role.model.Role
 import io.komune.im.f2.privilege.domain.role.model.RoleDTO
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Representation of a user.
@@ -104,6 +105,7 @@ interface UserDTO {
 /**
  * @d2 inherit
  */
+@Serializable
 data class User(
     override val id: UserId,
     override val memberOf: OrganizationRef?,

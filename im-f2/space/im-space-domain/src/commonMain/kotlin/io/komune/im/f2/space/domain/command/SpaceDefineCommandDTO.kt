@@ -5,6 +5,7 @@ import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Create or update a space.
@@ -47,6 +48,7 @@ interface SpaceDefineCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@Serializable
 data class SpaceDefineCommand(
     override val identifier: String,
     override val theme: String?,
@@ -69,6 +71,7 @@ interface SpaceDefinedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class SpaceDefinedEvent(
     override val identifier: SpaceIdentifier,
 ): SpaceDefinedEventDTO

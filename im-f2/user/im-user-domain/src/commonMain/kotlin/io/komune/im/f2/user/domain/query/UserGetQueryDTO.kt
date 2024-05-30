@@ -7,6 +7,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Get a user by id.
@@ -31,6 +32,7 @@ interface UserGetQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserGetQuery(
     override val id: UserId
 ): UserGetQueryDTO
@@ -50,6 +52,7 @@ interface UserGetResultDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserGetResult(
     override val item: User?
 ): UserGetResultDTO

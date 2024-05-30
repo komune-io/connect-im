@@ -5,6 +5,7 @@ import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Set a new email for a user.
@@ -40,6 +41,7 @@ interface UserUpdateEmailCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserUpdateEmailCommand(
     override val id: UserId,
     override val email: String,
@@ -61,6 +63,7 @@ interface UserUpdatedEmailEventDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserUpdatedEmailEvent(
     override val id: UserId
 ): UserUpdatedEmailEventDTO

@@ -6,6 +6,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Get a user by email.
@@ -31,6 +32,7 @@ interface UserGetByEmailQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserGetByEmailQuery(
     override val email: String
 ): UserGetByEmailQueryDTO
@@ -50,6 +52,7 @@ interface UserGetByEmailResultDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserGetByEmailResult(
     override val item: User?
 ): UserGetByEmailResultDTO

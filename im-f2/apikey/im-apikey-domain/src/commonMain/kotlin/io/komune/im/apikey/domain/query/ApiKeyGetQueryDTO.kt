@@ -8,6 +8,7 @@ import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Get an apikey by ID.
@@ -33,6 +34,7 @@ interface ApiKeyGetQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@Serializable
 data class ApiKeyGetQuery(
     override val id: ApiKeyId
 ): ApiKeyGetQueryDTO
@@ -53,6 +55,7 @@ interface ApiKeyGetResultDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class ApiKeyGetResult(
     override val item: ApiKey?
 ): ApiKeyGetResultDTO

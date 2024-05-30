@@ -8,6 +8,7 @@ import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Get a page of users.
@@ -83,6 +84,7 @@ interface UserPageQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserPageQuery(
     override val organizationId: OrganizationId? = null,
     override val organizationName: String? = null,
@@ -117,6 +119,7 @@ interface UserPageResultDTO: PageDTO<UserDTO> {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserPageResult(
     override val items: List<User>,
     override val total: Int

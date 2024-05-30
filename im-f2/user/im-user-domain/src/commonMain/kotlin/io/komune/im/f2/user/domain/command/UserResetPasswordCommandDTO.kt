@@ -6,6 +6,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Send an email to a user for them to reset their password.
@@ -31,6 +32,7 @@ interface UserResetPasswordCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserResetPasswordCommand(
     override val id: UserId
 ): UserResetPasswordCommandDTO
@@ -51,6 +53,7 @@ interface UserResetPasswordEventDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserResetPasswordEvent(
     override val id: UserId
 ): UserResetPasswordEventDTO

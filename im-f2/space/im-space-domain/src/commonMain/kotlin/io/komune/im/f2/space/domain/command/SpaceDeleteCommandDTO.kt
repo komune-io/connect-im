@@ -6,6 +6,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Delete a space (but not its users).
@@ -25,6 +26,7 @@ interface SpaceDeleteCommandDTO: Command {
  * @d2 command
  * @parent [SpaceDeleteFunction]
  */
+@Serializable
 data class SpaceDeleteCommand(
     /**
      * Identifier of the space to delete.
@@ -42,6 +44,7 @@ interface SpaceDeletedEventDTO: Event {
  * @d2 event
  * @parent [SpaceDeleteFunction]
  */
+@Serializable
 data class SpaceDeletedEvent(
     /**
      * Identifier of the deleted space.

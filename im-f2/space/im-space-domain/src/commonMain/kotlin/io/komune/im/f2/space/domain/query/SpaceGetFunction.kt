@@ -8,6 +8,7 @@ import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Get a space by ID.
@@ -27,6 +28,7 @@ interface SpaceGetQueryDTO: Query {
  * @d2 query
  * @parent [SpaceGetFunction]
  */
+@Serializable
 data class SpaceGetQuery(
     /**
      * Identifier of the space.
@@ -44,6 +46,7 @@ interface SpaceGetResultDTO: Event {
  * @d2 result
  * @parent [SpaceGetFunction]
  */
+@Serializable
 data class SpaceGetResult(
     /**
      * The space.
