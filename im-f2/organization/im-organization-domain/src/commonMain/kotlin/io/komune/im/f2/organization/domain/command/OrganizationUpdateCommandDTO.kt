@@ -8,6 +8,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Update an organization.
@@ -70,6 +71,7 @@ interface OrganizationUpdateCommandDTO: Command {
     val status: String?
 }
 
+@Serializable
 data class OrganizationUpdateCommand(
     override val id: OrganizationId,
     override val name: String,
@@ -94,6 +96,7 @@ interface OrganizationUpdatedResultDTO: Event {
     val id: OrganizationId
 }
 
+@Serializable
 data class OrganizationUpdatedResult(
     override val id: OrganizationId
 ): OrganizationUpdatedResultDTO

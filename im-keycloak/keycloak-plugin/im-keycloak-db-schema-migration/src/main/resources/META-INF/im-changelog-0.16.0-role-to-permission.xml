@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- ChangeSet to enable uuid-ossp extension -->
+    <changeSet id="0" author="komune">
+        <sql>
+            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+        </sql>
+    </changeSet>
+
+    <!-- ChangeSet to update role names -->
+    <changeSet id="10" author="komune">
+        <update tableName="keycloak_role">
+            <column name="name" value="im_user_read"/>
+            <where>name = 'im_read_user'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_role_read"/>
+            <where>name = 'im_read_role'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_apikey_read"/>
+            <where>name = 'im_read_apikey'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_organization_read"/>
+            <where>name = 'im_read_organization'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_organization_write"/>
+            <where>name = 'im_write_organization'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_apikey_write"/>
+            <where>name = 'im_write_apikey'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_user_write"/>
+            <where>name = 'im_write_user'</where>
+        </update>
+        <update tableName="keycloak_role">
+            <column name="name" value="im_role_write"/>
+            <where>name = 'im_write_role'</where>
+        </update>
+    </changeSet>
+
+    <!-- ChangeSet to insert missing roles into keycloak_role table for each realm -->
+    <changeSet id="20" author="komune">
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_user_read', 'Ability to view any user data', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_user_read' AND realm_id = id);
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_user_write', 'Ability to modify any user data', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_user_write' AND realm_id = id);
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_organization_read', 'Ability to view any organization data', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_organization_read' AND realm_id = id);
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_organization_write', 'Ability to modify any organization data', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_organization_write' AND realm_id = id);
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_organization_write_own', 'Ability to modify own organization data', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_organization_write_own' AND realm_id = id);
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_role_read', 'Ability to view any role data', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_role_read' AND realm_id = id);
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_role_write', 'Ability to modify any role data', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_role_write' AND realm_id = id);
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_apikey_read', 'Ability to view API keys', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_apikey_read' AND realm_id = id);
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_apikey_write', 'Ability to modify API keys', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_apikey_write' AND realm_id = id);
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_space_read', 'Ability to view space data', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_space_read' AND realm_id = id);
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_space_write', 'Ability to modify space data', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_space_write' AND realm_id = id);
+        </sql>
+    </changeSet>
+
+    <!-- ChangeSet to insert corresponding role attributes for each realm -->
+    <changeSet id="30" author="komune">
+        <sql>
+            INSERT INTO role_attribute (id, role_id, name, value)
+            SELECT uuid_generate_v4(), id, 'type', 'PERMISSION'
+            FROM keycloak_role
+            WHERE name = 'im_user_read';
+        </sql>
+        <sql>
+            INSERT INTO role_attribute (id, role_id, name, value)
+            SELECT uuid_generate_v4(), id, 'type', 'PERMISSION'
+            FROM keycloak_role
+            WHERE name = 'im_user_write';
+        </sql>
+        <sql>
+            INSERT INTO role_attribute (id, role_id, name, value)
+            SELECT uuid_generate_v4(), id, 'type', 'PERMISSION'
+            FROM keycloak_role
+            WHERE name = 'im_organization_read';
+        </sql>
+        <sql>
+            INSERT INTO role_attribute (id, role_id, name, value)
+            SELECT uuid_generate_v4(), id, 'type', 'PERMISSION'
+            FROM keycloak_role
+            WHERE name = 'im_organization_write';
+        </sql>
+        <sql>
+            INSERT INTO role_attribute (id, role_id, name, value)
+            SELECT uuid_generate_v4(), id, 'type', 'PERMISSION'
+            FROM keycloak_role
+            WHERE name = 'im_organization_write_own';
+        </sql>
+        <sql>
+            INSERT INTO role_attribute (id, role_id, name, value)
+            SELECT uuid_generate_v4(), id, 'type', 'PERMISSION'
+            FROM keycloak_role
+            WHERE name = 'im_role_read';
+        </sql>
+        <sql>
+            INSERT INTO role_attribute (id, role_id, name, value)
+            SELECT uuid_generate_v4(), id, 'type', 'PERMISSION'
+            FROM keycloak_role
+            WHERE name = 'im_role_write';
+        </sql>
+        <sql>
+            INSERT INTO role_attribute (id, role_id, name, value)
+            SELECT uuid_generate_v4(), id, 'type', 'PERMISSION'
+            FROM keycloak_role
+            WHERE name = 'im_apikey_read';
+        </sql>
+        <sql>
+            INSERT INTO role_attribute (id, role_id, name, value)
+            SELECT uuid_generate_v4(), id, 'type', 'PERMISSION'
+            FROM keycloak_role
+            WHERE name = 'im_apikey_write';
+        </sql>
+        <sql>
+            INSERT INTO role_attribute (id, role_id, name, value)
+            SELECT uuid_generate_v4(), id, 'type', 'PERMISSION'
+            FROM keycloak_role
+            WHERE name = 'im_space_read';
+        </sql>
+        <sql>
+            INSERT INTO role_attribute (id, role_id, name, value)
+            SELECT uuid_generate_v4(), id, 'type', 'PERMISSION'
+            FROM keycloak_role
+            WHERE name = 'im_space_write';
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -7,6 +7,7 @@ import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Get all organization refs.
@@ -26,6 +27,7 @@ interface OrganizationRefListQueryDTO: Query {
  * @d2 query
  * @parent [OrganizationRefListFunction]
  */
+@Serializable
 data class OrganizationRefListQuery(
 	/**
 	 * If false, filter out the disabled organizations. (default: false)
@@ -44,6 +46,7 @@ interface OrganizationRefListResultDTO: Event {
  * @d2 result
  * @parent [OrganizationRefListFunction]
  */
+@Serializable
 data class OrganizationRefListResult(
 	/**
 	 * All Organization Refs.

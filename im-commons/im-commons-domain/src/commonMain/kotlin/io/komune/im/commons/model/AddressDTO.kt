@@ -2,6 +2,7 @@ package io.komune.im.commons.model
 
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Representation of the address.
@@ -29,6 +30,7 @@ interface AddressDTO {
     val city: String
 }
 
+@Serializable
 data class Address(
     override val street: String,
     override val postalCode: String,

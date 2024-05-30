@@ -8,6 +8,7 @@ import f2.dsl.cqrs.page.PagePagination
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Get a page of spaces.
@@ -32,6 +33,7 @@ interface SpacePageQueryDTO: Query {
  * @d2 query
  * @parent [SpacePageFunction]
  */
+@Serializable
 data class SpacePageQuery(
 	/**
 	 * Search string filtering on the name of the space.
@@ -58,6 +60,7 @@ interface SpacePageResultDTO: PageDTO<SpaceDTO>
  * @d2 result
  * @parent [SpacePageFunction]
  */
+@Serializable
 data class SpacePageResult(
     /**
 	 * List of spaces satisfying the requesting filters. The size of the list is lesser or equal than the requested size.

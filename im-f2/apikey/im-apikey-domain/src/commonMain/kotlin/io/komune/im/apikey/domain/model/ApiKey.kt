@@ -6,6 +6,7 @@ import io.komune.im.f2.privilege.domain.role.model.Role
 import io.komune.im.f2.privilege.domain.role.model.RoleDTO
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 typealias ApiKeyId = ClientId
 typealias ApiKeyIdentifier = ClientIdentifier
@@ -20,6 +21,7 @@ interface ApiKeyDTO {
     val creationDate: Long
 }
 
+@Serializable
 data class ApiKey(
     override val id: ApiKeyId,
     override val name: String,

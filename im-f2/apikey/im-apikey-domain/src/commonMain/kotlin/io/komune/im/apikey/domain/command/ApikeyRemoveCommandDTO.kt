@@ -7,6 +7,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Create an API key for an apikey.
@@ -26,6 +27,7 @@ interface ApikeyRemoveCommandDTO: Command {
  * @d2 command
  * @parent [ApikeyRemoveFunction]
  */
+@Serializable
 data class ApikeyRemoveCommand(
     /**
      * Id of the apikey.
@@ -44,6 +46,7 @@ interface ApikeyRemoveEventDTO: Event {
  * @d2 event
  * @parent [ApikeyRemoveFunction]
  */
+@Serializable
 data class ApikeyRemoveEvent(
     /**
      * Id of the apikey.

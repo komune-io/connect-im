@@ -8,6 +8,7 @@ import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Get a page of apikeys.
@@ -66,6 +67,7 @@ interface ApiKeyPageQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@Serializable
 data class ApiKeyPageQuery(
 	override val search: String? = null,
 	override val organizationId: OrganizationId? = null,
@@ -98,6 +100,7 @@ interface ApiKeyPageResultDTO: PageDTO<ApiKeyDTO> {
 /**
  * @d2 inherit
  */
+@Serializable
 data class ApiKeyPageResult(
     override val items: List<ApiKey>,
     override val total: Int

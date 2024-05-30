@@ -3,6 +3,7 @@ package io.komune.im.f2.space.domain.model
 import io.komune.im.commons.model.SpaceIdentifier
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Representation of a space.
@@ -34,6 +35,7 @@ interface SpaceDTO {
     val locales: List<String>?
 }
 
+@Serializable
 data class Space(
     override val identifier: SpaceIdentifier,
     override val theme: String?,

@@ -8,6 +8,7 @@ import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Create an API key for an apikey.
@@ -48,6 +49,7 @@ interface ApiKeyOrganizationAddCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@Serializable
 data class ApiKeyOrganizationAddKeyCommand(
     override val organizationId: OrganizationId,
     override val name: String,
@@ -85,6 +87,7 @@ interface ApiKeyAddedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class ApiKeyOrganizationAddedEvent(
     override val id: ApiKeyId,
     override val organizationId: OrganizationId,

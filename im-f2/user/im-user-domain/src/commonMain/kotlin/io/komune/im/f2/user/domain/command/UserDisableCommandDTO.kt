@@ -6,6 +6,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Disable a user
@@ -51,6 +52,7 @@ interface UserDisableCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserDisableCommand(
     override val id: UserId,
     override val disabledBy: UserId?,
@@ -73,6 +75,7 @@ interface UserDisabledEventDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserDisabledEvent(
     override val id: UserId
 ): UserDisabledEventDTO

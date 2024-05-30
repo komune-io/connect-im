@@ -9,6 +9,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Update a user.
@@ -65,6 +66,7 @@ interface UserUpdateCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserUpdateCommand(
     override val id: UserId,
     override val givenName: String,
@@ -90,6 +92,7 @@ interface UserUpdatedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserUpdatedEvent(
     override val id: UserId
 ): UserUpdatedEventDTO

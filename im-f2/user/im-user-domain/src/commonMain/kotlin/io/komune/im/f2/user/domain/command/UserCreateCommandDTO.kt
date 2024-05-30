@@ -9,6 +9,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Create a new user.
@@ -108,6 +109,7 @@ interface UserCreateCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserCreateCommand(
     override val email: String,
     override val password: String? = null,
@@ -139,6 +141,7 @@ interface UserCreatedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class UserCreatedEvent(
     override val id: UserId
 ): UserCreatedEventDTO

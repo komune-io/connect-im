@@ -6,6 +6,7 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Disable an organization along with all its users.
@@ -55,6 +56,7 @@ interface OrganizationDisableCommandDTO: Command {
  * @d2 command
  * @parent [OrganizationDisableFunction]
  */
+@Serializable
 data class OrganizationDisableCommand(
     override val id: OrganizationId,
     override val disabledBy: String?,
@@ -74,6 +76,7 @@ interface OrganizationDisabledEventDTO: Event {
  * @d2 event
  * @parent [OrganizationDisableFunction]
  */
+@Serializable
 data class OrganizationDisabledEvent(
     /**
      * Identifier of the disabled organization.
