@@ -28,6 +28,9 @@ import io.komune.im.script.space.config.config.OrganizationData
 import io.komune.im.script.space.config.config.SpaceConfigProperties
 import io.komune.im.script.space.config.config.UserData
 import f2.spring.exception.ConflictException
+import io.komune.im.apikey.domain.model.ApiKeyId
+import io.komune.im.commons.model.RoleIdentifier
+import io.komune.im.script.core.extentions.init
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -81,18 +84,22 @@ class SpaceConfigScript (
 
     private suspend fun initPermissions(permissions: List<PermissionData>?) {
         if (permissions.isNullOrEmpty()) {
+            logger.info("No Permissions to initialize")
             return
         }
 
         permissions.mapAsync { permission ->
-            privilegeFinderService.getPrivilegeOrNull(permission.name)
-                ?: privilegeAggregateService.define(permission.toCommand())
+            init("Permission[${permission.name}]", logger, {
+                privilegeFinderService.getPrivilegeOrNull(permission.name)
+            }, {
+                privilegeAggregateService.define(permission.toCommand())
+            })
         }
     }
 
-    private suspend fun initRoles(roles: List<RoleData>?) {
+    private suspend fun initRoles(roles: List<RoleData>?): List<RoleIdentifier> {
         if (roles.isNullOrEmpty()) {
-            return
+            return emptyList()
         }
 
         val existingRoles = privilegeFinderService.listRoles()
@@ -119,9 +126,12 @@ class SpaceConfigScript (
             )
         }
 
-        roles.forEach { role ->
-            privilegeFinderService.getPrivilegeOrNull(role.name)
-                ?: privilegeAggregateService.define(role.toCommand())
+        return roles.map { role ->
+            init("Role[${role.name}]", logger, {
+                privilegeFinderService.getPrivilegeOrNull(role.name)?.identifier
+            }, {
+                privilegeAggregateService.define(role.toCommand()).identifier
+            })
         }
     }
 
@@ -165,8 +175,10 @@ class SpaceConfigScript (
 
     private suspend fun initUsers(users: List<UserData>?, organizationId: OrganizationId? = null) {
         users?.mapAsync { user ->
-            userFinderService.getByEmailOrNull(user.email)
-                ?: UserCreateCommand(
+            init("User[email: ${user.email}]", logger, {
+                userFinderService.getByEmailOrNull(user.email)
+            }, {
+                UserCreateCommand(
                     email = user.email,
                     password = user.password,
                     givenName = user.firstname,
@@ -179,18 +191,29 @@ class SpaceConfigScript (
                     isPasswordTemporary = false,
                     sendResetPassword = false
                 ).let { userAggregateService.create(it) }
+            })
         }
     }
 
-    private suspend fun initApiKeys(keys: List<ApiKeyData>?, organizationId: OrganizationId) {
+    private suspend fun initApiKeys(keys: List<ApiKeyData>?, organizationId: OrganizationId): List<ApiKeyId> {
+        if (keys.isNullOrEmpty()) {
+            return emptyList()
+        }
+
         // do not make async, as it saves the keys in organization attributes
-        keys?.forEach { key ->
-            ApiKeyOrganizationAddKeyCommand(
-                organizationId = organizationId,
-                name = key.name,
-                secret = key.secret,
-                roles = key.roles.orEmpty()
-            ).let { apiKeyAggregateService.create(it) }
+        return keys.map { key ->
+            init("Key[Name: ${key.name}, OrganizationId $organizationId]", logger, {
+                apiKeyAggregateService.findByName(key.name, organizationId)?.id
+            }, {
+                ApiKeyOrganizationAddKeyCommand(
+                    organizationId = organizationId,
+                    name = key.name,
+                    secret = key.secret,
+                    roles = key.roles.orEmpty()
+                ).let { apiKeyAggregateService.create(it).id }
+            })
+
+
         }
     }
 }
