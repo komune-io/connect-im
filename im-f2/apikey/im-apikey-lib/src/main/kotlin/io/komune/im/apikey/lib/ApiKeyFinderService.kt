@@ -14,6 +14,7 @@ import io.komune.im.core.user.domain.model.UserModel
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import f2.dsl.cqrs.page.OffsetPagination
 import f2.spring.exception.NotFoundException
+import io.komune.im.apikey.domain.model.ApiKeyIdentifier
 import org.springframework.stereotype.Service
 
 @Service
@@ -23,6 +24,13 @@ class ApiKeyFinderService(
     private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val userRepresentationTransformer: UserRepresentationTransformer
 ) {
+    suspend fun getOrNullByIdentifier(id: ApiKeyIdentifier): ApiKey? {
+        val user = getUserOfKey(id)
+        val organization = organizationCoreFinderService.get(user.memberOf!!)
+        return organization.apiKeys()
+            .firstOrNull { it.identifier == id }
+            ?.let { apiKeyToDTOTransformer.transform(it) }
+    }
     suspend fun getOrNull(id: ApiKeyId): ApiKey? {
         val user = getUserOfKey(id)
         val organization = organizationCoreFinderService.get(user.memberOf!!)

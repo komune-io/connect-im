@@ -4,9 +4,12 @@ import io.komune.im.apikey.domain.command.ApiKeyOrganizationAddKeyCommand
 import io.komune.im.apikey.domain.command.ApiKeyOrganizationAddedEvent
 import io.komune.im.apikey.domain.command.ApikeyRemoveCommand
 import io.komune.im.apikey.domain.command.ApikeyRemoveEvent
+import io.komune.im.apikey.domain.model.ApiKey
+import io.komune.im.apikey.domain.model.ApiKeyId
 import io.komune.im.apikey.domain.model.ApiKeyModel
 import io.komune.im.apikey.lib.service.ORGANIZATION_FIELD_API_KEYS
 import io.komune.im.apikey.lib.service.apiKeys
+import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.PrivilegeIdentifier
 import io.komune.im.commons.utils.mapAsync
 import io.komune.im.commons.utils.toJson
@@ -15,6 +18,7 @@ import io.komune.im.core.client.domain.command.ClientCreateCommand
 import io.komune.im.core.organization.api.OrganizationCoreAggregateService
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.organization.domain.command.OrganizationCoreSetSomeAttributesCommand
+import io.komune.im.core.organization.domain.model.OrganizationModel
 import io.komune.im.core.privilege.api.PrivilegeCoreFinderService
 import io.komune.im.core.privilege.api.model.checkTarget
 import io.komune.im.core.privilege.domain.model.RoleTarget
@@ -39,6 +43,12 @@ class ApiKeyAggregateService(
 ) {
     private val logger = LoggerFactory.getLogger(ApiKeyAggregateService::class.java)
 
+    suspend fun findByName(name: String, organizationId: OrganizationId): ApiKey? {
+        val organization = organizationCoreFinderService.get(organizationId)
+        val keyIdentifier = toKeyIdentifier(organization, name)
+        return apiKeyFinderService.getOrNullByIdentifier(keyIdentifier)
+    }
+
     @Suppress("LongMethod")
     suspend fun create(
         command: ApiKeyOrganizationAddKeyCommand
@@ -47,10 +57,7 @@ class ApiKeyAggregateService(
         val organization = organizationCoreFinderService.get(command.organizationId)
         val client = keycloakClientProvider.get()
 
-        val keyIdentifier = Normalizer.normalize("tr-${organization.identifier}-${command.name}-api-key", Normalizer.Form.NFD)
-            .lowercase()
-            .replace(Regex("[^a-z0-9]"), "-")
-            .replace(Regex("-+"), "-")
+        val keyIdentifier = toKeyIdentifier(organization, command.name)
         val keySecret = command.secret ?: UUID.randomUUID().toString()
 
         val keyId = ClientCreateCommand(
@@ -92,6 +99,18 @@ class ApiKeyAggregateService(
             keyIdentifier = keyIdentifier,
             keySecret = keySecret
         )
+    }
+
+    private fun toKeyIdentifier(
+        organization: OrganizationModel,
+        name: String
+    ): String {
+        val keyIdentifier =
+            Normalizer.normalize("tr-${organization.identifier}-${name}-api-key", Normalizer.Form.NFD)
+                .lowercase()
+                .replace(Regex("[^a-z0-9]"), "-")
+                .replace(Regex("-+"), "-")
+        return keyIdentifier
     }
 
     suspend fun remove(command: ApikeyRemoveCommand): ApikeyRemoveEvent {
