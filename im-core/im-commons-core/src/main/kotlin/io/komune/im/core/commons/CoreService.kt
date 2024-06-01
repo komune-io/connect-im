@@ -44,7 +44,7 @@ open class CoreService(
         } catch (e: Exception) {
             val client = keycloakClientProvider.get()
             throw I2ApiError(
-                description = "Space [${client.auth.realmId}]: $errorMessage",
+                description = "Space [${client.realmId}, ${client.auth.realmId}]: $errorMessage",
                 payload = emptyMap()
             ).asI2Exception(e)
         }

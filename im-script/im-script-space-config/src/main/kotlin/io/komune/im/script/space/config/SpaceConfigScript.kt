@@ -56,7 +56,7 @@ class SpaceConfigScript (
 
         val auth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
         withContext(AuthContext(auth)) {
-            logger.info("Verify Realm[${properties.space}] exists and update it if needed...")
+            logger.info("Verify Realm[${auth.space}] exists and update it if needed...")
             properties.verifyAndUpdateSpace()
 
             logger.info("Initializing Permissions...")
