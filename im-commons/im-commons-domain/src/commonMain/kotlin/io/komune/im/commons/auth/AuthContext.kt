@@ -14,8 +14,6 @@ data class AuthContext(
 }
 
 suspend fun <R> withAuth(auth: AuthSubRealm, space: String? = null, block: suspend CoroutineScope.() -> R): R {
-
-
     return withContext(AuthContext(
         auth.copy(space = space ?: auth.space)
     ), block)

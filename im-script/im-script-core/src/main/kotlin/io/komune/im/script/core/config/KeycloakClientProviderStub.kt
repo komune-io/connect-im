@@ -21,7 +21,7 @@ class KeycloakClientProviderStub(
         val clientCache = cache.getOrPut("${auth.master.serverUrl} ${auth.master.clientId}") {
             KeycloakClientCache(KeycloakClientBuilder.openConnection(auth))
         }
-        return clientCache.clients.getOrPut(auth.master.realmId) {
+        return clientCache.clients.getOrPut(auth.space) {
             clientCache.connection.forAuthedRealm()
         }
     }
