@@ -14,9 +14,9 @@ open class KeycloakClientProvider(
 
     open suspend fun get(): KeycloakClient {
         val auth = currentAuth() ?: authenticationResolver.getAuth()
+        val keycloakConnection = connection
+            ?: KeycloakClientBuilder.openConnection(auth)
         return cache.getOrPut(auth.space) {
-            val keycloakConnection = connection
-                ?: KeycloakClientBuilder.openConnection(auth)
             keycloakConnection.forRealm(auth.space)
         }
     }
