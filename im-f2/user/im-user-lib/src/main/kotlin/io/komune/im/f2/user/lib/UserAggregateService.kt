@@ -98,6 +98,7 @@ class UserAggregateService(
             givenName = command.givenName,
             familyName = command.familyName,
             roles = command.roles,
+            memberOf = command.memberOf,
             attributes = command.attributes.orEmpty().plus(listOfNotNull(
                 command.address?.let { UserDTO::address.name to it.toJson() },
                 command.phone?.let { UserDTO::phone.name to it },
