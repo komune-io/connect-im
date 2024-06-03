@@ -134,6 +134,6 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
     }
 
     private fun UserCoreDefineCommand.canUpdateMemberOf(): Boolean {
-        return id == null || isApiKey
+        return id == null
     }
 }
