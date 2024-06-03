@@ -3,8 +3,11 @@ package io.komune.im.f2.user.api
 import io.komune.im.commons.auth.ImRole
 import io.komune.im.commons.auth.hasOneOfRoles
 import io.komune.im.commons.auth.policies.PolicyEnforcer
+import io.komune.im.commons.auth.policies.enforce
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.UserId
+import io.komune.im.f2.user.domain.command.UserUpdateCommand
+import io.komune.im.f2.user.domain.command.UserUpdateCommandDTO
 import io.komune.im.f2.user.domain.model.UserDTO
 import io.komune.im.f2.user.domain.policies.UserPolicies
 import io.komune.im.f2.user.domain.query.UserPageQuery
@@ -35,6 +38,17 @@ class UserPoliciesEnforcer(
     suspend fun checkUpdate(userId: UserId) = checkAuthed("update an user") { authedUser ->
         val user = userFinderService.get(userId)
         UserPolicies.canUpdate(authedUser, user)
+    }
+    suspend fun enforceMemberOf(
+        userId: UserId,
+        cmd: UserUpdateCommand
+    ) = enforceAuthed { authedUser ->
+        val user = userFinderService.get(userId)
+        if(UserPolicies.canUpdateMemberOf(authedUser, user)) {
+            cmd.memberOf
+        } else {
+            user.memberOf
+        }
     }
 
     suspend fun checkDisable(userId: UserId) = checkAuthed("disable an user") { authedUser ->

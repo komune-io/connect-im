@@ -92,8 +92,7 @@ class UserAggregateService(
 
     suspend fun update(command: UserUpdateCommand): UserUpdatedEvent {
         checkRoles(command.roles)
-
-        UserCoreDefineCommand(
+        val event = UserCoreDefineCommand(
             id = command.id,
             givenName = command.givenName,
             familyName = command.familyName,
@@ -105,7 +104,7 @@ class UserAggregateService(
             )).toMap(),
         ).let { userCoreAggregateService.define(it) }
 
-        return UserUpdatedEvent(command.id)
+        return UserUpdatedEvent(event.id)
     }
 
     suspend fun updateEmail(command: UserUpdateEmailCommand): UserUpdatedEmailEvent {

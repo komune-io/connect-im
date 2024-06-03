@@ -50,6 +50,13 @@ object UserPolicies {
     }
 
     /**
+     * User can update member of the given user
+     */
+    fun canUpdateMemberOf(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
+        return authedUser.hasRole(ImRole.IM_ORGANIZATION_WRITE)
+    }
+
+    /**
      * User can disable a user
      */
     fun canDisable(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
