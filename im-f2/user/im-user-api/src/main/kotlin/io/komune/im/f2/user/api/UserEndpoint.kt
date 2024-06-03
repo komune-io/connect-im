@@ -96,8 +96,8 @@ class UserEndpoint(
     @Bean
     override fun userUpdate(): UserUpdateFunction = f2Function { command ->
         logger.info("userUpdate: $command")
-        policiesEnforcer.checkUpdate(command.id)
-        userAggregateService.update(command)
+        val cmd = policiesEnforcer.enforceUpdate(command)
+        userAggregateService.update(cmd)
     }
 
     @Bean
