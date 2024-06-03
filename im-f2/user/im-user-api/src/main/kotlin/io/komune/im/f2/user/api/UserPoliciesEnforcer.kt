@@ -12,12 +12,15 @@ import io.komune.im.f2.user.domain.model.UserDTO
 import io.komune.im.f2.user.domain.policies.UserPolicies
 import io.komune.im.f2.user.domain.query.UserPageQuery
 import io.komune.im.f2.user.lib.UserFinderService
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class UserPoliciesEnforcer(
     private val userFinderService: UserFinderService
 ): PolicyEnforcer() {
+
+    private val logger = LoggerFactory.getLogger(UserPoliciesEnforcer::class.java)
 
     suspend fun checkGet(user: UserDTO? = null) = checkAuthed("get user") { authedUser ->
         UserPolicies.canGet(authedUser, user)
@@ -45,9 +48,12 @@ class UserPoliciesEnforcer(
     ) = enforceAuthed { authedUser ->
         val user = userFinderService.get(userId)
         if(UserPolicies.canUpdateMemberOf(authedUser, user)) {
-            cmd.memberOf
+            cmd
         } else {
-            user.memberOf
+            logger.info("memberOf can't be updated")
+            cmd.copy(
+                memberOf = user.memberOf?.id
+            )
         }
     }
 
