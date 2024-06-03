@@ -78,6 +78,7 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
             address = params.address,
             phone = params.phone,
             roles = params.roles,
+            memberOf = params.memberOf,
             attributes = params.attributes,
         )
 
