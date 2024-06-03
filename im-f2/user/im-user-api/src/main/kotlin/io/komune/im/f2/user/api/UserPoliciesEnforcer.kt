@@ -38,19 +38,23 @@ class UserPoliciesEnforcer(
         UserPolicies.canCreate(authedUser, organizationId)
     }
 
+    suspend fun enforceUpdate(cmd: UserUpdateCommand) = enforceAuthed { authedUser ->
+        checkUpdate(cmd.id)
+        enforceMemberOf(cmd)
+    }
     suspend fun checkUpdate(userId: UserId) = checkAuthed("update an user") { authedUser ->
         val user = userFinderService.get(userId)
         UserPolicies.canUpdate(authedUser, user)
     }
     suspend fun enforceMemberOf(
-        userId: UserId,
         cmd: UserUpdateCommand
     ) = enforceAuthed { authedUser ->
-        val user = userFinderService.get(userId)
+        val user = userFinderService.get(cmd.id)
         if(UserPolicies.canUpdateMemberOf(authedUser, user)) {
             cmd
         } else {
-            logger.info("memberOf can't be updated")
+            logger.warn("memberOf can't be updated, " +
+                "memberOf will be set to the current user's organization[${user.memberOf?.id}].")
             cmd.copy(
                 memberOf = user.memberOf?.id
             )
