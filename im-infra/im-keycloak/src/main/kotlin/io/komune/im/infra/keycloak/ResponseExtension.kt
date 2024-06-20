@@ -1,7 +1,7 @@
 package io.komune.im.infra.keycloak
 
 import io.komune.im.commons.exception.I2ApiError
-import io.komune.im.commons.exception.asI2Exception
+import io.komune.im.commons.exception.asException
 import f2.spring.exception.ConflictException
 import f2.spring.exception.NotFoundException
 import org.apache.http.HttpStatus
@@ -26,7 +26,7 @@ fun Response.onCreationFailure(entityName: String = "entity") {
         else -> throw I2ApiError(
             description = msg,
             payload = emptyMap()
-        ).asI2Exception()
+        ).asException()
     }
 }
 
