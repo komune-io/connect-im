@@ -1,8 +1,8 @@
 package io.komune.im.core.commons
 
 import io.komune.im.commons.exception.I2ApiError
-import io.komune.im.commons.exception.I2Exception
-import io.komune.im.commons.exception.asI2Exception
+import io.komune.im.commons.exception.IMException
+import io.komune.im.commons.exception.asException
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.infra.redis.CacheName
 import io.komune.im.infra.redis.CachedService
@@ -37,7 +37,7 @@ open class CoreService(
     protected suspend fun <R> handleErrors(errorMessage: String, exec: suspend () -> R): R {
         return try {
             exec()
-        } catch (e: I2Exception) {
+        } catch (e: IMException) {
             throw e
         } catch (e: F2Exception) {
             throw e
@@ -46,7 +46,7 @@ open class CoreService(
             throw I2ApiError(
                 description = "Space [${client.realmId}, ${client.auth.realmId}]: $errorMessage",
                 payload = emptyMap()
-            ).asI2Exception(e)
+            ).asException(e)
         }
     }
 }
