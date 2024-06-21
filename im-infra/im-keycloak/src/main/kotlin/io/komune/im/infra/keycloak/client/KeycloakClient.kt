@@ -24,42 +24,42 @@ class KeycloakClient(
 
 	/* Client */
 	fun clients(): ClientsResource {
-		return realm().clients()
+		return realm(realmId).clients()
 	}
 
     fun client(id: String): ClientResource {
-        return clients().get(id)!!
+        return realm(realmId).clients().get(id)!!
     }
 
 	fun getClientByIdentifier(identifier: String): ClientRepresentation? {
-		return clients().findByClientId(identifier)?.firstOrNull()
+		return realm(realmId).clients().findByClientId(identifier)?.firstOrNull()
 	}
 
 	/* User */
 	fun users(): UsersResource {
-		return realm().users()
+		return realm(realmId).users()
 	}
 
 	fun user(id: String): UserResource {
-		return users().get(id)
+		return  realm(realmId).users().get(id)
 	}
 
 	/* Role */
 	fun roles(): RolesResource {
-		return realm().roles()
+		return  realm(realmId).roles()
 	}
 
 	fun role(identifier: String): RoleResource {
-		return roles().get(identifier)
+		return  realm(realmId).roles().get(identifier)
 	}
 
 	/* Group */
 	fun groups(): GroupsResource {
-		return realm().groups()
+		return realm(realmId).groups()
 	}
 
 	fun group(id: String): GroupResource {
-		return groups().group(id)
+		return realm(realmId).groups().group(id)
 	}
 
 	/* Realm */
