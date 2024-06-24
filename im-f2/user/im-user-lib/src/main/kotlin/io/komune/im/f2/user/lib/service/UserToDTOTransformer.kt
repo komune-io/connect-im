@@ -4,6 +4,7 @@ import io.komune.im.commons.Transformer
 import io.komune.im.commons.model.Address
 import io.komune.im.commons.utils.EmptyAddress
 import io.komune.im.commons.utils.mapAsync
+import io.komune.im.commons.utils.mapNotNullAsync
 import io.komune.im.commons.utils.parseJsonTo
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.user.domain.model.UserModel
@@ -28,7 +29,7 @@ class UserToDTOTransformer(
     }
 
     override suspend fun transform(item: UserModel): User {
-        val roles = item.roles.mapAsync(privilegeFinderService::getRole)
+        val roles = item.roles.mapNotNullAsync(privilegeFinderService::getRoleOrNull)
         val attributes = item.attributes.filterKeys { key -> key !in IM_USER_ATTRIBUTES }
         val organizationRef = item.memberOf?.let {
             organizationCoreFinderService.get(it)
