@@ -9,11 +9,14 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder
 import org.keycloak.OAuth2Constants
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
+import org.slf4j.LoggerFactory
 
 object KeycloakClientBuilder {
     private const val CONNECTION_POOL_SIZE = 10
-
+    private val logger = LoggerFactory.getLogger(KeycloakClientBuilder::class.java)
     fun openConnection(auth: AuthSubRealm): KeycloakClientConnection {
+
+        logger.debug("Open Keycloak connection for $auth")
         val master = auth.master
         return when (master) {
             is AuthRealmPassword -> openConnection(auth) {
