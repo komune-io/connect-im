@@ -54,67 +54,78 @@
             INSERT INTO keycloak_role (id, name, description, realm_id)
             SELECT uuid_generate_v4(), 'im_user_read', 'Ability to view any user data', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_user_read' AND realm_id = id);
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_user_read' AND realm_id = id)
+              AND name != 'master';
         </sql>
         <sql>
             INSERT INTO keycloak_role (id, name, description, realm_id)
             SELECT uuid_generate_v4(), 'im_user_write', 'Ability to modify any user data', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_user_write' AND realm_id = id);
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_user_write' AND realm_id = id)
+              AND name != 'master';
         </sql>
         <sql>
             INSERT INTO keycloak_role (id, name, description, realm_id)
             SELECT uuid_generate_v4(), 'im_organization_read', 'Ability to view any organization data', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_organization_read' AND realm_id = id);
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_organization_read' AND realm_id = id)
+              AND name != 'master';
         </sql>
         <sql>
             INSERT INTO keycloak_role (id, name, description, realm_id)
             SELECT uuid_generate_v4(), 'im_organization_write', 'Ability to modify any organization data', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_organization_write' AND realm_id = id);
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_organization_write' AND realm_id = id)
+              AND name != 'master';
         </sql>
         <sql>
             INSERT INTO keycloak_role (id, name, description, realm_id)
             SELECT uuid_generate_v4(), 'im_organization_write_own', 'Ability to modify own organization data', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_organization_write_own' AND realm_id = id);
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_organization_write_own' AND realm_id = id)
+              AND name != 'master';
         </sql>
         <sql>
             INSERT INTO keycloak_role (id, name, description, realm_id)
             SELECT uuid_generate_v4(), 'im_role_read', 'Ability to view any role data', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_role_read' AND realm_id = id);
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_role_read' AND realm_id = id)
+              AND name != 'master';
         </sql>
         <sql>
             INSERT INTO keycloak_role (id, name, description, realm_id)
             SELECT uuid_generate_v4(), 'im_role_write', 'Ability to modify any role data', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_role_write' AND realm_id = id);
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_role_write' AND realm_id = id)
+              AND name != 'master';
         </sql>
         <sql>
             INSERT INTO keycloak_role (id, name, description, realm_id)
             SELECT uuid_generate_v4(), 'im_apikey_read', 'Ability to view API keys', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_apikey_read' AND realm_id = id);
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_apikey_read' AND realm_id = id)
+              AND name != 'master';
         </sql>
         <sql>
             INSERT INTO keycloak_role (id, name, description, realm_id)
             SELECT uuid_generate_v4(), 'im_apikey_write', 'Ability to modify API keys', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_apikey_write' AND realm_id = id);
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_apikey_write' AND realm_id = id)
+              AND name != 'master';
         </sql>
         <sql>
             INSERT INTO keycloak_role (id, name, description, realm_id)
             SELECT uuid_generate_v4(), 'im_space_read', 'Ability to view space data', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_space_read' AND realm_id = id);
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_space_read' AND realm_id = id)
+              AND name != 'master';
         </sql>
         <sql>
             INSERT INTO keycloak_role (id, name, description, realm_id)
             SELECT uuid_generate_v4(), 'im_space_write', 'Ability to modify space data', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_space_write' AND realm_id = id);
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_space_write' AND realm_id = id)
+              AND name != 'master';
         </sql>
     </changeSet>
 

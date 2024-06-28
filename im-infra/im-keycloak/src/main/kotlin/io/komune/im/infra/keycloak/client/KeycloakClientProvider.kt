@@ -12,7 +12,7 @@ open class KeycloakClientProvider(
     private var connection: KeycloakClientBuilder.KeycloakClientConnection? = null
     private val cache = mutableMapOf<RealmId, KeycloakClient>()
 
-    open suspend fun get(): KeycloakClient {
+    suspend fun get(): KeycloakClient {
         val auth = currentAuth() ?: authenticationResolver.getAuth()
         val keycloakConnection = connection
             ?: KeycloakClientBuilder.openConnection(auth)
