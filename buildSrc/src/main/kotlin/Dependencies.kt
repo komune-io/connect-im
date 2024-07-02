@@ -6,7 +6,7 @@ import io.komune.gradle.dependencies.add
 
 object Framework {
 	val fixers = FixersPluginVersions.fixers
-	val connect = "0.16.0-SNAPSHOT"
+	val connect = "0.16.2"
 }
 
 object PluginVersions {
