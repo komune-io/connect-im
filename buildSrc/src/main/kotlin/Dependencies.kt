@@ -79,6 +79,7 @@ object Dependencies {
 
 		object Fs {
 			fun client(scope: Scope) = scope.add(
+				"io.komune.fs:fs-file-domain-jvm:${Versions.fs}",
 				"io.komune.fs:fs-file-client:${Versions.fs}"
 			)
 		}
