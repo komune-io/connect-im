@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   im-config:
     image: ${DOCKER_REPOSITORY}im-script:${VERSION_IM}

@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   im-keycloak:
     image: ${DOCKER_REPOSITORY}im-keycloak:${VERSION_IM}
