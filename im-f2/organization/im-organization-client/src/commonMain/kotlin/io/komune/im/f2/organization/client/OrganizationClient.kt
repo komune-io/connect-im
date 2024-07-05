@@ -13,6 +13,7 @@ import io.komune.im.f2.organization.domain.command.OrganizationUpdateFunction
 import io.komune.im.f2.organization.domain.query.OrganizationGetFromInseeFunction
 import io.komune.im.f2.organization.domain.query.OrganizationGetFunction
 import io.komune.im.f2.organization.domain.query.OrganizationPageFunction
+import io.komune.im.f2.organization.domain.query.OrganizationRefGetFunction
 import io.komune.im.f2.organization.domain.query.OrganizationRefListFunction
 import kotlin.js.JsExport
 import kotlinx.serialization.json.Json
@@ -28,6 +29,8 @@ expect fun organizationClient(
 open class OrganizationClient constructor(private val client: F2Client): OrganizationApi {
 
     override fun organizationGet(): OrganizationGetFunction = client.function(this::organizationGet.name)
+    override fun organizationRefGet(): OrganizationRefGetFunction = client.function(this::organizationRefGet.name)
+
     override fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = client.function(this::organizationGetFromInsee.name)
     override fun organizationPage(): OrganizationPageFunction = client.function(this::organizationPage.name)
     override fun organizationRefList(): OrganizationRefListFunction = client.function(this::organizationRefList.name)
