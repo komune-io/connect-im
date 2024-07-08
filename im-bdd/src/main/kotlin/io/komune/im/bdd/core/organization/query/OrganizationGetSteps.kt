@@ -5,6 +5,7 @@ import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.query.OrganizationGetQuery
 import f2.dsl.fnc.invokeWith
 import io.cucumber.java8.En
+import io.komune.im.f2.organization.domain.query.OrganizationRefGetQuery
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.data.TestContextKey
 
@@ -27,6 +28,18 @@ class OrganizationGetSteps: En, ImCucumberStepsDefinition() {
                 organizationGet(params)
             }
         }
+
+        When ("I get an organization ref by ID") {
+            step {
+                organizationRefGet(organizationGetParams(null))
+            }
+        }
+
+        When ("I get an organization ref by ID:") { params: OrganizationGetParams ->
+            step {
+                organizationRefGet(params)
+            }
+        }
     }
 
     private suspend fun organizationGet(params: OrganizationGetParams) {
@@ -35,6 +48,16 @@ class OrganizationGetSteps: En, ImCucumberStepsDefinition() {
                 id = params.identifier
             )
                 .invokeWith(organizationEndpoint.organizationGet())
+                .item
+        )
+    }
+
+    private suspend fun organizationRefGet(params: OrganizationGetParams) {
+        context.fetched.organizationRefs = listOfNotNull(
+            OrganizationRefGetQuery(
+                id = params.identifier
+            )
+                .invokeWith(organizationEndpoint.organizationRefGet())
                 .item
         )
     }

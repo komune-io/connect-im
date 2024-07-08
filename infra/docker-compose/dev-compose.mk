@@ -28,7 +28,7 @@ dev:
 
 dev-service-action:
 	@if [ "$(ACTION)" = "up" ]; then \
-		docker compose --env-file $(DOCKER_COMPOSE_ENV) -f $(DOCKER_COMPOSE_PATH)/docker-compose-$(SERVICE).yml  up -d; \
+		docker compose --env-file $(DOCKER_COMPOSE_ENV) -f $(DOCKER_COMPOSE_PATH)/docker-compose-$(SERVICE).yml up -d 2>&1 | grep -v "Found orphan containers"-d 2>&1 | grep -v "Found orphan containers"; \
 	elif [ "$(ACTION)" = "down" ]; then \
 		docker compose --env-file $(DOCKER_COMPOSE_ENV) -f $(DOCKER_COMPOSE_PATH)/docker-compose-$(SERVICE).yml down -v; \
 	elif [ "$(ACTION)" = "logs" ]; then \

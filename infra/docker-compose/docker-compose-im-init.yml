@@ -1,4 +1,3 @@
-version: "3.7"
 services:
   im-init:
     image: ${DOCKER_REPOSITORY}im-script:${VERSION_IM}

@@ -10,6 +10,7 @@ import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.model.SpaceIdentifier
 import io.komune.im.commons.model.UserId
 import io.komune.im.f2.organization.domain.model.Organization
+import io.komune.im.f2.organization.domain.model.OrganizationRef
 import io.komune.im.f2.privilege.domain.permission.model.Permission
 import io.komune.im.f2.privilege.domain.role.model.Role
 import io.komune.im.f2.user.domain.model.User
@@ -56,6 +57,7 @@ class ImTestContext: TestContext() {
     class FetchContext {
         lateinit var apikeys: List<ApiKey>
         lateinit var organizations: List<Organization>
+        lateinit var organizationRefs: List<OrganizationRef>
         lateinit var permissions: List<Permission>
         lateinit var roles: List<Role>
         lateinit var users: List<User>

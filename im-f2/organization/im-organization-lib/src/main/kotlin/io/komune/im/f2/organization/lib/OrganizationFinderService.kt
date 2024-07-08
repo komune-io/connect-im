@@ -28,6 +28,10 @@ class OrganizationFinderService(
         return organizationCoreFinderService.getOrNull(id)?.toDTOInternal()
     }
 
+    suspend fun getRefOrNull(id: OrganizationId): OrganizationRef? {
+        return organizationCoreFinderService.getOrNull(id)?.toRef()
+    }
+
     suspend fun get(id: OrganizationId): Organization {
         return organizationCoreFinderService.get(id).toDTOInternal()
     }

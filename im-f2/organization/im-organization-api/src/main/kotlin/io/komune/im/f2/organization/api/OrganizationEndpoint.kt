@@ -20,6 +20,9 @@ import io.komune.im.f2.organization.domain.query.OrganizationRefListResult
 import io.komune.im.f2.organization.lib.OrganizationAggregateService
 import io.komune.im.f2.organization.lib.OrganizationFinderService
 import f2.dsl.cqrs.page.OffsetPagination
+import io.komune.im.f2.organization.domain.OrganizationApi
+import io.komune.im.f2.organization.domain.query.OrganizationRefGetFunction
+import io.komune.im.f2.organization.domain.query.OrganizationRefGetResult
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.http.codec.multipart.FilePart
@@ -40,24 +43,31 @@ class OrganizationEndpoint(
     private val organizationAggregateService: OrganizationAggregateService,
     private val organizationFinderService: OrganizationFinderService,
     private val organizationPoliciesEnforcer: OrganizationPoliciesEnforcer,
-) {
+): OrganizationApi {
     private val logger = LoggerFactory.getLogger(OrganizationEndpoint::class.java)
 
     /**
      * Fetch an Organization by its ID.
      */
     @Bean
-    fun organizationGet(): OrganizationGetFunction = f2Function { query ->
+    override fun organizationGet(): OrganizationGetFunction = f2Function { query ->
         logger.info("organizationGet: $query")
         organizationPoliciesEnforcer.checkGet(query.id)
         organizationFinderService.getOrNull(query.id).let(::OrganizationGetResult)
+    }
+
+    @Bean
+    override fun organizationRefGet(): OrganizationRefGetFunction = f2Function { query ->
+        logger.info("organizationRefGet: $query")
+        organizationPoliciesEnforcer.checkGet(query.id)
+        organizationFinderService.getRefOrNull(query.id).let(::OrganizationRefGetResult)
     }
 
     /**
      * Fetch an Organization by its siret number from the Insee Sirene API.
      */
     @Bean
-    fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = f2Function { query ->
+    override fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = f2Function { query ->
         logger.info("organizationGetFromInsee: $query")
         organizationPoliciesEnforcer.checkList()
         organizationFinderService.getFromInsee(query.siret).let(::OrganizationGetFromInseeResult)
@@ -68,7 +78,7 @@ class OrganizationEndpoint(
      * Fetch a page of organizations.
      */
     @Bean
-    fun organizationPage(): OrganizationPageFunction = f2Function { query ->
+    override fun organizationPage(): OrganizationPageFunction = f2Function { query ->
         logger.info("organizationPage: $query")
         organizationPoliciesEnforcer.checkPage()
 
@@ -100,7 +110,7 @@ class OrganizationEndpoint(
      * Fetch all OrganizationRef.
      */
     @Bean
-    fun organizationRefList(): OrganizationRefListFunction = f2Function { query ->
+    override fun organizationRefList(): OrganizationRefListFunction = f2Function { query ->
         logger.info("organizationRefList: $query")
         organizationPoliciesEnforcer.checkRefList()
         organizationFinderService.listRefs(query.withDisabled).let(::OrganizationRefListResult)
@@ -110,7 +120,7 @@ class OrganizationEndpoint(
      * Create an organization.
      */
     @Bean
-    fun organizationCreate(): OrganizationCreateFunction = f2Function { command ->
+    override fun organizationCreate(): OrganizationCreateFunction = f2Function { command ->
         logger.info("organizationCreate: $command")
         organizationPoliciesEnforcer.checkCreate()
         organizationAggregateService.create(
@@ -122,7 +132,7 @@ class OrganizationEndpoint(
      * Update an organization.
      */
     @Bean
-    fun organizationUpdate(): OrganizationUpdateFunction = f2Function { command ->
+    override fun organizationUpdate(): OrganizationUpdateFunction = f2Function { command ->
         logger.info("organizationUpdate: $command")
         organizationPoliciesEnforcer.checkUpdate(command.id)
         organizationAggregateService.update(
@@ -147,7 +157,7 @@ class OrganizationEndpoint(
      * Disable an organization and its users.
      */
     @Bean
-    fun organizationDisable(): OrganizationDisableFunction = f2Function { command ->
+    override fun organizationDisable(): OrganizationDisableFunction = f2Function { command ->
         logger.info("organizationDisable: $command")
         organizationPoliciesEnforcer.checkDisable()
         organizationAggregateService.disable(command)
@@ -158,7 +168,7 @@ class OrganizationEndpoint(
      * Delete an organization and its users.
      */
     @Bean
-    fun organizationDelete(): OrganizationDeleteFunction = f2Function { command ->
+    override fun organizationDelete(): OrganizationDeleteFunction = f2Function { command ->
         logger.info("organizationDelete: $command")
         organizationPoliciesEnforcer.checkDelete()
         organizationAggregateService.delete(command)
