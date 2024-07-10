@@ -30,7 +30,7 @@ class OrganizationPageSteps: En, ImCucumberStepsDefinition() {
 
     private suspend fun fetchOrganizationPage(params: OrganizationPageParams) {
         context.fetched.organizations = OrganizationPageQuery(
-            name = params.search,
+            name = params.name,
             role = params.role,
             withDisabled = params.withDisable,
             offset = params.offset ?: 0,
@@ -40,7 +40,7 @@ class OrganizationPageSteps: En, ImCucumberStepsDefinition() {
     }
 
     private fun organizationPageParams(entry: Map<String, String>?) = OrganizationPageParams(
-        search = entry?.get("search"),
+        name = entry?.get("name"),
         role = entry?.get("role"),
 //        attributes = entry?.get("attr"),
         withDisable = entry?.get("withDisabled").toBoolean(),
@@ -49,7 +49,7 @@ class OrganizationPageSteps: En, ImCucumberStepsDefinition() {
     )
 
     private data class OrganizationPageParams(
-        val search: String?,
+        val name: String?,
         val role: String?,
 //        val attributes: Map<String, String>?,
         val withDisable: Boolean,

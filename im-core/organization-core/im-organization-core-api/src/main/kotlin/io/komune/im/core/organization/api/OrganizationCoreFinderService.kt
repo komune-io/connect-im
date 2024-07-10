@@ -33,6 +33,7 @@ class OrganizationCoreFinderService: CoreService(CacheName.Organization) {
     suspend fun page(
         ids: Collection<OrganizationId>? = null,
         identifier: String? = null,
+        name: String? = null,
         roles: Collection<RoleIdentifier>? = null,
         attributes: Map<String, (String?) -> Boolean>? = null,
         withDisabled: Boolean = false,
@@ -53,6 +54,7 @@ class OrganizationCoreFinderService: CoreService(CacheName.Organization) {
                     && (withDisabled || organization.enabled)
                     && (attributes == null || attributes.all { (key, match) -> match(organization.attributes[key]) })
                     && (identifier == null || organization.identifier.contains(identifier, true))
+                    && (name == null || organization.displayName.contains(name, true))
                     && (organization.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles))
             }.sortedByDescending(OrganizationModel::creationDate)
 

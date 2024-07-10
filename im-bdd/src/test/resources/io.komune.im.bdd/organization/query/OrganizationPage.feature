@@ -28,3 +28,15 @@ Feature: OrganizationPage
       | identifier |
       | org2       |
       | org1       |
+
+  Scenario: I want to get a page of organizations filtered by name
+    Given Some organizations are created:
+      | identifier | name |
+      | org1       | aaaa |
+      | org2       | zzzz |
+    When I get a page of organizations:
+      | name |
+      | aa   |
+    Then I should receive a list of organizations:
+      | identifier |
+      | org1       |

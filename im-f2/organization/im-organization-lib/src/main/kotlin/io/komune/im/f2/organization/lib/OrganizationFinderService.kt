@@ -61,7 +61,7 @@ class OrganizationFinderService(
         ).toMap()
 
         return organizationCoreFinderService.page(
-            identifier = name,
+            name = name,
             roles = roles,
             attributes = attributesFilters + additionalAttributesFilters,
             withDisabled = withDisabled,
