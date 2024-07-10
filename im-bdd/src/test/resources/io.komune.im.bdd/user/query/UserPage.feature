@@ -35,3 +35,15 @@ Feature: UserPage
       | identifier | email          |
       | usr1       | user1@test.com |
       | usr2       | user2@test.com |
+
+  Scenario: I want to get a page of users filtered by givenName
+    Given Some users are created:
+      | identifier | givenName | familyName | email          | memberOf |
+      | usrQ       | Quentin   | Dupond     | user1@test.com | null     |
+      | usrA       | Antoine   | Dupuit     | user2@test.com | null     |
+    When I get a page of users:
+      | name |
+      | Quen |
+    Then I should receive a list of users:
+      | identifier |
+      | usrQ       |
