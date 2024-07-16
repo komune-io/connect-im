@@ -23,7 +23,7 @@ fun PermissionModel.toRoleRepresentation() = RoleRepresentation().also {
     it.clientRole = false
     it.attributes = mapOf(
         Privilege::type.name to listOf(type.name),
-        PermissionModel::features.name to features?.map(List<FeatureIdentifier>::toJson),
+        PermissionModel::features.name to features?.map(List<FeatureIdentifier>::toJson).orEmpty(),
     )
 }
 

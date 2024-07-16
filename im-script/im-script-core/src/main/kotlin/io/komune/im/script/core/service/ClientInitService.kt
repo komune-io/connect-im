@@ -6,7 +6,7 @@ import io.komune.im.core.client.api.ClientCoreFinderService
 import io.komune.im.core.client.domain.command.ClientCreateCommand
 import io.komune.im.core.client.domain.command.ClientGrantClientRolesCommand
 import io.komune.im.core.client.domain.command.ClientGrantRealmRolesCommand
-import io.komune.im.script.core.extentions.init
+import io.komune.im.script.core.init
 import io.komune.im.script.core.model.AppClient
 import io.komune.im.script.core.model.WebClient
 import org.slf4j.LoggerFactory

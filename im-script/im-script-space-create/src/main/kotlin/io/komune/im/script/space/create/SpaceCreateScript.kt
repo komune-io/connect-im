@@ -14,14 +14,15 @@ import io.komune.im.f2.user.lib.UserFinderService
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.script.core.config.properties.ImScriptSpaceProperties
 import io.komune.im.script.core.config.properties.toAuthRealm
+import io.komune.im.script.core.model.FeatureData
 import io.komune.im.script.core.model.PermissionData
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.UUID
-import org.slf4j.LoggerFactory
 
 @Service
 class SpaceCreateScript(
@@ -49,6 +50,10 @@ class SpaceCreateScript(
 
         val newRealmAuth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
         withContext(AuthContext(newRealmAuth)) {
+            logger.info("Initializing IM features...")
+            initImFeatures()
+            logger.info("Initialized IM features")
+
             logger.info("Initializing IM permissions...")
             initImPermissions()
             logger.info("Initialized IM permissions")
@@ -69,11 +74,11 @@ class SpaceCreateScript(
             logger.info("Space create: $${properties}")
             spaceAggregateService.define(
                 SpaceDefineCommand(
-                identifier = properties.space,
-                theme = properties.theme,
-                smtp = properties.smtp,
-                locales = properties.locales ?: listOf("en", "fr")
-            )
+                    identifier = properties.space,
+                    theme = properties.theme,
+                    smtp = properties.smtp,
+                    locales = properties.locales ?: listOf("en", "fr")
+                )
             )
         }
     }
@@ -105,6 +110,16 @@ class SpaceCreateScript(
         val realmManagementClientId = client.getClientByIdentifier("realm-management")!!.id
         val realmAdminRole = client.role("realm-admin").toRepresentation()
         client.user(userId).roles().clientLevel(realmManagementClientId).add(listOf(realmAdminRole))
+    }
+
+    private suspend fun initImFeatures() = coroutineScope {
+        val imFeatures = ParserUtils.getConfiguration("imFeatures.json", Array<FeatureData>::class.java)
+        imFeatures.map { feature ->
+            async {
+                privilegeFinderService.getPrivilegeOrNull(feature.name)
+                    ?: privilegeAggregateService.define(feature.toCommand())
+            }
+        }.awaitAll()
     }
 
     private suspend fun initImPermissions() = coroutineScope {

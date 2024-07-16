@@ -1,34 +1,45 @@
 [{
     "name": "im_user_read",
-    "description": "Ability to view any user data"
+    "description": "Ability to view any user data",
+    "features": [["feat_im_all"], ["feat_im_own"]]
 }, {
     "name": "im_user_write",
-    "description": "Ability to modify any user data"
+    "description": "Ability to modify any user data",
+    "features":  [["feat_im_all"], ["feat_im_own"]]
 }, {
     "name": "im_organization_read",
-    "description": "Ability to view any organization data"
+    "description": "Ability to view any organization data",
+    "features":  [["feat_im_all"]]
 }, {
     "name": "im_organization_write",
-    "description": "Ability to modify any organization data"
+    "description": "Ability to modify any organization data",
+    "features":  [["feat_im_all"]]
 }, {
     "name": "im_organization_write_own",
-    "description": "Ability to modify own organization data"
+    "description": "Ability to modify own organization data",
+    "features":  [["feat_im_all"], ["feat_im_own"]]
 }, {
     "name": "im_role_read",
-    "description": "Ability to view any role data"
+    "description": "Ability to view any role data",
+    "features":  [["feat_im_all"], ["feat_im_own"]]
 }, {
     "name": "im_role_write",
-    "description": "Ability to modify any role data"
+    "description": "Ability to modify any role data",
+    "features":  [["feat_im_all"]]
 }, {
     "name": "im_apikey_read",
-    "description": "Ability to view API keys"
+    "description": "Ability to view API keys",
+    "features":  [["feat_im_all"], ["feat_im_own"]]
 }, {
     "name": "im_apikey_write",
-    "description": "Ability to modify API keys"
+    "description": "Ability to modify API keys",
+    "features":  [["feat_im_all"], ["feat_im_own"]]
 }, {
     "name": "im_space_read",
-    "description": "Ability to view space data"
+    "description": "Ability to view space data",
+    "features":  [["feat_im_all"]]
 }, {
     "name": "im_space_write",
-    "description": "Ability to modify space data"
+    "description": "Ability to modify space data",
+    "features":  [["feat_im_all"]]
 }]

@@ -1,0 +1,7 @@
+[{
+    "name": "feat_im_all",
+    "description": "Full IM features"
+}, {
+    "name": "feat_im_own",
+    "description": "IM features for the user's own organization"
+}]
