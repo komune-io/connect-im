@@ -14,5 +14,10 @@ enum class PrivilegeType {
     /**
      * See [PermissionDTO][io.komune.im.f2.privilege.domain.permission.model.PermissionDTO]
      */
-    PERMISSION
+    PERMISSION,
+
+    /**
+     * See [FeatureDTO][io.komune.im.f2.privilege.domain.feature.model.FeatureDTO]
+     */
+    FEATURE
 }

@@ -11,6 +11,7 @@ import io.komune.im.commons.model.SpaceIdentifier
 import io.komune.im.commons.model.UserId
 import io.komune.im.f2.organization.domain.model.Organization
 import io.komune.im.f2.organization.domain.model.OrganizationRef
+import io.komune.im.f2.privilege.domain.feature.model.Feature
 import io.komune.im.f2.privilege.domain.permission.model.Permission
 import io.komune.im.f2.privilege.domain.role.model.Role
 import io.komune.im.f2.user.domain.model.User
@@ -22,6 +23,7 @@ import s2.bdd.data.TestContextKey
 @Component
 class ImTestContext: TestContext() {
     val apikeyIds = testEntities<TestContextKey, ApiKeyId>("ApiKey")
+    val featureIdentifiers = testEntities<TestContextKey, String>("Feature")
     val organizationIds = testEntities<TestContextKey, OrganizationId>("Organization")
     val permissionIdentifiers = testEntities<TestContextKey, PermissionIdentifier>("Permission")
     val realmIds = testEntities<TestContextKey, RealmId>("Realm")
@@ -56,6 +58,7 @@ class ImTestContext: TestContext() {
 
     class FetchContext {
         lateinit var apikeys: List<ApiKey>
+        lateinit var features: List<Feature>
         lateinit var organizations: List<Organization>
         lateinit var organizationRefs: List<OrganizationRef>
         lateinit var permissions: List<Permission>

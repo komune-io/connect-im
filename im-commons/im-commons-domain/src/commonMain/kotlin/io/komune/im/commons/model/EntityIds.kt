@@ -49,6 +49,17 @@ typealias RoleIdentifier = PrivilegeIdentifier
 
 /**
  * @d2 hidden
+ * @visual json "92db2aff-2ed8-4f65-9b52-8cd3539ebc60"
+ */
+typealias FeatureId = PrivilegeId
+
+/**
+ * @d2 hidden
+ */
+typealias FeatureIdentifier = PrivilegeIdentifier
+
+/**
+ * @d2 hidden
  * @visual json "2b7ef785-a56e-4d4e-98bc-0414e3518049"
  */
 typealias ClientId = String

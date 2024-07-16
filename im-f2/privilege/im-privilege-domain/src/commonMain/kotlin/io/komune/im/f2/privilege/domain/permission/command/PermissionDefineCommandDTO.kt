@@ -1,8 +1,9 @@
 package io.komune.im.f2.privilege.domain.permission.command
 
-import io.komune.im.commons.model.PermissionIdentifier
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
+import io.komune.im.commons.model.FeatureIdentifier
+import io.komune.im.commons.model.PermissionIdentifier
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
 
@@ -29,6 +30,11 @@ interface PermissionDefineCommandDTO {
      * @ref [io.komune.im.f2.privilege.domain.permission.model.Permission.description]
      */
     val description: String
+
+    /**
+     * @ref [io.komune.im.f2.privilege.domain.permission.model.Permission.features]
+     */
+    val features: List<List<FeatureIdentifier>>?
 }
 
 /**
@@ -38,6 +44,7 @@ interface PermissionDefineCommandDTO {
 data class PermissionDefineCommand(
     override val identifier: PermissionIdentifier,
     override val description: String,
+    override val features: List<List<FeatureIdentifier>>?
 ): PermissionDefineCommandDTO
 
 /**

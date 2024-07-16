@@ -1,6 +1,8 @@
 package io.komune.im.f2.privilege.lib
 
+import f2.spring.exception.NotFoundException
 import io.komune.im.commons.SimpleCache
+import io.komune.im.commons.model.FeatureIdentifier
 import io.komune.im.commons.model.PermissionIdentifier
 import io.komune.im.commons.model.PrivilegeIdentifier
 import io.komune.im.commons.model.RoleIdentifier
@@ -9,11 +11,11 @@ import io.komune.im.core.privilege.domain.model.Privilege
 import io.komune.im.core.privilege.domain.model.PrivilegeType
 import io.komune.im.core.privilege.domain.model.RoleModel
 import io.komune.im.core.privilege.domain.model.RoleTarget
+import io.komune.im.f2.privilege.domain.feature.model.Feature
 import io.komune.im.f2.privilege.domain.model.PrivilegeDTO
 import io.komune.im.f2.privilege.domain.permission.model.Permission
 import io.komune.im.f2.privilege.domain.role.model.Role
 import io.komune.im.f2.privilege.lib.model.toDTO
-import f2.spring.exception.NotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -48,6 +50,15 @@ class PrivilegeFinderService(
         return getPermissionOrNull(identifier) ?: throw NotFoundException("Permission", identifier)
     }
 
+    suspend fun getFeatureOrNull(identifier: FeatureIdentifier): Feature? {
+        return getPrivilegeOrNull(identifier)
+            ?.takeIf { it is Feature } as Feature?
+    }
+
+    suspend fun getFeature(identifier: FeatureIdentifier): Feature {
+        return getFeatureOrNull(identifier) ?: throw NotFoundException("Feature", identifier)
+    }
+
     suspend fun listRoles(
         targets: Collection<RoleTarget>? = null
     ): List<Role> {
@@ -65,6 +76,13 @@ class PrivilegeFinderService(
         return privilegeCoreFinderService.list(
             types = listOf(PrivilegeType.PERMISSION)
         ).map { it.toDTOCached(cache) as Permission }
+    }
+
+    suspend fun listFeatures(): List<Feature> {
+        val cache = Cache()
+        return privilegeCoreFinderService.list(
+            types = listOf(PrivilegeType.FEATURE)
+        ).map { it.toDTOCached(cache) as Feature }
     }
 
     private suspend fun Privilege.toDTOCached(cache: Cache = Cache()): PrivilegeDTO = toDTO(

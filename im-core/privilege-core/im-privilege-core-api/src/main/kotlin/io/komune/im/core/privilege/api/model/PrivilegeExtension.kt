@@ -2,9 +2,11 @@ package io.komune.im.core.privilege.api.model
 
 import io.komune.im.commons.model.PrivilegeId
 import io.komune.im.core.privilege.api.exception.PrivilegeWrongTargetException
+import io.komune.im.core.privilege.domain.command.FeatureCoreDefineCommand
 import io.komune.im.core.privilege.domain.command.PermissionCoreDefineCommand
 import io.komune.im.core.privilege.domain.command.PrivilegeCoreDefineCommand
 import io.komune.im.core.privilege.domain.command.RoleCoreDefineCommand
+import io.komune.im.core.privilege.domain.model.FeatureModel
 import io.komune.im.core.privilege.domain.model.PermissionModel
 import io.komune.im.core.privilege.domain.model.Privilege
 import io.komune.im.core.privilege.domain.model.PrivilegeType
@@ -15,17 +17,20 @@ import org.keycloak.representations.idm.RoleRepresentation
 fun RoleRepresentation.toPrivilege(): Privilege = when (attributes[Privilege::type.name]?.firstOrNull()) {
     PrivilegeType.ROLE.name -> toRole()
     PrivilegeType.PERMISSION.name -> toPermission()
+    PrivilegeType.FEATURE.name -> toFeature()
     else -> toPermission()
 }
 
 fun Privilege.toRoleRepresentation(): RoleRepresentation = when (this) {
     is PermissionModel -> toRoleRepresentation()
     is RoleModel -> toRoleRepresentation()
+    is FeatureModel -> toRoleRepresentation()
 }
 
 fun PrivilegeCoreDefineCommand.toPrivilege(id: PrivilegeId?): Privilege = when (this) {
     is PermissionCoreDefineCommand -> toPermission(id)
     is RoleCoreDefineCommand -> toRole(id)
+    is FeatureCoreDefineCommand -> toFeature(id)
 }
 
 fun Privilege.checkTarget(target: RoleTarget) {
