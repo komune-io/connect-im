@@ -8,4 +8,5 @@ dependencies {
     api(project(Modules.Core.clientDomain))
 
     implementation(project(Modules.Api.config))
+    implementation(project(Modules.Keycloak.pluginDomain))
 }

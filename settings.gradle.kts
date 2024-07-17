@@ -81,6 +81,7 @@ include(
     "im-keycloak:keycloak-plugin:im-keycloak-event-listener-http",
     "im-keycloak:keycloak-plugin:im-keycloak-plugin-client",
     "im-keycloak:keycloak-plugin:im-keycloak-plugin-domain",
+    "im-keycloak:keycloak-plugin:im-keycloak-role-mapper",
 )
 
 include(
