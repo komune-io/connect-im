@@ -124,6 +124,7 @@ class SpaceConfigScript (
 
         val existingRoles = privilegeFinderService.listRoles()
             .plus(privilegeFinderService.listPermissions())
+            .plus(privilegeFinderService.listFeatures())
             .map(PrivilegeDTO::identifier)
             .toMutableSet()
 

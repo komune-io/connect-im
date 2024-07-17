@@ -22,7 +22,7 @@ class KeycloakClientProviderStub(
             KeycloakClientCache(KeycloakClientBuilder.openConnection(auth))
         }
         return clientCache.clients.getOrPut(auth.space) {
-            clientCache.connection.forAuthedRealm()
+            clientCache.connection.forRealm(auth.space)
         }
     }
 
