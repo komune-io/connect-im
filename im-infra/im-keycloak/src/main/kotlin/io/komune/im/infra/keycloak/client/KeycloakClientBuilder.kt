@@ -1,9 +1,9 @@
 package io.komune.im.infra.keycloak.client
 
-import io.komune.im.commons.model.AuthSubRealm
 import f2.client.ktor.http.plugin.model.AuthRealmClientSecret
 import f2.client.ktor.http.plugin.model.AuthRealmPassword
 import f2.client.ktor.http.plugin.model.RealmId
+import io.komune.im.commons.model.AuthSubRealm
 import io.komune.im.infra.keycloak.AuthRealmException
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder
 import org.keycloak.OAuth2Constants
@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory
 object KeycloakClientBuilder {
     private const val CONNECTION_POOL_SIZE = 10
     private val logger = LoggerFactory.getLogger(KeycloakClientBuilder::class.java)
-    fun openConnection(auth: AuthSubRealm): KeycloakClientConnection {
 
+    fun openConnection(auth: AuthSubRealm): KeycloakClientConnection {
         logger.debug("Open Keycloak connection for $auth")
         val master = auth.master
         return when (master) {

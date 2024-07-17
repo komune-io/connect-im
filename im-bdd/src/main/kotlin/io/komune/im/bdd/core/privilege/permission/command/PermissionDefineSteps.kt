@@ -1,13 +1,13 @@
 package io.komune.im.bdd.core.privilege.permission.command
 
+import f2.dsl.fnc.invokeWith
+import io.cucumber.datatable.DataTable
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.privilege.permission.data.permission
 import io.komune.im.commons.model.PermissionIdentifier
 import io.komune.im.f2.privilege.api.PermissionEndpoint
 import io.komune.im.f2.privilege.domain.permission.command.PermissionDefineCommand
-import f2.dsl.fnc.invokeWith
-import io.cucumber.datatable.DataTable
-import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import java.util.UUID
@@ -67,6 +67,7 @@ class PermissionDefineSteps: En, ImCucumberStepsDefinition() {
         command = PermissionDefineCommand(
             identifier = params.identifier,
             description = params.description,
+            features = null
         )
         command.invokeWith(permissionEndpoint.permissionDefine()).identifier
     }

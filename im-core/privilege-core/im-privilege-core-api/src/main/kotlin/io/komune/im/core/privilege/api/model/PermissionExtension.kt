@@ -1,6 +1,9 @@
 package io.komune.im.core.privilege.api.model
 
+import io.komune.im.commons.model.FeatureIdentifier
 import io.komune.im.commons.model.PermissionId
+import io.komune.im.commons.utils.parseJsonTo
+import io.komune.im.commons.utils.toJson
 import io.komune.im.core.privilege.domain.command.PermissionCoreDefineCommand
 import io.komune.im.core.privilege.domain.model.PermissionModel
 import io.komune.im.core.privilege.domain.model.Privilege
@@ -10,6 +13,7 @@ fun RoleRepresentation.toPermission() = PermissionModel(
     id = id,
     identifier = name,
     description = description.orEmpty(),
+    features = attributes[PermissionModel::features.name]?.map { it.parseJsonTo(Array<FeatureIdentifier>::class.java) }
 )
 
 fun PermissionModel.toRoleRepresentation() = RoleRepresentation().also {
@@ -19,6 +23,7 @@ fun PermissionModel.toRoleRepresentation() = RoleRepresentation().also {
     it.clientRole = false
     it.attributes = mapOf(
         Privilege::type.name to listOf(type.name),
+        PermissionModel::features.name to features?.map(List<FeatureIdentifier>::toJson).orEmpty(),
     )
 }
 
@@ -26,4 +31,5 @@ fun PermissionCoreDefineCommand.toPermission(id: PermissionId?) = PermissionMode
     id = id.orEmpty(),
     identifier = identifier,
     description = description,
+    features = features,
 )

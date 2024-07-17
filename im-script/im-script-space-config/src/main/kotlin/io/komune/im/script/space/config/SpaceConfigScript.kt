@@ -1,9 +1,12 @@
 package io.komune.im.script.space.config
 
+import f2.spring.exception.ConflictException
 import io.komune.im.apikey.domain.command.ApiKeyOrganizationAddKeyCommand
+import io.komune.im.apikey.domain.model.ApiKeyId
 import io.komune.im.apikey.lib.ApiKeyAggregateService
 import io.komune.im.commons.auth.AuthContext
 import io.komune.im.commons.model.OrganizationId
+import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.utils.ParserUtils
 import io.komune.im.commons.utils.mapAsync
 import io.komune.im.f2.organization.domain.command.OrganizationCreateCommand
@@ -20,6 +23,8 @@ import io.komune.im.f2.user.lib.UserAggregateService
 import io.komune.im.f2.user.lib.UserFinderService
 import io.komune.im.script.core.config.properties.ImScriptSpaceProperties
 import io.komune.im.script.core.config.properties.toAuthRealm
+import io.komune.im.script.core.init
+import io.komune.im.script.core.model.FeatureData
 import io.komune.im.script.core.model.PermissionData
 import io.komune.im.script.core.model.RoleData
 import io.komune.im.script.core.service.ClientInitService
@@ -27,10 +32,6 @@ import io.komune.im.script.space.config.config.ApiKeyData
 import io.komune.im.script.space.config.config.OrganizationData
 import io.komune.im.script.space.config.config.SpaceConfigProperties
 import io.komune.im.script.space.config.config.UserData
-import f2.spring.exception.ConflictException
-import io.komune.im.apikey.domain.model.ApiKeyId
-import io.komune.im.commons.model.RoleIdentifier
-import io.komune.im.script.core.extentions.init
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -59,6 +60,10 @@ class SpaceConfigScript (
             logger.info("Verify Realm[${auth.space}] exists and update it if needed...")
             properties.verifyAndUpdateSpace()
 
+            logger.info("Initializing Features...")
+            initFeatures(properties.features)
+            logger.info("Initialized Features")
+
             logger.info("Initializing Permissions...")
             initPermissions(properties.permissions)
             logger.info("Initialized Permissions")
@@ -79,6 +84,21 @@ class SpaceConfigScript (
             logger.info("Initializing Users...")
             initUsers(properties.users)
             logger.info("Initialized Users")
+        }
+    }
+
+    private suspend fun initFeatures(features: List<FeatureData>?) {
+        if (features.isNullOrEmpty()) {
+            logger.info("No Features to initialize")
+            return
+        }
+
+        features.mapAsync { feature ->
+            init("Feature[${feature.name}]", logger, {
+                privilegeFinderService.getPrivilegeOrNull(feature.name)
+            }, {
+                privilegeAggregateService.define(feature.toCommand())
+            })
         }
     }
 
@@ -104,6 +124,7 @@ class SpaceConfigScript (
 
         val existingRoles = privilegeFinderService.listRoles()
             .plus(privilegeFinderService.listPermissions())
+            .plus(privilegeFinderService.listFeatures())
             .map(PrivilegeDTO::identifier)
             .toMutableSet()
 

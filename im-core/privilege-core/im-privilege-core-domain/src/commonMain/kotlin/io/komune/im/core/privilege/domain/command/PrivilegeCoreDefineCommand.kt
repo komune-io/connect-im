@@ -1,11 +1,12 @@
 package io.komune.im.core.privilege.domain.command
 
+import f2.dsl.cqrs.Event
+import io.komune.im.commons.model.FeatureIdentifier
 import io.komune.im.commons.model.PermissionIdentifier
 import io.komune.im.commons.model.PrivilegeIdentifier
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.core.privilege.domain.model.PrivilegeType
 import io.komune.im.core.privilege.domain.model.RoleTarget
-import f2.dsl.cqrs.Event
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,7 +19,8 @@ sealed interface PrivilegeCoreDefineCommand {
 @Serializable
 data class PermissionCoreDefineCommand(
     override val identifier: PermissionIdentifier,
-    override val description: String
+    override val description: String,
+    val features: List<List<FeatureIdentifier>>?
 ): PrivilegeCoreDefineCommand {
     override val type = PrivilegeType.PERMISSION
 }
@@ -33,6 +35,14 @@ data class RoleCoreDefineCommand(
     val permissions: List<PermissionIdentifier>?
 ): PrivilegeCoreDefineCommand {
     override val type = PrivilegeType.ROLE
+}
+
+@Serializable
+data class FeatureCoreDefineCommand(
+    override val identifier: FeatureIdentifier,
+    override val description: String
+): PrivilegeCoreDefineCommand {
+    override val type = PrivilegeType.FEATURE
 }
 
 @Serializable

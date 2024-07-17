@@ -1,8 +1,8 @@
 package io.komune.im.f2.privilege.domain.permission.query
 
+import f2.dsl.fnc.F2Function
 import io.komune.im.f2.privilege.domain.permission.model.Permission
 import io.komune.im.f2.privilege.domain.permission.model.PermissionDTO
-import f2.dsl.fnc.F2Function
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
 import kotlin.js.JsName

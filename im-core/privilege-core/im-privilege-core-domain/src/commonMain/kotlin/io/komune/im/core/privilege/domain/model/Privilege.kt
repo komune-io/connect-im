@@ -1,5 +1,7 @@
 package io.komune.im.core.privilege.domain.model
 
+import io.komune.im.commons.model.FeatureId
+import io.komune.im.commons.model.FeatureIdentifier
 import io.komune.im.commons.model.PermissionId
 import io.komune.im.commons.model.PermissionIdentifier
 import io.komune.im.commons.model.PrivilegeId
@@ -20,7 +22,8 @@ sealed interface Privilege {
 data class PermissionModel(
     override val id: PermissionId,
     override val identifier: PermissionIdentifier,
-    override val description: String
+    override val description: String,
+    val features: List<List<FeatureIdentifier>>?
 ): Privilege {
     override val type = PrivilegeType.PERMISSION
 }
@@ -36,4 +39,13 @@ data class RoleModel(
     val permissions: List<PermissionIdentifier>
 ): Privilege {
     override val type = PrivilegeType.ROLE
+}
+
+@Serializable
+data class FeatureModel(
+    override val id: FeatureId,
+    override val identifier: FeatureIdentifier,
+    override val description: String
+): Privilege {
+    override val type = PrivilegeType.FEATURE
 }

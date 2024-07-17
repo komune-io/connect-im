@@ -9,6 +9,7 @@ import io.komune.im.core.client.domain.command.ClientGrantedClientRolesEvent
 import io.komune.im.core.client.domain.command.ClientGrantedRealmRolesEvent
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.infra.keycloak.handleResponseError
+import io.komune.im.keycloak.plugin.domain.model.KeycloakPluginIds
 import org.keycloak.representations.idm.ClientRepresentation
 import org.keycloak.representations.idm.ProtocolMapperRepresentation
 import org.springframework.stereotype.Service
@@ -17,6 +18,22 @@ import org.springframework.stereotype.Service
 class ClientCoreAggregateService(
     private val keycloakClientProvider: KeycloakClientProvider
 ) {
+    companion object {
+        val realmRoleFeatureProtocolMapper = ProtocolMapperRepresentation().apply {
+            name = "realm roles filtered by feature flags"
+            protocol = "openid-connect"
+            protocolMapper = KeycloakPluginIds.MAPPER_REALM_ROLE_FEATURE
+            config = mapOf(
+                "access.token.claim" to "true",
+                "claim.name" to "realm_access.roles",
+                "id.token.claim" to "true",
+                "jsonType.label" to "String",
+                "multivalued" to "true",
+                "userinfo.token.claim" to "true"
+            )
+        }
+    }
+
     suspend fun create(command: ClientCreateCommand): ClientCreatedEvent {
         val keycloakClient = keycloakClientProvider.get()
 
@@ -34,6 +51,7 @@ class ClientCoreAggregateService(
             adminUrl = command.adminUrl
             webOrigins = command.webOrigins
             protocolMappers = command.additionalAccessTokenClaim.map { accessTokenClaim(it) }
+                .plus(realmRoleFeatureProtocolMapper)
         }.let { keycloakClient.clients().create(it) }
 
         return ClientCreatedEvent(

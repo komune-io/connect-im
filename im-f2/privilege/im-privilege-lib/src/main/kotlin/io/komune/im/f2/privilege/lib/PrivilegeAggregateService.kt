@@ -1,9 +1,12 @@
 package io.komune.im.f2.privilege.lib
 
 import io.komune.im.core.privilege.api.PrivilegeCoreAggregateService
+import io.komune.im.core.privilege.domain.command.FeatureCoreDefineCommand
 import io.komune.im.core.privilege.domain.command.PermissionCoreDefineCommand
 import io.komune.im.core.privilege.domain.command.RoleCoreDefineCommand
 import io.komune.im.core.privilege.domain.model.RoleTarget
+import io.komune.im.f2.privilege.domain.feature.command.FeatureDefineCommand
+import io.komune.im.f2.privilege.domain.feature.command.FeatureDefinedEvent
 import io.komune.im.f2.privilege.domain.permission.command.PermissionDefineCommand
 import io.komune.im.f2.privilege.domain.permission.command.PermissionDefinedEvent
 import io.komune.im.f2.privilege.domain.role.command.RoleDefineCommand
@@ -34,9 +37,21 @@ class PrivilegeAggregateService(
             PermissionCoreDefineCommand(
                 identifier = command.identifier,
                 description = command.description,
+                features = command.features
             )
         )
 
         return PermissionDefinedEvent(event.identifier)
+    }
+
+    suspend fun define(command: FeatureDefineCommand): FeatureDefinedEvent {
+        val event = privilegeCoreAggregateService.define(
+            FeatureCoreDefineCommand(
+                identifier = command.identifier,
+                description = command.description
+            )
+        )
+
+        return FeatureDefinedEvent(event.identifier)
     }
 }

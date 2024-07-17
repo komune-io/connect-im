@@ -4,6 +4,7 @@ import io.komune.im.commons.model.Address
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.model.SpaceIdentifier
 import io.komune.im.script.core.model.AppClient
+import io.komune.im.script.core.model.FeatureData
 import io.komune.im.script.core.model.PermissionData
 import io.komune.im.script.core.model.RoleData
 import io.komune.im.script.core.model.WebClient
@@ -14,6 +15,7 @@ data class SpaceConfigProperties(
     val locales: List<String>?,
     val appClients: List<AppClient>,
     val webClients: List<WebClient>,
+    val features: List<FeatureData>?,
     val permissions: List<PermissionData>?,
     val roles: List<RoleData>?,
     val organizations: List<OrganizationData>?,

@@ -13,3 +13,9 @@ interface D2RolePage
  * @d2 page
  */
 interface D2PermissionPage
+
+/**
+ * @title API/Privilege/Feature
+ * @d2 page
+ */
+interface D2FeaturePage

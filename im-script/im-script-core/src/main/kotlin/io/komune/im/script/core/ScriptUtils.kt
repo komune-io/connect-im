@@ -34,3 +34,16 @@ suspend fun retryOnThrow(
     }
     return success
 }
+
+suspend fun <T> init(logPrefix: String, logger: Logger, find: suspend () -> T?, create: suspend () -> T): T {
+    val found = find()
+
+    if (found != null) {
+        logger.info("$logPrefix already exists")
+        return found
+    }
+
+    return create().also {
+        logger.info("$logPrefix created")
+    }
+}
