@@ -15,4 +15,6 @@ dependencies {
     implementation(project(Modules.F2.privilegeLib))
     implementation(project(Modules.F2.spaceLib))
     implementation(project(Modules.F2.userLib))
+
+    implementation(project(Modules.Keycloak.pluginDomain))
 }

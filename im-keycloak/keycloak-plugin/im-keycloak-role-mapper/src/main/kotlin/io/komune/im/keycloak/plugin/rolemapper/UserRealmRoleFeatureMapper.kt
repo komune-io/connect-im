@@ -75,7 +75,6 @@ class UserRealmRoleFeatureMapper: AbstractOIDCProtocolMapper(), OIDCAccessTokenM
             remainingRoles.addAll(role.compositesStream.collect(Collectors.toList()))
         }
 
-
         OIDCAttributeMapperHelper.mapClaim(token, mappingModel, actualRoles)
     }
 
