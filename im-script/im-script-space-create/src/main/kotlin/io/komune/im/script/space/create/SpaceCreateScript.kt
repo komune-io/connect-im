@@ -12,6 +12,7 @@ import io.komune.im.f2.user.domain.command.UserCreateCommand
 import io.komune.im.f2.user.lib.UserAggregateService
 import io.komune.im.f2.user.lib.UserFinderService
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
+import io.komune.im.keycloak.plugin.domain.model.KeycloakPluginIds
 import io.komune.im.script.core.config.properties.ImScriptSpaceProperties
 import io.komune.im.script.core.config.properties.toAuthRealm
 import io.komune.im.script.core.model.FeatureData
@@ -20,6 +21,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import org.keycloak.representations.idm.ProtocolMapperRepresentation
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -57,6 +59,10 @@ class SpaceCreateScript(
             logger.info("Initializing IM permissions...")
             initImPermissions()
             logger.info("Initialized IM permissions")
+
+            logger.info("Initializing Client Scopes...")
+            initClientScopes()
+            logger.info("Initialized Client Scopes")
 
             properties.adminUsers.forEach { adminUser ->
                 logger.info("Initializing Admin user [${adminUser.email}]...")
@@ -130,5 +136,38 @@ class SpaceCreateScript(
                     ?: privilegeAggregateService.define(permission.toCommand())
             }
         }.awaitAll()
+    }
+
+    private suspend fun initClientScopes() {
+        val client = keycloakClientProvider.get()
+        val scopesClient = client.realm().clientScopes()
+        val rolesScope = scopesClient.findAll()
+            .firstOrNull { it.name == "roles" }
+
+        if (rolesScope == null) {
+            logger.info("No client scope 'roles' found, skipping initialization.")
+            return
+        }
+
+        val rolesScopeProtocolMapperClient = scopesClient.get(rolesScope.id).protocolMappers
+        rolesScopeProtocolMapperClient.mappers
+            .firstOrNull { it.protocolMapper == "oidc-usermodel-realm-role-mapper" }
+            ?.let { rolesScopeProtocolMapperClient.delete(it.id) }
+
+        rolesScopeProtocolMapperClient.createMapper(
+            ProtocolMapperRepresentation().apply {
+                name = "realm roles filtered by feature flags"
+                protocol = "openid-connect"
+                protocolMapper = KeycloakPluginIds.MAPPER_REALM_ROLE_FEATURE
+                config = mapOf(
+                    "access.token.claim" to "true",
+                    "claim.name" to "realm_access.roles",
+                    "id.token.claim" to "false",
+                    "jsonType.label" to "String",
+                    "multivalued" to "true",
+                    "userinfo.token.claim" to "false"
+                )
+            }
+        )
     }
 }
