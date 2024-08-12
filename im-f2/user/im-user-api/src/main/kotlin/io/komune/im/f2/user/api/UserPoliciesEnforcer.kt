@@ -1,5 +1,6 @@
 package io.komune.im.f2.user.api
 
+import f2.spring.exception.ForbiddenAccessException
 import io.komune.im.commons.auth.ImRole
 import io.komune.im.commons.auth.hasOneOfRoles
 import io.komune.im.commons.auth.policies.PolicyEnforcer
@@ -75,7 +76,9 @@ class UserPoliciesEnforcer(
     suspend fun enforcePageQuery(query: UserPageQuery): UserPageQuery = enforceAuthed { authedUser ->
         if (authedUser.hasOneOfRoles(ImRole.ORCHESTRATOR)) {
             query
-        } else {
+        } else if(query.organizationId != null && query.organizationId != authedUser.memberOf) {
+           throw ForbiddenAccessException("User can't list users from other organizations.")
+        } else{
             query.copy(
                 organizationId = authedUser.memberOf
             )
