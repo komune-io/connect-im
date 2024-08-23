@@ -1,8 +1,9 @@
 package io.komune.im.core.organization.domain.command
 
-import io.komune.im.commons.model.OrganizationId
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
+import io.komune.im.commons.model.OrganizationId
+import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
 
 /**
@@ -19,6 +20,7 @@ interface OrganizationDeleteCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@Serializable
 data class OrganizationCoreDeleteCommand(
     override val id: OrganizationId
 ): OrganizationDeleteCommandDTO
@@ -37,6 +39,7 @@ interface OrganizationDeletedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@Serializable
 data class OrganizationCoreDeletedEvent(
     override val id: OrganizationId
 ): OrganizationDeletedEventDTO
