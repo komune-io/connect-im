@@ -1,7 +1,9 @@
 package io.komune.im.bdd.core.privilege.role.command
 
+import f2.dsl.fnc.invokeWith
+import io.cucumber.datatable.DataTable
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
-import io.komune.im.bdd.core.privilege.role.data.extractRoleTargetList
 import io.komune.im.bdd.core.privilege.role.data.role
 import io.komune.im.commons.model.PermissionIdentifier
 import io.komune.im.commons.model.RoleIdentifier
@@ -9,9 +11,6 @@ import io.komune.im.commons.utils.parseJson
 import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.f2.privilege.api.RoleEndpoint
 import io.komune.im.f2.privilege.domain.role.command.RoleDefineCommand
-import f2.dsl.fnc.invokeWith
-import io.cucumber.datatable.DataTable
-import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.parser.extractList
@@ -88,7 +87,7 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
         return RoleDefineParams(
             identifier = entry?.get("identifier") ?: context.roleIdentifiers.lastUsedOrNull.orRandom(),
             description = entry?.get("description") ?: UUID.randomUUID().toString(),
-            targets = entry?.extractRoleTargetList("targets").orEmpty(),
+            targets = entry?.extractList<RoleTarget>("targets").orEmpty(),
             locale = entry?.get("locale")?.parseJson() ?: emptyMap(),
             bindings = entry?.get("bindings")
                 ?.parseJson<Map<String, List<RoleIdentifier>>>()

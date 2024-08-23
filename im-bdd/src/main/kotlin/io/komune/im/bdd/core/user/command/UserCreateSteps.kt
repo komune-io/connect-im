@@ -1,14 +1,14 @@
 package io.komune.im.bdd.core.user.command
 
+import f2.dsl.fnc.invoke
+import io.cucumber.datatable.DataTable
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.user.data.user
 import io.komune.im.commons.model.Address
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserCreateCommand
-import f2.dsl.fnc.invoke
-import io.cucumber.datatable.DataTable
-import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
@@ -112,7 +112,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
                 city = "city"
             ),
             phone = entry?.get("phone") ?: "0600000000",
-            roles = entry?.extractList("roles")?.map { context.roleIdentifiers[it] ?: it }.orEmpty(),
+            roles = entry?.extractList<String>("roles")?.map { context.roleIdentifiers[it] ?: it }.orEmpty(),
             sendEmailLink = false,
             memberOf = entry?.get("memberOf").parseNullableOrDefault(null),
             attributes = userAttributesParams(entry),

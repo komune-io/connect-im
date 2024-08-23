@@ -1,13 +1,13 @@
 package io.komune.im.bdd.core.privilege.role.query
 
+import f2.dsl.fnc.invokeWith
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
-import io.komune.im.bdd.core.privilege.role.data.extractRoleTarget
 import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.f2.privilege.api.RoleEndpoint
 import io.komune.im.f2.privilege.domain.role.query.RoleListQuery
-import f2.dsl.fnc.invokeWith
-import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
+import s2.bdd.data.parser.extract
 
 class RoleListSteps: En, ImCucumberStepsDefinition() {
 
@@ -37,7 +37,7 @@ class RoleListSteps: En, ImCucumberStepsDefinition() {
     }
 
     private fun roleListParams(entry: Map<String, String>?) = RoleListParams(
-        target = entry?.extractRoleTarget("target")
+        target = entry?.extract<RoleTarget>("target")
     )
 
     private data class RoleListParams(
