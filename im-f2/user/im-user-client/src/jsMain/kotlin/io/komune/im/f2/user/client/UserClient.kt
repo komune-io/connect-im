@@ -12,7 +12,6 @@ import kotlinx.coroutines.await
 @JsExport
 actual fun userClient(urlBase: String, getAuth: suspend () -> AuthRealm): F2SupplierSingle<UserClient> = f2SupplierSingle {
     F2ClientBuilder.get(urlBase)
-        .await()
         .let(::UserClient)
 }
 

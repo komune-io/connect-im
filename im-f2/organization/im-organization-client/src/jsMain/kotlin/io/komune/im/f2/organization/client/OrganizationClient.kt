@@ -18,7 +18,6 @@ actual fun organizationClient(
     getAuth: suspend () -> AuthRealm
 ): F2SupplierSingle<OrganizationClient> = f2SupplierSingle {
     F2ClientBuilder.get(urlBase)
-        .await()
         .let(::OrganizationClient)
 }
 

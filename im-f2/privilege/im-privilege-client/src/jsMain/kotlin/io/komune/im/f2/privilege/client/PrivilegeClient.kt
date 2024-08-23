@@ -12,7 +12,7 @@ import kotlinx.coroutines.await
 @JsExport
 actual fun privilegeClient(urlBase: String, getAuth: suspend () -> AuthRealm): F2SupplierSingle<PrivilegeClient> = f2SupplierSingle {
     F2ClientBuilder.get(urlBase)
-        .await()
+
         .let(::PrivilegeClient)
 }
 
