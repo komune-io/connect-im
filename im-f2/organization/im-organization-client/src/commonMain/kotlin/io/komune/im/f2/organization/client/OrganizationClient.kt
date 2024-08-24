@@ -2,9 +2,11 @@ package io.komune.im.f2.organization.client
 
 import f2.client.F2Client
 import f2.client.function
-import f2.client.ktor.http.F2DefaultJson
+import f2.client.ktor.F2ClientBuilder
+import f2.client.ktor.http.plugin.F2Auth
 import f2.client.ktor.http.plugin.model.AuthRealm
 import f2.dsl.fnc.F2SupplierSingle
+import f2.dsl.fnc.f2SupplierSingle
 import io.komune.im.f2.organization.domain.OrganizationApi
 import io.komune.im.f2.organization.domain.command.OrganizationCreateFunction
 import io.komune.im.f2.organization.domain.command.OrganizationDeleteFunction
@@ -15,18 +17,33 @@ import io.komune.im.f2.organization.domain.query.OrganizationGetFunction
 import io.komune.im.f2.organization.domain.query.OrganizationPageFunction
 import io.komune.im.f2.organization.domain.query.OrganizationRefGetFunction
 import io.komune.im.f2.organization.domain.query.OrganizationRefListFunction
+import io.ktor.client.plugins.HttpTimeout
 import kotlin.js.JsExport
-import kotlinx.serialization.json.Json
 
-expect fun F2Client.organizationClient(): F2SupplierSingle<OrganizationClient>
-expect fun organizationClient(
+fun F2Client.organizationClient(): F2SupplierSingle<OrganizationClient> = f2SupplierSingle {
+    OrganizationClient(this)
+}
+
+fun organizationClient(
     urlBase: String,
-    json: Json? = F2DefaultJson,
-    getAuth: suspend () -> AuthRealm
-): F2SupplierSingle<OrganizationClient>
+    getAuth: suspend () -> AuthRealm,
+
+    ): F2SupplierSingle<OrganizationClient> = f2SupplierSingle {
+    OrganizationClient(
+        F2ClientBuilder.get(urlBase) {
+            install(HttpTimeout) {
+                @Suppress("MagicNumber")
+                requestTimeoutMillis = 60000
+            }
+            install(F2Auth) {
+                this.getAuth = getAuth
+            }
+        }
+    )
+}
 
 @JsExport
-open class OrganizationClient constructor(private val client: F2Client): OrganizationApi {
+open class OrganizationClient(private val client: F2Client): OrganizationApi {
 
     override fun organizationGet(): OrganizationGetFunction = client.function(this::organizationGet.name)
     override fun organizationRefGet(): OrganizationRefGetFunction = client.function(this::organizationRefGet.name)
