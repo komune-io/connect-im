@@ -1,7 +1,9 @@
 package io.komune.im.bdd.core.organization.command
 
+import f2.dsl.fnc.invoke
+import io.cucumber.datatable.DataTable
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
-import io.komune.im.bdd.core.organization.data.extractOrganizationStatus
 import io.komune.im.bdd.core.organization.data.organization
 import io.komune.im.commons.model.Address
 import io.komune.im.f2.organization.api.OrganizationEndpoint
@@ -9,13 +11,11 @@ import io.komune.im.f2.organization.domain.command.OrganizationUpdateCommand
 import io.komune.im.f2.organization.domain.model.OrganizationStatus
 import io.komune.im.f2.organization.domain.query.OrganizationGetQuery
 import io.komune.im.f2.privilege.domain.role.model.Role
-import f2.dsl.fnc.invoke
-import io.cucumber.datatable.DataTable
-import io.cucumber.java8.En
 import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
+import s2.bdd.data.parser.extract
 
 class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
 
@@ -110,7 +110,7 @@ class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
             website = entry?.get("website"),
             roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
             attributes = organizationAttributesParams(entry),
-            status = entry?.extractOrganizationStatus("status") ?: OrganizationStatus.VALIDATED
+            status = entry?.extract<OrganizationStatus>("status") ?: OrganizationStatus.VALIDATED
         )
     }
 

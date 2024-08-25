@@ -1,13 +1,13 @@
 package io.komune.im.bdd.exception
 
-import io.komune.im.bdd.ImCucumberStepsDefinition
-import io.komune.im.commons.exception.ExceptionCodes
-import io.komune.im.core.privilege.api.exception.PrivilegeWrongTargetException
 import f2.spring.exception.ConflictException
 import f2.spring.exception.ForbiddenAccessException
 import f2.spring.exception.MessageConverterException
 import f2.spring.exception.NotFoundException
 import io.cucumber.java8.En
+import io.komune.im.bdd.ImCucumberStepsDefinition
+import io.komune.im.commons.exception.ExceptionCodes
+import io.komune.im.core.privilege.api.exception.PrivilegeWrongTargetException
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.assertion.exceptions
 import s2.bdd.data.parser.safeExtract
@@ -44,7 +44,7 @@ class ExceptionAssertionSteps: En, ImCucumberStepsDefinition()  {
     }
 
     private fun exceptionAssertionParams(entry: Map<String, String>) = ExceptionAssertionParams(
-        code = entry.safeExtract("code").toInt(),
+        code = entry.safeExtract<Int>("code"),
         times = entry["times"]?.toInt() ?: 1
     )
 

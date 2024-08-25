@@ -10,15 +10,37 @@ import io.komune.im.f2.privilege.domain.role.query.RoleGetFunction
 import io.komune.im.f2.privilege.domain.role.query.RoleListFunction
 import f2.client.F2Client
 import f2.client.function
+import f2.client.ktor.F2ClientBuilder
+import f2.client.ktor.http.plugin.F2Auth
 import f2.client.ktor.http.plugin.model.AuthRealm
 import f2.dsl.fnc.F2SupplierSingle
+import f2.dsl.fnc.f2SupplierSingle
+import io.ktor.client.plugins.HttpTimeout
 import kotlin.js.JsExport
 
-expect fun F2Client.privilegeClient(): F2SupplierSingle<PrivilegeClient>
-expect fun privilegeClient(urlBase: String, getAuth: suspend () -> AuthRealm): F2SupplierSingle<PrivilegeClient>
+fun F2Client.privilegeClient(): F2SupplierSingle<PrivilegeClient> = f2SupplierSingle {
+    PrivilegeClient(this)
+}
+
+fun privilegeClient(
+    urlBase: String,
+    getAuth: suspend () -> AuthRealm,
+): F2SupplierSingle<PrivilegeClient> = f2SupplierSingle {
+    PrivilegeClient(
+        F2ClientBuilder.get(urlBase) {
+            install(HttpTimeout) {
+                @Suppress("MagicNumber")
+                requestTimeoutMillis = 60000
+            }
+            install(F2Auth) {
+                this.getAuth = getAuth
+            }
+        }
+    )
+}
 
 @JsExport
-open class PrivilegeClient constructor(private val client: F2Client): RoleApi, PermissionApi {
+open class PrivilegeClient(private val client: F2Client): RoleApi, PermissionApi {
     override fun permissionDefine(): PermissionDefineFunction = client.function(this::permissionDefine.name)
     override fun permissionGet(): PermissionGetFunction = client.function(this::permissionGet.name)
     override fun permissionList(): PermissionListFunction = client.function(this::permissionList.name)

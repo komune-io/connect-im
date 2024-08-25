@@ -30,8 +30,7 @@ class AuthenticationSteps: En, ImCucumberStepsDefinition() {
 
         Given("I am authenticated as admin") {
             step {
-                val allRoles = keycloakClientProvider.get().roles().list().map { it.name }
-                println(allRoles)
+                val allRoles = keycloakClientProvider.get(context.realmId).roles().list().map { it.name }
                 context.authedUser = AuthedUser(
                     id = "admin",
                     roles = allRoles.toTypedArray(),
