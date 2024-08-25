@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.core.io.ClassPathResource
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.TestPropertySource
 import org.testcontainers.containers.DockerComposeContainer
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.Wait
@@ -20,6 +21,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @ActiveProfiles("test")
 @SpringBootTest(classes = [TestApplication::class])
 @Testcontainers
+@TestPropertySource(properties = ["logging.level.io.komune.im.infra.keycloak.client=DEBUG"])
 class SpringTestConfiguration {
 
 //    @Container
