@@ -1,14 +1,11 @@
 package io.komune.im.f2.user.api
 
 import f2.spring.exception.ForbiddenAccessException
-import io.komune.im.commons.auth.ImRole
-import io.komune.im.commons.auth.hasOneOfRoles
 import io.komune.im.commons.auth.policies.PolicyEnforcer
-import io.komune.im.commons.auth.policies.enforce
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.UserId
+import io.komune.im.f2.organization.domain.policies.OrganizationPolicies
 import io.komune.im.f2.user.domain.command.UserUpdateCommand
-import io.komune.im.f2.user.domain.command.UserUpdateCommandDTO
 import io.komune.im.f2.user.domain.model.UserDTO
 import io.komune.im.f2.user.domain.policies.UserPolicies
 import io.komune.im.f2.user.domain.query.UserPageQuery
@@ -74,11 +71,11 @@ class UserPoliciesEnforcer(
     }
 
     suspend fun enforcePageQuery(query: UserPageQuery): UserPageQuery = enforceAuthed { authedUser ->
-        if (authedUser.hasOneOfRoles(ImRole.ORCHESTRATOR)) {
+        if (OrganizationPolicies.canList(authedUser)) {
             query
-        } else if(query.organizationId != null && query.organizationId != authedUser.memberOf) {
+        } else if (query.organizationId != null && !OrganizationPolicies.canGet(authedUser, query.organizationId!!)) {
            throw ForbiddenAccessException("User can't list users from other organizations.")
-        } else{
+        } else {
             query.copy(
                 organizationId = authedUser.memberOf
             )
