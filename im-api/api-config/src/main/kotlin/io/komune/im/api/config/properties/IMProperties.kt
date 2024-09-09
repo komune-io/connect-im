@@ -1,7 +1,7 @@
 package io.komune.im.api.config.properties
 
+import f2.client.domain.AuthRealmClientSecret
 import io.komune.im.commons.model.AuthSubRealm
-import f2.client.ktor.http.plugin.model.AuthRealmClientSecret
 import io.komune.f2.spring.boot.auth.AuthenticationProvider
 import org.springframework.boot.context.properties.ConfigurationProperties
 

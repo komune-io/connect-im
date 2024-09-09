@@ -134,6 +134,7 @@ object Dependencies {
 
         fun f2Client(scope: Scope) = scope.add(
             "io.komune.f2:f2-client-ktor:${Versions.f2}",
+            "io.komune.f2:f2-client-ktor-http:${Versions.f2}",
             "io.ktor:ktor-client-auth:${Versions.ktor}"
         )
 

@@ -1,8 +1,8 @@
 package io.komune.im.infra.keycloak.client
 
-import f2.client.ktor.http.plugin.model.AuthRealmClientSecret
-import f2.client.ktor.http.plugin.model.AuthRealmPassword
-import f2.client.ktor.http.plugin.model.RealmId
+import f2.client.domain.AuthRealmClientSecret
+import f2.client.domain.AuthRealmPassword
+import f2.client.domain.RealmId
 import io.komune.im.commons.model.AuthSubRealm
 import io.komune.im.infra.keycloak.AuthRealmException
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder

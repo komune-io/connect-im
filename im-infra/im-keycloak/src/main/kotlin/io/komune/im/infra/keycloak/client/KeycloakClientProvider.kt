@@ -1,6 +1,6 @@
 package io.komune.im.infra.keycloak.client
 
-import f2.client.ktor.http.plugin.model.RealmId
+import f2.client.domain.RealmId
 import io.komune.im.api.config.bean.ImAuthenticationProvider
 import io.komune.im.commons.auth.currentAuth
 import org.springframework.stereotype.Service

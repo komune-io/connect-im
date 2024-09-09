@@ -1,6 +1,7 @@
 package io.komune.im.commons.model
 
-import f2.client.ktor.http.plugin.model.RealmId
+import f2.client.domain.RealmId
+
 
 /**
  * @d2 hidden

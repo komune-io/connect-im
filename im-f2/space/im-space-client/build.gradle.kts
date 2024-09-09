@@ -6,4 +6,5 @@ plugins {
 
 dependencies {
     commonMainApi(project(Modules.F2.spaceDomain))
+    Dependencies.Mpp.f2Client(::commonMainApi)
 }

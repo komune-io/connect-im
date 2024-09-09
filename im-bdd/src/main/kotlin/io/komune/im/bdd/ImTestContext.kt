@@ -1,6 +1,6 @@
 package io.komune.im.bdd
 
-import f2.client.ktor.http.plugin.model.RealmId
+import f2.client.domain.RealmId
 import io.komune.im.apikey.domain.model.ApiKey
 import io.komune.im.apikey.domain.model.ApiKeyId
 import io.komune.im.commons.auth.ImRole
