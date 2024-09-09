@@ -1,4 +1,4 @@
-package io.komune.im.commons.http
+package io.komune.im.f2.organization.lib.service
 
 import f2.client.ktor.http.HttpClientBuilder
 import io.ktor.client.call.body
@@ -12,6 +12,20 @@ import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.parametersOf
+
+import f2.client.ktor.http.httpClientBuilder
+
+abstract class ClientJvm(
+    baseUrl: String,
+    httpClientBuilder: HttpClientBuilder = httpClientBuilder(),
+    generateBearerToken: suspend () -> String? = { null },
+): Client(
+    baseUrl = baseUrl,
+    generateBearerToken = generateBearerToken,
+    httpClientBuilder = httpClientBuilder
+)
+
+
 
 open class Client(
     private val baseUrl: String,

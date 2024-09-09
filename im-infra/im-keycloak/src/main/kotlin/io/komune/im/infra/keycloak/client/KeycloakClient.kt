@@ -1,7 +1,7 @@
 package io.komune.im.infra.keycloak.client
 
-import f2.client.ktor.http.plugin.model.AuthRealm
-import f2.client.ktor.http.plugin.model.RealmId
+import f2.client.domain.AuthRealm
+import f2.client.domain.RealmId
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.resource.ClientResource
 import org.keycloak.admin.client.resource.ClientsResource

@@ -16,4 +16,7 @@ dependencies {
 
     implementation(project(Modules.Api.config))
     implementation(project(Modules.Infra.redis))
+
+    Dependencies.Mpp.f2Client(::implementation)
+    Dependencies.Jvm.ktor(::implementation)
 }

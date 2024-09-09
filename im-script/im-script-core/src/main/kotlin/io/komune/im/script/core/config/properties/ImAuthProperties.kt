@@ -1,9 +1,9 @@
 package io.komune.im.script.core.config.properties
 
+import f2.client.domain.AuthRealmClientSecret
+import f2.client.domain.AuthRealmPassword
+import f2.client.domain.RealmId
 import io.komune.im.commons.model.AuthSubRealm
-import f2.client.ktor.http.plugin.model.AuthRealmClientSecret
-import f2.client.ktor.http.plugin.model.AuthRealmPassword
-import f2.client.ktor.http.plugin.model.RealmId
 
 data class ImAuthProperties(
     val serverUrl: String,
