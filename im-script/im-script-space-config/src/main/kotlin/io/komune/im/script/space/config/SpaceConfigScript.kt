@@ -52,38 +52,40 @@ class SpaceConfigScript (
     private val logger = LoggerFactory.getLogger(SpaceConfigScript::class.java)
 
     suspend fun run() {
-        val jsonPath = imScriptSpaceProperties.jsonConfig ?: return
-        val properties = ParserUtils.getConfiguration(jsonPath, SpaceConfigProperties::class.java)
+        val jsonPaths = imScriptSpaceProperties.jsonConfig ?: return
+        jsonPaths.split(";").forEach { jsonPath ->
+            logger.info("Start processing configuration file [$jsonPath]...")
+            val properties = ParserUtils.getConfiguration(jsonPath, SpaceConfigProperties::class.java)
+            val auth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
+            withContext(AuthContext(auth)) {
+                logger.info("Verify Realm[${auth.space}] exists and update it if needed...")
+                properties.verifyAndUpdateSpace()
 
-        val auth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
-        withContext(AuthContext(auth)) {
-            logger.info("Verify Realm[${auth.space}] exists and update it if needed...")
-            properties.verifyAndUpdateSpace()
+                logger.info("Initializing Features...")
+                initFeatures(properties.features)
+                logger.info("Initialized Features")
 
-            logger.info("Initializing Features...")
-            initFeatures(properties.features)
-            logger.info("Initialized Features")
+                logger.info("Initializing Permissions...")
+                initPermissions(properties.permissions)
+                logger.info("Initialized Permissions")
 
-            logger.info("Initializing Permissions...")
-            initPermissions(properties.permissions)
-            logger.info("Initialized Permissions")
+                logger.info("Initializing Roles...")
+                initRoles(properties.roles)
+                logger.info("Initialized Roles")
 
-            logger.info("Initializing Roles...")
-            initRoles(properties.roles)
-            logger.info("Initialized Roles")
+                logger.info("Initializing Clients...")
+                properties.webClients.forEach { clientInitService.initWebClient(it) }
+                properties.appClients.forEach { clientInitService.initAppClient(it) }
+                logger.info("Initialized Client")
 
-            logger.info("Initializing Clients...")
-            properties.webClients.forEach { clientInitService.initWebClient(it) }
-            properties.appClients.forEach { clientInitService.initAppClient(it) }
-            logger.info("Initialized Client")
+                logger.info("Initializing Organizations...")
+                initOrganizations(properties.organizations)
+                logger.info("Initialized Organizations")
 
-            logger.info("Initializing Organizations...")
-            initOrganizations(properties.organizations)
-            logger.info("Initialized Organizations")
-
-            logger.info("Initializing Users...")
-            initUsers(properties.users)
-            logger.info("Initialized Users")
+                logger.info("Initializing Users...")
+                initUsers(properties.users)
+                logger.info("Initialized Users")
+            }
         }
     }
 

@@ -24,15 +24,19 @@ class ImInitScript(
     private val logger = LoggerFactory.getLogger(ImInitScript::class.java)
 
     suspend fun run() {
-        val jsonPath = imScriptInitProperties.json ?: return
-        val properties = ParserUtils.getConfiguration(jsonPath, ImInitProperties::class.java)
+        val jsonPaths = imScriptInitProperties.json ?: return
+        jsonPaths.split(";").forEach { jsonPath ->
+            logger.info("Start processing configuration file [$jsonPath]...")
+            val properties = ParserUtils.getConfiguration(jsonPath, ImInitProperties::class.java)
 
-        val masterAuth = imScriptInitProperties.auth.toAuthRealm()
-        withContext(AuthContext(masterAuth)) {
-            logger.info("Initializing IM client...")
-            initImClient(properties)
-            logger.info("Initialized IM client")
+            val masterAuth = imScriptInitProperties.auth.toAuthRealm()
+            withContext(AuthContext(masterAuth)) {
+                logger.info("Initializing IM client...")
+                initImClient(properties)
+                logger.info("Initialized IM client")
+            }
         }
+
     }
 
     private suspend fun initImClient(properties: ImInitProperties) {

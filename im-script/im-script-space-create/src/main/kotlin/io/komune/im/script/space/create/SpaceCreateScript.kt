@@ -40,36 +40,39 @@ class SpaceCreateScript(
     private val logger = LoggerFactory.getLogger(SpaceCreateScript::class.java)
 
     suspend fun run() {
-        val jsonPath = imScriptSpaceProperties.jsonCreate ?: return
-        val properties = ParserUtils.getConfiguration(jsonPath, SpaceCreateProperties::class.java)
+        val jsonPaths = imScriptSpaceProperties.jsonCreate ?: return
+        jsonPaths.split(";").forEach { jsonPath ->
+            logger.info("Start processing configuration file [$jsonPath]...")
+            val properties = ParserUtils.getConfiguration(jsonPath, SpaceCreateProperties::class.java)
 
-        val masterAuth = imScriptSpaceProperties.auth.toAuthRealm()
-        withContext(AuthContext(masterAuth)) {
-            logger.info("Initializing Space[${properties.space}]...")
-            initRealm(properties)
-            logger.info("Initialized Space")
-        }
-
-        val newRealmAuth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
-        withContext(AuthContext(newRealmAuth)) {
-            logger.info("Initializing IM features...")
-            initImFeatures()
-            logger.info("Initialized IM features")
-
-            logger.info("Initializing IM permissions...")
-            initImPermissions()
-            logger.info("Initialized IM permissions")
-
-            logger.info("Initializing Client Scopes...")
-            initClientScopes()
-            logger.info("Initialized Client Scopes")
-
-            properties.adminUsers.forEach { adminUser ->
-                logger.info("Initializing Admin user [${adminUser.email}]...")
-                initAdmin(adminUser)
-                logger.info("Initialized Admin")
+            val masterAuth = imScriptSpaceProperties.auth.toAuthRealm()
+            withContext(AuthContext(masterAuth)) {
+                logger.info("Initializing Space[${properties.space}]...")
+                initRealm(properties)
+                logger.info("Initialized Space")
             }
-            logger.info("Initialized Admin users")
+
+            val newRealmAuth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
+            withContext(AuthContext(newRealmAuth)) {
+                logger.info("Initializing IM features...")
+                initImFeatures()
+                logger.info("Initialized IM features")
+
+                logger.info("Initializing IM permissions...")
+                initImPermissions()
+                logger.info("Initialized IM permissions")
+
+                logger.info("Initializing Client Scopes...")
+                initClientScopes()
+                logger.info("Initialized Client Scopes")
+
+                properties.adminUsers.forEach { adminUser ->
+                    logger.info("Initializing Admin user [${adminUser.email}]...")
+                    initAdmin(adminUser)
+                    logger.info("Initialized Admin")
+                }
+                logger.info("Initialized Admin users")
+            }
         }
     }
 
