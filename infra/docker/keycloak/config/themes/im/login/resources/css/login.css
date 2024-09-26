@@ -38,10 +38,7 @@ button {
 }
 
 .login-pf body {
-  background: url("../img/background.jpeg") no-repeat center center
-    fixed;
-  background-size: cover;
-  height: 100%;
+  background: white;
 }
 
 .login-pf-page {
@@ -54,10 +51,18 @@ button {
 }
 
 .btn-primary {
-  background-color: #005ecc;
+  background-color: #124450;
   border-style: none;
   border-radius: 5px;
   height: 40px;
+  background-image: none;
+}
+
+.btn-primary.active, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open .dropdown-toggle.btn-primary {
+    background-color: #124450;
+    border-style: none;
+    border-radius: 5px;
+    height: 40px;
 }
 
 #kc-page-title {
