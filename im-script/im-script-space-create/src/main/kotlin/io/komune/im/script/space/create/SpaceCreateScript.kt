@@ -42,6 +42,7 @@ class SpaceCreateScript(
     suspend fun run() {
         val jsonPaths = imScriptSpaceProperties.jsonCreate ?: return
         jsonPaths.split(";").forEach { jsonPath ->
+            logger.info("****************************************************")
             logger.info("Start processing configuration file [$jsonPath]...")
             val properties = ParserUtils.getConfiguration(jsonPath, SpaceCreateProperties::class.java)
 

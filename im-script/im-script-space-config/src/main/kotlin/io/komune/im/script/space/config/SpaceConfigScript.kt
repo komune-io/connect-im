@@ -54,6 +54,7 @@ class SpaceConfigScript (
     suspend fun run() {
         val jsonPaths = imScriptSpaceProperties.jsonConfig ?: return
         jsonPaths.split(";").forEach { jsonPath ->
+            logger.info("****************************************************")
             logger.info("Start processing configuration file [$jsonPath]...")
             val properties = ParserUtils.getConfiguration(jsonPath, SpaceConfigProperties::class.java)
             val auth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
