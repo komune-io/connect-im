@@ -68,6 +68,7 @@ jobs:
     with:
       on-tag: 'publish_promote'
       with-chromatic: false
+      make-file: 'Makefile_docs.mk'
       storybook-dir: storybook
       storybook-static-dir: storybook-static
       with-setup-npm-github-pkg: 'false'
