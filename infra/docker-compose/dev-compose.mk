@@ -36,7 +36,7 @@ exec-common:
 				$(MAKE) --no-print-directory dev-service-action ACTION=$(ACTION) SERVICE=$$service; \
 			done; \
 		else \
-			$(MAKE) --no-print-directory dev-service-action ACTION=$(ACTION) SERVICE=$$service; \
+			$(MAKE) --no-print-directory dev-service-action ACTION=$(ACTION) SERVICE=$(SERVICE); \
 		fi; \
 	fi
 
