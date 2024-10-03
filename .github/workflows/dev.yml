@@ -27,6 +27,7 @@ jobs:
       PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PKG_SONATYPE_OSS_USERNAME: ${{ secrets.PKG_SONATYPE_OSS_USERNAME }}
       PKG_SONATYPE_OSS_TOKEN: ${{ secrets.PKG_SONATYPE_OSS_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   kotkin-js:
     uses: komune-io/fixers-gradle/.github/workflows/make-kotlin-npm-workflow.yml@main
