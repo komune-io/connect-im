@@ -18,7 +18,7 @@ jobs:
       contents: read
       packages: write
     with:
-      make-file: 'libs.mk'
+      make-file: 'Makefile_libs.mk'
       on-tag: 'promote'
     secrets:
       GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
@@ -34,7 +34,7 @@ jobs:
       contents: read
       packages: write
     with:
-      make-file: 'libsJs.mk'
+      make-file: 'Makefile_libsJs.mk'
       on-tag: 'publish_promote'
     secrets:
       NPM_PKG_PUBLISH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,7 +46,7 @@ jobs:
       contents: read
       packages: write
     with:
-      make-file: 'docker.mk'
+      make-file: 'Makefile_docker.mk'
       with-docker-registry-login: 'true'
       on-tag: 'publish_promote'
       docker-buildx-platform: linux/amd64,linux/arm64
