@@ -54,7 +54,7 @@ class SpaceEndpoint(
     @Bean
     override fun spaceDelete(): SpaceDeleteFunction = f2Function { command ->
         logger.info("spaceDelete: $command")
-        spacePoliciesEnforcer.checkDelete(command.id)
+        spacePoliciesEnforcer.checkDelete()
         spaceAggregateService.delete(command)
     }
 

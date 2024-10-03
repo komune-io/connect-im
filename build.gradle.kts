@@ -5,7 +5,7 @@ plugins {
     id("org.springframework.boot") version PluginVersions.springBoot apply false
 
     id("io.komune.fixers.gradle.config") version PluginVersions.fixers
-//    id("io.komune.fixers.gradle.check") version PluginVersions.fixers
+    id("io.komune.fixers.gradle.check") version PluginVersions.fixers
     id("io.komune.fixers.gradle.d2") version PluginVersions.fixers
 
     id("io.komune.fixers.gradle.kotlin.mpp") version PluginVersions.fixers apply false
@@ -42,5 +42,9 @@ fixers {
     }
     npm {
         organization = "komune-io"
+    }
+    sonar {
+        organization = "komune-io"
+        projectKey = "komune-io_connect-im"
     }
 }

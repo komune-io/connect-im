@@ -34,7 +34,7 @@ object SpacePolicies {
     /**
      * User can delete a space
      */
-    fun canDelete(authedUser: AuthedUserDTO, spaceIdentifier: SpaceIdentifier): Boolean {
+    fun canDelete(authedUser: AuthedUserDTO): Boolean {
         return authedUser.hasRole(ImRole.IM_SPACE_WRITE)
     }
 

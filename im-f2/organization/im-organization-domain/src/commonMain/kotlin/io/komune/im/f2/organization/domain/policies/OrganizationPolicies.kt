@@ -27,7 +27,7 @@ object OrganizationPolicies {
     /**
      * User can list organizations ref
      */
-    fun checkRefList(authedUser: AuthedUserDTO) = true
+    fun checkRefList(authedUser: AuthedUserDTO?) = authedUser != null
 
     /**
      * User can create an organization

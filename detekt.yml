@@ -1,6 +1,6 @@
 build:
-  maxIssues: 0
-  excludeCorrectable: false
+  maxIssues: 1000
+  excludeCorrectable: true
   weights:
   # complexity: 2
   # LongParameterList: 1
@@ -213,115 +213,6 @@ exceptions:
       - Throwable
       - RuntimeException
 
-formatting:
-  active: true
-  android: false
-  autoCorrect: true
-  AnnotationOnSeparateLine:
-    active: false
-    autoCorrect: true
-  ChainWrapping:
-    active: true
-    autoCorrect: true
-  CommentSpacing:
-    active: true
-    autoCorrect: true
-  EnumEntryNameCase:
-    active: false
-    autoCorrect: true
-  Filename:
-    active: true
-  FinalNewline:
-    active: true
-    autoCorrect: true
-    insertFinalNewLine: true
-  ImportOrdering:
-    active: false
-    autoCorrect: true
-  Indentation:
-    active: false
-    autoCorrect: true
-    indentSize: 4
-    continuationIndentSize: 4
-  MaximumLineLength:
-    active: true
-    maxLineLength: 140
-  ModifierOrdering:
-    active: true
-    autoCorrect: true
-  MultiLineIfElse:
-    active: true
-    autoCorrect: true
-  NoBlankLineBeforeRbrace:
-    active: true
-    autoCorrect: true
-  NoConsecutiveBlankLines:
-    active: true
-    autoCorrect: true
-  NoEmptyClassBody:
-    active: true
-    autoCorrect: true
-  NoEmptyFirstLineInMethodBlock:
-    active: false
-    autoCorrect: true
-  NoLineBreakAfterElse:
-    active: true
-    autoCorrect: true
-  NoLineBreakBeforeAssignment:
-    active: true
-    autoCorrect: true
-  NoMultipleSpaces:
-    active: true
-    autoCorrect: true
-  NoSemicolons:
-    active: true
-    autoCorrect: true
-  NoTrailingSpaces:
-    active: true
-    autoCorrect: true
-  NoUnitReturn:
-    active: true
-    autoCorrect: true
-  NoUnusedImports:
-    active: true
-    autoCorrect: true
-  NoWildcardImports:
-    active: true
-  PackageName:
-    active: true
-    autoCorrect: true
-  ParameterListWrapping:
-    active: false
-    autoCorrect: true
-    indentSize: 4
-  SpacingAroundColon:
-    active: true
-    autoCorrect: true
-  SpacingAroundComma:
-    active: true
-    autoCorrect: true
-  SpacingAroundCurly:
-    active: true
-    autoCorrect: true
-  SpacingAroundDot:
-    active: true
-    autoCorrect: true
-  SpacingAroundKeyword:
-    active: true
-    autoCorrect: true
-  SpacingAroundOperators:
-    active: true
-    autoCorrect: true
-  SpacingAroundParens:
-    active: true
-    autoCorrect: true
-  SpacingAroundRangeOperator:
-    active: true
-    autoCorrect: true
-  StringTemplate:
-    active: true
-    autoCorrect: true
-
 naming:
   active: true
   ClassNaming:
@@ -367,10 +258,10 @@ naming:
     active: false
     rootPackage: ''
   MatchingDeclarationName:
-    active: true
+    active: false
     mustBeFirst: true
   MemberNameEqualsClassName:
-    active: false
+    active: true
     ignoreOverridden: true
   ObjectPropertyNaming:
     active: true
@@ -488,7 +379,7 @@ style:
     active: false
     includeLineWrapping: false
   ForbiddenComment:
-    active: true
+    active: false
     values: ['TODO:', 'FIXME:', 'STOPSHIP:']
     allowedPatterns: ''
   ForbiddenImport:
@@ -516,7 +407,7 @@ style:
     active: true
     maxJumpCount: 1
   MagicNumber:
-    active: true
+    active: false
     excludes: ['**/test/**', '**/androidTest/**', '**/*.Test.kt', '**/*.Spec.kt', '**/*.Spek.kt']
     ignoreNumbers: ['-1', '0', '1', '2']
     ignoreHashCodeFunction: true
@@ -533,7 +424,7 @@ style:
   MandatoryBracesLoops:
     active: true
   MaxLineLength:
-    active: true
+    active: false
     maxLineLength: 140
     excludePackageStatements: true
     excludeImportStatements: true
@@ -576,7 +467,7 @@ style:
   SpacingBetweenPackageAndImports:
     active: false
   ThrowsCount:
-    active: true
+    active: false
     max: 2
   TrailingWhitespace:
     active: false
@@ -584,7 +475,7 @@ style:
     active: false
     acceptableDecimalLength: 5
   UnnecessaryAbstractClass:
-    active: true
+    active: false
     excludeAnnotatedClasses: ['dagger.Module']
   UnnecessaryAnnotationUseSiteTarget:
     active: false
