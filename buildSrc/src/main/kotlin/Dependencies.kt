@@ -103,6 +103,9 @@ object Dependencies {
 			.also(::junit)
 			.also(::mockito)
 
+        fun s2Bdd(scope: Scope) = scope.add(
+            "io.komune.s2:s2-test-bdd:${Versions.s2}"
+        ).also(::cucumber)
 		fun junit(scope: Scope) = FixersDependencies.Jvm.Test.junit(scope)
 
 		fun cache(scope: Scope) = scope.add(
@@ -117,6 +120,7 @@ object Dependencies {
 		fun testcontainers(scope: Scope) = scope.add(
 			"org.testcontainers:junit-jupiter:${Versions.testcontainers}"
 		)
+
 	}
 
 	object Js {
@@ -243,5 +247,9 @@ object Modules {
         const val init = "$BASE-init"
         const val spaceConfig = "$BASE-space-config"
 		const val spaceCreate = "$BASE-space-create"
+	}
+
+	object Bdd {
+        const val base = ":im-bdd"
 	}
 }

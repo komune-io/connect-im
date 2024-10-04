@@ -1,8 +1,8 @@
-package io.komune.im.bdd
+package io.komune.im.bdd.spring
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cache.annotation.EnableCaching
 
 @EnableCaching
-@SpringBootApplication(scanBasePackages = ["io.komune.im", "io.komune.i2.spring.boot.auth"])
+@SpringBootApplication(scanBasePackages = ["io.komune.im"])
 class TestApplication

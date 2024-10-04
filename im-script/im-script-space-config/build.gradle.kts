@@ -14,4 +14,7 @@ dependencies {
     implementation(project(Modules.F2.organizationLib))
     implementation(project(Modules.F2.spaceLib))
     implementation(project(Modules.F2.userLib))
+
+    Dependencies.Jvm.junit(::testImplementation )
+    testImplementation(project(Modules.Bdd.base))
 }

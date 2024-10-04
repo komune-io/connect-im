@@ -1,4 +1,4 @@
-package io.komune.im.script.gateway.config
+package io.komune.im.script.core.config
 
 import io.komune.im.script.core.config.properties.ImRetryProperties
 import io.komune.im.script.core.config.properties.ImScriptInitProperties
