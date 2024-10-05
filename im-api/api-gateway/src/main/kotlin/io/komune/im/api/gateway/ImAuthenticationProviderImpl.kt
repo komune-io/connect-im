@@ -1,5 +1,6 @@
-package io.komune.im.api.config.bean
+package io.komune.im.api.gateway
 
+import io.komune.im.api.config.bean.ImAuthenticationProvider
 import io.komune.im.commons.model.AuthSubRealm
 import io.komune.im.api.config.properties.IMProperties
 import io.komune.im.api.config.properties.toAuthRealm

@@ -11,15 +11,16 @@ import io.komune.im.script.core.model.WebClient
 
 data class SpaceConfigProperties(
     val space: SpaceIdentifier,
-    val theme: String?,
-    val locales: List<String>?,
-    val appClients: List<AppClient>,
-    val webClients: List<WebClient>,
-    val features: List<FeatureData>?,
-    val permissions: List<PermissionData>?,
-    val roles: List<RoleData>?,
-    val organizations: List<OrganizationData>?,
-    val users: List<UserData>?
+    val theme: String? = null,
+    val locales: List<String>? = null,
+    val appClients: List<AppClient>? = null,
+
+    val webClients: List<WebClient>? = null,
+    val features: List<FeatureData>? = null,
+    val permissions: List<PermissionData>? = null,
+    val roles: List<RoleData>? = null,
+    val organizations: List<OrganizationData>? = null,
+    val users: List<UserData>? = null,
 )
 
 data class UserData(
@@ -32,18 +33,18 @@ data class UserData(
 )
 
 data class OrganizationData(
-    val siret: String?,
+    val siret: String? = null,
     val name: String,
-    val description: String?,
-    val address: Address?,
-    val roles: List<RoleIdentifier>?,
-    val attributes: Map<String, String>?,
-    val users: List<UserData>?,
-    val apiKeys: List<ApiKeyData>?
+    val description: String? = null,
+    val address: Address? = null,
+    val roles: List<RoleIdentifier>? = null,
+    val attributes: Map<String, String>? = null,
+    val users: List<UserData>? = null,
+    val apiKeys: List<ApiKeyData>? = null
 )
 
 data class ApiKeyData(
     val name: String,
-    val secret: String?,
-    val roles: List<RoleIdentifier>?
+    val secret: String? = null,
+    val roles: List<RoleIdentifier>? = null
 )

@@ -34,7 +34,7 @@ promote: docker-im-gateway-promote docker-script-promote docker-keycloak-promote
 
 ## im-gateway
 docker-im-gateway-build:
-	VERSION=${VERSION} ./gradlew build ${IM_APP_PACKAGE} --imageName ${IM_APP_IMG} -x test
+	VERSION=${VERSION} ./gradlew build ${IM_APP_PACKAGE} -Dorg.gradle.parallel=true --imageName ${IM_APP_IMG} -x test
 
 docker-im-gateway-publish:
 	@docker tag ${IM_APP_IMG} ghcr.io/komune-io/${IM_APP_IMG}
@@ -46,7 +46,7 @@ docker-im-gateway-promote:
 
 ## im-script
 docker-script-build:
-	VERSION=${VERSION} ./gradlew build ${IM_SCRIPT_PACKAGE} --imageName ${IM_SCRIPT_IMG} -x test
+	VERSION=${VERSION} ./gradlew build ${IM_SCRIPT_PACKAGE} -Dorg.gradle.parallel=true  --imageName ${IM_SCRIPT_IMG} -x test
 
 docker-script-publish:
 	@docker tag ${IM_SCRIPT_IMG} ghcr.io/komune-io/${IM_SCRIPT_IMG}

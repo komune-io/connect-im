@@ -46,7 +46,9 @@ class ApiKeyAggregateService(
     suspend fun findByName(name: String, organizationId: OrganizationId): ApiKey? {
         val organization = organizationCoreFinderService.get(organizationId)
         val keyIdentifier = toKeyIdentifier(organization, name)
-        return apiKeyFinderService.getOrNullByIdentifier(keyIdentifier)
+        return apiKeyFinderService.getOrNullByIdentifierAndOrganizationId(
+            keyIdentifier, organizationId
+        )
     }
 
     @Suppress("LongMethod")

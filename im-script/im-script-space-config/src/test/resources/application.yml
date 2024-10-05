@@ -1,0 +1,58 @@
+server:
+  port: 1000
+
+im:
+  script:
+    retry:
+      max: 5
+      delayMillis: 10000
+    init:
+      auth:
+        serverUrl: http://keycloak-it:8080
+        realmId: master
+        clientId: admin-cli
+        username: root
+        password: root
+    space:
+      auth:
+        serverUrl: http://keycloak-it:8080
+        realmId: master
+        clientId: im-root-platform
+        clientSecret: secret
+
+f2:
+  tenant:
+    issuerBaseUri: http://localhost:8080
+
+connect:
+  im:
+    keycloak:
+      url: http://localhost:8080
+      realm: master
+      clientId: im-root-platform
+      clientSecret: secret
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+im:
+  script:
+    init:
+      auth:
+        serverUrl: http://localhost:8080
+        realmId: master
+        clientId: admin-cli
+        username: root
+        password: root
+      json: file:./infra/docker-compose/config/build/init.json
+    space:
+      auth:
+        serverUrl: http://localhost:8080
+        realmId: master
+        clientId: im-root-platform
+        clientSecret: secret
+      jsonCreate: file:./infra/docker-compose/config/build/space-create.json
+      jsonConfig: file:./infra/docker-compose/config/build/space-config.json

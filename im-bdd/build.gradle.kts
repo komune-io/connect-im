@@ -26,11 +26,9 @@ dependencies {
 	Dependencies.Jvm.f2(::implementation)
 	Dependencies.Mpp.f2(::implementation)
 	Dependencies.Mpp.s2(::implementation)
-	Dependencies.Jvm.cucumber(::implementation)
+	Dependencies.Jvm.s2Bdd(::implementation)
 
-    implementation("io.komune.s2:s2-test-bdd:${Versions.s2}")
-
-	Dependencies.Jvm.testcontainers(::testImplementation)
+	Dependencies.Jvm.testcontainers(::implementation)
 
 	implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")
 }

@@ -25,12 +25,22 @@ class ApiKeyFinderService(
     private val userRepresentationTransformer: UserRepresentationTransformer
 ) {
     suspend fun getOrNullByIdentifier(id: ApiKeyIdentifier): ApiKey? {
-        val user = getUserOfKey(id)
-        val organization = organizationCoreFinderService.get(user.memberOf!!)
-        return organization.apiKeys()
-            .firstOrNull { it.identifier == id }
+        val user = getUserOfKeyOrNull(id)
+        return user?.memberOf?.let { memberOf ->
+            getOrNullByIdentifierAndOrganizationId(id, memberOf)
+        }
+    }
+    suspend fun getOrNullByIdentifierAndOrganizationId(
+        id: ApiKeyIdentifier,
+        organizationId: OrganizationId
+    ): ApiKey? {
+        val organization = organizationCoreFinderService.getOrNull(organizationId)
+        return organization
+            ?.apiKeys()
+            ?.firstOrNull { it.identifier == id }
             ?.let { apiKeyToDTOTransformer.transform(it) }
     }
+
     suspend fun getOrNull(id: ApiKeyId): ApiKey? {
         val user = getUserOfKey(id)
         val organization = organizationCoreFinderService.get(user.memberOf!!)
@@ -44,12 +54,16 @@ class ApiKeyFinderService(
     }
 
     suspend fun getUserOfKey(id: ApiKeyId): UserModel {
-        try {
+        return getUserOfKeyOrNull(id) ?: throw NotFoundException("User of ApiKey", id)
+    }
+
+    suspend fun getUserOfKeyOrNull(id: ApiKeyId): UserModel? {
+        return try {
             val client = keycloakClientProvider.get()
-            return client.client(id).serviceAccountUser
+             client.client(id).serviceAccountUser
                 .let { userRepresentationTransformer.transform(it) }
         } catch (e: javax.ws.rs.NotFoundException) {
-            throw NotFoundException("User of ApiKey", id)
+            null
         }
     }
 
