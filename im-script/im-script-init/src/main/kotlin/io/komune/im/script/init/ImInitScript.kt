@@ -38,10 +38,10 @@ class ImInitScript(
                 logger.warn("Deprecated: imMasterClient is deprecated and will be removed in the future")
                 logger.warn("Deprecated: use rootClient properties instead")
                 logger.warn("******************************")
-                properties.imMasterClient.initImClient()
+                properties.imMasterClient?.initImClient()
                 logger.info("Initialized imMasterClient")
                 logger.info("Initializing rootClient")
-                properties.rootClient.initImClient()
+                properties.rootClient?.initImClient()
                 logger.info("Initialized rootClient")
             }
         }
