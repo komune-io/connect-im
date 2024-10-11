@@ -1,11 +1,13 @@
 package io.komune.im.script.core.service
 
 import io.komune.im.commons.model.ClientId
+import io.komune.im.commons.model.ClientIdentifier
 import io.komune.im.core.client.api.ClientCoreAggregateService
 import io.komune.im.core.client.api.ClientCoreFinderService
 import io.komune.im.core.client.domain.command.ClientCreateCommand
 import io.komune.im.core.client.domain.command.ClientGrantClientRolesCommand
 import io.komune.im.core.client.domain.command.ClientGrantRealmRolesCommand
+import io.komune.im.core.client.domain.model.ClientModel
 import io.komune.im.script.core.init
 import io.komune.im.script.core.model.AppClient
 import io.komune.im.script.core.model.WebClient
@@ -33,6 +35,9 @@ class ClientInitService(
 
     private val logger = LoggerFactory.getLogger(ClientInitService::class.java)
 
+    suspend fun getAppClientId(clientIdentifier: ClientIdentifier): ClientModel? {
+        return clientCoreFinderService.getByIdentifierOrNull(clientIdentifier)
+    }
     suspend fun initAppClient(appClient: AppClient): ClientId {
 
         return init("AppClient[clientId: ${appClient.clientId}]", logger, {

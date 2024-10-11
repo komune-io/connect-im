@@ -67,16 +67,15 @@ class SpaceConfigScript (
             logger.info("Start processing configuration file [$jsonPath]...")
             val properties = ParserUtils.getConfiguration(jsonPath, SpaceConfigProperties::class.java)
             val auth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
-            withContext(AuthContext(auth)) {
-                config(auth, properties)
-            }
+            config(auth, properties)
         }
     }
 
     suspend fun config(
         auth: AuthSubRealm,
         properties: SpaceConfigProperties
-    ) {
+    ): Any = withContext(AuthContext(auth)) {
+
         logger.info("Verify Realm[${auth.space}] exists and update it if needed...")
         properties.verifyAndUpdateSpace()
 

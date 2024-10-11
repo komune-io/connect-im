@@ -3,6 +3,10 @@
     "theme": "${KC_REALM_THEME}",
     "locales": ["en", "fr"],
     "adminUsers": [],
+    "rootClient": {
+        "clientId": "${KC_REALM}-${KC_IM_CLIENT_ID}",
+        "clientSecret": "${KC_REALM_ROOT_CLIENT_SECRET}"
+    },
     "smtp": {
         "from": "dev@komune.io",
         "fromDisplayName": "Dev Komune",
@@ -15,3 +19,5 @@
         "auth": ""
     }
 }
+
+//

@@ -1,6 +1,7 @@
 package io.komune.im.script.space.create
 
 import io.komune.im.commons.auth.AuthContext
+import io.komune.im.commons.model.ClientId
 import io.komune.im.commons.utils.ParserUtils
 import io.komune.im.f2.privilege.domain.permission.model.Permission
 import io.komune.im.f2.privilege.lib.PrivilegeAggregateService
@@ -15,8 +16,11 @@ import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.keycloak.plugin.domain.model.KeycloakPluginIds
 import io.komune.im.script.core.config.properties.ImScriptSpaceProperties
 import io.komune.im.script.core.config.properties.toAuthRealm
+import io.komune.im.script.core.model.AppClient
 import io.komune.im.script.core.model.FeatureData
 import io.komune.im.script.core.model.PermissionData
+import io.komune.im.script.core.model.defaultSpaceRootClientId
+import io.komune.im.script.core.service.ClientInitService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -36,48 +40,65 @@ class SpaceCreateScript(
     private val privilegeFinderService: PrivilegeFinderService,
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService,
+    private val clientInitService: ClientInitService,
 ) {
     private val logger = LoggerFactory.getLogger(SpaceCreateScript::class.java)
 
+
     suspend fun run() {
         val jsonPaths = imScriptSpaceProperties.jsonCreate ?: return
+        runPaths(jsonPaths)
+    }
+
+    suspend fun runPaths(jsonPaths: String) {
         jsonPaths.split(";").forEach { jsonPath ->
             logger.info("****************************************************")
             logger.info("Start processing configuration file [$jsonPath]...")
             val properties = ParserUtils.getConfiguration(jsonPath, SpaceCreateProperties::class.java)
 
-            val masterAuth = imScriptSpaceProperties.auth.toAuthRealm()
-            withContext(AuthContext(masterAuth)) {
-                logger.info("Initializing Space[${properties.space}]...")
-                initRealm(properties)
-                logger.info("Initialized Space")
-            }
-
-            val newRealmAuth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
-            withContext(AuthContext(newRealmAuth)) {
-                logger.info("Initializing IM features...")
-                initImFeatures()
-                logger.info("Initialized IM features")
-
-                logger.info("Initializing IM permissions...")
-                initImPermissions()
-                logger.info("Initialized IM permissions")
-
-                logger.info("Initializing Client Scopes...")
-                initClientScopes()
-                logger.info("Initialized Client Scopes")
-
-                properties.adminUsers.forEach { adminUser ->
-                    logger.info("Initializing Admin user [${adminUser.email}]...")
-                    initAdmin(adminUser)
-                    logger.info("Initialized Admin")
-                }
-                logger.info("Initialized Admin users")
-            }
+            createScript(properties)
         }
     }
 
+    suspend fun createScript(properties: SpaceCreateProperties) {
+        val masterAuth = imScriptSpaceProperties.auth.toAuthRealm()
+        withContext(AuthContext(masterAuth)) {
+            initRealm(properties)
+        }
+
+        val newRealmAuth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
+        withContext(AuthContext(newRealmAuth)) {
+            configureRealm(properties)
+        }
+    }
+
+    private suspend fun configureRealm(properties: SpaceCreateProperties) {
+        logger.info("Initializing IM features...")
+        initImFeatures()
+        logger.info("Initialized IM features")
+
+        logger.info("Initializing IM permissions...")
+        initImPermissions()
+        logger.info("Initialized IM permissions")
+
+        logger.info("Initializing Client Scopes...")
+        initClientScopes()
+        logger.info("Initialized Client Scopes")
+
+        logger.info("Initializing Space Root Client...")
+        properties.rootClient?.initImClient(properties.space)
+        logger.info("Initialized Space Root Client")
+
+        properties.adminUsers?.forEach { adminUser ->
+            logger.info("Initializing Admin user [${adminUser.email}]...")
+            initAdmin(adminUser)
+            logger.info("Initialized Admin")
+        }
+        logger.info("Initialized Admin users")
+    }
+
     private suspend fun initRealm(properties: SpaceCreateProperties) {
+        logger.info("Initializing Space[${properties.space}]...")
         if (spaceFinderService.getOrNull(properties.space) != null) {
             logger.info("Space[${properties.space}] already created")
         } else {
@@ -91,6 +112,7 @@ class SpaceCreateScript(
                 )
             )
         }
+        logger.info("Initialized Space")
     }
 
     private suspend fun initAdmin(properties: AdminUserData) {
@@ -123,7 +145,11 @@ class SpaceCreateScript(
     }
 
     private suspend fun initImFeatures() = coroutineScope {
-        val imFeatures = ParserUtils.getConfiguration("imFeatures.json", Array<FeatureData>::class.java)
+        val imFeatures = ParserUtils.getConfiguration(
+            "imFeatures.json",
+            Array<FeatureData>::class.java,
+            SpaceCreateScript::class.java.classLoader
+        )
         imFeatures.map { feature ->
             async {
                 privilegeFinderService.getPrivilegeOrNull(feature.name)
@@ -133,7 +159,11 @@ class SpaceCreateScript(
     }
 
     private suspend fun initImPermissions() = coroutineScope {
-        val imPermissions = ParserUtils.getConfiguration("imPermissions.json", Array<PermissionData>::class.java)
+        val imPermissions = ParserUtils.getConfiguration(
+            "imPermissions.json",
+            Array<PermissionData>::class.java,
+            SpaceCreateScript::class.java.classLoader
+        )
         imPermissions.map { permission ->
             async {
                 privilegeFinderService.getPrivilegeOrNull(permission.name)
@@ -173,5 +203,21 @@ class SpaceCreateScript(
                 )
             }
         )
+    }
+
+    private suspend fun ClientCredentials.initImClient(spaceName: String): ClientId {
+        return AppClient(
+            clientId = clientId ?: defaultSpaceRootClientId(spaceName),
+            clientSecret = clientSecret,
+            roles = listOf(),
+            realmManagementRoles = listOf(
+                "manage-realm",
+                "manage-users",
+                "manage-clients",
+                "manage-events",
+                "manage-identity-providers",
+            )
+        ).let { clientInitService.initAppClient(it) }
+
     }
 }
