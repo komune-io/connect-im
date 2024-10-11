@@ -33,7 +33,7 @@ connect:
     keycloak:
         url: http://keycloak-it:8080
         realm: master
-        clientId: im-root-platform
+        clientId: im-root-client
         clientSecret: secret
     organization:
       insee:
@@ -62,7 +62,7 @@ connect:
     keycloak:
       url: http://localhost:8080
       realm: master
-      clientId: im-root-platform
+      clientId: im-root-client
       clientSecret: secret
 
 ---
@@ -80,5 +80,5 @@ connect:
     keycloak:
       url: http://localhost:8080
       realm: master
-      clientId: im-root-platform
+      clientId: im-root-client
       clientSecret: secret

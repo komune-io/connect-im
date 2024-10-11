@@ -29,7 +29,7 @@ connect:
     keycloak:
       url: http://localhost:8080
       realm: master
-      clientId: im-root-platform
+      clientId: im-root-client
       clientSecret: secret
 
 ---
@@ -52,7 +52,7 @@ im:
       auth:
         serverUrl: http://localhost:8080
         realmId: master
-        clientId: im-root-platform
+        clientId: im-root-client
         clientSecret: secret
       jsonCreate: file:./infra/docker-compose/config/build/space-create.json
       jsonConfig: file:./infra/docker-compose/config/build/space-config.json

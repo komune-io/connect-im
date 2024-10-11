@@ -17,4 +17,8 @@ dependencies {
     implementation(project(Modules.F2.userLib))
 
     implementation(project(Modules.Keycloak.pluginDomain))
+
+    Dependencies.Jvm.junit(::testImplementation)
+    testImplementation(project(Modules.Bdd.base))
+    testImplementation(project(Modules.F2.apikeyLib))
 }

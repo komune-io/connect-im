@@ -20,7 +20,4 @@ public class DbSchemaMigrationProvider: JpaEntityProvider {
 
     override fun close() {
     }
-
-
-
 }

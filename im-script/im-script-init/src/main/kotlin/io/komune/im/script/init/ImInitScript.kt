@@ -8,6 +8,8 @@ import io.komune.im.core.client.domain.command.ClientGrantClientRolesCommand
 import io.komune.im.script.core.config.properties.ImScriptInitProperties
 import io.komune.im.script.core.config.properties.toAuthRealm
 import io.komune.im.script.core.model.AppClient
+import io.komune.im.script.core.model.ClientCredentials
+import io.komune.im.script.core.model.DEFAULT_ROOT_CLIENT_ID
 import io.komune.im.script.core.service.ClientInitService
 import io.komune.im.script.init.config.ImInitProperties
 import kotlinx.coroutines.withContext
@@ -31,18 +33,26 @@ class ImInitScript(
 
             val masterAuth = imScriptInitProperties.auth.toAuthRealm()
             withContext(AuthContext(masterAuth)) {
-                logger.info("Initializing IM client...")
-                initImClient(properties)
-                logger.info("Initialized IM client")
+                logger.info("Initializing imMasterClient...")
+                logger.warn("******************************")
+                logger.warn("Deprecated: imMasterClient is deprecated and will be removed in the future")
+                logger.warn("Deprecated: use rootClient properties instead")
+                logger.warn("******************************")
+                properties.imMasterClient.initImClient()
+                logger.info("Initialized imMasterClient")
+                logger.info("Initializing rootClient")
+                properties.rootClient.initImClient()
+                logger.info("Initialized rootClient")
             }
         }
 
     }
 
-    private suspend fun initImClient(properties: ImInitProperties) {
+    private suspend fun ClientCredentials.initImClient() {
+        val clientId = clientId ?: DEFAULT_ROOT_CLIENT_ID
         val imClientId = AppClient(
-            clientId = properties.imMasterClient.clientId,
-            clientSecret = properties.imMasterClient.clientSecret,
+            clientId = clientId,
+            clientSecret = clientSecret,
             roles = listOf("admin"),
             realmManagementRoles = emptyList()
         ).let { clientInitService.initAppClient(it) }
