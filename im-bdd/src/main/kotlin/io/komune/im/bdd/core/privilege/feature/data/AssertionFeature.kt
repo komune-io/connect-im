@@ -27,7 +27,7 @@ class AssertionFeature(
             description: String = feature.description,
         ) = also {
             Assertions.assertThat(
-                feature.attributes[Feature::type.name]?.firstOrNull()
+                feature.attributes?.get(Feature::type.name)?.firstOrNull()
             ).isEqualTo(PrivilegeType.FEATURE.name)
             Assertions.assertThat(feature.id).isEqualTo(id)
             Assertions.assertThat(feature.name).isEqualTo(identifier)

@@ -21,7 +21,7 @@ class AuthenticationSteps: En, ImCucumberStepsDefinition() {
                     val userRoles = async { userResource.roles().realmLevel().listEffective() }
                     context.authedUser = AuthedUser(
                         id = userId,
-                        memberOf = user.await().attributes["memberOf"]?.firstOrNull(),
+                        memberOf = user.await()?.attributes?.get("memberOf")?.firstOrNull(),
                         roles = userRoles.await().map { it.name }.toTypedArray()
                     )
                 }

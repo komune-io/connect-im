@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.ClientRepresentation
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.repository.AssertionApiEntity
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 fun AssertionBdd.client(keycloakClient: KeycloakClient) = AssertionClient(keycloakClient)
 
@@ -17,13 +18,13 @@ class AssertionClient(
 ): AssertionApiEntity<ClientRepresentation, ClientId, AssertionClient.ClientAssert>() {
     override suspend fun findById(id: ClientId): ClientRepresentation? = try {
         keycloakClient.client(id).toRepresentation()
-    } catch (e: javax.ws.rs.NotFoundException) {
+    } catch (e: JakartaNotFoundException) {
         null
     }
 
     fun findByIdentifier(identifier: ClientIdentifier): ClientRepresentation? = try {
         keycloakClient.getClientByIdentifier(identifier)
-    } catch (e: javax.ws.rs.NotFoundException) {
+    } catch (e: JakartaNotFoundException) {
         null
     }
 

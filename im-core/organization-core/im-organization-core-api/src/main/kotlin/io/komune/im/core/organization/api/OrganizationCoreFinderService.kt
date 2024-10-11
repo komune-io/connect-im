@@ -13,6 +13,7 @@ import f2.dsl.cqrs.page.PageDTO
 import f2.spring.exception.NotFoundException
 import org.keycloak.representations.idm.GroupRepresentation
 import org.springframework.stereotype.Service
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
 class OrganizationCoreFinderService: CoreService(CacheName.Organization) {
@@ -21,7 +22,7 @@ class OrganizationCoreFinderService: CoreService(CacheName.Organization) {
         val client = keycloakClientProvider.get()
         try {
             client.group(id).toRepresentation().toOrganization()
-        } catch (e: javax.ws.rs.NotFoundException) {
+        } catch (e: JakartaNotFoundException) {
             null
         }
     }

@@ -47,7 +47,7 @@ class UserRealmRoleFeatureMapper: AbstractOIDCProtocolMapper(), OIDCAccessTokenM
         clientSessionCtx: ClientSessionContext
     ) {
         val features = clientSessionCtx.rolesStream
-            .filter { "FEATURE" in it.attributes["type"].orEmpty() }
+            .filter { "FEATURE" in it.attributes?.get("type").orEmpty() }
             .map { it.name }
             .collect(Collectors.toSet()) as Set<String>
 
@@ -79,7 +79,7 @@ class UserRealmRoleFeatureMapper: AbstractOIDCProtocolMapper(), OIDCAccessTokenM
     }
 
     private fun RoleModel.isFeatured(features: Collection<String>): Boolean {
-        val roleFeatureRules = attributes["features"]
+        val roleFeatureRules = attributes?.get("features")
             ?.map { it.parseJsonTo(Array<String>::class.java) }
 
         if (roleFeatureRules.isNullOrEmpty()) {

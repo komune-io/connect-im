@@ -13,6 +13,7 @@ import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.UserRepresentation
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.repository.AssertionApiEntity
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 fun AssertionBdd.user(client: KeycloakClient) = AssertionUser(client)
 
@@ -21,7 +22,7 @@ class AssertionUser(
 ): AssertionApiEntity<UserRepresentation, UserId, AssertionUser.UserAssert>() {
     override suspend fun findById(id: UserId): UserRepresentation? = try {
         client.user(id).toRepresentation()
-    } catch (e: javax.ws.rs.NotFoundException) {
+    } catch (e: JakartaNotFoundException) {
         null
     }
 
@@ -38,7 +39,7 @@ class AssertionUser(
     inner class UserAssert(
         private val user: UserRepresentation
     ) {
-        private val singleAttributes = user.attributes
+        private val singleAttributes = user.attributes.orEmpty()
             .mapValues { (_, values) -> values.firstOrNull() }
             .filterValues { !it.isNullOrBlank() } as Map<String, String>
 

@@ -1,13 +1,13 @@
 services:
   im-keycloak:
-    image: ${DOCKER_REPOSITORY}im-keycloak:${VERSION_IM}
+    image: im-keycloak:${VERSION_IM}
     container_name: ${KC_HOSTNAME}
     environment:
       KC_DB_URL: 'jdbc:postgresql://im-keycloak-postgres/im-keycloak'
       KC_DB_PASSWORD: admin
       KC_DB_USERNAME: admin
       KC_DB_SCHEMA: public
-      KC_HOSTNAME: localhost:8080
+      KC_HOSTNAME: localhost
       KEYCLOAK_ADMIN: ${KC_ROOT_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KC_ROOT_PASS}
       PROXY_ADDRESS_FORWARDING: "true"

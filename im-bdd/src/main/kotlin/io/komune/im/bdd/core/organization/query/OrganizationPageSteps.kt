@@ -42,7 +42,6 @@ class OrganizationPageSteps: En, ImCucumberStepsDefinition() {
     private fun organizationPageParams(entry: Map<String, String>?) = OrganizationPageParams(
         name = entry?.get("name"),
         role = entry?.get("role"),
-//        attributes = entry?.get("attr"),
         withDisable = entry?.get("withDisabled").toBoolean(),
         offset = entry?.get("offset")?.toInt(),
         limit = entry?.get("limit")?.toInt(),
@@ -51,7 +50,6 @@ class OrganizationPageSteps: En, ImCucumberStepsDefinition() {
     private data class OrganizationPageParams(
         val name: String?,
         val role: String?,
-//        val attributes: Map<String, String>?,
         val withDisable: Boolean,
         val offset: Int?,
         val limit: Int?

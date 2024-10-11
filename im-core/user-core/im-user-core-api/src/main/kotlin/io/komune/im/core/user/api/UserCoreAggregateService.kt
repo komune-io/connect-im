@@ -88,8 +88,8 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
         val user = client.user(command.id).toRepresentation()
 
         user.isEnabled = false
-        user.singleAttribute(UserModel::disabledBy.name, command.disabledBy)
-        user.singleAttribute(UserModel::disabledDate.name, System.currentTimeMillis().toString())
+        user.singleAttribute<UserRepresentation>(UserModel::disabledBy.name, command.disabledBy)
+        user.singleAttribute<UserRepresentation>(UserModel::disabledDate.name, System.currentTimeMillis().toString())
 
         client.user(command.id).update(user)
         UserCoreDisabledEvent(command.id)
@@ -125,6 +125,11 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
             .filterValues { it.filterNotNull().isNotEmpty() }
     }
 
+    private suspend fun UserRepresentation.enableAttributes() {
+        val client = keycloakClientProvider.get()
+        client.user(id)
+
+    }
     private suspend fun UserRepresentation.assignRoles(roles: List<RoleRepresentation>) {
         val client = keycloakClientProvider.get()
         with(client.user(id).roles().realmLevel()) {

@@ -13,6 +13,7 @@ import io.komune.im.infra.redis.CachedService
 import f2.spring.exception.NotFoundException
 import org.keycloak.representations.idm.RoleRepresentation
 import org.springframework.stereotype.Service
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
 class PrivilegeCoreFinderService(
@@ -25,7 +26,7 @@ class PrivilegeCoreFinderService(
             client.role(identifier)
                 .toRepresentation()
                 .toPrivilege()
-        } catch (e: javax.ws.rs.NotFoundException) {
+        } catch (e: JakartaNotFoundException) {
             null
         }
     }

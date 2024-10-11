@@ -14,13 +14,13 @@ fun RoleRepresentation.toRole() = RoleModel(
     id = id,
     identifier = name,
     description = description.orEmpty(),
-    targets = attributes[RoleModel::targets.name].orEmpty().map { RoleTarget.valueOf(it) },
-    bindings = attributes[RoleModel::bindings.name]?.firstOrNull()
+    targets = attributes?.get(RoleModel::targets.name).orEmpty().map { RoleTarget.valueOf(it) },
+    bindings = attributes?.get(RoleModel::bindings.name)?.firstOrNull()
         ?.parseJson<Map<String, List<RoleIdentifier>>>()
         ?.mapKeys { (target) -> RoleTarget.valueOf(target) }
         .orEmpty(),
-    locale = attributes[RoleModel::locale.name]?.firstOrNull()?.parseJson<Map<String, String>>().orEmpty(),
-    permissions = attributes[RoleModel::permissions.name].orEmpty()
+    locale = attributes?.get(RoleModel::locale.name)?.firstOrNull()?.parseJson<Map<String, String>>().orEmpty(),
+    permissions = attributes?.get(RoleModel::permissions.name).orEmpty()
 )
 
 fun RoleModel.toRoleRepresentation() = RoleRepresentation().also {

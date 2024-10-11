@@ -14,7 +14,7 @@ import io.komune.im.core.privilege.domain.model.RoleModel
 import io.komune.im.core.privilege.domain.model.RoleTarget
 import org.keycloak.representations.idm.RoleRepresentation
 
-fun RoleRepresentation.toPrivilege(): Privilege = when (attributes[Privilege::type.name]?.firstOrNull()) {
+fun RoleRepresentation.toPrivilege(): Privilege = when (attributes?.get(Privilege::type.name)?.firstOrNull()) {
     PrivilegeType.ROLE.name -> toRole()
     PrivilegeType.PERMISSION.name -> toPermission()
     PrivilegeType.FEATURE.name -> toFeature()
