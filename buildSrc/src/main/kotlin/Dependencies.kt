@@ -28,14 +28,14 @@ object Versions {
 	const val springBoot = PluginVersions.springBoot
 	const val springData = FixersVersions.Spring.data
 
-	const val kdatetime = "0.1.1"
+	const val kdatetime = FixersVersions.Kotlin.datetime
 
 	// Come from gradle.properties
 	fun keycloak() = System.getProperty("KEYCLOAK_VERSION").also { version ->
         println("Keycloak version: $version")
     }
 
-	const val mockito = "4.11.0"
+	const val mockito = "5.14.1"
 	const val testcontainers = FixersVersions.Test.testcontainers
 
 	const val slf4j = FixersVersions.Logging.slf4j
