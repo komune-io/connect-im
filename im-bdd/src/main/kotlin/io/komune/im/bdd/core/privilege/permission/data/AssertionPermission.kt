@@ -27,7 +27,7 @@ class AssertionPermission(
             description: String = permission.description,
         ) = also {
             Assertions.assertThat(
-                permission.attributes[Permission::type.name]?.firstOrNull()
+                permission.attributes?.get(Permission::type.name)?.firstOrNull()
             ).isEqualTo(PrivilegeType.PERMISSION.name)
             Assertions.assertThat(permission.id).isEqualTo(id)
             Assertions.assertThat(permission.name).isEqualTo(identifier)

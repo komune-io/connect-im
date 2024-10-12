@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.GroupRepresentation
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.repository.AssertionApiEntity
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 fun AssertionBdd.organization(client: KeycloakClient) = AssertionOrganization(client)
 
@@ -18,7 +19,7 @@ class AssertionOrganization(
 ): AssertionApiEntity<GroupRepresentation, OrganizationId, AssertionOrganization.OrganizationAssert>() {
     override suspend fun findById(id: OrganizationId): GroupRepresentation? = try {
         client.group(id).toRepresentation()
-    } catch (e: javax.ws.rs.NotFoundException) {
+    } catch (e: JakartaNotFoundException) {
         null
     }
     override suspend fun assertThat(entity: GroupRepresentation) = OrganizationAssert(entity)
@@ -26,7 +27,8 @@ class AssertionOrganization(
     inner class OrganizationAssert(
         private val group: GroupRepresentation
     ) {
-        private val singleAttributes = group.attributes
+        private val groupAttributes = group.attributes.orEmpty()
+        private val singleAttributes = groupAttributes
             .mapValues { (_, values) -> values.firstOrNull() }
             .filterValues { !it.isNullOrBlank() } as Map<String, String>
 

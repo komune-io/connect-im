@@ -33,11 +33,12 @@ object KeycloakClientBuilder {
     }
 
     private fun openConnection(auth: AuthSubRealm, configure: KeycloakBuilder.() -> KeycloakBuilder): KeycloakClientConnection {
+        val resteasyClientBuilder = ResteasyClientBuilder.newBuilder() as ResteasyClientBuilder
         val keycloak = KeycloakBuilder.builder()
             .serverUrl(auth.master.serverUrl)
             .realm(auth.master.realmId)
             .clientId(auth.master.clientId)
-            .resteasyClient(ResteasyClientBuilder().connectionPoolSize(CONNECTION_POOL_SIZE).build())
+            .resteasyClient(resteasyClientBuilder.connectionPoolSize(CONNECTION_POOL_SIZE).build())
             .configure()
             .build()
         return KeycloakClientConnection(keycloak, auth)

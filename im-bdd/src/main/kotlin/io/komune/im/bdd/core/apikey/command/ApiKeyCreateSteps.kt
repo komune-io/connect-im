@@ -111,7 +111,7 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
 
         val user = kcClient.client(apiKeyId).serviceAccountUser
         AssertionBdd.user(kcClient).assertThat(user).hasFields(
-            memberOf = params.organization?.let(context.organizationIds::safeGet) ?: user.attributes["memberOf"]?.firstOrNull(),
+            memberOf = params.organization?.let(context.organizationIds::safeGet) ?: user.attributes?.get("memberOf")?.firstOrNull(),
             roles = params.roles ?: apiKey.roles,
             enabled = true,
             isApiKey = true

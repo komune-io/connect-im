@@ -18,7 +18,7 @@ test:
 	./gradlew test
 
 publish:
-	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish -Dorg.gradle.parallel=true -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
+	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
 
 check:
 	./gradlew sonar -Dsonar.token=${SONAR_TOKEN} -Dorg.gradle.parallel=true

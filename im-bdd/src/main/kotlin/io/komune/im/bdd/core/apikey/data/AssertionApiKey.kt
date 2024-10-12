@@ -11,6 +11,7 @@ import io.komune.im.infra.keycloak.client.KeycloakClient
 import org.assertj.core.api.Assertions
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.repository.AssertionApiEntity
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 fun AssertionBdd.apiKey(client: KeycloakClient) = AssertionApiKey(client)
 
@@ -21,14 +22,15 @@ class AssertionApiKey(
         try {
             val organizationId = client.client(id)
                 .serviceAccountUser
-                .attributes["memberOf"]
+                .attributes
+                ?.get("memberOf")
                 ?.firstOrNull()
                 ?: return null
 
             val organization = client.group(organizationId).toRepresentation()
-            val apiKeys = organization.attributes[ORGANIZATION_FIELD_API_KEYS]?.firstOrNull()?.parseJson<Array<ApiKeyModel>>()
+            val apiKeys = organization.attributes?.get(ORGANIZATION_FIELD_API_KEYS)?.firstOrNull()?.parseJson<Array<ApiKeyModel>>()
             return apiKeys?.firstOrNull { it.id == id }
-        } catch (e: javax.ws.rs.NotFoundException) {
+        } catch (e: JakartaNotFoundException) {
             return null
         }
     }

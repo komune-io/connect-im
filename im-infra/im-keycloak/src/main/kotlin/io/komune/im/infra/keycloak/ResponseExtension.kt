@@ -4,8 +4,8 @@ import io.komune.im.commons.exception.I2ApiError
 import io.komune.im.commons.exception.asException
 import f2.spring.exception.ConflictException
 import f2.spring.exception.NotFoundException
+import jakarta.ws.rs.core.Response
 import org.apache.http.HttpStatus
-import javax.ws.rs.core.Response
 
 fun Response.toEntityCreatedId(): String {
 	return this.location.toString().substringAfterLast("/")

@@ -10,9 +10,12 @@ import io.komune.im.f2.space.domain.command.SpaceDefineCommand
 import io.komune.im.f2.space.domain.command.SpaceDefinedEvent
 import io.komune.im.f2.space.domain.command.SpaceDeleteCommand
 import io.komune.im.f2.space.domain.command.SpaceDeletedEvent
+import io.komune.im.infra.keycloak.client.KeycloakClient
 import io.komune.im.infra.redis.CacheName
 import org.keycloak.representations.idm.RealmRepresentation
+import org.keycloak.representations.userprofile.config.UPConfig
 import org.springframework.stereotype.Service
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
 class SpaceAggregateService(
@@ -37,7 +40,7 @@ class SpaceAggregateService(
     suspend fun define(command: SpaceDefineCommand): SpaceDefinedEvent = withAuth(authenticationResolver.getAuth(), "master") {
         try {
             update(command)
-        } catch (e: javax.ws.rs.NotFoundException) {
+        } catch (e: JakartaNotFoundException) {
             create(command)
         }
 
@@ -70,7 +73,16 @@ class SpaceAggregateService(
             roles = realmClientRoles
         ).let { clientCoreAggregateService.grantClientRoles(it) }
 
+        enableUserAttributes(realm.realm)
+
         keycloakClientProvider.reset()
+    }
+
+    private suspend fun enableUserAttributes(realm: String) {
+        val client = keycloakClientProvider.get(realm)
+        val upConfiguration = client.userProfile().configuration
+        upConfiguration.unmanagedAttributePolicy = UPConfig.UnmanagedAttributePolicy.ENABLED
+        client.userProfile().update(upConfiguration)
     }
 
     private suspend fun update(command: SpaceDefineCommand) {

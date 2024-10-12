@@ -11,6 +11,7 @@ import f2.dsl.cqrs.page.PagePagination
 import f2.spring.exception.NotFoundException
 import org.keycloak.representations.idm.RealmRepresentation
 import org.springframework.stereotype.Service
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
 class SpaceFinderService: CoreService(CacheName.Space) {
@@ -22,7 +23,7 @@ class SpaceFinderService: CoreService(CacheName.Space) {
             client.realm(id)
                 .toRepresentation()
                 .toSpace()
-        } catch (e: javax.ws.rs.NotFoundException) {
+        } catch (e: JakartaNotFoundException) {
             null
         }
     }

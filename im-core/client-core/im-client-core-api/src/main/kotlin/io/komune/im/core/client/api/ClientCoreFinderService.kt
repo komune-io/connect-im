@@ -6,6 +6,7 @@ import io.komune.im.core.client.api.model.toClient
 import io.komune.im.core.client.domain.model.ClientModel
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import f2.spring.exception.NotFoundException
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,7 +20,7 @@ class ClientCoreFinderService(
             keycloakClient.client(id)
                 .toRepresentation()
                 .toClient()
-        } catch (e: javax.ws.rs.NotFoundException) {
+        } catch (e: JakartaNotFoundException) {
             null
         }
     }
@@ -33,7 +34,7 @@ class ClientCoreFinderService(
 
         return try {
             keycloakClient.getClientByIdentifier(identifier)?.toClient()
-        } catch (e: javax.ws.rs.NotFoundException) {
+        } catch (e: JakartaNotFoundException) {
             null
         }
     }
@@ -50,7 +51,7 @@ class ClientCoreFinderService(
                 .roles()
                 .list()
                 .map { it.name }
-        } catch (e: javax.ws.rs.NotFoundException) {
+        } catch (e: JakartaNotFoundException) {
             throw NotFoundException("Client", id)
         }
     }

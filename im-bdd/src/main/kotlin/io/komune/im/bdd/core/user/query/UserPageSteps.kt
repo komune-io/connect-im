@@ -47,7 +47,6 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
         name = entry?.get("name"),
         email = entry?.get("email"),
         role = entry?.get("role"),
-//        attributes = entry?.get("attr"),
         withDisable = entry?.get("withDisabled").toBoolean(),
         offset = entry?.get("offset")?.toInt(),
         limit = entry?.get("limit")?.toInt(),
@@ -58,7 +57,6 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
         val name: String?,
         val email: String?,
         val role: String?,
-//        val attributes: Map<String, String>?,
         val withDisable: Boolean,
         val offset: Int?,
         val limit: Int?

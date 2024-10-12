@@ -13,7 +13,7 @@ fun RoleRepresentation.toPermission() = PermissionModel(
     id = id,
     identifier = name,
     description = description.orEmpty(),
-    features = attributes[PermissionModel::features.name]?.map { it.parseJsonTo(Array<FeatureIdentifier>::class.java) }
+    features = attributes?.get(PermissionModel::features.name)?.map { it.parseJsonTo(Array<FeatureIdentifier>::class.java) }
 )
 
 fun PermissionModel.toRoleRepresentation() = RoleRepresentation().also {

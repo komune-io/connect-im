@@ -27,22 +27,22 @@ class AssertionRole(
     inner class RoleAssert(
         private val role: RoleRepresentation
     ) {
-        private val roleTargets: List<RoleTarget> = role.attributes[Role::targets.name]
+        private val roleTargets: List<RoleTarget> = role.attributes?.get(Role::targets.name)
             .orEmpty()
             .map { RoleTarget.valueOf(it) }
 
-        private val roleBindings: Map<RoleTarget, List<RoleIdentifier>> = role.attributes[Role::bindings.name]
+        private val roleBindings: Map<RoleTarget, List<RoleIdentifier>> = role.attributes?.get(Role::bindings.name)
             ?.firstOrNull()
             ?.parseJson<Map<String, List<RoleIdentifier>>>()
             ?.mapKeys { (target) -> RoleTarget.valueOf(target) }
             .orEmpty()
 
-        private val roleLocale: Map<String, String> = role.attributes[Role::locale.name]
+        private val roleLocale: Map<String, String> = role.attributes?.get(Role::locale.name)
             ?.firstOrNull()
             ?.parseJson()
             ?: emptyMap()
 
-        private val rolePermissions: List<PermissionIdentifier> = role.attributes[Role::permissions.name]
+        private val rolePermissions: List<PermissionIdentifier> = role.attributes?.get(Role::permissions.name)
             .orEmpty()
 
         fun hasFields(
@@ -54,7 +54,7 @@ class AssertionRole(
             bindings: Map<RoleTarget, List<RoleIdentifier>> = roleBindings,
             permissions: List<PermissionIdentifier> = rolePermissions
         ) = also {
-            Assertions.assertThat(role.attributes[Role::type.name]?.firstOrNull()).isEqualTo(PrivilegeType.ROLE.name)
+            Assertions.assertThat(role.attributes?.get(Role::type.name)?.firstOrNull()).isEqualTo(PrivilegeType.ROLE.name)
             Assertions.assertThat(role.id).isEqualTo(id)
             Assertions.assertThat(role.name).isEqualTo(identifier)
             Assertions.assertThat(role.description).isEqualTo(description)

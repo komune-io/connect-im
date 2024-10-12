@@ -21,7 +21,7 @@ class UserRepresentationTransformer(
 
         return UserModel(
             id = item.id,
-            memberOf = item.attributes[UserModel::memberOf.name]?.firstOrNull(),
+            memberOf = item.attributes?.get(UserModel::memberOf.name)?.firstOrNull(),
             email = item.email.orEmpty(),
             givenName = item.firstName.orEmpty(),
             familyName = item.lastName.orEmpty(),
@@ -29,9 +29,9 @@ class UserRepresentationTransformer(
             attributes = item.attributes.orEmpty().mapValues { (_, value) -> value.first() },
             enabled = item.isEnabled,
             creationDate = item.createdTimestamp,
-            disabledBy = item.attributes[UserModel::disabledBy.name]?.firstOrNull(),
-            disabledDate = item.attributes[UserModel::disabledDate.name]?.firstOrNull()?.toLong(),
-            isApiKey = item.attributes[UserModel::isApiKey.name]?.firstOrNull().toBoolean()
+            disabledBy = item.attributes?.get(UserModel::disabledBy.name)?.firstOrNull(),
+            disabledDate = item.attributes?.get(UserModel::disabledDate.name)?.firstOrNull()?.toLong(),
+            isApiKey = item.attributes?.get(UserModel::isApiKey.name)?.firstOrNull().toBoolean()
         )
     }
 }

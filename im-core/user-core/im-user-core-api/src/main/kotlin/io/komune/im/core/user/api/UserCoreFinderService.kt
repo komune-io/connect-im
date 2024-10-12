@@ -14,6 +14,7 @@ import f2.dsl.cqrs.page.OffsetPagination
 import f2.dsl.cqrs.page.PageDTO
 import f2.spring.exception.NotFoundException
 import org.springframework.stereotype.Service
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
 class UserCoreFinderService(
@@ -24,7 +25,7 @@ class UserCoreFinderService(
         val client = keycloakClientProvider.get()
         try {
             client.user(id).toRepresentation().let { userRepresentationTransformer.transform(it) }
-        } catch (e: javax.ws.rs.NotFoundException) {
+        } catch (e: JakartaNotFoundException) {
             null
         }
     }
