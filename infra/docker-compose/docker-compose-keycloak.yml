@@ -1,6 +1,6 @@
 services:
   im-keycloak:
-    image: im-keycloak:${VERSION_IM}
+    image: ${DOCKER_REPOSITORY}im-keycloak:${VERSION_IM}
     container_name: ${KC_HOSTNAME}
     environment:
       KC_DB_URL: 'jdbc:postgresql://im-keycloak-postgres/im-keycloak'
