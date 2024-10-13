@@ -19,7 +19,7 @@ class AssertionOrganization(
     private val client: KeycloakClient
 ): AssertionApiEntity<GroupRepresentation, OrganizationId, AssertionOrganization.OrganizationAssert>() {
 
-    private val logger = LoggerFactory.getLogger(AssertionOrganizationRef::class.java)
+    private val logger = LoggerFactory.getLogger(AssertionOrganization::class.java)
 
     override suspend fun findById(id: OrganizationId): GroupRepresentation? = try {
         client.group(id).toRepresentation()
