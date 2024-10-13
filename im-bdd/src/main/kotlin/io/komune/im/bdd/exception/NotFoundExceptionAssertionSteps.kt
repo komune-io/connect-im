@@ -13,7 +13,7 @@ class NotFoundExceptionAssertionSteps: En, S2CucumberStepsDefinition() {
         DataTableType(::notFoundParams)
 
         Then("The {string} should not be found") { objectName: String ->
-            val lastUsedKey = context.entityLists[objectName]!!.lastUsedKey
+            val lastUsedKey = context.entityLists[objectName]?.lastUsedKey
             assert(lastUsedKey.toString())
         }
 

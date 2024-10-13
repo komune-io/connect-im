@@ -129,9 +129,10 @@ class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
 
     private fun organizationAttributesParams(entry: Map<String, String>?): Map<String, String>? {
         if (entry == null) return null
-        return if (entry.containsKey("job")) {
+        val job = entry["job"]
+        return if (job != null) {
              mapOf(
-                "job" to entry["job"]!!
+                "job" to job
             )
         } else null
     }
