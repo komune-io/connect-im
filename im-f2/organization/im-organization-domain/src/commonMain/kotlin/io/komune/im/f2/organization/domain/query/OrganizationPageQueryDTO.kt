@@ -77,7 +77,8 @@ data class OrganizationPageQuery(
 @JsExport
 interface OrganizationPageResultDTO: PageDTO<OrganizationDTO> {
     /**
-     * List of organizations satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
+     * List of organizations satisfying the requesting filters.
+     * The size of the list is lesser or equal than the requested size.
      */
     override val items: List<OrganizationDTO>
 

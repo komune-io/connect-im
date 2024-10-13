@@ -64,7 +64,7 @@ interface OrganizationDTO {
 
     /**
      * URL pointing to the logo of the organization.
-     * @example "https://d1muf25xaso8hp.cloudfront.net/https%3A%2F%2Ff9a8147b117eae8242d081b049108349.cdn.bubble.io%2Ff1673342519429x701902957290415400%2Fkomune-logo.png?w=192&h=52&auto=compress&dpr=2&fit=max"
+     * @example "https://komune.io/logo.png"
      */
     val logo: String?
 

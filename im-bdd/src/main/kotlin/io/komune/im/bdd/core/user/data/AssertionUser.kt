@@ -1,5 +1,6 @@
 package io.komune.im.bdd.core.user.data
 
+import io.komune.im.bdd.core.organization.data.AssertionOrganizationRef
 import io.komune.im.commons.model.Address
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.RoleIdentifier
@@ -11,6 +12,7 @@ import io.komune.im.f2.user.domain.model.User
 import io.komune.im.infra.keycloak.client.KeycloakClient
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.UserRepresentation
+import org.slf4j.LoggerFactory
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.repository.AssertionApiEntity
 import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
@@ -20,9 +22,13 @@ fun AssertionBdd.user(client: KeycloakClient) = AssertionUser(client)
 class AssertionUser(
     private val client: KeycloakClient
 ): AssertionApiEntity<UserRepresentation, UserId, AssertionUser.UserAssert>() {
+
+    private val logger = LoggerFactory.getLogger(AssertionOrganizationRef::class.java)
+
     override suspend fun findById(id: UserId): UserRepresentation? = try {
         client.user(id).toRepresentation()
     } catch (e: JakartaNotFoundException) {
+        logger.debug("User not found with id: $id")
         null
     }
 

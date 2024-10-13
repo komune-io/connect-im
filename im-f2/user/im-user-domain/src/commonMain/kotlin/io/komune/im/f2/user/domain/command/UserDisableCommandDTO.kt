@@ -36,7 +36,8 @@ interface UserDisableCommandDTO: Command {
 
     /**
      * Whether to anonymize the personal data of the user or not.
-     * This will remove or blank all sensible fields except custom attributes. To anonymize custom attributes, see `attributes` field.
+     * This will remove or blank all sensible fields except custom attributes.
+     * To anonymize custom attributes, see `attributes` field.
      * @example true
      */
     val anonymize: Boolean

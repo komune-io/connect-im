@@ -45,7 +45,7 @@ class ScriptServiceRunner(
         }
 
         if (!success) {
-            throw RuntimeException()
+            throw RuntimeException("Failed to run script $script")
         }
     }
 }

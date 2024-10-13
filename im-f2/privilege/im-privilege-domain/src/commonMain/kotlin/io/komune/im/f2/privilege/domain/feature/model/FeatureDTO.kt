@@ -8,7 +8,8 @@ import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
 
 /**
- * Feature flag that represents a group of actions within a system and can be used to enable or disable the related permissions.
+ * Feature flag that represents a group of actions within a system
+ * and can be used to enable or disable the related permissions.
  * @d2 model
  * @parent [io.komune.im.f2.privilege.domain.D2FeaturePage]
  * @order 10

@@ -15,5 +15,5 @@ data class KeycloakHttpEvent(
     val details: Map<String, String>?
 ) {
     fun isVerifyEmail() = type == EventType.VERIFY_EMAIL
-            || type == EventType.CUSTOM_REQUIRED_ACTION && details?.get(Details.CUSTOM_REQUIRED_ACTION) == "VERIFY_EMAIL"
+        || type == EventType.CUSTOM_REQUIRED_ACTION && details?.get(Details.CUSTOM_REQUIRED_ACTION) == "VERIFY_EMAIL"
 }

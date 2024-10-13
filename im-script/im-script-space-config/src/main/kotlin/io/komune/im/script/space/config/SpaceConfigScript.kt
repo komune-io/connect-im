@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class SpaceConfigScript (
+class SpaceConfigScript(
     private val apiKeyAggregateService: ApiKeyAggregateService,
     private val clientInitService: ClientInitService,
     private val imScriptSpaceProperties: ImScriptSpaceProperties,
@@ -72,8 +72,7 @@ class SpaceConfigScript (
     }
 
     suspend fun config(
-        auth: AuthSubRealm,
-        properties: SpaceConfigProperties
+        auth: AuthSubRealm, properties: SpaceConfigProperties
     ): Any = withContext(AuthContext(auth)) {
 
         logger.info("Verify Realm[${auth.space}] exists and update it if needed...")
@@ -128,11 +127,8 @@ class SpaceConfigScript (
     private suspend fun initRoles(
         roles: List<RoleData>?
     ): List<RoleIdentifier> = roles.initNotEmpty("Roles") { items ->
-        val existingRoles = privilegeFinderService.listRoles()
-            .plus(privilegeFinderService.listPermissions())
-            .plus(privilegeFinderService.listFeatures())
-            .map(PrivilegeDTO::identifier)
-            .toMutableSet()
+        val existingRoles = privilegeFinderService.listRoles().plus(privilegeFinderService.listPermissions())
+            .plus(privilegeFinderService.listFeatures()).map(PrivilegeDTO::identifier).toMutableSet()
 
         val remainingRoles = items.filter { it.name !in existingRoles }.toMutableSet()
         var anyRoleInitialized = true
@@ -140,8 +136,7 @@ class SpaceConfigScript (
         while (remainingRoles.isNotEmpty() && anyRoleInitialized) {
             remainingRoles.filter { role -> role.permissions.orEmpty().all { it in existingRoles } }
                 .also { anyRoleInitialized = it.isNotEmpty() }
-                .mapAsync { role -> privilegeAggregateService.define(role.toCommand()) }
-                .forEach { role ->
+                .mapAsync { role -> privilegeAggregateService.define(role.toCommand()) }.forEach { role ->
                     remainingRoles.removeIf { it.name == role.identifier }
                     existingRoles.add(role.identifier)
                 }
@@ -149,7 +144,8 @@ class SpaceConfigScript (
 
         if (remainingRoles.isNotEmpty()) {
             throw IllegalArgumentException(
-                "Could not initialize roles [${remainingRoles.joinToString { it.name }}] because some of their permissions do not exist"
+                "Could not initialize roles [${remainingRoles.joinToString { it.name }}] " +
+                    "because some of their permissions do not exist"
             )
         }
 
@@ -192,7 +188,7 @@ class SpaceConfigScript (
                 ).let { organizationAggregateService.create(it).id }
             } catch (e: ConflictException) {
                 val organizationsCreated = organizationFinderService.page(name = organization.name).items
-                if(organizationsCreated.isEmpty() || organizationsCreated.size > 1) {
+                if (organizationsCreated.isEmpty() || organizationsCreated.size > 1) {
                     return@mapAsync
                 }
                 organizationsCreated.first().id
@@ -204,13 +200,11 @@ class SpaceConfigScript (
     }
 
     private suspend fun <T, R> List<T>?.initNotEmpty(
-        objectType: String,
-        organization: OrganizationData? = null,
-        exec: suspend (items: List<T>) -> List<R>
+        objectType: String, organization: OrganizationData? = null, exec: suspend (items: List<T>) -> List<R>
     ): List<R> {
         val suffix = organization?.let { " of Organization [${it.name}]" } ?: ""
         logger.info("Initializing $objectType$suffix...")
-        if(this.isNullOrEmpty()) {
+        if (this.isNullOrEmpty()) {
             logger.info("No $objectType to initialize")
             return emptyList()
         }
@@ -220,9 +214,7 @@ class SpaceConfigScript (
     }
 
     private suspend fun initUsers(
-        users: List<UserData>?,
-        organization: OrganizationData? = null,
-        organizationId: OrganizationId? = null
+        users: List<UserData>?, organization: OrganizationData? = null, organizationId: OrganizationId? = null
     ) = users.initNotEmpty("Users", organization) { items ->
         items.mapAsync { user ->
             init("User[email: ${user.email}]", logger, {
@@ -246,9 +238,7 @@ class SpaceConfigScript (
     }
 
     private suspend fun initApiKeys(
-        keys: List<ApiKeyData>?,
-        organization: OrganizationData?,
-        organizationId: OrganizationId
+        keys: List<ApiKeyData>?, organization: OrganizationData?, organizationId: OrganizationId
     ): List<ApiKeyId> = keys.initNotEmpty("ApiKeys", organization) {
         // do not make async, as it saves the keys in organization attributes
         keys?.map { key ->
@@ -256,10 +246,7 @@ class SpaceConfigScript (
                 apiKeyAggregateService.findByName(key.name, organizationId)?.id
             }, {
                 ApiKeyOrganizationAddKeyCommand(
-                    organizationId = organizationId,
-                    name = key.name,
-                    secret = key.secret,
-                    roles = key.roles.orEmpty()
+                    organizationId = organizationId, name = key.name, secret = key.secret, roles = key.roles.orEmpty()
                 ).let { apiKeyAggregateService.create(it).id }
             })
         } ?: emptyList()

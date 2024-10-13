@@ -19,6 +19,7 @@ import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 class PrivilegeCoreFinderService(
     private val keycloakClientProvider: KeycloakClientProvider
 ): CachedService(CacheName.Privilege) {
+
     suspend fun getPrivilegeOrNull(identifier: PrivilegeIdentifier): Privilege? = query(identifier) {
         val client = keycloakClientProvider.get()
 

@@ -63,7 +63,9 @@ class PermissionDefineSteps: En, ImCucumberStepsDefinition() {
         }
     }
 
-    private suspend fun definePermission(params: PermissionDefineParams) = context.permissionIdentifiers.register(params.identifier) {
+    private suspend fun definePermission(
+        params: PermissionDefineParams
+    ) = context.permissionIdentifiers.register(params.identifier) {
         command = PermissionDefineCommand(
             identifier = params.identifier,
             description = params.description,

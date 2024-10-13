@@ -54,7 +54,9 @@ class AssertionRole(
             bindings: Map<RoleTarget, List<RoleIdentifier>> = roleBindings,
             permissions: List<PermissionIdentifier> = rolePermissions
         ) = also {
-            Assertions.assertThat(role.attributes?.get(Role::type.name)?.firstOrNull()).isEqualTo(PrivilegeType.ROLE.name)
+            Assertions.assertThat(
+                role.attributes?.get(Role::type.name)?.firstOrNull()
+            ).isEqualTo(PrivilegeType.ROLE.name)
             Assertions.assertThat(role.id).isEqualTo(id)
             Assertions.assertThat(role.name).isEqualTo(identifier)
             Assertions.assertThat(role.description).isEqualTo(description)

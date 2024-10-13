@@ -36,6 +36,7 @@ class OrganizationFinderService(
         return organizationCoreFinderService.get(id).toDTOInternal()
     }
 
+    @Suppress("SwallowedException")
     suspend fun getFromInsee(siret: String): Organization? {
         return try {
             inseeHttpClient?.getOrganizationBySiret(siret)
@@ -54,7 +55,9 @@ class OrganizationFinderService(
         withDisabled: Boolean = false,
         offset: OffsetPagination? = null,
     ): PageDTO<Organization> {
-        val attributesFilters = attributes.orEmpty().mapValues { (_, filter) -> ({ attribute: String? -> attribute == filter }) }
+        val attributesFilters = attributes
+            .orEmpty()
+            .mapValues { (_, filter) -> ({ attribute: String? -> attribute == filter }) }
         val additionalAttributesFilters = listOfNotNull(
             status?.let { OrganizationDTO::status.name to ({ attribute: String? -> attribute in status.map(
                 OrganizationStatus::name) }) }

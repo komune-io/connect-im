@@ -47,7 +47,13 @@ open class ImCucumberStepsDefinition: s2.bdd.CucumberStepsDefinition() {
             "iss" to iss
         ).let { claims -> Jwt("fake", null, null, mapOf("header" to "fake"), claims) }
             .let { jwt ->
-                JwtAuthenticationToken(jwt, authedUser.roles.map { SimpleGrantedAuthority("${WebSecurityConfig.ROLE_PREFIX}$it") })
+                val authorities = authedUser.roles.map {
+                    SimpleGrantedAuthority("${WebSecurityConfig.ROLE_PREFIX}$it")
+                }
+                JwtAuthenticationToken(
+                    jwt,
+                    authorities
+                )
             }
             .let(::SecurityContextImpl)
         return ReactorContext(Context.of(SecurityContext::class.java, Mono.just(securityContext)))

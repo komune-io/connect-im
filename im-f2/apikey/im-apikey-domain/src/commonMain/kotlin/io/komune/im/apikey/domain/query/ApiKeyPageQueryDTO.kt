@@ -1,11 +1,11 @@
 package io.komune.im.apikey.domain.query
 
-import io.komune.im.apikey.domain.model.ApiKey
-import io.komune.im.apikey.domain.model.ApiKeyDTO
-import io.komune.im.commons.model.OrganizationId
 import f2.dsl.cqrs.Query
 import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.fnc.F2Function
+import io.komune.im.apikey.domain.model.ApiKey
+import io.komune.im.apikey.domain.model.ApiKeyDTO
+import io.komune.im.commons.model.OrganizationId
 import kotlin.js.JsExport
 import kotlin.js.JsName
 import kotlinx.serialization.Serializable
@@ -24,44 +24,44 @@ typealias ApiKeyPageFunction = F2Function<ApiKeyPageQuery, ApiKeyPageResult>
  */
 @JsExport
 @JsName("ApiKeyPageQueryDTO")
-interface ApiKeyPageQueryDTO: Query {
+interface ApiKeyPageQueryDTO : Query {
     /**
      * Search string filtering on the name of the apikey.
      * @example "Komune"
      */
-	val search: String?
-	val organizationId: OrganizationId?
+    val search: String?
+    val organizationId: OrganizationId?
 
     /**
      * Role filter.
      */
-	val role: String?
+    val role: String?
 
     /**
      * Arbitrary attributes filter.
      */
-	val attributes: Map<String, String>?
+    val attributes: Map<String, String>?
 
     /**
      * If false, filter out the disabled apikeys.
      * @example false
      * @default false
      */
-	val withDisabled: Boolean?
+    val withDisabled: Boolean?
 
     /**
      * Maximum number of apikeys to fetch.
      * @example 10
      * @default 10
      */
-	val limit: Int?
+    val limit: Int?
 
     /**
      * Index of the first apikey.
      * @example 0
      * @default 0
      */
-	val offset: Int?
+    val offset: Int?
 }
 
 /**
@@ -69,14 +69,14 @@ interface ApiKeyPageQueryDTO: Query {
  */
 @Serializable
 data class ApiKeyPageQuery(
-	override val search: String? = null,
-	override val organizationId: OrganizationId? = null,
-	override val role: String? = null,
-	override val attributes: Map<String, String>? = null,
-	override val withDisabled: Boolean? = false,
-	override val limit: Int? = 10,
-	override val offset: Int? = 0
-): ApiKeyPageQueryDTO
+    override val search: String? = null,
+    override val organizationId: OrganizationId? = null,
+    override val role: String? = null,
+    override val attributes: Map<String, String>? = null,
+    override val withDisabled: Boolean? = false,
+    override val limit: Int? = 10,
+    override val offset: Int? = 0
+) : ApiKeyPageQueryDTO
 
 /**
  * @d2 result
@@ -84,9 +84,10 @@ data class ApiKeyPageQuery(
  */
 @JsExport
 @JsName("ApiKeyPageResultDTO")
-interface ApiKeyPageResultDTO: PageDTO<ApiKeyDTO> {
+interface ApiKeyPageResultDTO : PageDTO<ApiKeyDTO> {
     /**
-     * List of apikeys satisfying the requesting filters. The size of the list is lesser or equal than the requested limit.
+     * List of apikeys satisfying the requesting filters.
+     * The size of the list is lesser or equal than the requested limit.
      */
     override val items: List<ApiKeyDTO>
 
@@ -104,4 +105,4 @@ interface ApiKeyPageResultDTO: PageDTO<ApiKeyDTO> {
 data class ApiKeyPageResult(
     override val items: List<ApiKey>,
     override val total: Int
-): ApiKeyPageResultDTO
+) : ApiKeyPageResultDTO

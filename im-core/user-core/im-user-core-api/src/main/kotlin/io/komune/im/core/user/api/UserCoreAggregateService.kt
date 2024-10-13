@@ -14,16 +14,17 @@ import io.komune.im.core.user.domain.command.UserCoreSentEmailEvent
 import io.komune.im.core.user.domain.model.UserModel
 import io.komune.im.infra.keycloak.handleResponseError
 import io.komune.im.infra.redis.CacheName
+import java.util.UUID
 import org.keycloak.representations.idm.CredentialRepresentation
 import org.keycloak.representations.idm.RoleRepresentation
 import org.keycloak.representations.idm.UserRepresentation
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 @Service
-class UserCoreAggregateService: CoreService(CacheName.User) {
+class UserCoreAggregateService : CoreService(CacheName.User) {
 
-    suspend fun define(command: UserCoreDefineCommand) = mutate(command.id.orEmpty(),
+    suspend fun define(command: UserCoreDefineCommand) = mutate(
+        command.id.orEmpty(),
         "Error while defining user (id: [${command.id}], email: [${command.email}])"
     ) {
         val client = keycloakClientProvider.get()
@@ -81,7 +82,8 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
         UserCoreSentEmailEvent(command.id, command.actions)
     }
 
-    suspend fun disable(command: UserCoreDisableCommand) = mutate(command.id,
+    suspend fun disable(command: UserCoreDisableCommand) = mutate(
+        command.id,
         "Error disabling user [${command.id}]"
     ) {
         val client = keycloakClientProvider.get()
@@ -114,7 +116,9 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
 
         val newAttributes = command.attributes.orEmpty().plus(
             listOfNotNull(
-                command.memberOf.takeIf { command.canUpdateMemberOf() } ?.let { UserModel::memberOf.name to command.memberOf },
+                command.memberOf
+                    .takeIf { command.canUpdateMemberOf() }
+                    ?.let { UserModel::memberOf.name to command.memberOf },
                 UserModel::isApiKey.name to command.isApiKey.toString(),
             ).toMap()
         ).mapValues { (_, values) -> listOf(values) }
@@ -125,11 +129,11 @@ class UserCoreAggregateService: CoreService(CacheName.User) {
             .filterValues { it.filterNotNull().isNotEmpty() }
     }
 
-    private suspend fun UserRepresentation.enableAttributes() {
-        val client = keycloakClientProvider.get()
-        client.user(id)
+//    private suspend fun UserRepresentation.enableAttributes() {
+//        val client = keycloakClientProvider.get()
+//        client.user(id)
+//    }
 
-    }
     private suspend fun UserRepresentation.assignRoles(roles: List<RoleRepresentation>) {
         val client = keycloakClientProvider.get()
         with(client.user(id).roles().realmLevel()) {

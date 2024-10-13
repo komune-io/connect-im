@@ -34,9 +34,7 @@ class F2ErrorWebExceptionHandler(
     serverProperties.error,
     applicationContext
 ) {
-    companion object {
-        private const val INTERNAL_ERROR = 500
-    }
+
     init {
         setViewResolvers(viewResolvers.toList())
         setMessageWriters(serverCodecConfigurer.writers)

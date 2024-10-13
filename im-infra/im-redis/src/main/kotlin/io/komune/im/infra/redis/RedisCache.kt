@@ -26,7 +26,11 @@ class RedisCache(
         }
     }
 
-    suspend inline fun <reified T> getFromCacheOr(cacheName: CacheName, vararg objectId: Any, crossinline fetch: suspend () -> T): T {
+    suspend inline fun <reified T> getFromCacheOr(
+        cacheName: CacheName,
+        vararg objectId: Any,
+        crossinline fetch: suspend () -> T
+    ): T {
         return getCache(cacheName)?.let { cache ->
             val key = SimpleKey(objectId)
             val value = cache.get(key)?.get() as String?
