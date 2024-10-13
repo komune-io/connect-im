@@ -15,9 +15,6 @@ import s2.bdd.data.parser.safeExtract
 
 class UserFinderSteps: En, ImCucumberStepsDefinition() {
 
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
-
     init {
         DataTableType { entry: Map<String, String> ->
             FetchByIdParams(

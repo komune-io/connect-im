@@ -17,9 +17,6 @@ import s2.bdd.data.parser.safeExtract
 
 class OrganizationFinderSteps: En, ImCucumberStepsDefinition() {
 
-    @Autowired
-    private lateinit var organizationEndpoint: OrganizationEndpoint
-
     init {
         DataTableType { entry: Map<String, String> ->
             FetchByIdParams(

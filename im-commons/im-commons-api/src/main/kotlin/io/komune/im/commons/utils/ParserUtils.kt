@@ -16,7 +16,11 @@ const val FILE = "file:"
 object ParserUtils {
     private val logger = LoggerFactory.getLogger(ParserUtils::class.java)
 
-    fun <T> getConfiguration(configPath: String, clazz: Class<T>, classLoader: ClassLoader = Thread.currentThread().contextClassLoader): T {
+    fun <T> getConfiguration(
+        configPath: String,
+        clazz: Class<T>,
+        classLoader: ClassLoader = Thread.currentThread().contextClassLoader
+    ): T {
         try {
             logger.info("Loading configuration from json file [$configPath]...")
             return getFile(configPath, classLoader)?.parseTo(clazz) ?: exitProcess(-1)
@@ -25,7 +29,12 @@ object ParserUtils {
             exitProcess(-1)
         }
     }
-    fun <T> getConfiguration(configPath: String, clazz: Class<Array<T>>, classLoader: ClassLoader = Thread.currentThread().contextClassLoader): List<T> {
+
+    fun <T> getConfiguration(
+        configPath: String,
+        clazz: Class<Array<T>>,
+        classLoader: ClassLoader = Thread.currentThread().contextClassLoader
+    ): List<T> {
         try {
             logger.info("Loading configuration from json file [$configPath]...")
             return getFile(configPath, classLoader)?.parseJsonTo(clazz) ?: exitProcess(-1)
@@ -36,9 +45,12 @@ object ParserUtils {
     }
 
     @Throws(MalformedURLException::class)
-    private fun getFile(filename: String, classLoader: ClassLoader = Thread.currentThread().contextClassLoader): InputStream? {
+    private fun getFile(
+        filename: String,
+        classLoader: ClassLoader = Thread.currentThread().contextClassLoader
+    ): InputStream? {
         val url = getUrl(filename, classLoader)
-        if(url.toString().startsWith("jar:")) {
+        if (url.toString().startsWith("jar:")) {
             return fileFromJar(url)
         }
         return File(url.file).inputStream()

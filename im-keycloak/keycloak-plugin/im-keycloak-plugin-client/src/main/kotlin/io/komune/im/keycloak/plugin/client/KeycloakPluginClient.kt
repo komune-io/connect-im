@@ -28,14 +28,19 @@ class KeycloakPluginClient(
     }
 
     suspend fun generateActionToken(
-        realm: String, clientId: String, action: String, userId: String, redirectUri: String? = null, bearerToken: String
+        realm: String,
+        clientId: String,
+        action: String,
+        userId: String,
+        redirectUri: String? = null,
+        bearerToken: String
     ): String? {
         val response = httpClient.get(
             "${buildUrl(realm)}/${KeycloakPluginIds.ACTION_TOKEN}" +
-                    "?client_id=${clientId}" +
-                    "&action=${action}" +
-                    "&user_id=${userId}" +
-                    (redirectUri?.let { "&redirect_uri=$it" } ?: "")
+                "?client_id=${clientId}" +
+                "&action=${action}" +
+                "&user_id=${userId}" +
+                (redirectUri?.let { "&redirect_uri=$it" } ?: "")
         ) {
             header("Content-Type", ContentType.Application.Json)
             header("Authorization", "Bearer $bearerToken")

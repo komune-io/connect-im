@@ -1,7 +1,10 @@
 package io.komune.im.apikey.lib
 
+import f2.dsl.cqrs.page.OffsetPagination
+import f2.spring.exception.NotFoundException
 import io.komune.im.apikey.domain.model.ApiKey
 import io.komune.im.apikey.domain.model.ApiKeyId
+import io.komune.im.apikey.domain.model.ApiKeyIdentifier
 import io.komune.im.apikey.domain.model.ApiKeyModel
 import io.komune.im.apikey.domain.query.ApiKeyPageResult
 import io.komune.im.apikey.lib.service.ApiKeyToDTOTransformer
@@ -12,9 +15,6 @@ import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.user.api.service.UserRepresentationTransformer
 import io.komune.im.core.user.domain.model.UserModel
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
-import f2.dsl.cqrs.page.OffsetPagination
-import f2.spring.exception.NotFoundException
-import io.komune.im.apikey.domain.model.ApiKeyIdentifier
 import org.springframework.stereotype.Service
 import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
@@ -31,6 +31,7 @@ class ApiKeyFinderService(
             getOrNullByIdentifierAndOrganizationId(id, memberOf)
         }
     }
+
     suspend fun getOrNullByIdentifierAndOrganizationId(
         id: ApiKeyIdentifier,
         organizationId: OrganizationId
@@ -61,7 +62,7 @@ class ApiKeyFinderService(
     suspend fun getUserOfKeyOrNull(id: ApiKeyId): UserModel? {
         return try {
             val client = keycloakClientProvider.get()
-             client.client(id).serviceAccountUser
+            client.client(id).serviceAccountUser
                 .let { userRepresentationTransformer.transform(it) }
         } catch (e: JakartaNotFoundException) {
             null
@@ -79,7 +80,8 @@ class ApiKeyFinderService(
         val organizations = organizationCoreFinderService.page(
             ids = organizationId?.let(::setOf),
             roles = role?.let(::setOf),
-            attributes = attributes.orEmpty().mapValues { (_, filter) -> ({ attribute: String? -> attribute == filter }) },
+            attributes = attributes.orEmpty()
+                .mapValues { (_, filter) -> ({ attribute: String? -> attribute == filter }) },
             withDisabled = withDisabled ?: false
         ).items
 

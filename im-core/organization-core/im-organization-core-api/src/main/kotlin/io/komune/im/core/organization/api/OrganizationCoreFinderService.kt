@@ -1,5 +1,8 @@
 package io.komune.im.core.organization.api
 
+import f2.dsl.cqrs.page.OffsetPagination
+import f2.dsl.cqrs.page.PageDTO
+import f2.spring.exception.NotFoundException
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.utils.matches
@@ -8,17 +11,16 @@ import io.komune.im.core.commons.CoreService
 import io.komune.im.core.organization.api.model.toOrganization
 import io.komune.im.core.organization.domain.model.OrganizationModel
 import io.komune.im.infra.redis.CacheName
-import f2.dsl.cqrs.page.OffsetPagination
-import f2.dsl.cqrs.page.PageDTO
-import f2.spring.exception.NotFoundException
 import org.keycloak.representations.idm.GroupRepresentation
 import org.springframework.stereotype.Service
 import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
-class OrganizationCoreFinderService: CoreService(CacheName.Organization) {
+class OrganizationCoreFinderService : CoreService(CacheName.Organization) {
 
-    suspend fun getOrNull(id: OrganizationId): OrganizationModel? = query(id, "Error while fetching organization [$id]") {
+    suspend fun getOrNull(
+        id: OrganizationId
+    ): OrganizationModel? = query(id, "Error while fetching organization [$id]") {
         val client = keycloakClientProvider.get()
         try {
             client.group(id).toRepresentation().toOrganization()

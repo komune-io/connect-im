@@ -40,7 +40,8 @@ interface PermissionDTO: PrivilegeDTO {
     override val description: String
 
     /**
-     * List of features needed to enable this permission. The first level is a logical OR, the second level is a logical AND.
+     * List of features needed to enable this permission.
+     * The first level is a logical OR, the second level is a logical AND.
      * If the list is null or empty, the permission is always enabled.
      * @example [["feat_organization"]]
      */

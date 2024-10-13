@@ -14,6 +14,7 @@ data class ImAuthProperties(
     val password: String? = null,
 )
 
+@Suppress("UseCheckOrError")
 fun ImAuthProperties.toAuthRealm(space: RealmId? = null): AuthSubRealm {
     return if (clientSecret != null) {
         AuthSubRealm(

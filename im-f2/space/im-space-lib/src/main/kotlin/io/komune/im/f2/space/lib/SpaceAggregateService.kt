@@ -10,7 +10,6 @@ import io.komune.im.f2.space.domain.command.SpaceDefineCommand
 import io.komune.im.f2.space.domain.command.SpaceDefinedEvent
 import io.komune.im.f2.space.domain.command.SpaceDeleteCommand
 import io.komune.im.f2.space.domain.command.SpaceDeletedEvent
-import io.komune.im.infra.keycloak.client.KeycloakClient
 import io.komune.im.infra.redis.CacheName
 import org.keycloak.representations.idm.RealmRepresentation
 import org.keycloak.representations.userprofile.config.UPConfig
@@ -22,7 +21,7 @@ class SpaceAggregateService(
     private val clientCoreAggregateService: ClientCoreAggregateService,
     private val clientCoreFinderService: ClientCoreFinderService,
     private val authenticationResolver: ImAuthenticationProvider
-): CoreService(CacheName.Space) {
+) : CoreService(CacheName.Space) {
 
 
     companion object {
@@ -37,7 +36,9 @@ class SpaceAggregateService(
         const val IS_INTERNATIONALIZATION_ENABLED = true
     }
 
-    suspend fun define(command: SpaceDefineCommand): SpaceDefinedEvent = withAuth(authenticationResolver.getAuth(), "master") {
+    suspend fun define(
+        command: SpaceDefineCommand
+    ): SpaceDefinedEvent = withAuth(authenticationResolver.getAuth(), "master") {
         try {
             update(command)
         } catch (e: JakartaNotFoundException) {

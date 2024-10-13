@@ -59,16 +59,15 @@ class OrganizationAggregateService(
             address = command.address,
             roles = command.roles,
             parentOrganizationId = command.parentOrganizationId,
-            attributes = command.attributes.orEmpty() + listOfNotNull(
-                command.siret?.let { OrganizationDTO::siret.name to it },
+            attributes = command.attributes.orEmpty()
+                + listOfNotNull(command.siret?.let { OrganizationDTO::siret.name to it },
                 command.website?.let { OrganizationDTO::website.name to it },
                 OrganizationDTO::status.name to OrganizationStatus.valueOf(command.status).name
             ).toMap().filterValues { it.isNotBlank() },
         ).let { organizationCoreAggregateService.define(it).id }
 
         OrganizationCreatedEvent(
-            id = organizationId,
-            parentOrganization = command.parentOrganizationId
+            id = organizationId, parentOrganization = command.parentOrganizationId
         )
     }
 
@@ -82,15 +81,16 @@ class OrganizationAggregateService(
             description = command.description,
             address = command.address,
             roles = command.roles,
-            attributes = command.attributes.orEmpty() + listOfNotNull(
-                command.website?.let { OrganizationDTO::website.name to it },
-                command.status?.let { OrganizationDTO::status.name to OrganizationStatus.valueOf(it).name }
-            ).toMap().filterValues { it.isNotBlank() },
+            attributes = command.attributes.orEmpty()
+                + listOfNotNull(command.website?.let { OrganizationDTO::website.name to it },
+                command.status?.let { OrganizationDTO::status.name to OrganizationStatus.valueOf(it).name }).toMap()
+                .filterValues { it.isNotBlank() },
         ).let { organizationCoreAggregateService.define(it).id }
 
         return OrganizationUpdatedResult(command.id)
     }
 
+    @Suppress("UseCheckOrError")
     suspend fun uploadLogo(command: OrganizationUploadLogoCommand, file: ByteArray): OrganizationUploadedLogoEvent {
         if (!::fileClient.isInitialized) {
             throw IllegalStateException("FileClient not initialized.")
@@ -99,25 +99,23 @@ class OrganizationAggregateService(
         val event = fileClient.fileUpload(
             command = FileUploadCommand(
                 path = OrganizationFsConfig.pathForOrganization(command.id),
-            ),
-            file = file
+            ), file = file
         )
 
         OrganizationCoreSetSomeAttributesCommand(
-            id = command.id,
-            attributes = mapOf(OrganizationDTO::logo.name to event.url)
+            id = command.id, attributes = mapOf(OrganizationDTO::logo.name to event.url)
         ).let { organizationCoreAggregateService.setSomeAttributes(it) }
 
         return OrganizationUploadedLogoEvent(
-            id = command.id,
-            url = event.url
+            id = command.id, url = event.url
         )
     }
 
     suspend fun disable(command: OrganizationDisableCommand): OrganizationDisabledEvent {
         val newAttributes = mapOf(
             OrganizationModel::enabled.name to "false",
-            Organization::disabledBy.name to (command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id.orEmpty()),
+            Organization::disabledBy.name to (command.disabledBy
+                ?: AuthenticationProvider.getAuthedUser()?.id.orEmpty()),
             Organization::disabledDate.name to System.currentTimeMillis().toString()
         )
 
@@ -135,12 +133,11 @@ class OrganizationAggregateService(
             ).let { organizationCoreAggregateService.define(it) }
         } else {
             OrganizationCoreSetSomeAttributesCommand(
-                id = command.id,
-                attributes = newAttributes
+                id = command.id, attributes = newAttributes
             ).let { organizationCoreAggregateService.setSomeAttributes(it) }
         }
 
-        val userEvents =  userFinderService.page(
+        val userEvents = userFinderService.page(
             organizationIds = listOf(command.id)
         ).items.map { user ->
             UserDisableCommand(
@@ -152,8 +149,7 @@ class OrganizationAggregateService(
         }
 
         return OrganizationDisabledEvent(
-            id = command.id,
-            userIds = userEvents.map(UserDisabledEvent::id)
+            id = command.id, userIds = userEvents.map(UserDisabledEvent::id)
         )
     }
 

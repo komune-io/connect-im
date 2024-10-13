@@ -12,13 +12,16 @@ suspend fun <T, R> Collection<T>.mapAsyncDeferred(transform: suspend (T) -> R): 
         }
     }
 }
-suspend fun <T, R> Collection<T>.mapNotNullAsyncDeferred(transform: suspend (T) -> R?): List<Deferred<R?>> = coroutineScope {
-    mapNotNull {
-        async {
-            transform(it)
+
+suspend fun <T, R> Collection<T>.mapNotNullAsyncDeferred(transform: suspend (T) -> R?): List<Deferred<R?>> =
+    coroutineScope {
+        mapNotNull {
+            async {
+                transform(it)
+            }
         }
     }
-}
 
 suspend fun <T, R> Collection<T>.mapAsync(transform: suspend (T) -> R): List<R> = mapAsyncDeferred(transform).awaitAll()
-suspend fun <T, R> Collection<T>.mapNotNullAsync(transform: suspend (T) -> R?): List<R> = mapAsyncDeferred(transform).awaitAll().filterNotNull()
+suspend fun <T, R> Collection<T>.mapNotNullAsync(transform: suspend (T) -> R?): List<R> =
+    mapAsyncDeferred(transform).awaitAll().filterNotNull()

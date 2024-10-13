@@ -43,12 +43,14 @@ fun organizationClient(
 }
 
 @JsExport
-open class OrganizationClient(private val client: F2Client): OrganizationApi {
+open class OrganizationClient(private val client: F2Client) : OrganizationApi {
 
     override fun organizationGet(): OrganizationGetFunction = client.function(this::organizationGet.name)
     override fun organizationRefGet(): OrganizationRefGetFunction = client.function(this::organizationRefGet.name)
 
-    override fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = client.function(this::organizationGetFromInsee.name)
+    override fun organizationGetFromInsee(): OrganizationGetFromInseeFunction =
+        client.function(this::organizationGetFromInsee.name)
+
     override fun organizationPage(): OrganizationPageFunction = client.function(this::organizationPage.name)
     override fun organizationRefList(): OrganizationRefListFunction = client.function(this::organizationRefList.name)
 

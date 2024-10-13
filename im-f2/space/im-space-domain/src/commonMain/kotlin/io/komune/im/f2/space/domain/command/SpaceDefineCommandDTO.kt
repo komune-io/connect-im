@@ -33,7 +33,8 @@ interface SpaceDefineCommandDTO: Command {
     val theme: String?
 
     /**
-     * SMTP is a variable that represents the configuration of the Simple Mail Transfer Protocol (SMTP) settings as a map.
+     * SMTP is a variable that represents the configuration of
+     * the Simple Mail Transfer Protocol (SMTP) settings as a map.
      *
      */
     val smtp: Map<String, String>?

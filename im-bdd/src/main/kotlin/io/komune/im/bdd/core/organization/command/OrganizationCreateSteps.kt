@@ -73,7 +73,9 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
         }
     }
 
-    private suspend fun createOrganization(params: OrganizationInitParams) = context.organizationIds.register(params.identifier) {
+    private suspend fun createOrganization(
+        params: OrganizationInitParams
+    ) = context.organizationIds.register(params.identifier) {
         command = OrganizationCreateCommand(
             siret = params.siret,
             name = params.name,

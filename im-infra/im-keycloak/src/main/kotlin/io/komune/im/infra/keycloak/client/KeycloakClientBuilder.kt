@@ -24,15 +24,20 @@ object KeycloakClientBuilder {
                 username(master.username)
                 password(master.password)
             }
+
             is AuthRealmClientSecret -> openConnection(auth) {
                 grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 clientSecret(master.clientSecret)
             }
+
             else -> throw AuthRealmException("Invalid AuthRealm type[${auth::class.simpleName}]")
         }
     }
 
-    private fun openConnection(auth: AuthSubRealm, configure: KeycloakBuilder.() -> KeycloakBuilder): KeycloakClientConnection {
+    private fun openConnection(
+        auth: AuthSubRealm,
+        configure: KeycloakBuilder.() -> KeycloakBuilder
+    ): KeycloakClientConnection {
         val resteasyClientBuilder = ResteasyClientBuilder.newBuilder() as ResteasyClientBuilder
         val keycloak = KeycloakBuilder.builder()
             .serverUrl(auth.master.serverUrl)

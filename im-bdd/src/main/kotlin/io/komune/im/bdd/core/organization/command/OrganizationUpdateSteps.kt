@@ -17,7 +17,7 @@ import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extract
 
-class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
+class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
 
     @Autowired
     private lateinit var organizationEndpoint: OrganizationEndpoint
@@ -92,7 +92,9 @@ class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
         organizationEndpoint.organizationUpdate().invoke(command).id
     }
 
-    private fun organizationUpdateParams(entry: Map<String, String>?): OrganizationUpdateParams = runBlocking(authedContext()) {
+    private fun organizationUpdateParams(
+        entry: Map<String, String>?
+    ): OrganizationUpdateParams = runBlocking(authedContext()) {
         val identifier = entry?.get("identifier") ?: context.organizationIds.lastUsedKey
         val organization = organizationEndpoint.organizationGet()
             .invoke(OrganizationGetQuery(context.organizationIds.safeGet(identifier)))
@@ -127,11 +129,10 @@ class OrganizationUpdateSteps: En, ImCucumberStepsDefinition() {
 
     private fun organizationAttributesParams(entry: Map<String, String>?): Map<String, String>? {
         if (entry == null) return null
-        if (entry.containsKey("job")) {
-            return mapOf(
+        return if (entry.containsKey("job")) {
+             mapOf(
                 "job" to entry["job"]!!
             )
-        }
-        return null
+        } else null
     }
 }

@@ -1,6 +1,7 @@
 package io.komune.im.keycloak.plugin.rolemapper
 
 import io.komune.im.keycloak.plugin.domain.model.KeycloakPluginIds
+import java.util.stream.Collectors
 import org.keycloak.models.ClientSessionContext
 import org.keycloak.models.KeycloakSession
 import org.keycloak.models.ProtocolMapperModel
@@ -14,9 +15,9 @@ import org.keycloak.protocol.oidc.mappers.OIDCIDTokenMapper
 import org.keycloak.protocol.oidc.mappers.UserInfoTokenMapper
 import org.keycloak.provider.ProviderConfigProperty
 import org.keycloak.representations.IDToken
-import java.util.stream.Collectors
 
-class UserRealmRoleFeatureMapper: AbstractOIDCProtocolMapper(), OIDCAccessTokenMapper, OIDCIDTokenMapper, UserInfoTokenMapper {
+class UserRealmRoleFeatureMapper : AbstractOIDCProtocolMapper(), OIDCAccessTokenMapper, OIDCIDTokenMapper,
+    UserInfoTokenMapper {
 
     companion object {
         const val PROVIDER_ID = KeycloakPluginIds.MAPPER_REALM_ROLE_FEATURE
@@ -52,7 +53,8 @@ class UserRealmRoleFeatureMapper: AbstractOIDCProtocolMapper(), OIDCAccessTokenM
             .collect(Collectors.toSet()) as Set<String>
 
         val userAssignedRoles = userSession.user.realmRoleMappingsStream.collect(Collectors.toList())
-        val groupAssignedRoles = userSession.user.groupsStream.flatMap { it.realmRoleMappingsStream }.collect(Collectors.toList())
+        val groupAssignedRoles =
+            userSession.user.groupsStream.flatMap { it.realmRoleMappingsStream }.collect(Collectors.toList())
 
         val visitedRoles = mutableSetOf<String>()
         val remainingRoles = mutableListOf<RoleModel>()

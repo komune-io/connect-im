@@ -1,5 +1,6 @@
 package io.komune.im.bdd.core.apikey.data
 
+import io.komune.im.bdd.core.organization.data.AssertionOrganizationRef
 import io.komune.im.commons.model.ClientId
 import io.komune.im.commons.model.ClientIdentifier
 import io.komune.im.commons.model.PrivilegeIdentifier
@@ -7,6 +8,7 @@ import io.komune.im.core.client.domain.model.ClientModel
 import io.komune.im.infra.keycloak.client.KeycloakClient
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.ClientRepresentation
+import org.slf4j.LoggerFactory
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.repository.AssertionApiEntity
 import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
@@ -16,15 +18,20 @@ fun AssertionBdd.client(keycloakClient: KeycloakClient) = AssertionClient(keyclo
 class AssertionClient(
     private val keycloakClient: KeycloakClient
 ): AssertionApiEntity<ClientRepresentation, ClientId, AssertionClient.ClientAssert>() {
+
+    private val logger = LoggerFactory.getLogger(AssertionOrganizationRef::class.java)
+
     override suspend fun findById(id: ClientId): ClientRepresentation? = try {
         keycloakClient.client(id).toRepresentation()
     } catch (e: JakartaNotFoundException) {
+        logger.debug("Client not found with id: $id")
         null
     }
 
     fun findByIdentifier(identifier: ClientIdentifier): ClientRepresentation? = try {
         keycloakClient.getClientByIdentifier(identifier)
     } catch (e: JakartaNotFoundException) {
+        logger.debug("Client not found with identifier: $identifier")
         null
     }
 

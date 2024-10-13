@@ -20,7 +20,9 @@ interface OrganizationCommandFeatures {
     /**
      * Upload a logo for a given organization
      */
-//    suspend fun organizationUploadLogo(cmd: OrganizationUploadLogoCommand, file: FilePart): OrganizationUploadedLogoEvent
+//    suspend fun organizationUploadLogo(
+//    cmd: OrganizationUploadLogoCommand, file: FilePart
+//    ): OrganizationUploadedLogoEvent
 
     /**
      * Disable an organization and its users.

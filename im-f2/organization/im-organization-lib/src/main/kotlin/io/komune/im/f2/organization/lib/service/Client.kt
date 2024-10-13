@@ -1,6 +1,7 @@
 package io.komune.im.f2.organization.lib.service
 
 import f2.client.ktor.http.HttpClientBuilder
+import f2.client.ktor.http.httpClientBuilder
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.forms.FormDataContent
@@ -13,18 +14,15 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.parametersOf
 
-import f2.client.ktor.http.httpClientBuilder
-
 abstract class ClientJvm(
     baseUrl: String,
     httpClientBuilder: HttpClientBuilder = httpClientBuilder(),
     generateBearerToken: suspend () -> String? = { null },
-): Client(
+) : Client(
     baseUrl = baseUrl,
     generateBearerToken = generateBearerToken,
     httpClientBuilder = httpClientBuilder
 )
-
 
 
 open class Client(
@@ -47,7 +45,11 @@ open class Client(
         }.body()
     }
 
-    protected suspend inline fun <reified T> post(path: String, formData: Map<String, String>, withAuth: Boolean = true): T {
+    protected suspend inline fun <reified T> post(
+        path: String,
+        formData: Map<String, String>,
+        withAuth: Boolean = true
+    ): T {
         println("POST formdata $path")
         return httpClient.httpClient.post {
             formDataSetup(path, formData, withAuth)
@@ -61,7 +63,11 @@ open class Client(
         }.body()
     }
 
-    protected suspend inline fun <reified T> put(path: String, formData: Map<String, String>, withAuth: Boolean = true): T {
+    protected suspend inline fun <reified T> put(
+        path: String,
+        formData: Map<String, String>,
+        withAuth: Boolean = true
+    ): T {
         println("PUT formdata $path")
         return httpClient.httpClient.put {
             formDataSetup(path, formData, withAuth)
@@ -74,10 +80,14 @@ open class Client(
         setBody(jsonBody)
     }
 
-    protected suspend fun HttpRequestBuilder.formDataSetup(path: String, formData: Map<String, String>, withAuth: Boolean) {
+    protected suspend fun HttpRequestBuilder.formDataSetup(
+        path: String,
+        formData: Map<String, String>,
+        withAuth: Boolean
+    ) {
         basicSetup(path, withAuth)
         val parameters = formData.map { (key, value) -> key to listOf(value) }
-                .toTypedArray()
+            .toTypedArray()
 
         setBody(FormDataContent(parametersOf(*parameters)))
     }

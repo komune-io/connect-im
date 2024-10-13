@@ -63,7 +63,9 @@ class FeatureDefineSteps: En, ImCucumberStepsDefinition() {
         }
     }
 
-    private suspend fun defineFeature(params: FeatureDefineParams) = context.featureIdentifiers.register(params.identifier) {
+    private suspend fun defineFeature(
+        params: FeatureDefineParams
+    ) = context.featureIdentifiers.register(params.identifier) {
         command = FeatureDefineCommand(
             identifier = params.identifier,
             description = params.description,
