@@ -19,7 +19,7 @@ class AssertionOrganization(
     private val client: KeycloakClient
 ): AssertionApiEntity<GroupRepresentation, OrganizationId, AssertionOrganization.OrganizationAssert>() {
 
-    private val logger = LoggerFactory.getLogger(AssertionOrganizationRef::class.java)
+    private val logger = LoggerFactory.getLogger(AssertionOrganization::class.java)
 
     override suspend fun findById(id: OrganizationId): GroupRepresentation? = try {
         client.group(id).toRepresentation()
@@ -43,7 +43,7 @@ class AssertionOrganization(
         private val groupWebsite: String? = singleAttributes[Organization::website.name]
         private val groupEnabled: Boolean = singleAttributes[Organization::enabled.name].toBoolean()
         private val groupCreationDate: Long = singleAttributes[Organization::creationDate.name]?.toLong() ?: 0
-        private val groupStatus: String = singleAttributes[Organization::status.name]!!
+        private val groupStatus: String? = singleAttributes[Organization::status.name]
 
         fun hasFields(
             id: OrganizationId = group.id,
@@ -68,7 +68,7 @@ class AssertionOrganization(
             Assertions.assertThat(roles).isEqualTo(roles)
             Assertions.assertThat(groupEnabled).isEqualTo(enabled)
             Assertions.assertThat(groupCreationDate).isEqualTo(creationDate)
-            Assertions.assertThat(groupStatus).isEqualTo(status)
+            Assertions.assertThat(groupStatus).isNotNull().isEqualTo(status)
         }
 
         fun matches(organization: Organization) = hasFields(

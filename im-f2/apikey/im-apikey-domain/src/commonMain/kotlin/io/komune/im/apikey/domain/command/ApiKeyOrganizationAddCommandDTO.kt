@@ -1,12 +1,12 @@
 package io.komune.im.apikey.domain.command
 
+import f2.dsl.cqrs.Command
+import f2.dsl.cqrs.Event
+import f2.dsl.fnc.F2Function
 import io.komune.im.apikey.domain.model.ApiKeyId
 import io.komune.im.apikey.domain.model.ApiKeyIdentifier
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.RoleIdentifier
-import f2.dsl.cqrs.Command
-import f2.dsl.cqrs.Event
-import f2.dsl.fnc.F2Function
 import kotlin.js.JsExport
 import kotlinx.serialization.Serializable
 

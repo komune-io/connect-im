@@ -1,8 +1,8 @@
 package io.komune.im.commons
 
-import io.komune.im.commons.utils.mapAsync
 import f2.dsl.cqrs.page.Page
 import f2.dsl.cqrs.page.PageDTO
+import io.komune.im.commons.utils.mapAsync
 
 abstract class Transformer<ORIGIN, RESULT> {
     abstract suspend fun transform(item: ORIGIN): RESULT

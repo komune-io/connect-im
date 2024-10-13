@@ -1,12 +1,12 @@
 package io.komune.im.keycloak.plugin.event.listener.http
 
 import io.komune.im.keycloak.plugin.domain.model.KeycloakHttpEvent
+import kotlin.streams.toList as streamToList
 import kotlinx.coroutines.runBlocking
 import org.keycloak.events.Event
 import org.keycloak.events.EventListenerProvider
 import org.keycloak.events.admin.AdminEvent
 import org.keycloak.models.KeycloakSession
-import kotlin.streams.toList
 
 class HttpEventListenerProvider(
     private val session: KeycloakSession
@@ -30,7 +30,7 @@ class HttpEventListenerProvider(
 
         println("Client: ${client.clientId}")
 
-        client.protocolMappersStream.toList()
+        client.protocolMappersStream.streamToList()
             .firstOrNull { it.name == "event-http-webhook" }
             ?.config
             ?.get("claim.value")

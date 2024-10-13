@@ -10,7 +10,6 @@ class ScriptApplication
 
 fun main(args: Array<String>) {
 	SpringApplication(ScriptApplication::class.java).run {
-//        setAdditionalProfiles("local")
 		run(*args)
 	}
 }

@@ -1,10 +1,10 @@
 package io.komune.im.bdd.core.privilege.role.query
 
+import io.cucumber.datatable.DataTable
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.privilege.role.data.role
 import io.komune.im.f2.privilege.domain.role.model.Role
-import io.cucumber.datatable.DataTable
-import io.cucumber.java8.En
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope

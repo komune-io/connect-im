@@ -1,10 +1,10 @@
 package io.komune.im.f2.organization.domain.query
 
-import io.komune.im.f2.organization.domain.model.Organization
-import io.komune.im.f2.organization.domain.model.OrganizationDTO
 import f2.dsl.cqrs.Query
 import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.fnc.F2Function
+import io.komune.im.f2.organization.domain.model.Organization
+import io.komune.im.f2.organization.domain.model.OrganizationDTO
 import kotlin.js.JsExport
 import kotlinx.serialization.Serializable
 

@@ -3,7 +3,6 @@ package io.komune.im.f2.space.domain.policies
 import io.komune.im.commons.auth.AuthedUserDTO
 import io.komune.im.commons.auth.ImRole
 import io.komune.im.commons.auth.hasRole
-import io.komune.im.commons.model.SpaceIdentifier
 import kotlin.js.JsExport
 import kotlin.js.JsName
 

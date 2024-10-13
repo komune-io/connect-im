@@ -1,11 +1,11 @@
 package io.komune.im.f2.user.domain.command
 
-import io.komune.im.core.user.domain.command.UserCoreDeleteCommand
-import io.komune.im.core.user.domain.command.UserCoreDeletedEvent
-import io.komune.im.core.user.domain.command.UserDeleteCommandDTO
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
+import io.komune.im.core.user.domain.command.UserCoreDeleteCommand
+import io.komune.im.core.user.domain.command.UserCoreDeletedEvent
+import io.komune.im.core.user.domain.command.UserDeleteCommandDTO
 import io.komune.im.core.user.domain.command.UserDeletedEventDTO
 import kotlin.js.JsExport
 

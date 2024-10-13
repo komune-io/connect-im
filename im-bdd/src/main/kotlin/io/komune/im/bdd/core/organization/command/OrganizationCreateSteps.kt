@@ -10,11 +10,11 @@ import io.komune.im.commons.model.OrganizationId
 import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.command.OrganizationCreateCommand
 import io.komune.im.f2.organization.domain.model.OrganizationStatus
+import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extract
-import java.util.UUID
 
 class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
     @Autowired

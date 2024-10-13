@@ -1,11 +1,11 @@
 package io.komune.im.apikey.domain.query
 
-import io.komune.im.apikey.domain.model.ApiKey
-import io.komune.im.apikey.domain.model.ApiKeyDTO
-import io.komune.im.apikey.domain.model.ApiKeyId
 import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
+import io.komune.im.apikey.domain.model.ApiKey
+import io.komune.im.apikey.domain.model.ApiKeyDTO
+import io.komune.im.apikey.domain.model.ApiKeyId
 import kotlin.js.JsExport
 import kotlin.js.JsName
 import kotlinx.serialization.Serializable

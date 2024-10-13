@@ -4,8 +4,8 @@ import io.komune.im.commons.model.FeatureId
 import io.komune.im.commons.model.FeatureIdentifier
 import io.komune.im.core.privilege.domain.model.PrivilegeType
 import io.komune.im.f2.privilege.domain.model.PrivilegeDTO
-import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Feature flag that represents a group of actions within a system

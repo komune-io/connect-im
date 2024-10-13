@@ -1,7 +1,7 @@
 package io.komune.im.bdd
 
-import io.komune.im.commons.utils.mapAsync
 import io.cucumber.java8.En
+import io.komune.im.commons.utils.mapAsync
 
 class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
     init {

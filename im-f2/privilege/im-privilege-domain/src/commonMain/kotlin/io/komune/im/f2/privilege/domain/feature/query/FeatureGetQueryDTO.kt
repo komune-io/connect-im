@@ -4,9 +4,9 @@ import f2.dsl.fnc.F2Function
 import io.komune.im.commons.model.FeatureIdentifier
 import io.komune.im.f2.privilege.domain.feature.model.Feature
 import io.komune.im.f2.privilege.domain.feature.model.FeatureDTO
-import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Get a feature by identifier.

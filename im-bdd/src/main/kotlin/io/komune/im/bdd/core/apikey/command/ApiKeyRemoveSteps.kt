@@ -1,14 +1,14 @@
 package io.komune.im.bdd.core.apikey.command
 
+import f2.dsl.fnc.invoke
+import io.cucumber.datatable.DataTable
+import io.cucumber.java8.En
 import io.komune.im.apikey.api.ApiKeyEndpoint
 import io.komune.im.apikey.domain.command.ApikeyRemoveCommand
 import io.komune.im.apikey.domain.model.ApiKeyId
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.apikey.data.apiKey
 import io.komune.im.bdd.core.apikey.data.client
-import f2.dsl.fnc.invoke
-import io.cucumber.datatable.DataTable
-import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey

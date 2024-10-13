@@ -1,11 +1,11 @@
 package io.komune.im.f2.space.domain.query
 
-import io.komune.im.f2.space.domain.model.Space
-import io.komune.im.f2.space.domain.model.SpaceDTO
 import f2.dsl.cqrs.Query
 import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.cqrs.page.PagePagination
 import f2.dsl.fnc.F2Function
+import io.komune.im.f2.space.domain.model.Space
+import io.komune.im.f2.space.domain.model.SpaceDTO
 import kotlin.js.JsExport
 import kotlin.js.JsName
 import kotlinx.serialization.Serializable

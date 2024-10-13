@@ -1,9 +1,9 @@
 package io.komune.im.f2.organization.domain.command
 
-import io.komune.im.core.organization.domain.command.OrganizationCoreDeleteCommand
-import io.komune.im.core.organization.domain.command.OrganizationCoreDeletedEvent
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
+import io.komune.im.core.organization.domain.command.OrganizationCoreDeleteCommand
+import io.komune.im.core.organization.domain.command.OrganizationCoreDeletedEvent
 import io.komune.im.core.organization.domain.command.OrganizationDeleteCommandDTO
 import io.komune.im.core.organization.domain.command.OrganizationDeletedEventDTO
 import kotlin.js.JsExport

@@ -5,8 +5,8 @@ import io.komune.im.commons.model.RoleId
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.core.privilege.domain.model.PrivilegeType
 import io.komune.im.f2.privilege.domain.model.PrivilegeDTO
-import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Named collection of permissions

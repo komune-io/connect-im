@@ -32,7 +32,7 @@ open class KeycloakClientProvider(
         }
     }
 
-    open suspend fun reset() {
+    open fun reset() {
         connection?.keycloak?.close()
         connection = null
         cache.clear()

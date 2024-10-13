@@ -1,11 +1,9 @@
 package io.komune.im.f2.organization.domain.query
 
-import io.komune.im.commons.model.OrganizationId
-import io.komune.im.f2.organization.domain.model.Organization
-import io.komune.im.f2.organization.domain.model.OrganizationDTO
 import f2.dsl.cqrs.Event
 import f2.dsl.cqrs.Query
 import f2.dsl.fnc.F2Function
+import io.komune.im.commons.model.OrganizationId
 import io.komune.im.f2.organization.domain.model.OrganizationRef
 import io.komune.im.f2.organization.domain.model.OrganizationRefDTO
 import kotlin.js.JsExport

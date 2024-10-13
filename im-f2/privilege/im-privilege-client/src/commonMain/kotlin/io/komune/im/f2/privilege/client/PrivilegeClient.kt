@@ -1,5 +1,12 @@
 package io.komune.im.f2.privilege.client
 
+import f2.client.F2Client
+import f2.client.domain.AuthRealm
+import f2.client.function
+import f2.client.ktor.F2ClientBuilder
+import f2.client.ktor.http.plugin.F2Auth
+import f2.dsl.fnc.F2SupplierSingle
+import f2.dsl.fnc.f2SupplierSingle
 import io.komune.im.f2.privilege.domain.PermissionApi
 import io.komune.im.f2.privilege.domain.RoleApi
 import io.komune.im.f2.privilege.domain.permission.command.PermissionDefineFunction
@@ -8,13 +15,6 @@ import io.komune.im.f2.privilege.domain.permission.query.PermissionListFunction
 import io.komune.im.f2.privilege.domain.role.command.RoleDefineFunction
 import io.komune.im.f2.privilege.domain.role.query.RoleGetFunction
 import io.komune.im.f2.privilege.domain.role.query.RoleListFunction
-import f2.client.F2Client
-import f2.client.domain.AuthRealm
-import f2.client.function
-import f2.client.ktor.F2ClientBuilder
-import f2.client.ktor.http.plugin.F2Auth
-import f2.dsl.fnc.F2SupplierSingle
-import f2.dsl.fnc.f2SupplierSingle
 import io.ktor.client.plugins.HttpTimeout
 import kotlin.js.JsExport
 

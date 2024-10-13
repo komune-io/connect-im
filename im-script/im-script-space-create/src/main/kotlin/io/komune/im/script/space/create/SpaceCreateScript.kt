@@ -21,6 +21,7 @@ import io.komune.im.script.core.model.FeatureData
 import io.komune.im.script.core.model.PermissionData
 import io.komune.im.script.core.model.defaultSpaceRootClientId
 import io.komune.im.script.core.service.ClientInitService
+import java.util.UUID
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -28,7 +29,6 @@ import kotlinx.coroutines.withContext
 import org.keycloak.representations.idm.ProtocolMapperRepresentation
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 @Service
 class SpaceCreateScript(

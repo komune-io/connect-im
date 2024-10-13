@@ -1,5 +1,6 @@
 package io.komune.im.f2.user.api
 
+import f2.dsl.cqrs.page.OffsetPagination
 import io.komune.im.commons.auth.policies.f2Function
 import io.komune.im.f2.user.domain.UserApi
 import io.komune.im.f2.user.domain.command.UserCreateFunction
@@ -19,7 +20,6 @@ import io.komune.im.f2.user.domain.query.UserPageFunction
 import io.komune.im.f2.user.domain.query.UserPageResult
 import io.komune.im.f2.user.lib.UserAggregateService
 import io.komune.im.f2.user.lib.UserFinderService
-import f2.dsl.cqrs.page.OffsetPagination
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

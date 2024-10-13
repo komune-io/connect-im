@@ -11,10 +11,10 @@ import io.komune.im.commons.utils.parseJson
 import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.f2.privilege.api.RoleEndpoint
 import io.komune.im.f2.privilege.domain.role.command.RoleDefineCommand
+import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.parser.extractList
-import java.util.UUID
 
 class RoleDefineSteps: En, ImCucumberStepsDefinition() {
 

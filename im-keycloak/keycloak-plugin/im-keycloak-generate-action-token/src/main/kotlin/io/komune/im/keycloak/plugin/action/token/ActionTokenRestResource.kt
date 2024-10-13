@@ -1,8 +1,5 @@
 package io.komune.im.keycloak.plugin.action.token
 
-import org.keycloak.authentication.actiontoken.execactions.ExecuteActionsActionToken
-import org.keycloak.models.KeycloakSession
-import org.keycloak.services.managers.AppAuthManager
 import jakarta.ws.rs.ForbiddenException
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.NotAuthorizedException
@@ -10,6 +7,9 @@ import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
+import org.keycloak.authentication.actiontoken.execactions.ExecuteActionsActionToken
+import org.keycloak.models.KeycloakSession
+import org.keycloak.services.managers.AppAuthManager
 
 class ActionTokenRestResource(
     private val session: KeycloakSession

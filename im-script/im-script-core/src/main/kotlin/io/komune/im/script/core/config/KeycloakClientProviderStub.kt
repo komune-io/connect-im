@@ -26,7 +26,7 @@ class KeycloakClientProviderStub(
         }
     }
 
-    override suspend fun reset() {
+    override fun reset() {
         cache.values.forEach {
             it.connection.keycloak.close()
         }

@@ -1,9 +1,9 @@
 package io.komune.im.infra.keycloak
 
-import io.komune.im.commons.exception.I2ApiError
-import io.komune.im.commons.exception.asException
 import f2.spring.exception.ConflictException
 import f2.spring.exception.NotFoundException
+import io.komune.im.commons.exception.I2ApiError
+import io.komune.im.commons.exception.asException
 import jakarta.ws.rs.core.Response
 import org.apache.http.HttpStatus
 
