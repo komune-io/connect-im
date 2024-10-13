@@ -3,8 +3,8 @@ package io.komune.im.core.organization.domain.command
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import io.komune.im.commons.model.OrganizationId
-import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * @d2 command

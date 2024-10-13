@@ -9,11 +9,11 @@ import io.komune.im.commons.model.Address
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserCreateCommand
+import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extractList
-import java.util.UUID
 
 class UserCreateSteps: En, ImCucumberStepsDefinition() {
     @Autowired

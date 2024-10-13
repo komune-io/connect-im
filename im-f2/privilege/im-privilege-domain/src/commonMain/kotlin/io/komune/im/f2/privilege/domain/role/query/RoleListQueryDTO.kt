@@ -1,11 +1,11 @@
 package io.komune.im.f2.privilege.domain.role.query
 
+import f2.dsl.fnc.F2Function
 import io.komune.im.f2.privilege.domain.role.model.Role
 import io.komune.im.f2.privilege.domain.role.model.RoleDTO
-import f2.dsl.fnc.F2Function
-import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
 import kotlin.js.JsName
+import kotlinx.serialization.Serializable
 
 /**
  * Get a list of roles.

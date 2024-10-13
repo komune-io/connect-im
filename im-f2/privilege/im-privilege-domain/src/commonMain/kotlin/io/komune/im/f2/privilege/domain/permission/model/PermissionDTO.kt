@@ -5,8 +5,8 @@ import io.komune.im.commons.model.PermissionId
 import io.komune.im.commons.model.PermissionIdentifier
 import io.komune.im.core.privilege.domain.model.PrivilegeType
 import io.komune.im.f2.privilege.domain.model.PrivilegeDTO
-import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Allowed action within a system.

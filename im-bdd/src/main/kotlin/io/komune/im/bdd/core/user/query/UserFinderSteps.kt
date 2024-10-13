@@ -1,14 +1,12 @@
 package io.komune.im.bdd.core.user.query
 
+import io.cucumber.datatable.DataTable
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.user.data.user
 import io.komune.im.commons.utils.mapAsync
-import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.model.User
-import io.cucumber.datatable.DataTable
-import io.cucumber.java8.En
 import org.assertj.core.api.Assertions
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.safeExtract

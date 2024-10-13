@@ -1,5 +1,6 @@
 package io.komune.im.core.privilege.api
 
+import f2.spring.exception.NotFoundException
 import io.komune.im.commons.model.PrivilegeIdentifier
 import io.komune.im.commons.utils.matches
 import io.komune.im.core.privilege.api.model.toPrivilege
@@ -10,7 +11,6 @@ import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.infra.redis.CacheName
 import io.komune.im.infra.redis.CachedService
-import f2.spring.exception.NotFoundException
 import org.keycloak.representations.idm.RoleRepresentation
 import org.springframework.stereotype.Service
 import jakarta.ws.rs.NotFoundException as JakartaNotFoundException

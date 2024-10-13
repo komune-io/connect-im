@@ -1,7 +1,9 @@
 package io.komune.im.f2.organization.api
 
+import f2.dsl.cqrs.page.OffsetPagination
 import io.komune.im.commons.auth.policies.f2Function
 import io.komune.im.commons.utils.contentByteArray
+import io.komune.im.f2.organization.domain.OrganizationApi
 import io.komune.im.f2.organization.domain.command.OrganizationCreateFunction
 import io.komune.im.f2.organization.domain.command.OrganizationDeleteFunction
 import io.komune.im.f2.organization.domain.command.OrganizationDisableFunction
@@ -15,14 +17,12 @@ import io.komune.im.f2.organization.domain.query.OrganizationGetFunction
 import io.komune.im.f2.organization.domain.query.OrganizationGetResult
 import io.komune.im.f2.organization.domain.query.OrganizationPageFunction
 import io.komune.im.f2.organization.domain.query.OrganizationPageResult
+import io.komune.im.f2.organization.domain.query.OrganizationRefGetFunction
+import io.komune.im.f2.organization.domain.query.OrganizationRefGetResult
 import io.komune.im.f2.organization.domain.query.OrganizationRefListFunction
 import io.komune.im.f2.organization.domain.query.OrganizationRefListResult
 import io.komune.im.f2.organization.lib.OrganizationAggregateService
 import io.komune.im.f2.organization.lib.OrganizationFinderService
-import f2.dsl.cqrs.page.OffsetPagination
-import io.komune.im.f2.organization.domain.OrganizationApi
-import io.komune.im.f2.organization.domain.query.OrganizationRefGetFunction
-import io.komune.im.f2.organization.domain.query.OrganizationRefGetResult
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.http.codec.multipart.FilePart

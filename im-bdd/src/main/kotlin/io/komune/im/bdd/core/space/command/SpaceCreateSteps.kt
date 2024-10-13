@@ -1,5 +1,8 @@
 package io.komune.im.bdd.core.space.command
 
+import f2.dsl.fnc.invokeWith
+import io.cucumber.datatable.DataTable
+import io.cucumber.java8.En
 import io.komune.im.api.config.properties.IMProperties
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.apikey.data.client
@@ -7,9 +10,6 @@ import io.komune.im.bdd.core.space.data.space
 import io.komune.im.commons.model.SpaceIdentifier
 import io.komune.im.f2.space.api.SpaceEndpoint
 import io.komune.im.f2.space.domain.command.SpaceDefineCommand
-import f2.dsl.fnc.invokeWith
-import io.cucumber.datatable.DataTable
-import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 

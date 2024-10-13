@@ -8,9 +8,9 @@ import io.komune.im.bdd.core.privilege.feature.data.feature
 import io.komune.im.commons.model.FeatureIdentifier
 import io.komune.im.f2.privilege.api.FeatureEndpoint
 import io.komune.im.f2.privilege.domain.feature.command.FeatureDefineCommand
+import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
-import java.util.UUID
 
 class FeatureDefineSteps: En, ImCucumberStepsDefinition() {
 

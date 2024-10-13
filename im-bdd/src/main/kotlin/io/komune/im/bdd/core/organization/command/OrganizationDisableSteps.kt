@@ -1,12 +1,12 @@
 package io.komune.im.bdd.core.organization.command
 
+import f2.dsl.fnc.invoke
+import io.cucumber.datatable.DataTable
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.organization.data.organization
 import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.command.OrganizationDisableCommand
-import f2.dsl.fnc.invoke
-import io.cucumber.datatable.DataTable
-import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey

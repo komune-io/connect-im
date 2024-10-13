@@ -1,8 +1,8 @@
 package io.komune.im.core.user.domain.command
 
 import io.komune.im.commons.model.UserId
-import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * @d2 command

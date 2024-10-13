@@ -1,10 +1,10 @@
 package io.komune.im.commons.auth
 
 import io.komune.im.commons.model.AuthSubRealm
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.withContext
 
 data class AuthContext(
     val auth: AuthSubRealm

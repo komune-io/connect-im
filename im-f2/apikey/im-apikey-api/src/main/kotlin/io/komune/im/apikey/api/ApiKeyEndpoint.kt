@@ -1,5 +1,6 @@
 package io.komune.im.apikey.api
 
+import f2.dsl.cqrs.page.OffsetPagination
 import io.komune.im.apikey.domain.command.ApiKeyOrganizationAddFunction
 import io.komune.im.apikey.domain.command.ApikeyRemoveFunction
 import io.komune.im.apikey.domain.query.ApiKeyGetFunction
@@ -8,7 +9,6 @@ import io.komune.im.apikey.domain.query.ApiKeyPageFunction
 import io.komune.im.apikey.lib.ApiKeyAggregateService
 import io.komune.im.apikey.lib.ApiKeyFinderService
 import io.komune.im.commons.auth.policies.f2Function
-import f2.dsl.cqrs.page.OffsetPagination
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service

@@ -1,11 +1,11 @@
 package io.komune.im.f2.privilege.domain.role.command
 
-import io.komune.im.commons.model.PermissionIdentifier
-import io.komune.im.commons.model.RoleIdentifier
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
-import kotlinx.serialization.Serializable
+import io.komune.im.commons.model.PermissionIdentifier
+import io.komune.im.commons.model.RoleIdentifier
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Create or update a role.

@@ -3,7 +3,6 @@ package io.komune.im.f2.user.lib.service
 import io.komune.im.commons.Transformer
 import io.komune.im.commons.model.Address
 import io.komune.im.commons.utils.EmptyAddress
-import io.komune.im.commons.utils.mapAsync
 import io.komune.im.commons.utils.mapNotNullAsync
 import io.komune.im.commons.utils.parseJsonTo
 import io.komune.im.core.organization.api.OrganizationCoreFinderService

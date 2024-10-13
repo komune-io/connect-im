@@ -1,12 +1,12 @@
 package io.komune.im.core.commons
 
+import f2.dsl.cqrs.exception.F2Exception
 import io.komune.im.commons.exception.I2ApiError
 import io.komune.im.commons.exception.IMException
 import io.komune.im.commons.exception.asException
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.infra.redis.CacheName
 import io.komune.im.infra.redis.CachedService
-import f2.dsl.cqrs.exception.F2Exception
 import kotlinx.coroutines.CoroutineScope
 import org.springframework.beans.factory.annotation.Autowired
 

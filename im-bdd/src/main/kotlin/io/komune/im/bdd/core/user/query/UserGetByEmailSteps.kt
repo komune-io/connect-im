@@ -1,10 +1,10 @@
 package io.komune.im.bdd.core.user.query
 
+import f2.dsl.fnc.invokeWith
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.query.UserGetByEmailQuery
-import f2.dsl.fnc.invokeWith
-import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
 
 class UserGetByEmailSteps: En, ImCucumberStepsDefinition() {

@@ -16,10 +16,8 @@
 
 package org.springframework.cloud.function.context.config;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-
+import com.fasterxml.jackson.databind.JsonMappingException;
+import f2.spring.exception.MessageConverterException;
 import org.springframework.cloud.function.cloudevent.CloudEventMessageUtils;
 import org.springframework.cloud.function.json.JsonMapper;
 import org.springframework.core.GenericTypeResolver;
@@ -35,9 +33,9 @@ import org.springframework.util.MimeType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-
-import f2.spring.exception.MessageConverterException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Implementation of {@link MessageConverter} which uses Jackson or Gson libraries to do the

@@ -1,9 +1,9 @@
 package io.komune.im.f2.space.domain.command
 
-import io.komune.im.commons.model.SpaceIdentifier
 import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
+import io.komune.im.commons.model.SpaceIdentifier
 import kotlin.js.JsExport
 import kotlinx.serialization.Serializable
 

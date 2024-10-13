@@ -5,7 +5,6 @@ import io.komune.im.apikey.domain.command.ApiKeyOrganizationAddedEvent
 import io.komune.im.apikey.domain.command.ApikeyRemoveCommand
 import io.komune.im.apikey.domain.command.ApikeyRemoveEvent
 import io.komune.im.apikey.domain.model.ApiKey
-import io.komune.im.apikey.domain.model.ApiKeyId
 import io.komune.im.apikey.domain.model.ApiKeyModel
 import io.komune.im.apikey.lib.service.ORGANIZATION_FIELD_API_KEYS
 import io.komune.im.apikey.lib.service.apiKeys
@@ -26,10 +25,10 @@ import io.komune.im.core.user.api.UserCoreAggregateService
 import io.komune.im.core.user.domain.command.UserCoreDefineCommand
 import io.komune.im.core.user.domain.model.UserModel
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
-import org.springframework.stereotype.Service
 import java.text.Normalizer
 import java.util.UUID
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 
 @Service
 class ApiKeyAggregateService(

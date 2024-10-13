@@ -1,5 +1,7 @@
 package io.komune.im.f2.space.lib
 
+import f2.dsl.cqrs.page.PagePagination
+import f2.spring.exception.NotFoundException
 import io.komune.im.api.config.PageDefault
 import io.komune.im.commons.model.SpaceIdentifier
 import io.komune.im.core.commons.CoreService
@@ -7,8 +9,6 @@ import io.komune.im.f2.space.domain.model.Space
 import io.komune.im.f2.space.domain.query.SpacePageResult
 import io.komune.im.f2.space.lib.model.toSpace
 import io.komune.im.infra.redis.CacheName
-import f2.dsl.cqrs.page.PagePagination
-import f2.spring.exception.NotFoundException
 import org.keycloak.representations.idm.RealmRepresentation
 import org.springframework.stereotype.Service
 import jakarta.ws.rs.NotFoundException as JakartaNotFoundException

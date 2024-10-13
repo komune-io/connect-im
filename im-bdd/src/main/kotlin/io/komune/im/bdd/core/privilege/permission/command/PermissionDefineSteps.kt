@@ -8,9 +8,9 @@ import io.komune.im.bdd.core.privilege.permission.data.permission
 import io.komune.im.commons.model.PermissionIdentifier
 import io.komune.im.f2.privilege.api.PermissionEndpoint
 import io.komune.im.f2.privilege.domain.permission.command.PermissionDefineCommand
+import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
-import java.util.UUID
 
 class PermissionDefineSteps: En, ImCucumberStepsDefinition() {
 

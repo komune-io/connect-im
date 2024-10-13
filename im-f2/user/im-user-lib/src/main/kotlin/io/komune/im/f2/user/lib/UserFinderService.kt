@@ -1,5 +1,7 @@
 package io.komune.im.f2.user.lib
 
+import f2.dsl.cqrs.page.OffsetPagination
+import f2.dsl.cqrs.page.PageDTO
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.model.UserId
@@ -8,8 +10,6 @@ import io.komune.im.core.organization.domain.model.OrganizationModel
 import io.komune.im.core.user.api.UserCoreFinderService
 import io.komune.im.f2.user.domain.model.User
 import io.komune.im.f2.user.lib.service.UserToDTOTransformer
-import f2.dsl.cqrs.page.OffsetPagination
-import f2.dsl.cqrs.page.PageDTO
 import org.springframework.stereotype.Service
 
 @Service

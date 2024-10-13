@@ -1,10 +1,10 @@
 package io.komune.im.bdd.core.user.command
 
+import f2.dsl.fnc.invoke
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserResetPasswordCommand
-import f2.dsl.fnc.invoke
-import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.data.TestContextKey
 

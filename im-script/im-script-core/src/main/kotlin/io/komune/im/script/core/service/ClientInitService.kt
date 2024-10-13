@@ -11,9 +11,9 @@ import io.komune.im.core.client.domain.model.ClientModel
 import io.komune.im.script.core.init
 import io.komune.im.script.core.model.AppClient
 import io.komune.im.script.core.model.WebClient
+import java.util.UUID
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 const val ORGANIZATION_ID_CLAIM_NAME = "memberOf"
 

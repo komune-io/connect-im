@@ -1,5 +1,8 @@
 package io.komune.im.f2.organization.lib
 
+import f2.dsl.cqrs.page.OffsetPagination
+import f2.dsl.cqrs.page.PageDTO
+import f2.dsl.cqrs.page.map
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
@@ -13,9 +16,6 @@ import io.komune.im.f2.organization.lib.model.toOrganization
 import io.komune.im.f2.organization.lib.model.toRef
 import io.komune.im.f2.organization.lib.service.InseeHttpClient
 import io.komune.im.f2.privilege.lib.PrivilegeFinderService
-import f2.dsl.cqrs.page.OffsetPagination
-import f2.dsl.cqrs.page.PageDTO
-import f2.dsl.cqrs.page.map
 import org.springframework.stereotype.Service
 
 @Service

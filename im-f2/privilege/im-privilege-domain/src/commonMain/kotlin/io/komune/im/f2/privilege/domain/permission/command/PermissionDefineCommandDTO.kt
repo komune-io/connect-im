@@ -4,8 +4,8 @@ import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import io.komune.im.commons.model.FeatureIdentifier
 import io.komune.im.commons.model.PermissionIdentifier
-import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
+import kotlinx.serialization.Serializable
 
 /**
  * Create or update a permission.

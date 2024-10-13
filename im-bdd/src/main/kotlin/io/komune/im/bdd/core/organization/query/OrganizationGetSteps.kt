@@ -1,10 +1,10 @@
 package io.komune.im.bdd.core.organization.query
 
+import f2.dsl.fnc.invokeWith
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.query.OrganizationGetQuery
-import f2.dsl.fnc.invokeWith
-import io.cucumber.java8.En
 import io.komune.im.f2.organization.domain.query.OrganizationRefGetQuery
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.data.TestContextKey

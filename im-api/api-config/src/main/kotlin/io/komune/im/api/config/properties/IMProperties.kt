@@ -1,8 +1,8 @@
 package io.komune.im.api.config.properties
 
 import f2.client.domain.AuthRealmClientSecret
-import io.komune.im.commons.model.AuthSubRealm
 import io.komune.f2.spring.boot.auth.AuthenticationProvider
+import io.komune.im.commons.model.AuthSubRealm
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 const val IM_URL_PROPERTY = "connect.im"

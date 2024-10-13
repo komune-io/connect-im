@@ -1,13 +1,13 @@
 package io.komune.im.bdd.core.user.command
 
+import f2.dsl.fnc.invoke
+import io.cucumber.datatable.DataTable
+import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.user.data.user
 import io.komune.im.core.user.domain.command.UserCoreDeleteCommand
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserDeleteCommand
-import f2.dsl.fnc.invoke
-import io.cucumber.datatable.DataTable
-import io.cucumber.java8.En
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey

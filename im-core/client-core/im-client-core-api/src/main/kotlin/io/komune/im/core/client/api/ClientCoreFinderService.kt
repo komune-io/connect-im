@@ -1,13 +1,13 @@
 package io.komune.im.core.client.api
 
+import f2.spring.exception.NotFoundException
 import io.komune.im.commons.model.ClientId
 import io.komune.im.commons.model.ClientIdentifier
 import io.komune.im.core.client.api.model.toClient
 import io.komune.im.core.client.domain.model.ClientModel
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
-import f2.spring.exception.NotFoundException
-import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.springframework.stereotype.Service
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
 class ClientCoreFinderService(
