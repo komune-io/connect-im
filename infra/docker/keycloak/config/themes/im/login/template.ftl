@@ -70,33 +70,35 @@
                         <span class="subtitle"><span class="required">*</span> ${msg("requiredFields")}</span>
                     </div>
                     <div class="col-md-10">
-                        <#nested "show-username">
-                        <div class="${properties.kcFormGroupClass!}">
-                            <div id="kc-username">
-                                <label id="kc-attempted-username">${auth.attemptedUsername}</label>
-                                <a id="reset-login" href="${url.loginRestartFlowUrl}">
-                                    <div class="kc-login-tooltip">
-                                        <i class="${properties.kcResetFlowIcon!}"></i>
-                                        <span class="kc-tooltip-text">${msg("restartLoginTooltip")}</span>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
+<#--                        Disable the following block because username is an UUID-->
+<#--                        <#nested "show-username">-->
+<#--                        <div class="${properties.kcFormGroupClass!}">-->
+<#--                            <div id="kc-username">-->
+<#--                                <label id="kc-attempted-username">${auth.attemptedUsername}</label>-->
+<#--                                <a id="reset-login" href="${url.loginRestartFlowUrl}">-->
+<#--                                    <div class="kc-login-tooltip">-->
+<#--                                        <i class="${properties.kcResetFlowIcon!}"></i>-->
+<#--                                        <span class="kc-tooltip-text">${msg("restartLoginTooltip")}</span>-->
+<#--                                    </div>-->
+<#--                                </a>-->
+<#--                            </div>-->
+<#--                        </div>-->
                     </div>
                 </div>
             <#else>
-                <#nested "show-username">
-                <div class="${properties.kcFormGroupClass!}">
-                    <div id="kc-username">
-                        <label id="kc-attempted-username">${auth.attemptedUsername}</label>
-                        <a id="reset-login" href="${url.loginRestartFlowUrl}">
-                            <div class="kc-login-tooltip">
-                                <i class="${properties.kcResetFlowIcon!}"></i>
-                                <span class="kc-tooltip-text">${msg("restartLoginTooltip")}</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+<#--                Disable the following block because username is an UUID-->
+<#--                <#nested "show-username">-->
+<#--                <div class="${properties.kcFormGroupClass!}">-->
+<#--                    <div id="kc-username">-->
+<#--                        <label id="kc-attempted-username">${auth.attemptedUsername}</label>-->
+<#--                        <a id="reset-login" href="${url.loginRestartFlowUrl}">-->
+<#--                            <div class="kc-login-tooltip">-->
+<#--                                <i class="${properties.kcResetFlowIcon!}"></i>-->
+<#--                                <span class="kc-tooltip-text">${msg("restartLoginTooltip")}</span>-->
+<#--                            </div>-->
+<#--                        </a>-->
+<#--                    </div>-->
+<#--                </div>-->
             </#if>
         </#if>
       </header>
