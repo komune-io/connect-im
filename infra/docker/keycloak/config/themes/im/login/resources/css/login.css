@@ -1,4 +1,52 @@
+/*UPDATED CSS*/
+a {
+    text-decoration: underline;
+    font-size: 12px;
+}
+
+.btn-primary {
+    background-color: #124450;
+    border-style: none;
+    border-radius: 5px;
+    height: 40px;
+    background-image: none;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-primary.active, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open .dropdown-toggle.btn-primary {
+    background-color: #124450;
+    border-style: none;
+    border-radius: 5px;
+    height: 40px;
+}
+
+.form-control {
+    padding-left: 10px;
+    border-radius: 5px;
+    border: 1px solid rgb(197, 199, 208);
+    height: 40px !important;
+    width: 70%;
+    margin-left: 15%;
+}
+
+.form-control:hover {
+    border: 1.5px solid #124450;
+    outline: none;
+}
+
+.form-control:focus-visible {
+    border: 1.5px solid #124450;
+    outline: none;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+/*FROM LAST VERSION*/
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
 body {
   margin: 0;
   padding: 0;
@@ -50,21 +98,6 @@ button {
   justify-content: center;
 }
 
-.btn-primary {
-  background-color: #124450;
-  border-style: none;
-  border-radius: 5px;
-  height: 40px;
-  background-image: none;
-}
-
-.btn-primary.active, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open .dropdown-toggle.btn-primary {
-    background-color: #124450;
-    border-style: none;
-    border-radius: 5px;
-    height: 40px;
-}
-
 #kc-page-title {
   font-size: 18px;
   margin-bottom: 20px;
@@ -73,10 +106,6 @@ button {
 #logo {
   width: 180px;
   margin-bottom: 20px;
-}
-
-a {
-  text-decoration: underline;
 }
 
 #forgotPassword {
@@ -255,24 +284,6 @@ div.kc-logo-text span {
 
 .required {
   color: #cb2915;
-}
-
-.form-control {
-  border-radius: 5px;
-  border-color: #d3d7da;
-  height: 45px !important;
-  width: 70%;
-  margin-left: 15%;
-}
-
-.form-control:hover {
-  border-color: #d3d7da;
-}
-
-.form-control:focus {
-  box-shadow: none;
-  border-color: #9a9a9a;
-  border-width: 1.5px;
 }
 
 ol#kc-totp-settings {
