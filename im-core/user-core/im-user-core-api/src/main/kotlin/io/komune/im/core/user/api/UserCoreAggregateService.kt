@@ -139,7 +139,9 @@ class UserCoreAggregateService : CoreService(CacheName.User) {
     private suspend fun UserRepresentation.assignRoles(roles: List<RoleRepresentation>) {
         val client = keycloakClientProvider.get()
         with(client.user(id).roles().realmLevel()) {
-            val rolesToRemoves = listAll().filter { it.name.startsWith("default-roles") }
+            val allRoles = listAll()
+            logger.info("All roles: ${allRoles.map { it.name }}")
+            val rolesToRemoves = allRoles.filter { it.name.startsWith("default-roles") }
             logger.info("User[$id] Removing roles: ${rolesToRemoves.map { it.name }}")
             remove(rolesToRemoves)
             logger.info("Adding roles: ${roles.map { it.name }}")
