@@ -141,7 +141,7 @@ class UserCoreAggregateService : CoreService(CacheName.User) {
         with(client.user(id).roles().realmLevel()) {
             val allRoles = listAll()
             logger.info("All roles: ${allRoles.map { it.name }}")
-            val rolesToRemoves = allRoles.filter { it.name.startsWith("default-roles") }
+            val rolesToRemoves = allRoles.filterNot { it.name.startsWith("default-roles") }
             logger.info("User[$id] Removing roles: ${rolesToRemoves.map { it.name }}")
             remove(rolesToRemoves)
             logger.info("Adding roles: ${roles.map { it.name }}")
