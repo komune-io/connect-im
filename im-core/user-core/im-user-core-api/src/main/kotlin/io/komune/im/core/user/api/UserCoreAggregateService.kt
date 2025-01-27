@@ -18,10 +18,12 @@ import java.util.UUID
 import org.keycloak.representations.idm.CredentialRepresentation
 import org.keycloak.representations.idm.RoleRepresentation
 import org.keycloak.representations.idm.UserRepresentation
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class UserCoreAggregateService : CoreService(CacheName.User) {
+    private val logger = LoggerFactory.getLogger(UserCoreAggregateService::class.java)
 
     suspend fun define(command: UserCoreDefineCommand) = mutate(
         command.id.orEmpty(),
@@ -137,8 +139,12 @@ class UserCoreAggregateService : CoreService(CacheName.User) {
     private suspend fun UserRepresentation.assignRoles(roles: List<RoleRepresentation>) {
         val client = keycloakClientProvider.get()
         with(client.user(id).roles().realmLevel()) {
-            val rolesToRemoves = listAll().filter { it.name.startsWith("default-roles") }
+            val allRoles = listAll()
+            logger.info("All roles: ${allRoles.map { it.name }}")
+            val rolesToRemoves = allRoles.filterNot { it.name.startsWith("default-roles") }
+            logger.info("User[$id] Removing roles: ${rolesToRemoves.map { it.name }}")
             remove(rolesToRemoves)
+            logger.info("Adding roles: ${roles.map { it.name }}")
             add(roles)
         }
     }
