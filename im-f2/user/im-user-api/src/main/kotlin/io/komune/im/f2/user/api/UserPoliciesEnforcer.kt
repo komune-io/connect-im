@@ -50,7 +50,8 @@ class UserPoliciesEnforcer(
         val user = userFinderService.get(cmd.id)
         logger.debug("Checking if memberOf can be updated for user with roles[${user.roles}] " +
             "and memberOf[${user.memberOf?.id}].")
-        if(UserPolicies.canUpdateMemberOf(authedUser)) {
+
+        if(UserPolicies.canUpdateMemberOf(authedUser) || user.memberOf?.id == cmd.memberOf) {
             cmd
         } else {
             logger.warn("memberOf can't be updated, " +
