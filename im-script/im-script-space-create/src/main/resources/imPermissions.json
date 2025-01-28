@@ -7,6 +7,10 @@
     "description": "Ability to modify any user data",
     "features":  [["feat_im_all"], ["feat_im_own"]]
 }, {
+    "name": "im_user_role_write",
+    "description": "Ability to modify the roles of user",
+    "features":  [["feat_im_all"], ["feat_im_own"]]
+}, {
     "name": "im_organization_read",
     "description": "Ability to view any organization data",
     "features":  [["feat_im_all"]]

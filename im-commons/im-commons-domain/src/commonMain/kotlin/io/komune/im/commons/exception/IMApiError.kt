@@ -1,10 +1,10 @@
 package io.komune.im.commons.exception
 
-data class I2ApiError(
+data class IMApiError(
 	override val description: String,
 	override val payload: Map<String, String>,
 ): IMError(
-	type = I2ApiError::class.simpleName!!,
+	type = IMApiError::class.simpleName!!,
 	description = description,
 	payload = payload,
 )

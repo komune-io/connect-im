@@ -9,6 +9,7 @@ enum class ImRole(val identifier: String) {
     ORCHESTRATOR_USER("tr_orchestrator_user"),
 
     IM_USER_READ("im_user_read"),
+    IM_USER_ROLE_READ("im_user_role_write"),
     IM_USER_WRITE("im_user_write"),
 
     IM_ORGANIZATION_READ("im_organization_read"),
