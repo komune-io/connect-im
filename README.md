@@ -1,265 +1,166 @@
 # IM
 
----
+## Description
+IM is a microservice for Identity and Access Management built with Kotlin and Spring Cloud Function, leveraging a Keycloak instance. It enables the creation and management of Spaces, Users, Organizations, and Privileges, which can then be used to authenticate via Keycloak.
 
-# Description
+## Table of Contents
+1. [Overview](#overview)
+2. [Architecture](#architecture)
+3. [Configuration](#configuration)
+    - [Application Configuration](#application-configuration)
+    - [Docker-Compose Configuration](#docker-compose-configuration)
+4. [Features and Functionalities](#features-and-functionalities)
+    - [Users](#users)
+    - [Organizations](#organizations)
+    - [Privileges](#privileges)
+        - [Features](#features)
+        - [Roles](#roles)
+        - [Permissions](#permissions)
+5. [Getting Started](#getting-started)
+6. [Testing](#testing)
+7. [Troubleshooting](#troubleshooting)
+8. [Keycloak Integration](#keycloak-integration)
+    - [Keycloak Plugin](#keycloak-plugin)
+    - [IM-Event-HTTP](#im-event-http)
 
-IM is a micro-service for Identity and Access Management. It is built upon a Keycloak instance.
+## Overview
 
-It allows you to create and manage: Users, Organizations and Roles. These Users and Organizations can then be used to authenticate to a Keycloak instance.
+IM simplifies identity and access management with the following features:
+- User Management: Handle individual identities, roles, and permissions.
+- Organization Management: Group users and assign collective roles and privileges.
+- Privileges: Manage granular permissions, roles, and access control.
 
-# Architecture
+## Architecture
 
-IM interacts with Keycloak using [Keycloak’s Admin Client](https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client). IM also exposes entrypoints to allow communications with any applications.
+IM interacts with Keycloak using [Keycloak's Admin Client](https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client) and exposes endpoints to communicate with other applications.
 
-<img src="https://docs.komune.io/s3/docs/im/diagrams/architecture.png" alt="drawing" width="300"/>
+![IM Architecture]()
 
-# Getting started
+## Configuration
 
-IM works with a running Keycloak instance. It can easily be deployed as a docker container, within a docker-compose file: ([link to docker repo](https://hub.docker.com/r/komune-io/i2-gateway))
+### Application Configuration
+
+Define the necessary parameters in your `application.yml` file:
+
+```YAML
+connect:
+    fs:
+        url: http://fs:8090
+c
+```
+
+### Docker-Compose Configuration
+
+A sample `docker-compose` configuration for the IM Gateway:
 
 ```yaml
-version: "3.7"
 services:
-  im-gateway:
-    image: komune-io/im-gateway:${VERSION}
-    container_name: im-gateway
+    im-gateway:
+    image: ${DOCKER_REPOSITORY}im-gateway:${VERSION_IM}
     environment:
-      server_port: 8004
-      i2_issuers[0]_uri: ${ISSUER_URI}
-      i2_issuers[0]_authUrl: ${KEYCLOAK_URL}
-      i2_issuers[0]_realm: ${KEYCLOAK_REALM}
-      i2_issuers[0]_clientId: ${CLIENT_ID}
-      i2_issuers[0]_clientSecret: ${CLIENT_SECRET}
+        - server_port=8004
+        - f2_tenant_issuer-base-uri=${KC_URL_PUBLIC}
+        - connect_im_keycloak_url=${KC_URL_PUBLIC}
+        - connect_im_keycloak_realm=${KC_ROOT_REALM}
+        - connect_im_keycloak_clientId=${KC_IM_CLIENT_ID}
+        - connect_im_keycloak_clientSecret=${KC_IM_CLIENT_SECRET}
     ports:
       - "8004:8004"
 ```
 
-Functionalities are divided into 3 entities: User, Organization and Role.
+## Features and Functionalities
 
-If you are in a java environment all the necessary models and commands for an entity can be found here:
+### Users
+- Represent individual identities with specific roles and permissions.
+- Can belong to one or more organizations.
+- Authenticate through Keycloak, operating within assigned permissions.
 
-- [User SDK](https://mvnrepository.com/artifact/io.komune.im/user-domain)
-- [Organization SDK](https://mvnrepository.com/artifact/io.komune.im/organization-domain)
-- [Role SDK](https://mvnrepository.com/artifact/io.komune.im/role-domain)
+### Organizations
+- Represent collective entities grouping multiple users.
+- Have roles that define overarching permissions and features.
+- Govern actions available to users within the organization.
 
-```kotlin
+### Privileges
+
+#### Features
+Features act as access control filters, defining the specific contexts in which permissions can be applied. They ensure permissions are valid only in allowed contexts.
+
+#### Roles
+- Roles group permissions for users or organizations.
+- They simplify access management and can define bindings to other roles or users.
+
+#### Permissions
+Permissions are fine-grained access rights defining specific actions. They are linked to one or more features to limit their scope.
+
+| Permission Name              | Description                         | Required Features        |
+| ---------------------------- | ----------------------------------- | ------------------------ |
+| im_user_read                 | Ability to view any user data       | feat_im_all, feat_im_own |
+| im_user_write                | Ability to modify any user data     | feat_im_all, feat_im_own |
+| im_organization_read         | Ability to view any organization    | feat_im_all              |
+
+## Getting Started
+
+### SDKs
+Use the following dependencies in your Kotlin project to manage Users, Organizations, and Roles:
+
+```yaml
 implementation("io.komune.im:user-domain:${Versions.im}")
 implementation("io.komune.im:organization-domain:${Versions.im}")
 implementation("io.komune.im:role-domain:${Versions.im}")
 ```
 
-SDK that sugarcoats the http requests are also available:
-- [User Client](https://mvnrepository.com/artifact/io.komune.im/user-client)
-- [OrganizationClient](https://mvnrepository.com/artifact/io.komune.im/organization-client)
-- [Role Client](https://mvnrepository.com/artifact/io.komune.im/role-client)
+### Clients
+The clients provided use Ktor and should be singletons:
 
-```kotlin
-implementation("io.komune.im:user-client:${Versions.im}")
-implementation("io.komune.im:organization-client:${Versions.im}")
-implementation("io.komune.im:role-client:${Versions.im}")
-```
-
-The client provided in the SDK uses Ktor under the hood and should be a singleton in your application in order to prevent any memory leak. Ex:
-
-```kotlin
+```yaml
 @Configuration
 class ImConfig(
-    private val tokenProvider: TokenProvider
+private val tokenProvider: TokenProvider
 ) {
-
-    @Value("\${im.url}")
-    lateinit var imUrl: String
+@Value("\${im.url}")
+lateinit var imUrl: String
 
     @Bean
     fun userClient() = UserClient(
         url = imUrl,
         generateBearerToken = tokenProvider::getToken
     )
-
-    @Bean
-    fun organizationClient() = OrganizationClient(
-        url = imUrl,
-        generateBearerToken = tokenProvider::getToken
-    )
-
-    @Bean
-    fun roleClient() = RoleClient(
-        url = imUrl,
-        generateBearerToken = tokenProvider::getToken
-    )
 }
 ```
 
-# Configuration
+## Testing
 
-Properties prefix: `i2.issuers[]`
+To run tests:
+1. Start the dev environment:
+   (((bash)))
+   make dev up
+   (((bash)))
+2. Run tests:
+   (((bash)))
+   ./gradlew test
+   (((bash)))
+3. Stop the dev environment:
+   (((bash)))
+   make dev down
+   (((bash)))
 
-| Property                   | Description                             | Example                                  | Default                                |
-|----------------------------|-----------------------------------------|------------------------------------------|----------------------------------------|
-| uri                        | Issuer URI accepted by IM               | https://auth.komune.io/auth/realms/development | http://keycloak-it:8080/realms/test |
-| authUrl                    | Keycloak server URL                     | https://auth.komune.io/auth             | http://keycloak-it:8080             |
-| realm                      | Keycloak realm to authenticate to       | development                              | test                                   |
-| clientId     | Client ID used to authenticate with     | smartclient                              | i2-api                                 |
-| clientSecret | Client Secret used to authenticate with | smartsecret                              | xxxxx                                  |
+## Troubleshooting
 
-`i2.issuers[]` should define a list of the above configuration.
+### Common Issues
 
-For instance:
-- In your ```application.yml``` file:
-```
-i2:
-  issuers:
-    -
-      uri: http://keycloak-it:8080/realms/test
-      authUrl: http://keycloak-it:8080
-      realm: test
-      clientId: i2-api
-      clientSecret: clientSecret
-    -
-      uri: http://keycloak-it:8080/realms/test2
-      authUrl: http://keycloak-it:8080
-      realm: test2
-      clientId: i2-api
-      clientSecret: clientSecret2
-```
+| Issue                        | Cause                                 | Solution                                                                 |
+| ---------------------------- | ------------------------------------- | ----------------------------------------------------------------------- |
+| FileClient not initialized   | FS configuration missing              | Provide valid FS configuration or avoid FS-dependent features.          |
+| Certificate not trusted      | Untrusted HTTPS server                | Add the server’s certificate to the JVM trust store.                    |
 
-- By overriding in your docker-compose file:
-```
-version: "3.7"
-services:
-  im-gateway:
-    image: komune-io/im-gateway:${VERSION}
-    container_name: im-gateway
-    environment:
-      server_port: 8004
-      i2_issuers[0]_uri: ${ISSUER_URI}
-      i2_issuers[0]_authUrl: ${KEYCLOAK_URL}
-      i2_issuers[0]_realm: ${KEYCLOAK_REALM}
-      i2_issuers[0]_clientId: ${CLIENT_ID}
-      i2_issuers[0]_clientSecret: ${CLIENT_SECRET}
-      i2_issuers[1]_uri: ${ISSUER_URI_1}
-      i2_issuers[1]_authUrl: ${KEYCLOAK_URL_1}
-      i2_issuers[1]_realm: ${KEYCLOAK_REALM_1}
-      i2_issuers[1]_clientId: ${CLIENT_ID_1}
-      i2_issuers[1]_clientSecret: ${CLIENT_SECRET_1}
-    ports:
-      - "8004:8004"
-```
+## Keycloak Integration
 
-Properties prefix: `i2.organization.insee`
+### Keycloak Plugin
 
-| Property     | Description                | Example                                  | Default                                |
-|--------------|----------------------------|------------------------------------------|----------------------------------------|
-| token        | Token used to authenticate | c6ef3de5-3ef1-330a-8917-21f6750dcb09 | c6ef3de5-3ef1-330a-8917-21f6750dcb09 |
-| sirene-api   | Sirene-api URL             | https://api.insee.fr/entreprises/sirene/V3             | https://api.insee.fr/entreprises/sirene/V3             |
-
-Properties prefix: `connect.fs`
-
-| Property     | Description                | Example                                  | Default                                |
-|--------------|----------------------------|------------------------------------------|----------------------------------------|
-| url          | Points to an FS instance. This property is optional but will disable associated features if not set (ex: upload logo) | http://localhost:8090 | null
-
-# Tests
-
-To run tests you need to:
- * Start dev environment 
-
-```bash
-make dev up
-```
-
- * Run test
-```bash
-./gradlew test
-```
-
-* Stop dev environment
-
-```bash
-make dev down
-```
-
-# Errors
-
-## FileClient not initialized  
-
-### Message
-
-`java.lang.IllegalStateException: FileClient not initialized.`
-
-### Cause
-
-Appears when trying to use a feature that calls FS but no FS configuration was provided.
-
-### Solution
-
-Define a [configuration](#configuration) pointing to a valid FS instance or do not use any feature that needs it.
-
-## Certificate is not trusted
-
-### Message
-
-`sun.security.validator.ValidatorException`
-
-### Cause
-
-The JVM is trying to reach a HTTPS server that is not trusted by the JVM trust store
-
-### Solution
-
-Generate a certificate for this server and add it to the trust store
-
-`openssl x509 -in <(openssl s_client -connect $HOST:$PORT -prexit 2>/dev/null) -out ~/$ALIAS.crt`
-`sudo keytool -importcert -file ~/$ALIAS.crt -alias $ALIAS -keystore $(/usr/libexec/java_home)/lib/security/cacerts -storepass changeit`
-
-
-## Database column too small
-
-### Cause
-We store json in a field designed to just store a string data can be too long
-
-### Solution
-
-Execute sql script on keycloak database.
-```
-ALTER TABLE public."group_attribute"
-ALTER COLUMN value TYPE TEXT;
-
-ALTER TABLE public."user_attribute"
-ALTER COLUMN value TYPE TEXT;
-```
-
-# Keycloak Plugin
-
-## Create a plugin
-
-1. Create a module inside `i2-keycloak:keycloak-plugin`
-2. Build it with `./gradlew i2-keycloak:keycloak-plugin:shadowJar`
-3. Build the Dockerfile located in `i2-keycloak/docker/`
-4. Enjoy
-
-(steps 2 and 3 can be done automatically with `make package-keycloak`)
-
-## I2-Event-HTTP
-
-client ("xxx-web" + "account") hardcoded claim: `event-http-wehbook` = url to send the events to   
- > if local and keycloak is within docker container, use ip address instead of localhost
-
-It is possible to filter the events to send from the keycloak GUI by going to Events > Login Events Settings > Save Events ON > Saved Types
-
-Endpoint example:
-```kotlin
-@Configuration
-class KeycloakEventEndpoint(
-    private val applicationContext: ApplicationContext
-) {
-
-    @PermitAll
-    @Bean
-    fun keycloakEvent(): F2Consumer<KeycloakHttpEvent> = f2Consumer { event ->
-        println(event.type)
-        applicationContext.publishEvent(event)
-    }
-}
-```
+To create a plugin:
+1. Add a module inside `i2-keycloak:keycloak-plugin`.
+2. Build it:
+   ```bash
+   ./gradlew i2-keycloak:keycloak-plugin:shadowJar
+    ```
+3. Build the Dockerfile in `i2-keycloak/docker/`.
