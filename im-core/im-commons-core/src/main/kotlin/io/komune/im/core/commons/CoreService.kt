@@ -1,7 +1,7 @@
 package io.komune.im.core.commons
 
 import f2.dsl.cqrs.exception.F2Exception
-import io.komune.im.commons.exception.I2ApiError
+import io.komune.im.commons.exception.IMApiError
 import io.komune.im.commons.exception.IMException
 import io.komune.im.commons.exception.asException
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
@@ -43,7 +43,7 @@ open class CoreService(
             throw e
         } catch (e: Exception) {
             val client = keycloakClientProvider.get()
-            throw I2ApiError(
+            throw IMApiError(
                 description = "Space [${client.realmId}, ${client.auth.realmId}]: $errorMessage",
                 payload = emptyMap()
             ).asException(e)

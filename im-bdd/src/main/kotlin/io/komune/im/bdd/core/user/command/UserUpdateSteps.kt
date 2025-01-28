@@ -13,6 +13,7 @@ import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
+import s2.bdd.data.parser.extractList
 
 class UserUpdateSteps: En, ImCucumberStepsDefinition() {
     @Autowired
@@ -68,6 +69,24 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
                 )
             }
         }
+
+        Then("The user should be updated:") { dataTable: DataTable ->
+            step {
+                val userId = context.userIds.lastUsed
+                dataTable.asList(UserUpdateParams::class.java)
+                    .forEach {
+                        AssertionBdd.user(keycloakClient()).assertThatId(userId).hasFields(
+                            givenName = it.givenName,
+                            familyName = it.familyName,
+                            address = it.address,
+                            phone = it.phone,
+                            roles = it.roles,
+                            attributes = it.attributes,
+                        )
+
+                    }
+            }
+        }
     }
 
     private suspend fun updateUser(params: UserUpdateParams) {
@@ -96,7 +115,8 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
                 city = entry?.get("city") ?: "city"
             ),
             phone = entry?.get("phone") ?: "0600000000",
-            roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
+            roles = entry?.extractList<String>("roles")?.map { context.roleIdentifiers[it] ?: it }
+                ?: listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
             memberOf = entry?.get("memberOf").parseNullableOrDefault(context.organizationIds.lastUsedOrNull),
             attributes = userAttributesParams(entry),
         )
@@ -114,7 +134,7 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
     )
 
     private fun userAttributesParams(entry: Map<String, String>?): Map<String, String> {
-        val job = entry?.get("job") ?: "job-${UUID.randomUUID()}"
+        val job = entry?.get("job") ?: "job"
         return mapOf(
             "job" to job
         )
