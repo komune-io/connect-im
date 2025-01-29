@@ -45,7 +45,7 @@ object ParserUtils {
     }
 
     @Throws(MalformedURLException::class)
-    private fun getFile(
+    fun getFile(
         filename: String,
         classLoader: ClassLoader = Thread.currentThread().contextClassLoader
     ): InputStream? {

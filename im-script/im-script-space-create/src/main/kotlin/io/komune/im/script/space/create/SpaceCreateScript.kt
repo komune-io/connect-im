@@ -3,6 +3,7 @@ package io.komune.im.script.space.create
 import io.komune.im.commons.auth.AuthContext
 import io.komune.im.commons.model.ClientId
 import io.komune.im.commons.utils.ParserUtils
+import io.komune.im.commons.utils.ParserUtils.getFile
 import io.komune.im.f2.privilege.domain.permission.model.Permission
 import io.komune.im.f2.privilege.lib.PrivilegeAggregateService
 import io.komune.im.f2.privilege.lib.PrivilegeFinderService
@@ -25,6 +26,7 @@ import io.komune.im.script.core.service.ClientInitService
 import io.komune.im.script.space.create.config.AdminUserData
 import io.komune.im.script.space.create.config.ClientCredentials
 import io.komune.im.script.space.create.config.SpaceCreateProperties
+import java.io.BufferedReader
 import java.util.UUID
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -58,6 +60,8 @@ class SpaceCreateScript(
         jsonPaths.split(";").forEach { jsonPath ->
             logger.info("****************************************************")
             logger.info("Start processing configuration file [$jsonPath]...")
+            val tt = getFile(jsonPath)?.bufferedReader()?.use(BufferedReader::readText)
+            logger.info(tt)
             val properties = ParserUtils.getConfiguration(jsonPath, SpaceCreateProperties::class.java)
 
             createScript(properties)
@@ -106,7 +110,7 @@ class SpaceCreateScript(
         if (spaceFinderService.getOrNull(properties.space) != null) {
             logger.info("Space[${properties.space}] already created")
         } else {
-            logger.info("Space create: $${properties}")
+            logger.info("Space create: $properties")
             spaceAggregateService.define(
                 SpaceDefineCommand(
                     identifier = properties.space,
