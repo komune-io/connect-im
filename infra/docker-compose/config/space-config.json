@@ -1,6 +1,13 @@
 {
     "space": "${KC_REALM}",
     "theme": "${KC_REALM_THEME}",
+    "settings": {
+        "login": {
+            "registrationAllowed": true,
+            "resetPasswordAllowed": true,
+            "rememberMe": true
+        }
+    },
     "appClients": [
         {
             "clientId": "${KC_APP_CLIENT_ID}",

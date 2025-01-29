@@ -167,11 +167,11 @@ class SpaceConfigScript(
                 theme = theme ?: space.theme,
                 smtp = space.smtp,
                 locales = locales ?: space.locales,
-                settings = this.settings?.let { it ->
+                settings = settings?.let {
                     SpaceSettings(
-                        registrationAllowed = it.login.registrationAllowed,
-                        rememberMe = it.login.rememberMe,
-                        resetPasswordAllowed = it.login.resetPasswordAllowed
+                        registrationAllowed = settings.login.registrationAllowed,
+                        rememberMe = settings.login.rememberMe,
+                        resetPasswordAllowed = settings.login.resetPasswordAllowed
                     )
                 }
             ).let { spaceAggregateService.define(it) }
