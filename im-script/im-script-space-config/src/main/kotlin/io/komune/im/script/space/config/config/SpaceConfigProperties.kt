@@ -3,6 +3,7 @@ package io.komune.im.script.space.config.config
 import io.komune.im.commons.model.Address
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.model.SpaceIdentifier
+import io.komune.im.script.core.config.properties.SpaceSettingsProperties
 import io.komune.im.script.core.model.AppClient
 import io.komune.im.script.core.model.FeatureData
 import io.komune.im.script.core.model.PermissionData
@@ -11,6 +12,7 @@ import io.komune.im.script.core.model.WebClient
 
 data class SpaceConfigProperties(
     val space: SpaceIdentifier,
+    val settings: SpaceSettingsProperties? = null,
     val theme: String? = null,
     val locales: List<String>? = null,
     val appClients: List<AppClient>? = null,

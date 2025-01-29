@@ -13,6 +13,7 @@ import io.komune.im.f2.space.domain.command.SpaceDeletedEvent
 import io.komune.im.infra.redis.CacheName
 import org.keycloak.representations.idm.RealmRepresentation
 import org.keycloak.representations.userprofile.config.UPConfig
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
@@ -23,6 +24,7 @@ class SpaceAggregateService(
     private val authenticationResolver: ImAuthenticationProvider
 ) : CoreService(CacheName.Space) {
 
+    private val logger = LoggerFactory.getLogger(SpaceAggregateService::class.java)
 
     companion object {
         const val ACCESS_TOKEN_LIFESPAN = 28800
@@ -39,24 +41,31 @@ class SpaceAggregateService(
     suspend fun define(
         command: SpaceDefineCommand
     ): SpaceDefinedEvent = withAuth(authenticationResolver.getAuth(), "master") {
+        logger.info("Defining space with identifier: ${command.identifier}")
         try {
             update(command)
         } catch (e: JakartaNotFoundException) {
+            logger.info("Space not found, creating new space with identifier: ${command.identifier}")
             create(command)
         }
 
         SpaceDefinedEvent(
             identifier = command.identifier,
-        )
+        ).also {
+            logger.info("Space defined with identifier: ${command.identifier}")
+        }
     }
 
     suspend fun delete(command: SpaceDeleteCommand): SpaceDeletedEvent = mutate(command.id) {
+        logger.info("Deleting space with identifier: ${command.id}")
         val client = keycloakClientProvider.get()
         client.realm(command.id).remove()
+        logger.info("Space deleted with identifier: ${command.id}")
         SpaceDeletedEvent(command.id)
     }
 
     private suspend fun create(command: SpaceDefineCommand) {
+        logger.info("Creating space with identifier: ${command.identifier}")
         val client = keycloakClientProvider.get()
 
         val realm = RealmRepresentation()
@@ -64,6 +73,7 @@ class SpaceAggregateService(
             .apply(command)
 
         client.realms().create(realm)
+        logger.info("Realm created for space with identifier: ${command.identifier}")
 
         val authClientId = clientCoreFinderService.getByIdentifier(client.auth.clientId).id
         val realmClientId = clientCoreFinderService.getByIdentifier("${command.identifier}-realm").id
@@ -73,25 +83,31 @@ class SpaceAggregateService(
             providerClientId = realmClientId,
             roles = realmClientRoles
         ).let { clientCoreAggregateService.grantClientRoles(it) }
+        logger.info("Granted client roles for space with identifier: ${command.identifier}")
 
         enableUserAttributes(realm.realm)
+        logger.info("Enabled user attributes for space with identifier: ${command.identifier}")
 
         keycloakClientProvider.reset()
     }
 
     private suspend fun enableUserAttributes(realm: String) {
+        logger.info("Enabling user attributes for realm: $realm")
         val client = keycloakClientProvider.get(realm)
         val upConfiguration = client.userProfile().configuration
         upConfiguration.unmanagedAttributePolicy = UPConfig.UnmanagedAttributePolicy.ENABLED
         client.userProfile().update(upConfiguration)
+        logger.info("User attributes enabled for realm: $realm")
     }
 
     private suspend fun update(command: SpaceDefineCommand) {
+        logger.info("Updating space with identifier: ${command.identifier}")
         val client = keycloakClientProvider.get()
         val realm = client.realm(command.identifier)
             .toRepresentation()
             .apply(command)
         client.realm(command.identifier).update(realm)
+        logger.info("Space updated with identifier: ${command.identifier}")
     }
 
     private fun RealmRepresentation.applyBaseConfig() = apply {
@@ -114,12 +130,27 @@ class SpaceAggregateService(
     }
 
     private fun RealmRepresentation.apply(command: SpaceDefineCommand) = apply {
+        logger.info("Setting realm to ${command.identifier}")
         realm = command.identifier
+        logger.info("Setting displayName to ${command.identifier}")
         displayName = command.identifier
+        logger.info("Setting smtpServer to ${command.smtp}")
         smtpServer = command.smtp
+        logger.info("Setting loginTheme to ${command.theme}")
         loginTheme = command.theme
+        logger.info("Setting emailTheme to ${command.theme}")
         emailTheme = command.theme
+        logger.info("Setting supportedLocales to ${command.locales?.toSet()}")
         supportedLocales = command.locales?.toSet()
+        logger.info("Setting defaultLocale to ${command.locales?.firstOrNull()}")
         defaultLocale = command.locales?.firstOrNull()
+        command.settings?.let { settings ->
+            logger.info("Setting isRegistrationAllowed to ${settings.registrationAllowed}")
+            isRegistrationAllowed = settings.registrationAllowed
+            logger.info("Setting isResetPasswordAllowed to ${settings.resetPasswordAllowed}")
+            isResetPasswordAllowed = settings.resetPasswordAllowed
+            logger.info("Setting isRememberMe to ${settings.rememberMe}")
+            isRememberMe = settings.rememberMe
+        }
     }
 }

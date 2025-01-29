@@ -1,5 +1,12 @@
 {
     "space": "${KC_REALM}",
+    "settings": {
+        "login": {
+            "registrationAllowed": true,
+            "resetPasswordAllowed": true,
+            "rememberMe": true
+        }
+    },
     "theme": "${KC_REALM_THEME}",
     "locales": ["en", "fr"],
     "adminUsers": [],

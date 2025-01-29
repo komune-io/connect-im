@@ -6,8 +6,8 @@ import io.komune.im.script.core.config.properties.ImScriptSpaceProperties
 import io.komune.im.script.core.config.properties.toAuthRealm
 import io.komune.im.script.core.model.defaultSpaceRootClientId
 import io.komune.im.script.core.service.ClientInitService
-import io.komune.im.script.space.create.ClientCredentials
-import io.komune.im.script.space.create.SpaceCreateProperties
+import io.komune.im.script.space.create.config.ClientCredentials
+import io.komune.im.script.space.create.config.SpaceCreateProperties
 import io.komune.im.script.space.create.SpaceCreateScript
 import java.util.UUID
 import kotlin.math.absoluteValue
