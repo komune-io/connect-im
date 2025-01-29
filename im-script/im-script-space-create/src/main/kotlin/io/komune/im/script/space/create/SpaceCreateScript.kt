@@ -57,14 +57,14 @@ class SpaceCreateScript(
     suspend fun runPaths(jsonPaths: String) {
         jsonPaths.split(";").forEach { jsonPath ->
             logger.info("****************************************************")
-            logger.info("Start processing configuration file [$jsonPath]...")
             val properties = ParserUtils.getConfiguration(jsonPath, SpaceCreateProperties::class.java)
-
+            logger.info("Start processing configuration file [$properties]...")
             createScript(properties)
         }
     }
 
     suspend fun createScript(properties: SpaceCreateProperties) {
+        logger.info("Create script with props: [${properties}]")
         val masterAuth = imScriptSpaceProperties.auth.toAuthRealm()
         withContext(AuthContext(masterAuth)) {
             initRealm(properties)
