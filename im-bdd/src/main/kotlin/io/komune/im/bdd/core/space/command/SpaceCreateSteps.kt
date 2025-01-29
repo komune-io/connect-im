@@ -77,7 +77,8 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
             identifier = params.identifier,
             smtp = null,
             theme = null,
-            locales = null
+            locales = null,
+            settings = null
         )
         command.invokeWith(spaceEndpoint.spaceDefine()).identifier
     }

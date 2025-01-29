@@ -44,6 +44,7 @@ interface SpaceDefineCommandDTO: Command {
      * @example [["en", "fr"]]
      */
     val locales: List<String>?
+    val settings: SpaceSettingsDTO?
 }
 
 /**
@@ -54,8 +55,29 @@ data class SpaceDefineCommand(
     override val identifier: String,
     override val theme: String?,
     override val smtp: Map<String, String>?,
-    override val locales: List<String>?
+    override val locales: List<String>?,
+    override val settings: SpaceSettings?
 ): SpaceDefineCommandDTO
+
+/**
+ * @d2 inherit
+ */
+@JsExport
+interface SpaceSettingsDTO {
+    val registrationAllowed: Boolean?
+    val rememberMe: Boolean?
+    val resetPasswordAllowed: Boolean?
+}
+
+/**
+ * @d2 inherit
+ */
+@Serializable
+data class SpaceSettings(
+    override val registrationAllowed: Boolean?,
+    override val rememberMe: Boolean?,
+    override val resetPasswordAllowed: Boolean?
+): SpaceSettingsDTO
 
 /**
  * @d2 event

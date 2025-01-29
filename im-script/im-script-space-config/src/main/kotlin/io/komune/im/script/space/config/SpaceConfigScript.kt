@@ -18,6 +18,7 @@ import io.komune.im.f2.privilege.domain.model.PrivilegeDTO
 import io.komune.im.f2.privilege.lib.PrivilegeAggregateService
 import io.komune.im.f2.privilege.lib.PrivilegeFinderService
 import io.komune.im.f2.space.domain.command.SpaceDefineCommand
+import io.komune.im.f2.space.domain.command.SpaceSettings
 import io.komune.im.f2.space.lib.SpaceAggregateService
 import io.komune.im.f2.space.lib.SpaceFinderService
 import io.komune.im.f2.user.domain.command.UserCreateCommand
@@ -52,7 +53,7 @@ class SpaceConfigScript(
     private val spaceFinderService: SpaceFinderService,
     private val spaceAggregateService: SpaceAggregateService,
     private val userAggregateService: UserAggregateService,
-    private val userFinderService: UserFinderService
+    private val userFinderService: UserFinderService,
 ) {
     private val logger = LoggerFactory.getLogger(SpaceConfigScript::class.java)
 
@@ -165,7 +166,14 @@ class SpaceConfigScript(
                 identifier = space.identifier,
                 theme = theme ?: space.theme,
                 smtp = space.smtp,
-                locales = locales ?: space.locales
+                locales = locales ?: space.locales,
+                settings = settings?.let {
+                    SpaceSettings(
+                        registrationAllowed = settings.login.registrationAllowed,
+                        rememberMe = settings.login.rememberMe,
+                        resetPasswordAllowed = settings.login.resetPasswordAllowed
+                    )
+                }
             ).let { spaceAggregateService.define(it) }
         }
     }

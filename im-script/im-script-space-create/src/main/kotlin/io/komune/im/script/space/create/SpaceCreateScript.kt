@@ -7,6 +7,7 @@ import io.komune.im.f2.privilege.domain.permission.model.Permission
 import io.komune.im.f2.privilege.lib.PrivilegeAggregateService
 import io.komune.im.f2.privilege.lib.PrivilegeFinderService
 import io.komune.im.f2.space.domain.command.SpaceDefineCommand
+import io.komune.im.f2.space.domain.command.SpaceSettings
 import io.komune.im.f2.space.lib.SpaceAggregateService
 import io.komune.im.f2.space.lib.SpaceFinderService
 import io.komune.im.f2.user.domain.command.UserCreateCommand
@@ -21,6 +22,9 @@ import io.komune.im.script.core.model.FeatureData
 import io.komune.im.script.core.model.PermissionData
 import io.komune.im.script.core.model.defaultSpaceRootClientId
 import io.komune.im.script.core.service.ClientInitService
+import io.komune.im.script.space.create.config.AdminUserData
+import io.komune.im.script.space.create.config.ClientCredentials
+import io.komune.im.script.space.create.config.SpaceCreateProperties
 import java.util.UUID
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -108,7 +112,12 @@ class SpaceCreateScript(
                     identifier = properties.space,
                     theme = properties.theme,
                     smtp = properties.smtp,
-                    locales = properties.locales ?: listOf("en", "fr")
+                    locales = properties.locales ?: listOf("en", "fr"),
+                    settings = SpaceSettings(
+                        registrationAllowed = properties.settings?.login?.registrationAllowed,
+                        rememberMe = properties.settings?.login?.rememberMe,
+                        resetPasswordAllowed = properties.settings?.login?.resetPasswordAllowed
+                    )
                 )
             )
         }
