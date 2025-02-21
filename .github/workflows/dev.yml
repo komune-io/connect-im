@@ -40,6 +40,8 @@ jobs:
     secrets:
       NPM_PKG_PUBLISH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_PKG_PROMOTE_TOKEN: ${{ secrets.NPM_PKG_NPMJS_TOKEN}}
+      PKG_GITHUB_USERNAME: ${{ github.actor }}
+      PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   docker:
     uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@main
