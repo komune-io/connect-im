@@ -70,8 +70,8 @@ class ClientInitService(
                     roles = appClient.realmManagementRoles ?: DEFAULT_REALM_MANAGEMENT_ROLES
                 ).let { clientCoreAggregateService.grantClientRoles(it) }
             }
-
-            logger.info("Client [${appClient.clientId}] secret: $secret")
+            val secretLogging = if(logger.isTraceEnabled) secret else "******"
+            logger.info("Client [${appClient.clientId}] secret: $secretLogging")
             clientId
         })
 

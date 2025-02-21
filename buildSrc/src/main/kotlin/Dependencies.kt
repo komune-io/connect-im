@@ -34,6 +34,9 @@ object Versions {
 	fun keycloak() = System.getProperty("KEYCLOAK_VERSION").also { version ->
         println("Keycloak version: $version")
     }
+	fun keycloakAdmin() = "26.0.4".also { version ->
+        println("org.keycloak:keycloak-admin-client version: $version")
+    }
 
 	const val mockito = "5.14.1"
 	const val testcontainers = FixersVersions.Test.testcontainers
@@ -46,7 +49,7 @@ object Dependencies {
 
 		object Keycloak {
             fun adminClient(scope: Scope) = scope.add(
-                "org.keycloak:keycloak-admin-client:${Versions.keycloak()}"
+                "org.keycloak:keycloak-admin-client:${Versions.keycloakAdmin()}"
             )
 
             fun modelJpa(scope: Scope)  = scope.add(
@@ -60,10 +63,11 @@ object Dependencies {
             fun all(scope: Scope)  = scope.add(
               "org.keycloak:keycloak-core:${Versions.keycloak()}",
               "org.keycloak:keycloak-server-spi:${Versions.keycloak()}",
-              "org.keycloak:keycloak-server-spi-private:${Versions.keycloak()}",
               "org.keycloak:keycloak-services:${Versions.keycloak()}",
               "org.keycloak:keycloak-saml-core-public:${Versions.keycloak()}"
-            )
+            ).also {
+                serverSpiPrivate(scope)
+            }
 		}
 		fun f2(scope: Scope) = scope.add(
 			"io.komune.f2:f2-spring-boot-starter-function-http:${Versions.f2}"
