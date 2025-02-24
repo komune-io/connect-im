@@ -120,6 +120,7 @@
             }]
         }, {
             "name": "Monsstrai Company",
+            "roles": ["tr_orchestrator"],
             "description": "Your greatest fears working as one",
             "address": {
                 "street": "123 rue Matysme",
