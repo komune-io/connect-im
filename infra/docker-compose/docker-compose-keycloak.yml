@@ -7,7 +7,8 @@ services:
       KC_DB_PASSWORD: admin
       KC_DB_USERNAME: admin
       KC_DB_SCHEMA: public
-      KC_HOSTNAME: localhost
+      KC_HOSTNAME: ${AUTH_HOST_URL}
+      KEYCLOAK_FRONTEND_URL: ${AUTH_HOST_URL}
       KEYCLOAK_ADMIN: ${KC_ROOT_USER}
       KEYCLOAK_ADMIN_PASSWORD: ${KC_ROOT_PASS}
       PROXY_ADDRESS_FORWARDING: "true"
