@@ -111,7 +111,7 @@ class UserEndpoint(
     @Bean
     override fun userConfigureMFA(): UserConfigureMFAFunction = f2Function { command ->
         logger.info("userConfigureMFA: $command")
-        policiesEnforcer.checkConfigureMFA(command.id)
+        policiesEnforcer.checkConfigureMfa(command.id)
         userAggregateService.configureMFA(command)
     }
 
