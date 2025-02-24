@@ -8,6 +8,7 @@ import f2.client.ktor.http.plugin.F2Auth
 import f2.dsl.fnc.F2SupplierSingle
 import f2.dsl.fnc.f2SupplierSingle
 import io.komune.im.f2.user.domain.UserApi
+import io.komune.im.f2.user.domain.command.UserConfigureMFAFunction
 import io.komune.im.f2.user.domain.command.UserCreateFunction
 import io.komune.im.f2.user.domain.command.UserDeleteFunction
 import io.komune.im.f2.user.domain.command.UserDisableFunction
@@ -55,6 +56,8 @@ open class UserClient(private val client: F2Client): UserApi {
     override fun userResetPassword(): UserResetPasswordFunction = client.function(this::userResetPassword.name)
     override fun userUpdateEmail(): UserUpdateEmailFunction = client.function(this::userUpdateEmail.name)
     override fun userUpdatePassword(): UserUpdatePasswordFunction = client.function(this::userUpdatePassword.name)
+    override fun userConfigureMFA(): UserConfigureMFAFunction = client.function(this::userConfigureMFA.name)
+
     override fun userDisable(): UserDisableFunction = client.function(this::userDisable.name)
     override fun userDelete(): UserDeleteFunction = client.function(this::userDelete.name)
 }

@@ -131,10 +131,6 @@ class UserCoreAggregateService : CoreService(CacheName.User) {
             .filterValues { it.filterNotNull().isNotEmpty() }
     }
 
-//    private suspend fun UserRepresentation.enableAttributes() {
-//        val client = keycloakClientProvider.get()
-//        client.user(id)
-//    }
 
     private suspend fun UserRepresentation.assignRoles(roles: List<RoleRepresentation>) {
         val client = keycloakClientProvider.get()

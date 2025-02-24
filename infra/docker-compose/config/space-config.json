@@ -12,13 +12,7 @@
         {
             "clientId": "${KC_APP_CLIENT_ID}",
             "clientSecret": "${KC_APP_CLIENT_SECRET}",
-            "roles": [],
-            "realmManagementRoles": [
-                "manage-users",
-                "view-users",
-                "query-groups",
-                "manage-realm"
-            ]
+            "roles": ["tr_orchestrator_admin", "tr_orchestrator"]
         }
     ],
     "webClients": [
@@ -27,7 +21,16 @@
             "webUrl": "http://localhost:5173"
         }
     ],
-    "permissions": [
+    "permissions": [{
+            "name": "fs_file_write",
+            "description": "Ability to write file in fs"
+        }, {
+            "name": "fs_file_read",
+            "description": "Ability to read file in fs"
+        }, {
+            "name": "fs_policy_write",
+            "description": "Ability to write policy in fs"
+        },
         {
             "name": "tr_project_read",
             "description": "Ability to view project data"
@@ -48,7 +51,10 @@
             "bindings": {
                 "USER": ["tr_orchestrator_user", "tr_orchestrator_admin"],
                 "API_KEY": ["tr_orchestrator_user", "tr_orchestrator_admin"]
-            }
+            },
+            "permissions": [
+                "feat_im_all", "feat_im_own"
+            ]
         },
         {
             "name": "tr_orchestrator_user",
@@ -58,7 +64,7 @@
                 "fr": "Utilisateur",
                 "en": "User"
             },
-            "permissions": ["im_user_read", "tr_project_read"]
+            "permissions": ["im_user_read", "tr_project_read",  "im_role_read", "fs_file_read"]
         },
         {
             "name": "tr_orchestrator_admin",
@@ -70,9 +76,10 @@
             },
             "permissions": [
                 "im_organization_read", "im_organization_write",
-                "im_user_read", "im_user_write",
+                "im_user_read", "im_user_write", "im_user_role_write",
                 "im_role_read",  "im_role_write",
                 "im_apikey_read", "im_apikey_write",
+                "fs_file_write", "fs_file_read", "fs_policy_write",
                 "tr_project_read", "tr_project_write"
             ]
         }
@@ -113,19 +120,19 @@
             }]
         }, {
             "name": "Monsstrai Company",
+            "roles": ["tr_orchestrator"],
             "description": "Your greatest fears working as one",
             "address": {
                 "street": "123 rue Matysme",
                 "postalCode": "66666",
                 "city": "Ville Ainh"
             },
-            "roles": [],
             "users": [{
                 "email": "fred@ajance.com",
                 "password":  "traceconnect",
                 "firstname": "Fred",
                 "lastname":  "Ajance",
-                "roles": [],
+                "roles": ["tr_orchestrator_admin"],
                 "attributes": {
                     "job": "Frais d'agence"
                 }
@@ -134,7 +141,7 @@
                 "password":  "traceconnect",
                 "firstname": "Thibault",
                 "lastname":  "Métyfeppeur",
-                "roles": []
+                "roles": ["tr_orchestrator_admin"]
             }, {
                 "email": "jess@croke.com",
                 "password":  "traceconnect",

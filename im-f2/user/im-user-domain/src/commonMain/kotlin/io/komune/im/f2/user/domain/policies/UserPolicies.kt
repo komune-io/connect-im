@@ -81,8 +81,14 @@ object UserPolicies {
         return (authedUser.id == user.id || authedUser.hasRole(ImRole.IM_USER_WRITE))
             && (authedUser.memberOf == user.memberOf?.id || authedUser.hasRole(ImRole.IM_ORGANIZATION_WRITE))
     }
+
     private fun isNotMySelf(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return authedUser.id != user.id
+        return !isMySelf(authedUser, user)
+
+    }
+
+    private fun isMySelf(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
+        return authedUser.id == user.id
 
     }
 }

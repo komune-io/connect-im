@@ -1,5 +1,5 @@
 ### OAuth2 Token
-POST http://keycloak-it:8080/realms/master/protocol/openid-connect/token
+POST http://im-keycloak:8080/realms/master/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=client_credentials&client_id=im-root&client_secret=2rc3Aay1ssJgY946tFeacnOMfUm9M0tJ

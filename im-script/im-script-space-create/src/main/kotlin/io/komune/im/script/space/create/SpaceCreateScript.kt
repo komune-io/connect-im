@@ -113,6 +113,7 @@ class SpaceCreateScript(
                     theme = properties.theme,
                     smtp = properties.smtp,
                     locales = properties.locales ?: listOf("en", "fr"),
+                    mfa = properties.mfa,
                     settings = SpaceSettings(
                         registrationAllowed = properties.settings?.login?.registrationAllowed,
                         rememberMe = properties.settings?.login?.rememberMe,

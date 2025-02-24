@@ -45,6 +45,7 @@ interface SpaceDefineCommandDTO: Command {
      */
     val locales: List<String>?
     val settings: SpaceSettingsDTO?
+    val mfa: List<String>?
 }
 
 /**
@@ -56,7 +57,8 @@ data class SpaceDefineCommand(
     override val theme: String?,
     override val smtp: Map<String, String>?,
     override val locales: List<String>?,
-    override val settings: SpaceSettings?
+    override val settings: SpaceSettings?,
+    override val mfa: List<String>?,
 ): SpaceDefineCommandDTO
 
 /**

@@ -167,6 +167,7 @@ class SpaceConfigScript(
                 theme = theme ?: space.theme,
                 smtp = space.smtp,
                 locales = locales ?: space.locales,
+                mfa = mfa,
                 settings = settings?.let {
                     SpaceSettings(
                         registrationAllowed = settings.login.registrationAllowed,

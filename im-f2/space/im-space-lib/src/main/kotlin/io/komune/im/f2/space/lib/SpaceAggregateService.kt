@@ -10,6 +10,7 @@ import io.komune.im.f2.space.domain.command.SpaceDefineCommand
 import io.komune.im.f2.space.domain.command.SpaceDefinedEvent
 import io.komune.im.f2.space.domain.command.SpaceDeleteCommand
 import io.komune.im.f2.space.domain.command.SpaceDeletedEvent
+import io.komune.im.f2.space.lib.flow.SpaceOtpFlowService
 import io.komune.im.infra.redis.CacheName
 import org.keycloak.representations.idm.RealmRepresentation
 import org.keycloak.representations.userprofile.config.UPConfig
@@ -19,6 +20,7 @@ import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
 class SpaceAggregateService(
+    private val spaceOtpFlowService: SpaceOtpFlowService,
     private val clientCoreAggregateService: ClientCoreAggregateService,
     private val clientCoreFinderService: ClientCoreFinderService,
     private val authenticationResolver: ImAuthenticationProvider
@@ -48,7 +50,7 @@ class SpaceAggregateService(
             logger.info("Space not found, creating new space with identifier: ${command.identifier}")
             create(command)
         }
-
+        createFlow(command)
         SpaceDefinedEvent(
             identifier = command.identifier,
         ).also {
@@ -108,6 +110,16 @@ class SpaceAggregateService(
             .apply(command)
         client.realm(command.identifier).update(realm)
         logger.info("Space updated with identifier: ${command.identifier}")
+    }
+
+    private suspend fun createFlow(command: SpaceDefineCommand) {
+        if(command.mfa?.contains(SpaceOtpFlowService.OTP_FLOW_USER_ATTRIBUTE_VALUE) == true) {
+            logger.info("Create custom otp flow[${SpaceOtpFlowService.OTP_FLOW_NAME}]: ${command.identifier}")
+            spaceOtpFlowService.create(keycloakClientProvider, command.identifier)
+            logger.info("Created custom otp flow[${SpaceOtpFlowService.OTP_FLOW_NAME}]: ${command.identifier}")
+            spaceOtpFlowService.setAsDefault(keycloakClientProvider, command.identifier)
+            logger.info("Set as default browser flow[${SpaceOtpFlowService.OTP_FLOW_NAME}]: ${command.identifier}")
+        }
     }
 
     private fun RealmRepresentation.applyBaseConfig() = apply {
