@@ -15,6 +15,7 @@ data class SpaceConfigProperties(
     val settings: SpaceSettingsProperties? = null,
     val theme: String? = null,
     val locales: List<String>? = null,
+    val mfa: List<String>? = null,
     val appClients: List<AppClient>? = null,
 
     val webClients: List<WebClient>? = null,

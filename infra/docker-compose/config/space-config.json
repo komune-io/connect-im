@@ -12,7 +12,7 @@
         {
             "clientId": "${KC_APP_CLIENT_ID}",
             "clientSecret": "${KC_APP_CLIENT_SECRET}",
-            "roles": ["admin", "tr_orchestrator"]
+            "roles": ["tr_orchestrator_admin", "tr_orchestrator"]
         }
     ],
     "webClients": [

@@ -10,6 +10,7 @@ data class SpaceCreateProperties(
     val theme: String? = null,
     val smtp: Map<String, String>? = null,
     val locales: List<String>? = null,
+    val mfa: List<String>? = null,
     val adminUsers: List<AdminUserData>? = null,
     val rootClient: ClientCredentials? = null,
 )

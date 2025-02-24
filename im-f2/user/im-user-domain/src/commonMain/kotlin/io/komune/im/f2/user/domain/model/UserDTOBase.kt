@@ -72,6 +72,12 @@ interface UserDTO {
     val roles: List<RoleDTO>
 
     /**
+     * Multifactor authentication enabled
+     * @example [ "OTP" ]
+     */
+    val mfa: List<String>?
+
+    /**
      * Additional arbitrary attributes assigned to the user.
      * @example { "age": 42 }
      */
@@ -118,6 +124,7 @@ data class User(
     override val attributes: Map<String, String>,
     override val enabled: Boolean,
     override val disabledBy: UserId?,
+    override val mfa: List<String>?,
     override val creationDate: Long,
-    override val disabledDate: Long?
+    override val disabledDate: Long?,
 ): UserDTO

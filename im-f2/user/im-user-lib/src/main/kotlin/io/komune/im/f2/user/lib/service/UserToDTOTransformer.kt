@@ -4,6 +4,7 @@ import io.komune.im.commons.Transformer
 import io.komune.im.commons.model.Address
 import io.komune.im.commons.utils.EmptyAddress
 import io.komune.im.commons.utils.mapNotNullAsync
+import io.komune.im.commons.utils.parseJson
 import io.komune.im.commons.utils.parseJsonTo
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.user.domain.model.UserModel
@@ -53,8 +54,8 @@ class UserToDTOTransformer(
 			enabled = item.enabled,
 			disabledBy = item.attributes[User::disabledBy.name],
 			creationDate = item.creationDate,
+            mfa = item.attributes[User::mfa.name]?.parseJson(),
 			disabledDate = item.attributes[User::disabledDate.name]?.toLong()
 		)
 	}
-	
 }

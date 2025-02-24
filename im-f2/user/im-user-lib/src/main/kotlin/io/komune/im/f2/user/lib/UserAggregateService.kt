@@ -14,6 +14,8 @@ import io.komune.im.core.user.api.UserCoreAggregateService
 import io.komune.im.core.user.domain.command.UserCoreDefineCommand
 import io.komune.im.core.user.domain.command.UserCoreDisableCommand
 import io.komune.im.core.user.domain.command.UserCoreSendEmailCommand
+import io.komune.im.f2.user.domain.command.UserConfigureMFACommand
+import io.komune.im.f2.user.domain.command.UserConfiguredMFAEvent
 import io.komune.im.f2.user.domain.command.UserCreateCommand
 import io.komune.im.f2.user.domain.command.UserCreatedEvent
 import io.komune.im.f2.user.domain.command.UserDeleteCommand
@@ -149,6 +151,15 @@ class UserAggregateService(
 
     suspend fun delete(command: UserDeleteCommand): UserDeletedEvent {
         return userCoreAggregateService.delete(command)
+    }
+
+
+    suspend fun configureMFA(command: UserConfigureMFACommand): UserConfiguredMFAEvent {
+        UserCoreSendEmailCommand(
+            id = command.id,
+            actions = listOf(EventType.UPDATE_TOTP.name)
+        ).let { userCoreAggregateService.sendEmail(it) }
+        return UserConfiguredMFAEvent(command.id)
     }
 
     private suspend fun checkOrganizationExist(organizationId: OrganizationId?) {

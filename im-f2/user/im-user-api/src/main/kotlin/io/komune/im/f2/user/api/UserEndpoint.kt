@@ -3,6 +3,7 @@ package io.komune.im.f2.user.api
 import f2.dsl.cqrs.page.OffsetPagination
 import io.komune.im.commons.auth.policies.f2Function
 import io.komune.im.f2.user.domain.UserApi
+import io.komune.im.f2.user.domain.command.UserConfigureMFAFunction
 import io.komune.im.f2.user.domain.command.UserCreateFunction
 import io.komune.im.f2.user.domain.command.UserDeleteFunction
 import io.komune.im.f2.user.domain.command.UserDisableFunction
@@ -105,6 +106,13 @@ class UserEndpoint(
         logger.info("userResetPassword: $command")
         policiesEnforcer.checkUpdate(command.id)
         userAggregateService.resetPassword(command)
+    }
+
+    @Bean
+    override fun userConfigureMFA(): UserConfigureMFAFunction = f2Function { command ->
+        logger.info("userConfigureMFA: $command")
+        policiesEnforcer.checkConfigureMFA(command.id)
+        userAggregateService.configureMFA(command)
     }
 
     @Bean
