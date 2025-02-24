@@ -8,14 +8,14 @@ im:
       delayMillis: 10000
     init:
       auth:
-        serverUrl: http://keycloak-it:8080
+        serverUrl: http://im-keycloak:8080
         realmId: master
         clientId: admin-cli
         username: root
         password: root
     space:
       auth:
-        serverUrl: http://keycloak-it:8080
+        serverUrl: http://im-keycloak:8080
         realmId: master
         clientId: im-root-client
         clientSecret: secret

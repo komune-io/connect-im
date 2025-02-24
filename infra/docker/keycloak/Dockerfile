@@ -1,8 +1,8 @@
 ARG KEYCLOAK_VERSION
 
-FROM quay.io/keycloak/keycloak:26.0.0 AS builder
+FROM quay.io/keycloak/keycloak:26.1.2 AS builder
 ENV KC_DB=postgres
-
+ENV KC_FEATURES=passkeys
 ENV KC_LOG_LEVEL=INFO
 
 ARG KC_HTTP_RELATIVE_PATH
@@ -12,7 +12,7 @@ ENV KC_HTTP_RELATIVE_PATH=${KC_HTTP_RELATIVE_PATH}
 COPY im-keycloak/keycloak-plugin/build/libs/keycloak-plugin-with-dependencies.jar /opt/keycloak/providers/im-event-http.jar
 RUN /opt/keycloak/bin/kc.sh build --db=postgres
 
-FROM quay.io/keycloak/keycloak:26.0.0
+FROM quay.io/keycloak/keycloak:26.1.2
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 WORKDIR /opt/keycloak
 

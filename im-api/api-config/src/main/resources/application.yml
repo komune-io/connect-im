@@ -20,18 +20,18 @@ multitenancy:
     http:
         header-name: X-TenantId
     security:
-        issuer-base-uri: http://localhost:8080/realms/
+        issuer-base-uri: http://im-keycloak:8080/realms/
 
 f2:
   tenant:
-    issuer-base-uri: http://keycloak-it:8080
+    issuer-base-uri: http://im-keycloak:8080
 
 connect:
   fs:
     url: http://fs:8090
   im:
     keycloak:
-        url: http://keycloak-it:8080
+        url: http://im-keycloak:8080
         realm: master
         clientId: im-root-client
         clientSecret: secret
@@ -52,24 +52,6 @@ spring:
   config:
     activate:
       on-profile: test
-
-f2:
-  tenant:
-    issuer-base-uri: http://localhost:8080
-
-connect:
-  im:
-    keycloak:
-      url: http://localhost:8080
-      realm: master
-      clientId: im-root-client
-      clientSecret: secret
-
----
-spring:
-  config:
-    activate:
-      on-profile: local
 
 f2:
   tenant:
