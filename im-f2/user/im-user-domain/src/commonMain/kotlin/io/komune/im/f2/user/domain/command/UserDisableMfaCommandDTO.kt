@@ -14,15 +14,15 @@ import kotlinx.serialization.Serializable
  * @parent [io.komune.im.f2.user.domain.D2UserPage]
  * @order 40
  */
-typealias UserConfigureMFAFunction = F2Function<UserConfigureMFACommand, UserConfiguredMFAEvent>
+typealias UserDisableMfaFunction = F2Function<UserDisableMfaCommand, UserDisabledMfavent>
 
 /**
  * @d2 command
- * @parent [UserConfigureMFAFunction]
+ * @parent [UserDisableMfaFunction]
  */
 @JsExport
-@JsName("UserConfigureMFACommandDTO")
-interface UserConfigureMFACommandDTO: Command {
+@JsName("UserDisableMfaCommandDTO")
+interface UserDisableMfaCommandDTO: Command {
     /**
      * Identifier of the user.
      */
@@ -33,17 +33,17 @@ interface UserConfigureMFACommandDTO: Command {
  * @d2 inherit
  */
 @Serializable
-data class UserConfigureMFACommand(
+data class UserDisableMfaCommand(
     override val id: UserId,
-): UserConfigureMFACommandDTO
+): UserDisableMfaCommandDTO
 
 /**
  * @d2 event
- * @parent [UserConfigureMFAFunction]
+ * @parent [UserDisableMfaFunction]
  */
 @JsExport
-@JsName("UserConfiguredMFAEventDTO")
-interface UserConfiguredMFAEventDTO: Event {
+@JsName("UserDisabledMfaEventDTO")
+interface UserDisabledMfaventDTO: Event {
     /**
      * Identifier of the updated user.
      */
@@ -54,6 +54,6 @@ interface UserConfiguredMFAEventDTO: Event {
  * @d2 inherit
  */
 @Serializable
-data class UserConfiguredMFAEvent(
+data class UserDisabledMfavent(
     override val id: UserId
-): UserConfiguredMFAEventDTO
+): UserDisabledMfaventDTO
