@@ -56,7 +56,7 @@ open class UserClient(private val client: F2Client): UserApi {
     override fun userResetPassword(): UserResetPasswordFunction = client.function(this::userResetPassword.name)
     override fun userUpdateEmail(): UserUpdateEmailFunction = client.function(this::userUpdateEmail.name)
     override fun userUpdatePassword(): UserUpdatePasswordFunction = client.function(this::userUpdatePassword.name)
-    override fun userDisableMfa(): UserDisableMfaFunction = client.function(this::userConfigureMfa.name)
+    override fun userDisableMfa(): UserDisableMfaFunction = client.function(this::userDisableMfa.name)
 
     override fun userDisable(): UserDisableFunction = client.function(this::userDisable.name)
     override fun userDelete(): UserDeleteFunction = client.function(this::userDelete.name)

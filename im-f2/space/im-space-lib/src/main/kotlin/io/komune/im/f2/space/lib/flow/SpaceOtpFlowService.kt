@@ -20,7 +20,6 @@ class SpaceOtpFlowService {
 
     /*
      *   Browser Flow (Top-Level Flow)
-     *   ├──
      */
     private fun create(authFlowsClient: AuthenticationManagementResource) {
         authenticationFlow("browser-with-conditional-otp") {
