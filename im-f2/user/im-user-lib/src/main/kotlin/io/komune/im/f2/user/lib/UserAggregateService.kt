@@ -21,9 +21,9 @@ import io.komune.im.f2.user.domain.command.UserCreatedEvent
 import io.komune.im.f2.user.domain.command.UserDeleteCommand
 import io.komune.im.f2.user.domain.command.UserDeletedEvent
 import io.komune.im.f2.user.domain.command.UserDisableCommand
-import io.komune.im.f2.user.domain.command.UserDisableMFACommand
+import io.komune.im.f2.user.domain.command.UserDisableMfaCommand
 import io.komune.im.f2.user.domain.command.UserDisabledEvent
-import io.komune.im.f2.user.domain.command.UserDisabledMFAEvent
+import io.komune.im.f2.user.domain.command.UserDisabledMfavent
 import io.komune.im.f2.user.domain.command.UserResetPasswordCommand
 import io.komune.im.f2.user.domain.command.UserResetPasswordEvent
 import io.komune.im.f2.user.domain.command.UserUpdateCommand
@@ -156,9 +156,9 @@ class UserAggregateService(
     }
 
 
-    suspend fun disableMultiFactorAuthentication(command: UserDisableMFACommand): UserDisabledMFAEvent {
+    suspend fun disableMultiFactorAuthentication(command: UserDisableMfaCommand): UserDisabledMfavent {
         userCoreAggregateService.removeCredentials(UserCoreRemoveCredentialsCommand(command.id, CredentialType.OTP))
-        return UserDisabledMFAEvent(command.id)
+        return UserDisabledMfavent(command.id)
     }
 
     private suspend fun checkOrganizationExist(organizationId: OrganizationId?) {

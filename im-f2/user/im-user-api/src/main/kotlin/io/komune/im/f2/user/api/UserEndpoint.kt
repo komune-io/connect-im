@@ -6,7 +6,7 @@ import io.komune.im.f2.user.domain.UserApi
 import io.komune.im.f2.user.domain.command.UserCreateFunction
 import io.komune.im.f2.user.domain.command.UserDeleteFunction
 import io.komune.im.f2.user.domain.command.UserDisableFunction
-import io.komune.im.f2.user.domain.command.UserDisableMFAFunction
+import io.komune.im.f2.user.domain.command.UserDisableMfaFunction
 import io.komune.im.f2.user.domain.command.UserResetPasswordFunction
 import io.komune.im.f2.user.domain.command.UserUpdateEmailFunction
 import io.komune.im.f2.user.domain.command.UserUpdateFunction
@@ -109,8 +109,8 @@ class UserEndpoint(
     }
 
     @Bean
-    override fun userDisableMFA(): UserDisableMFAFunction = f2Function { command ->
-        logger.info("userDisableMFA: $command")
+    override fun userDisableMfa(): UserDisableMfaFunction = f2Function { command ->
+        logger.info("userDisableMfa: $command")
         policiesEnforcer.checkDisableMfa(command.id)
         userAggregateService.disableMultiFactorAuthentication(command)
     }

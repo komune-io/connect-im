@@ -1,6 +1,6 @@
 package io.komune.im.f2.user.domain
 
-import io.komune.im.f2.user.domain.command.UserDisableMFAFunction
+import io.komune.im.f2.user.domain.command.UserDisableMfaFunction
 import io.komune.im.f2.user.domain.command.UserCreateFunction
 import io.komune.im.f2.user.domain.command.UserDeleteFunction
 import io.komune.im.f2.user.domain.command.UserDisableFunction
@@ -43,7 +43,7 @@ interface UserCommandApi {
     /** Set the given password for a given user ID */
     fun userUpdatePassword(): UserUpdatePasswordFunction
     /** Disable multifactor authentication **/
-    fun userDisableMFA(): UserDisableMFAFunction
+    fun userDisableMfa(): UserDisableMfaFunction
     /** Disable a user */
     fun userDisable(): UserDisableFunction
     /** Delete a user */
