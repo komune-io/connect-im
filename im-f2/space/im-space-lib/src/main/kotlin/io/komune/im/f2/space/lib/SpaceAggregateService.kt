@@ -1,5 +1,6 @@
 package io.komune.im.f2.space.lib
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.komune.im.api.config.bean.ImAuthenticationProvider
 import io.komune.im.commons.auth.withAuth
 import io.komune.im.core.client.api.ClientCoreAggregateService
@@ -23,7 +24,8 @@ class SpaceAggregateService(
     private val spaceOtpFlowService: SpaceOtpFlowService,
     private val clientCoreAggregateService: ClientCoreAggregateService,
     private val clientCoreFinderService: ClientCoreFinderService,
-    private val authenticationResolver: ImAuthenticationProvider
+    private val authenticationResolver: ImAuthenticationProvider,
+    private val objectMapper: ObjectMapper
 ) : CoreService(CacheName.Space) {
 
     private val logger = LoggerFactory.getLogger(SpaceAggregateService::class.java)
@@ -114,6 +116,13 @@ class SpaceAggregateService(
 
     private suspend fun createFlow(command: SpaceDefineCommand) {
         if(command.mfa?.contains(SpaceOtpFlowService.OTP_FLOW_USER_ATTRIBUTE_VALUE) == true) {
+            val client = keycloakClientProvider.get()
+            val settings = client.realm(command.identifier)
+                .toRepresentation().apply {
+                    attributes["acr.loa.map"] = objectMapper.writeValueAsString(SpaceOtpFlowService.ACR)
+                }
+            client.realm(command.identifier).update(settings)
+
             logger.info("Create custom otp flow[${SpaceOtpFlowService.OTP_FLOW_NAME}]: ${command.identifier}")
             spaceOtpFlowService.create(keycloakClientProvider, command.identifier)
             logger.info("Created custom otp flow[${SpaceOtpFlowService.OTP_FLOW_NAME}]: ${command.identifier}")

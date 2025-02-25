@@ -10,6 +10,14 @@ class SpaceOtpFlowService {
         const val OTP_FLOW_NAME = "browser-with-conditional-otp"
         const val OTP_FLOW_USER_ATTRIBUTE = "mfa"
         const val OTP_FLOW_USER_ATTRIBUTE_VALUE = "OTP"
+
+        val ACR = mapOf(
+//            "bronze" to "1",
+//            "silver" to "2",
+//            "gold" to "3",
+            "force-password" to "4",
+            "force-mfa" to "5"
+        )
     }
 
     suspend fun create(keycloakClientProvider: KeycloakClientProvider, space: String) {
@@ -33,18 +41,30 @@ class SpaceOtpFlowService {
 
             subFlow("browser-with-conditional-otp-forms", FlowType.BASIC_FLOW, AuthenticationProvider.FORM_FLOW) {
                 execution(AuthenticationProvider.USERNAME_PASSWORD, Requirement.REQUIRED)
-
-                subFlow("browser-with-conditional-otp-otp", FlowType.BASIC_FLOW, AuthenticationProvider.FORM_FLOW) {
+                subFlow("browser-with-conditional-otp-password", FlowType.BASIC_FLOW, AuthenticationProvider.FORM_FLOW) {
                     requirement = Requirement.CONDITIONAL
-
-                    condition(AuthenticationProvider.CONDITIONAL_USER_ATTRIBUTE) {
+                    condition(AuthenticationProvider.CONDITIONAL_LEVEL_OF_AUTHENTICATION) {
+//                        alias = "silver"
                         config(
-                            "attribute_name" to OTP_FLOW_USER_ATTRIBUTE,
-                            "attribute_expected_value" to OTP_FLOW_USER_ATTRIBUTE_VALUE
+                            "loa-condition-level" to "4",
+                            "loa-max-age" to "0"
+                        )
+                    }
+                    execution(AuthenticationProvider.ALLOW_ACCESS, Requirement.REQUIRED)
+                }
+                subFlow("browser-with-conditional-otp-force", FlowType.BASIC_FLOW, AuthenticationProvider.FORM_FLOW) {
+                    requirement = Requirement.CONDITIONAL
+                    condition(AuthenticationProvider.CONDITIONAL_LEVEL_OF_AUTHENTICATION) {
+//                        alias = "gold"
+                        config(
+                            "loa-condition-level" to "5",
+                            "loa-max-age" to "0"
                         )
                     }
                     execution(AuthenticationProvider.OTP_FORM, Requirement.REQUIRED)
                 }
+
+
             }
         }.deploy(authFlowsClient)
     }
