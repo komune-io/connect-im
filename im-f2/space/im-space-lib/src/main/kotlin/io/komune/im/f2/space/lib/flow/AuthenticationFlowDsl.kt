@@ -17,8 +17,10 @@ enum class AuthenticationProvider(val id: String) {
     USERNAME_PASSWORD("auth-username-password-form"),
     COOKIE("auth-cookie"),
     OTP_FORM("auth-otp-form"),
+    ALLOW_ACCESS("allow-access-authenticator"),
     IDP_REDIRECT("identity-provider-redirector"),
     CONDITIONAL_USER_ATTRIBUTE("conditional-user-attribute"),
+    CONDITIONAL_LEVEL_OF_AUTHENTICATION("conditional-level-of-authentication"),
     KERBEROS("auth-kerberos");
 
     override fun toString(): String = id
