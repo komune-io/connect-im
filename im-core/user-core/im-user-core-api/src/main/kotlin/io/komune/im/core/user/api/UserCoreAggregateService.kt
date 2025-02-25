@@ -9,6 +9,8 @@ import io.komune.im.core.user.domain.command.UserCoreDeleteCommand
 import io.komune.im.core.user.domain.command.UserCoreDeletedEvent
 import io.komune.im.core.user.domain.command.UserCoreDisableCommand
 import io.komune.im.core.user.domain.command.UserCoreDisabledEvent
+import io.komune.im.core.user.domain.command.UserCoreRemoveCredentialsCommand
+import io.komune.im.core.user.domain.command.UserCoreRemovedCredentialsEvent
 import io.komune.im.core.user.domain.command.UserCoreSendEmailCommand
 import io.komune.im.core.user.domain.command.UserCoreSentEmailEvent
 import io.komune.im.core.user.domain.model.UserModel
@@ -69,7 +71,7 @@ class UserCoreAggregateService : CoreService(CacheName.User) {
     }
 
     suspend fun sendEmail(command: UserCoreSendEmailCommand) = handleErrors(
-        "Error sending email actions [${command.actions.joinToString(", ")}]" +
+        "Error sending email actions [${command.actions.joinToString(", ")}] " +
             "userId[${command.id}] " +
             "clientId[${AuthenticationProvider.getClientId()}]"
     ) {
@@ -97,6 +99,20 @@ class UserCoreAggregateService : CoreService(CacheName.User) {
 
         client.user(command.id).update(user)
         UserCoreDisabledEvent(command.id)
+    }
+
+    suspend fun removeCredentials(command: UserCoreRemoveCredentialsCommand) = mutate(
+        command.id,
+        "User[${command.id}] Error removing credentials with type ${command.type}."
+    ) {
+        val useClient = keycloakClientProvider.get().user(command.id)
+        val credentials = useClient.credentials()
+        credentials.forEach {
+            if(it.type == command.type.value) {
+                useClient.removeCredential(it.id)
+            }
+        }
+        UserCoreRemovedCredentialsEvent(command.id)
     }
 
     suspend fun delete(command: UserCoreDeleteCommand) = mutate(command.id, "Error deleting user [${command.id}]") {

@@ -54,7 +54,7 @@ class UserToDTOTransformer(
 			enabled = item.enabled,
 			disabledBy = item.attributes[User::disabledBy.name],
 			creationDate = item.creationDate,
-            mfa = item.attributes[User::mfa.name]?.parseJson(),
+            mfa = item.mfa,
 			disabledDate = item.attributes[User::disabledDate.name]?.toLong()
 		)
 	}

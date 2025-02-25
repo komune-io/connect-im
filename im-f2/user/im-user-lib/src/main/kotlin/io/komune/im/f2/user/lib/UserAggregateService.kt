@@ -11,17 +11,19 @@ import io.komune.im.core.privilege.api.PrivilegeCoreFinderService
 import io.komune.im.core.privilege.api.model.checkTarget
 import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.core.user.api.UserCoreAggregateService
+import io.komune.im.core.user.domain.command.CredentialType
 import io.komune.im.core.user.domain.command.UserCoreDefineCommand
 import io.komune.im.core.user.domain.command.UserCoreDisableCommand
+import io.komune.im.core.user.domain.command.UserCoreRemoveCredentialsCommand
 import io.komune.im.core.user.domain.command.UserCoreSendEmailCommand
-import io.komune.im.f2.user.domain.command.UserConfigureMFACommand
-import io.komune.im.f2.user.domain.command.UserConfiguredMFAEvent
 import io.komune.im.f2.user.domain.command.UserCreateCommand
 import io.komune.im.f2.user.domain.command.UserCreatedEvent
 import io.komune.im.f2.user.domain.command.UserDeleteCommand
 import io.komune.im.f2.user.domain.command.UserDeletedEvent
 import io.komune.im.f2.user.domain.command.UserDisableCommand
+import io.komune.im.f2.user.domain.command.UserDisableMFACommand
 import io.komune.im.f2.user.domain.command.UserDisabledEvent
+import io.komune.im.f2.user.domain.command.UserDisabledMFAEvent
 import io.komune.im.f2.user.domain.command.UserResetPasswordCommand
 import io.komune.im.f2.user.domain.command.UserResetPasswordEvent
 import io.komune.im.f2.user.domain.command.UserUpdateCommand
@@ -154,12 +156,9 @@ class UserAggregateService(
     }
 
 
-    suspend fun configureMFA(command: UserConfigureMFACommand): UserConfiguredMFAEvent {
-        UserCoreSendEmailCommand(
-            id = command.id,
-            actions = listOf(EventType.UPDATE_TOTP.name)
-        ).let { userCoreAggregateService.sendEmail(it) }
-        return UserConfiguredMFAEvent(command.id)
+    suspend fun disableMultiFactorAuthentication(command: UserDisableMFACommand): UserDisabledMFAEvent {
+        userCoreAggregateService.removeCredentials(UserCoreRemoveCredentialsCommand(command.id, CredentialType.OTP))
+        return UserDisabledMFAEvent(command.id)
     }
 
     private suspend fun checkOrganizationExist(organizationId: OrganizationId?) {

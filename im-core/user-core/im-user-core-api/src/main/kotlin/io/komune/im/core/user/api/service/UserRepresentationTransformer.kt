@@ -1,6 +1,7 @@
 package io.komune.im.core.user.api.service
 
 import io.komune.im.commons.Transformer
+import io.komune.im.core.user.domain.command.CredentialType
 import io.komune.im.core.user.domain.model.UserModel
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import org.keycloak.representations.idm.UserRepresentation
@@ -18,7 +19,8 @@ class UserRepresentationTransformer(
             .listAll()
             .map { it.name }
             .minus(client.defaultRealmRole)
-
+        val credentials = client.user(item.id).credentials()
+        val mfa = credentials.map { it.type }.filter { it == CredentialType.OTP.value }
         return UserModel(
             id = item.id,
             memberOf = item.attributes?.get(UserModel::memberOf.name)?.firstOrNull(),
@@ -26,6 +28,7 @@ class UserRepresentationTransformer(
             givenName = item.firstName.orEmpty(),
             familyName = item.lastName.orEmpty(),
             roles = roles,
+            mfa = mfa,
             attributes = item.attributes.orEmpty().mapValues { (_, value) -> value.first() },
             enabled = item.isEnabled,
             creationDate = item.createdTimestamp,

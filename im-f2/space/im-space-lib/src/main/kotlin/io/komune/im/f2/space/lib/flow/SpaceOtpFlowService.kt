@@ -9,7 +9,7 @@ class SpaceOtpFlowService {
     companion object {
         const val OTP_FLOW_NAME = "browser-with-conditional-otp"
         const val OTP_FLOW_USER_ATTRIBUTE = "mfa"
-        const val OTP_FLOW_USER_ATTRIBUTE_VALUE = "OTF"
+        const val OTP_FLOW_USER_ATTRIBUTE_VALUE = "OTP"
     }
 
     suspend fun create(keycloakClientProvider: KeycloakClientProvider, space: String) {
@@ -23,7 +23,7 @@ class SpaceOtpFlowService {
      *   ├──
      */
     private fun create(authFlowsClient: AuthenticationManagementResource) {
-        val browserFlow = authenticationFlow("browser-with-conditional-otp") {
+        authenticationFlow("browser-with-conditional-otp") {
             description = "Custom browser flow with conditional OTP"
             type = FlowType.BASIC_FLOW
             isBuiltIn = false

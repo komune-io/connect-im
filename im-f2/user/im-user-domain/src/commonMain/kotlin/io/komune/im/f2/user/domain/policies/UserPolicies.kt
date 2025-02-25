@@ -50,9 +50,16 @@ object UserPolicies {
     }
 
     /**
-     * User can update mfa
+     * User can configure mfa
      */
     fun canConfigureMfa(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
+        return isMySelf(authedUser, user)
+    }
+
+    /**
+     * User can disable mfa
+     */
+    fun canDisableMfa(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
         return isMySelf(authedUser, user)
     }
 

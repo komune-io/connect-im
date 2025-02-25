@@ -3,10 +3,10 @@ package io.komune.im.f2.user.api
 import f2.dsl.cqrs.page.OffsetPagination
 import io.komune.im.commons.auth.policies.f2Function
 import io.komune.im.f2.user.domain.UserApi
-import io.komune.im.f2.user.domain.command.UserConfigureMFAFunction
 import io.komune.im.f2.user.domain.command.UserCreateFunction
 import io.komune.im.f2.user.domain.command.UserDeleteFunction
 import io.komune.im.f2.user.domain.command.UserDisableFunction
+import io.komune.im.f2.user.domain.command.UserDisableMFAFunction
 import io.komune.im.f2.user.domain.command.UserResetPasswordFunction
 import io.komune.im.f2.user.domain.command.UserUpdateEmailFunction
 import io.komune.im.f2.user.domain.command.UserUpdateFunction
@@ -109,10 +109,10 @@ class UserEndpoint(
     }
 
     @Bean
-    override fun userConfigureMFA(): UserConfigureMFAFunction = f2Function { command ->
-        logger.info("userConfigureMFA: $command")
-        policiesEnforcer.checkConfigureMfa(command.id)
-        userAggregateService.configureMFA(command)
+    override fun userDisableMFA(): UserDisableMFAFunction = f2Function { command ->
+        logger.info("userDisableMFA: $command")
+        policiesEnforcer.checkDisableMfa(command.id)
+        userAggregateService.disableMultiFactorAuthentication(command)
     }
 
     @Bean

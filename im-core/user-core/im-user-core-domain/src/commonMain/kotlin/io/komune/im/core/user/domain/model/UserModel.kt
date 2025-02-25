@@ -11,6 +11,7 @@ data class UserModel(
     val givenName: String,
     val familyName: String,
     val roles: List<RoleIdentifier>,
+    val mfa: List<String>,
     val attributes: Map<String, String>,
     val enabled: Boolean,
     val disabledBy: UserId?,
