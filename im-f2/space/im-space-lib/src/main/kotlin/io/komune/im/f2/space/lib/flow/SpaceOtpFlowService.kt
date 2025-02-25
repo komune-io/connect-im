@@ -41,7 +41,9 @@ class SpaceOtpFlowService {
 
             subFlow("browser-with-conditional-otp-forms", FlowType.BASIC_FLOW, AuthenticationProvider.FORM_FLOW) {
                 execution(AuthenticationProvider.USERNAME_PASSWORD, Requirement.REQUIRED)
-                subFlow("browser-with-conditional-otp-password", FlowType.BASIC_FLOW, AuthenticationProvider.FORM_FLOW) {
+                subFlow(
+                    "browser-with-conditional-otp-password", FlowType.BASIC_FLOW, AuthenticationProvider.FORM_FLOW
+                ) {
                     requirement = Requirement.CONDITIONAL
                     condition(AuthenticationProvider.CONDITIONAL_LEVEL_OF_AUTHENTICATION) {
 //                        alias = "silver"
@@ -52,7 +54,9 @@ class SpaceOtpFlowService {
                     }
                     execution(AuthenticationProvider.ALLOW_ACCESS, Requirement.REQUIRED)
                 }
-                subFlow("browser-with-conditional-otp-force", FlowType.BASIC_FLOW, AuthenticationProvider.FORM_FLOW) {
+                subFlow(
+                    "browser-with-conditional-otp-force", FlowType.BASIC_FLOW, AuthenticationProvider.FORM_FLOW
+                ) {
                     requirement = Requirement.CONDITIONAL
                     condition(AuthenticationProvider.CONDITIONAL_LEVEL_OF_AUTHENTICATION) {
 //                        alias = "gold"
