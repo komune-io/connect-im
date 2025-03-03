@@ -10,11 +10,16 @@ const val IM_URL_PROPERTY = "connect.im"
 @ConfigurationProperties(prefix = IM_URL_PROPERTY)
 data class IMProperties(
     val organization: OrganizationProperties?,
+    val user: UserProperties?,
     val theme: String? = null,
     val keycloak: KeycloakProperties
 )
 class OrganizationProperties(
     val insee: InseeProperties?
+)
+
+class UserProperties(
+    val emailAsUsername: Boolean = false
 )
 
 class KeycloakProperties(

@@ -128,6 +128,8 @@ class SpaceAggregateService(
             logger.info("Created custom otp flow[${SpaceOtpFlowService.OTP_FLOW_NAME}]: ${command.identifier}")
             spaceOtpFlowService.setAsDefault(keycloakClientProvider, command.identifier)
             logger.info("Set as default browser flow[${SpaceOtpFlowService.OTP_FLOW_NAME}]: ${command.identifier}")
+        } else {
+            logger.info("Skip creating custom otp flow: ${command.identifier}")
         }
     }
 
