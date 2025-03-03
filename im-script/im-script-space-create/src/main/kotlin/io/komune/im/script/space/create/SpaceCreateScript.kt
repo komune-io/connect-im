@@ -117,7 +117,8 @@ class SpaceCreateScript(
                     settings = SpaceSettings(
                         registrationAllowed = properties.settings?.login?.registrationAllowed,
                         rememberMe = properties.settings?.login?.rememberMe,
-                        resetPasswordAllowed = properties.settings?.login?.resetPasswordAllowed
+                        resetPasswordAllowed = properties.settings?.login?.resetPasswordAllowed,
+                        registrationEmailAsUsername = properties.settings?.login?.registrationEmailAsUsername
                     )
                 )
             )
