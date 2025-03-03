@@ -172,7 +172,8 @@ class SpaceAggregateService(
             isRegistrationAllowed = settings.registrationAllowed
             logger.info("Setting isResetPasswordAllowed to ${settings.resetPasswordAllowed}")
             isResetPasswordAllowed = settings.resetPasswordAllowed
-            this.isRegistrationEmailAsUsername = settings.registrationEmailAsUsername
+            logger.info("Setting isRegistrationEmailAsUsername to ${settings.registrationEmailAsUsername}")
+            isRegistrationEmailAsUsername = settings.registrationEmailAsUsername
             logger.info("Setting isRememberMe to ${settings.rememberMe}")
             isRememberMe = settings.rememberMe
         }
