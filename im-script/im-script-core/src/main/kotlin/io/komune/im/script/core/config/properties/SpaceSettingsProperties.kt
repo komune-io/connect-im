@@ -7,5 +7,6 @@ data class SpaceSettingsProperties(
 data class LoginSettingsProperties(
     val registrationAllowed: Boolean = false,
     val resetPasswordAllowed : Boolean = true,
-    val rememberMe : Boolean = false
+    val rememberMe : Boolean = false,
+    val registrationEmailAsUsername : Boolean = false
 )

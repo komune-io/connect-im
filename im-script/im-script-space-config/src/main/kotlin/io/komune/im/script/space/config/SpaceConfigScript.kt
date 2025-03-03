@@ -172,7 +172,8 @@ class SpaceConfigScript(
                     SpaceSettings(
                         registrationAllowed = settings.login.registrationAllowed,
                         rememberMe = settings.login.rememberMe,
-                        resetPasswordAllowed = settings.login.resetPasswordAllowed
+                        resetPasswordAllowed = settings.login.resetPasswordAllowed,
+                        registrationEmailAsUsername = settings.login.registrationEmailAsUsername
                     )
                 }
             ).let { spaceAggregateService.define(it) }
