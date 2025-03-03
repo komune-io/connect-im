@@ -125,11 +125,7 @@ class UserCoreAggregateService(
     }
 
     private suspend fun UserRepresentation.apply(command: UserCoreDefineCommand): UserRepresentation {
-        val emailAsUsername = properties.user?.emailAsUsername
-            ?:  keycloakClientProvider.get().realm().toRepresentation()?.let {
-                logger.info("Using realm[${it.displayName}] configuration for emailAsUsername: ${it.isRegistrationEmailAsUsername}")
-                it.isRegistrationEmailAsUsername
-            } ?: false
+        val emailAsUsername = getIsRegistrationEmailAsUsername()
         return this.apply {
             username =
                 username ?: if (emailAsUsername) email ?: UUID.randomUUID().toString() else UUID.randomUUID().toString()
@@ -156,6 +152,16 @@ class UserCoreAggregateService(
                 .plus(newAttributes)
                 .filterValues { it.filterNotNull().isNotEmpty() }
         }
+    }
+
+    private suspend fun getIsRegistrationEmailAsUsername(): Boolean {
+        val emailAsUsername = properties.user?.emailAsUsername
+            ?: keycloakClientProvider.get().realm().toRepresentation()?.let {
+                logger.info("Using realm[${it.displayName}] configuration " +
+                    "for emailAsUsername: ${it.isRegistrationEmailAsUsername}")
+                it.isRegistrationEmailAsUsername
+            } ?: false
+        return emailAsUsername
     }
 
     private suspend fun UserRepresentation.assignRoles(roles: List<RoleRepresentation>) {
