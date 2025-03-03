@@ -69,7 +69,7 @@ interface SpaceSettingsDTO {
     val registrationAllowed: Boolean?
     val rememberMe: Boolean?
     val resetPasswordAllowed: Boolean?
-    val isRegistrationEmailAsUsername: Boolean?
+    val registrationEmailAsUsername: Boolean?
 }
 
 /**
@@ -80,7 +80,7 @@ data class SpaceSettings(
     override val registrationAllowed: Boolean?,
     override val rememberMe: Boolean?,
     override val resetPasswordAllowed: Boolean?,
-    override val isRegistrationEmailAsUsername: Boolean?
+    override val registrationEmailAsUsername: Boolean?
 ): SpaceSettingsDTO
 
 /**
