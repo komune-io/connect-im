@@ -1,5 +1,6 @@
 package io.komune.im.core.user.api
 
+import io.komune.im.api.config.properties.IMProperties
 import io.komune.im.commons.auth.AuthenticationProvider
 import io.komune.im.commons.utils.mapAsync
 import io.komune.im.core.commons.CoreService
@@ -24,7 +25,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class UserCoreAggregateService : CoreService(CacheName.User) {
+class UserCoreAggregateService(
+    private val properties: IMProperties
+) : CoreService(CacheName.User) {
     private val logger = LoggerFactory.getLogger(UserCoreAggregateService::class.java)
 
     suspend fun define(command: UserCoreDefineCommand) = mutate(
@@ -122,7 +125,9 @@ class UserCoreAggregateService : CoreService(CacheName.User) {
     }
 
     private fun UserRepresentation.apply(command: UserCoreDefineCommand) = apply {
-        username = username ?: UUID.randomUUID().toString()
+        val emailAsUsername = properties.user?.emailAsUsername ?: false
+
+        username = username ?: if(emailAsUsername) email ?: UUID.randomUUID().toString() else UUID.randomUUID().toString()
         command.email?.let { email = it }
         command.givenName?.let { firstName = it }
         command.familyName?.let { lastName = it }
