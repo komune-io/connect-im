@@ -42,11 +42,10 @@ IM interacts with Keycloak using [Keycloak's Admin Client](https://mvnrepository
 
 Define the necessary parameters in your `application.yml` file:
 
-```YAML
+```yaml
 connect:
     fs:
         url: http://fs:8090
-c
 ```
 
 ### Docker-Compose Configuration
@@ -90,13 +89,24 @@ Features act as access control filters, defining the specific contexts in which 
 - They simplify access management and can define bindings to other roles or users.
 
 #### Permissions
-Permissions are fine-grained access rights defining specific actions. They are linked to one or more features to limit their scope.
 
-| Permission Name              | Description                         | Required Features        |
-| ---------------------------- | ----------------------------------- | ------------------------ |
-| im_user_read                 | Ability to view any user data       | feat_im_all, feat_im_own |
-| im_user_write                | Ability to modify any user data     | feat_im_all, feat_im_own |
-| im_organization_read         | Ability to view any organization    | feat_im_all              |
+| Permission Name                 | Description                               | Required Features        |
+|---------------------------------|-------------------------------------------|--------------------------|
+| **im_user_read**                | Ability to view any user data             | feat_im_all, feat_im_own |
+| **im_user_write**               | Ability to modify any user data           | feat_im_all, feat_im_own |
+| **im_user_role_write**          | Ability to modify the roles of a user     | feat_im_all, feat_im_own |
+| **im_organization_read**        | Ability to view any organization data     | feat_im_all              |
+| **im_organization_write**       | Ability to modify any organization data   | feat_im_all              |
+| **im_organization_write_own**   | Ability to modify own organization data   | feat_im_all, feat_im_own |
+| **im_organization_apikey_read** | Ability to read any organization API keys | feat_im_all              |
+| **im_organization_status_write**| Ability to write organization status      | feat_im_all              |
+| **im_role_read**                | Ability to view any role data             | feat_im_all, feat_im_own |
+| **im_role_write**               | Ability to modify any role data           | feat_im_all              |
+| **im_apikey_read**              | Ability to view API keys                  | feat_im_all, feat_im_own |
+| **im_apikey_write**             | Ability to modify API keys                | feat_im_all, feat_im_own |
+| **im_space_read**               | Ability to view space data                | feat_im_all              |
+| **im_space_write**              | Ability to modify space data              | feat_im_all              |
+| **im_mfa_force**                | Ability to force MFA on a user            | feat_im_all              |
 
 ## Getting Started
 
@@ -112,7 +122,7 @@ implementation("io.komune.im:role-domain:${Versions.im}")
 ### Clients
 The clients provided use Ktor and should be singletons:
 
-```yaml
+```kotlin
 @Configuration
 class ImConfig(
 private val tokenProvider: TokenProvider
@@ -127,40 +137,3 @@ lateinit var imUrl: String
     )
 }
 ```
-
-## Testing
-
-To run tests:
-1. Start the dev environment:
-   (((bash)))
-   make dev up
-   (((bash)))
-2. Run tests:
-   (((bash)))
-   ./gradlew test
-   (((bash)))
-3. Stop the dev environment:
-   (((bash)))
-   make dev down
-   (((bash)))
-
-## Troubleshooting
-
-### Common Issues
-
-| Issue                        | Cause                                 | Solution                                                                 |
-| ---------------------------- | ------------------------------------- | ----------------------------------------------------------------------- |
-| FileClient not initialized   | FS configuration missing              | Provide valid FS configuration or avoid FS-dependent features.          |
-| Certificate not trusted      | Untrusted HTTPS server                | Add the server’s certificate to the JVM trust store.                    |
-
-## Keycloak Integration
-
-### Keycloak Plugin
-
-To create a plugin:
-1. Add a module inside `i2-keycloak:keycloak-plugin`.
-2. Build it:
-   ```bash
-   ./gradlew i2-keycloak:keycloak-plugin:shadowJar
-    ```
-3. Build the Dockerfile in `i2-keycloak/docker/`.

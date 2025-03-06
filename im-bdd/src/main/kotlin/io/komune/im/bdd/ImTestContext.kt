@@ -3,7 +3,7 @@ package io.komune.im.bdd
 import f2.client.domain.RealmId
 import io.komune.im.apikey.domain.model.ApiKey
 import io.komune.im.apikey.domain.model.ApiKeyId
-import io.komune.im.commons.auth.ImRole
+import io.komune.im.commons.auth.ImPermission
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.PermissionIdentifier
 import io.komune.im.commons.model.RoleIdentifier
@@ -33,9 +33,9 @@ class ImTestContext: TestContext() {
 
     var realmId: RealmId = "im-test"
 
-    private val permanentRoles = ImRole.values()
+    private val permanentRoles = ImPermission.values()
         .asSequence()
-        .map(ImRole::identifier)
+        .map(ImPermission::identifier)
         .plus("uma_authorization")
         .plus("offline_access")
         .toSet()

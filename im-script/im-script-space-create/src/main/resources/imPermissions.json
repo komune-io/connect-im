@@ -23,6 +23,14 @@
     "description": "Ability to modify own organization data",
     "features":  [["feat_im_all"], ["feat_im_own"]]
 }, {
+    "name": "im_organization_apikey_read",
+    "description": "Ability to read any organization API keys",
+    "features":  [["feat_im_all"]]
+}, {
+    "name": "im_organization_status_write",
+    "description": "Ability to write organization status",
+    "features":  [["feat_im_all"]]
+}, {
     "name": "im_role_read",
     "description": "Ability to view any role data",
     "features":  [["feat_im_all"], ["feat_im_own"]]
@@ -45,5 +53,9 @@
 }, {
     "name": "im_space_write",
     "description": "Ability to modify space data",
+    "features":  [["feat_im_all"]]
+}, {
+    "name": "im_mfa_force",
+    "description": "Ability to force MFA on user",
     "features":  [["feat_im_all"]]
 }]

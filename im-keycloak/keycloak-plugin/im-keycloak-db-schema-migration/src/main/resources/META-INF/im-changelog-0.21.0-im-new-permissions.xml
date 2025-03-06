@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- ChangeSet to insert missing roles into keycloak_role table for each realm -->
+    <changeSet id="1" author="komune">
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_organization_apikey_read', 'Ability to read any organization API keys', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_organization_apikey_read' AND realm_id = id)
+              AND name != 'master';
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_organization_status_write', 'Ability to write organization status', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_user_role_write' AND realm_id = id)
+              AND name != 'master';
+        </sql>
+        <sql>
+            INSERT INTO keycloak_role (id, name, description, realm_id)
+            SELECT uuid_generate_v4(), 'im_mfa_force', 'Ability to force MFA', id
+            FROM realm
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_mfa_force' AND realm_id = id)
+              AND name != 'master';
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

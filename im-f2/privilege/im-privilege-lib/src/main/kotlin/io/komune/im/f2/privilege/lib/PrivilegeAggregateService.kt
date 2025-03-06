@@ -25,7 +25,7 @@ class PrivilegeAggregateService(
                 targets = command.targets.map(RoleTarget::valueOf),
                 locale = command.locale,
                 bindings = command.bindings?.mapKeys { (target) -> RoleTarget.valueOf(target) },
-                permissions = command.permissions
+                permissions = command.permissions,
             )
         )
 

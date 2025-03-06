@@ -62,7 +62,7 @@ data class RoleDefineCommand(
     override val targets: List<String>,
     override val locale: Map<String, String>,
     override val bindings: Map<String, List<RoleIdentifier>>?,
-    override val permissions: List<PermissionIdentifier>?
+    override val permissions: List<PermissionIdentifier>?,
 ): RoleDefineCommandDTO
 
 /**

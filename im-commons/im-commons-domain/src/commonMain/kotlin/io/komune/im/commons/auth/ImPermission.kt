@@ -3,10 +3,8 @@ package io.komune.im.commons.auth
 import kotlin.js.JsExport
 
 @JsExport
-enum class ImRole(val identifier: String) {
-    ORCHESTRATOR("tr_orchestrator"),
-    ORCHESTRATOR_ADMIN("tr_orchestrator_admin"),
-    ORCHESTRATOR_USER("tr_orchestrator_user"),
+enum class ImPermission(val identifier: String) {
+    IM_FORCE_MFA("im_mfa_force"),
 
     IM_USER_READ("im_user_read"),
     IM_USER_ROLE_READ("im_user_role_write"),
@@ -15,6 +13,9 @@ enum class ImRole(val identifier: String) {
     IM_ORGANIZATION_READ("im_organization_read"),
     IM_ORGANIZATION_WRITE("im_organization_write"),
     IM_MY_ORGANIZATION_WRITE("im_organization_write_own"),
+
+    IM_ORGANIZATION_API_KEY_READ("im_organization_apikey_read"),
+    IM_ORGANIZATION_STATUS_WRITE("im_organization_status_write"),
 
     IM_APIKEY_READ("im_apikey_read"),
     IM_APIKEY_WRITE("im_apikey_write"),

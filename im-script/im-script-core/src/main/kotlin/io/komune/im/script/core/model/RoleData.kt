@@ -11,7 +11,7 @@ data class RoleData(
     val targets: List<RoleTarget>?,
     val locale: Map<String, String>?,
     val bindings: Map<RoleTarget, List<RoleIdentifier>>?,
-    val permissions: List<PermissionIdentifier>?
+    val permissions: List<PermissionIdentifier>?,
 ) {
     fun toCommand() = RoleDefineCommand(
         identifier = name,

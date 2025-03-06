@@ -32,7 +32,7 @@ data class RoleCoreDefineCommand(
     val targets: List<RoleTarget>,
     val locale: Map<String, String>,
     val bindings: Map<RoleTarget, List<RoleIdentifier>>?,
-    val permissions: List<PermissionIdentifier>?
+    val permissions: List<PermissionIdentifier>?,
 ): PrivilegeCoreDefineCommand {
     override val type = PrivilegeType.ROLE
 }

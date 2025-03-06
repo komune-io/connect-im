@@ -78,21 +78,22 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
             targets = params.targets.map { it.name },
             locale = params.locale,
             bindings = params.bindings?.mapKeys { (target) -> target.name },
-            permissions = params.permissions
+            permissions = params.permissions,
         )
         command.invokeWith(roleEndpoint.roleDefine()).identifier
     }
 
     private fun roleDefineParams(entry: Map<String, String>?): RoleDefineParams {
         return RoleDefineParams(
-            identifier = entry?.get("identifier") ?: context.roleIdentifiers.lastUsedOrNull.orRandom(),
-            description = entry?.get("description") ?: UUID.randomUUID().toString(),
-            targets = entry?.extractList<RoleTarget>("targets").orEmpty(),
-            locale = entry?.get("locale")?.parseJson() ?: emptyMap(),
-            bindings = entry?.get("bindings")
+            identifier = entry?.get(RoleDefineParams::identifier.name)
+                ?: context.roleIdentifiers.lastUsedOrNull.orRandom(),
+            description = entry?.get(RoleDefineParams::description.name) ?: UUID.randomUUID().toString(),
+            targets = entry?.extractList<RoleTarget>(RoleDefineParams::targets.name).orEmpty(),
+            locale = entry?.get(RoleDefineParams::locale.name)?.parseJson() ?: emptyMap(),
+            bindings = entry?.get(RoleDefineParams::bindings.name)
                 ?.parseJson<Map<String, List<RoleIdentifier>>>()
                 ?.mapKeys { (key) -> RoleTarget.valueOf(key) },
-            permissions = entry?.extractList("permissions")
+            permissions = entry?.extractList(RoleDefineParams::permissions.name),
         )
     }
 
@@ -102,6 +103,6 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
         val targets: List<RoleTarget>,
         val locale: Map<String, String>,
         val bindings: Map<RoleTarget, List<RoleIdentifier>>?,
-        val permissions: List<PermissionIdentifier>?
+        val permissions: List<PermissionIdentifier>?,
     )
 }

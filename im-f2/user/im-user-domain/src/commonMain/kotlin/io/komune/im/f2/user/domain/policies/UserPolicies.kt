@@ -1,7 +1,7 @@
 package io.komune.im.f2.user.domain.policies
 
 import io.komune.im.commons.auth.AuthedUserDTO
-import io.komune.im.commons.auth.ImRole
+import io.komune.im.commons.auth.ImPermission
 import io.komune.im.commons.auth.hasOneOfRoles
 import io.komune.im.commons.auth.hasRole
 import io.komune.im.commons.model.OrganizationId
@@ -16,7 +16,7 @@ object UserPolicies {
      * User can get a user
      */
     fun canGet(authedUser: AuthedUserDTO, user: UserDTO?): Boolean {
-        return authedUser.hasRole(ImRole.IM_USER_READ)
+        return authedUser.hasRole(ImPermission.IM_USER_READ)
                 || authedUser.id == user?.id
                 || user?.memberOf?.id == authedUser.memberOf
     }
@@ -25,7 +25,7 @@ object UserPolicies {
      * User can list users
      */
     fun canPage(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasOneOfRoles(ImRole.IM_USER_READ)
+        return authedUser.hasOneOfRoles(ImPermission.IM_USER_READ)
     }
 
 
@@ -38,8 +38,8 @@ object UserPolicies {
      * User can create a user
      */
     fun canCreate(authedUser: AuthedUserDTO, organizationId: OrganizationId?): Boolean {
-        return authedUser.hasRole(ImRole.IM_USER_WRITE)
-            && (organizationId == authedUser.memberOf || authedUser.hasRole(ImRole.IM_ORGANIZATION_WRITE))
+        return authedUser.hasRole(ImPermission.IM_USER_WRITE)
+            && (organizationId == authedUser.memberOf || authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE))
     }
 
     /**
@@ -67,14 +67,14 @@ object UserPolicies {
      * User can update member of the given user
      */
     fun canUpdateMemberOf(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImRole.IM_ORGANIZATION_WRITE)
+        return authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE)
     }
 
     /**
      * User can update roles of the given user
      */
     fun canUpdateRole(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImRole.IM_USER_ROLE_READ)
+        return authedUser.hasRole(ImPermission.IM_USER_ROLE_READ)
     }
 
     /**
@@ -92,8 +92,8 @@ object UserPolicies {
     }
 
     private fun canWriteUser(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return (authedUser.id == user.id || authedUser.hasRole(ImRole.IM_USER_WRITE))
-            && (authedUser.memberOf == user.memberOf?.id || authedUser.hasRole(ImRole.IM_ORGANIZATION_WRITE))
+        return (authedUser.id == user.id || authedUser.hasRole(ImPermission.IM_USER_WRITE))
+            && (authedUser.memberOf == user.memberOf?.id || authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE))
     }
 
     private fun isNotMySelf(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
