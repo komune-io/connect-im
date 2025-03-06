@@ -20,7 +20,7 @@ fun RoleRepresentation.toRole() = RoleModel(
         ?.mapKeys { (target) -> RoleTarget.valueOf(target) }
         .orEmpty(),
     locale = attributes?.get(RoleModel::locale.name)?.firstOrNull()?.parseJson<Map<String, String>>().orEmpty(),
-    permissions = attributes?.get(RoleModel::permissions.name).orEmpty()
+    permissions = attributes?.get(RoleModel::permissions.name).orEmpty(),
 )
 
 fun RoleModel.toRoleRepresentation() = RoleRepresentation().also {
@@ -44,5 +44,5 @@ fun RoleCoreDefineCommand.toRole(id: RoleId?) = RoleModel(
     targets = targets,
     locale = locale,
     bindings = bindings.orEmpty(),
-    permissions = permissions.orEmpty()
+    permissions = permissions.orEmpty(),
 )

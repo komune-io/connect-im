@@ -19,17 +19,22 @@ data class AuthedUser(
     override val identifier: String?,
     override val memberOf: OrganizationId?,
     override val roles: Array<String>?
-): AuthedUserDTO
+) : AuthedUserDTO
 
 fun AuthedUserDTO.hasRole(role: String) = role in (roles ?: emptyArray())
-fun AuthedUserDTO.hasRole(role: ImRole) = hasRole(role.identifier)
+fun AuthedUserDTO.hasRole(role: ImPermission) = hasRole(role.identifier)
 fun AuthedUserDTO.hasRoles(vararg roles: String): Boolean {
     val myRoles = this.roles ?: emptyArray()
-   return roles.all(myRoles::contains)
+    return roles.all(myRoles::contains)
 }
-fun AuthedUserDTO.hasRoles(vararg roles: ImRole) = hasRoles(*roles.map(ImRole::identifier).toTypedArray())
+
+fun AuthedUserDTO.hasRoles(vararg roles: ImPermission) =
+    hasRoles(*roles.map(ImPermission::identifier).toTypedArray())
+
 fun AuthedUserDTO.hasOneOfRoles(vararg roles: String): Boolean {
     val myRoles = this.roles ?: emptyArray()
     return roles.any(myRoles::contains)
 }
-fun AuthedUserDTO.hasOneOfRoles(vararg roles: ImRole) = hasOneOfRoles(*roles.map(ImRole::identifier).toTypedArray())
+
+fun AuthedUserDTO.hasOneOfRoles(vararg roles: ImPermission) =
+    hasOneOfRoles(*roles.map(ImPermission::identifier).toTypedArray())

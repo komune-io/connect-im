@@ -79,8 +79,8 @@
                 "im_user_read", "im_user_write", "im_user_role_write",
                 "im_role_read",  "im_role_write",
                 "im_apikey_read", "im_apikey_write",
-                "fs_file_write", "fs_file_read", "fs_policy_write",
-                "tr_project_read", "tr_project_write"
+                "im_organization_apikey_read", "im_organization_status_write",
+                "fs_file_write", "fs_file_read", "fs_policy_write"
             ]
         }
     ],

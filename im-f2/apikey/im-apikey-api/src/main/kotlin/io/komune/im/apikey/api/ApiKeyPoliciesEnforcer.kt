@@ -3,7 +3,7 @@ package io.komune.im.apikey.api
 import io.komune.im.apikey.domain.model.ApiKeyId
 import io.komune.im.apikey.domain.policies.ApiKeyPolicies
 import io.komune.im.apikey.domain.query.ApiKeyPageQuery
-import io.komune.im.commons.auth.ImRole
+import io.komune.im.commons.auth.ImPermission
 import io.komune.im.commons.auth.hasOneOfRoles
 import io.komune.im.commons.auth.policies.PolicyEnforcer
 import org.springframework.stereotype.Service
@@ -28,7 +28,7 @@ class ApiKeyPoliciesEnforcer: PolicyEnforcer() {
     }
 
     suspend fun enforcePage(query: ApiKeyPageQuery): ApiKeyPageQuery = enforceAuthed { authedUser ->
-        if (authedUser.hasOneOfRoles(ImRole.ORCHESTRATOR) ) {
+        if (authedUser.hasOneOfRoles(ImPermission.IM_ORGANIZATION_API_KEY_READ) ) {
             query
         } else {
             query.copy(
