@@ -60,7 +60,7 @@ object UserPolicies {
      * User can disable mfa
      */
     fun canDisableMfa(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return isMySelf(authedUser, user)
+        return isMySelf(authedUser, user) && !authedUser.hasRole(ImPermission.IM_FORCE_MFA_OTP)
     }
 
     /**

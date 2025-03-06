@@ -23,9 +23,9 @@
         </sql>
         <sql>
             INSERT INTO keycloak_role (id, name, description, realm_id)
-            SELECT uuid_generate_v4(), 'im_mfa_force', 'Ability to force MFA', id
+            SELECT uuid_generate_v4(), 'im_mfa_force_otp', 'Ability to force MFA', id
             FROM realm
-            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_mfa_force' AND realm_id = id)
+            WHERE NOT EXISTS (SELECT 1 FROM keycloak_role WHERE name = 'im_mfa_force_otp' AND realm_id = id)
               AND name != 'master';
         </sql>
     </changeSet>

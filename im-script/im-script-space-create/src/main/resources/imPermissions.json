@@ -55,7 +55,7 @@
     "description": "Ability to modify space data",
     "features":  [["feat_im_all"]]
 }, {
-    "name": "im_mfa_force",
+    "name": "im_mfa_force_otp",
     "description": "Ability to force MFA on user",
     "features":  [["feat_im_all"]]
 }]

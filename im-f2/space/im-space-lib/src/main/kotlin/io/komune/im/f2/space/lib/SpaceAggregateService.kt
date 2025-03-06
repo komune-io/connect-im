@@ -11,6 +11,7 @@ import io.komune.im.f2.space.domain.command.SpaceDefineCommand
 import io.komune.im.f2.space.domain.command.SpaceDefinedEvent
 import io.komune.im.f2.space.domain.command.SpaceDeleteCommand
 import io.komune.im.f2.space.domain.command.SpaceDeletedEvent
+import io.komune.im.f2.space.lib.flow.ImMfaPasswordOtpFlow
 import io.komune.im.f2.space.lib.flow.SpaceOtpFlowService
 import io.komune.im.infra.redis.CacheName
 import org.keycloak.representations.idm.RealmRepresentation
@@ -117,17 +118,18 @@ class SpaceAggregateService(
     private suspend fun createFlow(command: SpaceDefineCommand) {
         if(command.mfa?.contains(SpaceOtpFlowService.OTP_FLOW_USER_ATTRIBUTE_VALUE) == true) {
             val client = keycloakClientProvider.get()
+            val acrLoaMap = objectMapper.writeValueAsString(ImMfaPasswordOtpFlow.Acr.asKeycloakMap())
             val settings = client.realm(command.identifier)
                 .toRepresentation().apply {
-                    attributes["acr.loa.map"] = objectMapper.writeValueAsString(SpaceOtpFlowService.ACR)
+                    attributes["acr.loa.map"] = acrLoaMap
                 }
             client.realm(command.identifier).update(settings)
 
-            logger.info("Create custom otp flow[${SpaceOtpFlowService.OTP_FLOW_NAME}]: ${command.identifier}")
+            logger.info("Create custom otp flow[${ImMfaPasswordOtpFlow.name}]: ${command.identifier}")
             spaceOtpFlowService.create(keycloakClientProvider, command.identifier)
-            logger.info("Created custom otp flow[${SpaceOtpFlowService.OTP_FLOW_NAME}]: ${command.identifier}")
+            logger.info("Created custom otp flow[${ImMfaPasswordOtpFlow.name}]: ${command.identifier}")
             spaceOtpFlowService.setAsDefault(keycloakClientProvider, command.identifier)
-            logger.info("Set as default browser flow[${SpaceOtpFlowService.OTP_FLOW_NAME}]: ${command.identifier}")
+            logger.info("Set as default browser flow[${ImMfaPasswordOtpFlow.name}]: ${command.identifier}")
         } else {
             logger.info("Skip creating custom otp flow: ${command.identifier}")
         }
