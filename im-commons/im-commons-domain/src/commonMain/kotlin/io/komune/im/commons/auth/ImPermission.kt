@@ -4,7 +4,7 @@ import kotlin.js.JsExport
 
 @JsExport
 enum class ImPermission(val identifier: String) {
-    IM_FORCE_MFA("im_mfa_force"),
+    IM_FORCE_MFA_OTP("im_mfa_force_otp"),
 
     IM_USER_READ("im_user_read"),
     IM_USER_ROLE_READ("im_user_role_write"),

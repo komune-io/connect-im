@@ -20,6 +20,7 @@ enum class AuthenticationProvider(val id: String) {
     ALLOW_ACCESS("allow-access-authenticator"),
     IDP_REDIRECT("identity-provider-redirector"),
     CONDITIONAL_USER_ATTRIBUTE("conditional-user-attribute"),
+    CONDITIONAL_USER_ROLE("conditional-user-role"),
     CONDITIONAL_LEVEL_OF_AUTHENTICATION("conditional-level-of-authentication"),
     KERBEROS("auth-kerberos");
 
@@ -34,48 +35,76 @@ class AuthenticationFlowDsl(val alias: String) {
     val executions = mutableListOf<Execution>()
     val subFlows = mutableListOf<SubFlow>()
 
-    fun execution(provider: AuthenticationProvider, requirement: Requirement, config: Map<String, String>? = null) {
-        executions.add(Execution(provider, requirement, config))
+    fun execution(block: Execution.() -> Unit) {
+        executions.add(Execution().apply(block))
     }
 
-    fun subFlow(alias: String, type: FlowType, provider: AuthenticationProvider, block: SubFlow.() -> Unit) {
-        val subFlow = SubFlow(alias, type, provider).apply(block)
+    fun subFlow(block: SubFlow.() -> Unit) {
+        val subFlow = SubFlow().apply(block)
         subFlows.add(subFlow)
     }
 }
 
-class SubFlow(val alias: String, var type: FlowType, val provider: AuthenticationProvider) {
+class SubFlow {
+    lateinit var alias: String
+    var type: FlowType = FlowType.BASIC_FLOW
+    lateinit var provider: AuthenticationProvider
     var description: String? = null
     var requirement: Requirement = Requirement.ALTERNATIVE
     val executions = mutableListOf<Execution>()
     val subFlows = mutableListOf<SubFlow>()
 
-    fun execution(provider: AuthenticationProvider, requirement: Requirement, config: Map<String, String>? = null) {
-        executions.add(Execution(provider, requirement, config))
+    fun execution(block: Execution.() -> Unit) {
+        executions.add(Execution().apply(block))
     }
 
-    fun condition(provider: AuthenticationProvider, block: Condition.() -> Unit) {
-        val condition = Condition(provider).apply(block)
-        executions.add(condition)
+    fun conditional(block: Conditional.() -> Unit) {
+        val conditional = Conditional().apply(block)
+        executions.add(conditional)
+    }
+
+    fun conditionalLoa(block: ConditionalLoa.() -> Unit) {
+        val conditionalLoa = ConditionalLoa().apply(block)
+        executions.add(conditionalLoa)
     }
 
     @Suppress("MemberNameEqualsClassName")
-    fun subFlow(alias: String, type: FlowType, provider: AuthenticationProvider, block: SubFlow.() -> Unit) {
-        val subFlow = SubFlow(alias, type, provider).apply(block)
+    fun subFlow(block: SubFlow.() -> Unit) {
+        val subFlow = SubFlow().apply(block)
         subFlows.add(subFlow)
     }
 }
 
-open class Execution(
-    val provider: AuthenticationProvider,
-    val requirement: Requirement,
-    val config: Map<String, String>? = null
-)
+open class Execution {
+    lateinit var provider: AuthenticationProvider
+    var requirement: Requirement = Requirement.REQUIRED
+    open var config: Map<String, String>? = null
+}
 
-class Condition(provider: AuthenticationProvider) : Execution(provider, Requirement.REQUIRED, mutableMapOf()) {
+class Conditional : Execution() {
     fun config(vararg pairs: Pair<String, String>) {
-        (config as MutableMap).putAll(pairs)
+        this.config = pairs.toMap()
     }
+}
+
+class ConditionalLoa : Execution() {
+    var loaConditionLevel: Int = 0
+    var loaMaxAge: Int = 0
+
+    init {
+        provider = AuthenticationProvider.CONDITIONAL_LEVEL_OF_AUTHENTICATION
+    }
+
+    fun buildConfig(): Map<String, String> {
+        return mapOf(
+            "loa-condition-level" to loaConditionLevel.toString(),
+            "loa-max-age" to loaMaxAge.toString()
+        )
+    }
+
+    override var config: Map<String, String>?
+        get() = buildConfig()
+        set(_) {}
 }
 
 fun authenticationFlow(alias: String, block: AuthenticationFlowDsl.() -> Unit): AuthenticationFlowDsl {
@@ -93,12 +122,11 @@ fun AuthenticationFlowDsl.deploy(authFlowsClient: AuthenticationManagementResour
 
     val dd = authFlowsClient.createFlow(newFlow)
     print(dd.status)
-    // Add executions
+
     executions.forEach { execution ->
         authFlowsClient.addExecution(alias, execution.provider, execution.requirement, execution.config)
     }
 
-    // Add subflows
     subFlows.forEach { subFlow ->
         deploySubFlow(authFlowsClient, alias, subFlow)
     }
@@ -119,7 +147,6 @@ private fun deploySubFlow(
         deploySubFlow(authFlowsClient, subFlow.alias, nestedSubFlow)
     }
 }
-
 
 private fun AuthenticationManagementResource.addExecution(
     parent: String,
@@ -151,23 +178,18 @@ private fun AuthenticationManagementResource.addExecutionFlowLocal(
 ) {
     addExecutionFlow(
         parentName, mapOf(
-            SubFlow::alias.name to subFlow.alias,
-            SubFlow::description.name to subFlow.description,
-            SubFlow::provider.name to subFlow.provider.id,
-            SubFlow::type.name to subFlow.type.id,
+            "alias" to subFlow.alias,
+            "description" to subFlow.description,
+            "provider" to subFlow.provider.id,
+            "type" to subFlow.type.id,
         )
     )
 
-    // Step 2: Fetch Executions to Get Execution ID
     val executions = getExecutions(parentName)
 
-    // Find the execution ID for "auth-cookie"
     val executionToUpdate = executions.find { it.displayName == subFlow.alias }
-        ?: throw IllegalStateException("Execution not found for auth-cookie")
+        ?: throw IllegalStateException("Execution not found for ${subFlow.alias}")
 
-    println("Found execution ID: ${executionToUpdate.id}")
-
-    // Step 3: Update Execution Requirement
     executionToUpdate.requirement = subFlow.requirement.name
     this.updateExecutions(parentName, executionToUpdate)
 }

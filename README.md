@@ -106,7 +106,7 @@ Features act as access control filters, defining the specific contexts in which 
 | **im_apikey_write**             | Ability to modify API keys                | feat_im_all, feat_im_own |
 | **im_space_read**               | Ability to view space data                | feat_im_all              |
 | **im_space_write**              | Ability to modify space data              | feat_im_all              |
-| **im_mfa_force**                | Ability to force MFA on a user            | feat_im_all              |
+| **im_mfa_force_otp**                | Ability to force MFA otp on a user        | feat_im_all              |
 
 ## Getting Started
 
