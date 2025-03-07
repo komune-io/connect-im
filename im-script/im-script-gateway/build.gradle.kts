@@ -10,7 +10,7 @@ dependencies {
     implementation(project(Modules.Script.spaceConfig))
     implementation(project(Modules.Script.spaceCreate))
 
-    Dependencies.Jvm.f2(::implementation)
+    Dependencies.Jvm.f2Function(::implementation)
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {}

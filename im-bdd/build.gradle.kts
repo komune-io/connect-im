@@ -23,7 +23,7 @@ dependencies {
     implementation(project(Modules.Core.privilegeApi))
     implementation(project(Modules.Core.clientApi))
 
-	Dependencies.Jvm.f2(::implementation)
+	Dependencies.Jvm.f2Http(::implementation)
 	Dependencies.Mpp.f2(::implementation)
 	Dependencies.Mpp.s2(::implementation)
 	Dependencies.Jvm.s2Bdd(::implementation)

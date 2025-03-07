@@ -8,6 +8,8 @@ dependencies {
     api(project(Modules.F2.userDomain))
 
     implementation(project(Modules.F2.userLib))
+    implementation(project(Modules.Core.mfaApi))
+
     implementation(project(":im-api:api-config"))
     implementation(project(Modules.Commons.auth))
 }

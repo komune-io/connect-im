@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    Dependencies.Jvm.cache(::implementation)
-
-    Dependencies.Jvm.f2Http(::implementation)
+    api(project(Modules.Core.organizationDomain))
+    api(project(Modules.Core.mfaDomain))
+    implementation(project(Modules.Infra.redis))
 }

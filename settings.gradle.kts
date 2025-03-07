@@ -37,6 +37,9 @@ include(
     "im-core:client-core:im-client-core-api",
     "im-core:client-core:im-client-core-domain",
 
+    "im-core:mfa-core:im-mfa-core-api",
+    "im-core:mfa-core:im-mfa-core-domain",
+
     "im-core:organization-core:im-organization-core-api",
     "im-core:organization-core:im-organization-core-domain",
 

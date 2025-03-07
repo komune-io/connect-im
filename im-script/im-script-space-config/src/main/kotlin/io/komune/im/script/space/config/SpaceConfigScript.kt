@@ -55,6 +55,7 @@ class SpaceConfigScript(
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService,
 ) {
+
     private val logger = LoggerFactory.getLogger(SpaceConfigScript::class.java)
 
     suspend fun run() {
