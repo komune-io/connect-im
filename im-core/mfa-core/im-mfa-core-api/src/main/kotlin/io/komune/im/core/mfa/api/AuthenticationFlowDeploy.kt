@@ -2,6 +2,8 @@ package io.komune.im.core.mfa.api
 
 import io.komune.im.core.mfa.domain.model.AuthenticationFlowDsl
 import io.komune.im.core.mfa.domain.model.AuthenticationProvider
+import io.komune.im.core.mfa.domain.model.Execution
+import io.komune.im.core.mfa.domain.model.FlowObject
 import io.komune.im.core.mfa.domain.model.Requirement
 import io.komune.im.core.mfa.domain.model.SubFlow
 import org.keycloak.admin.client.resource.AuthenticationManagementResource
@@ -17,15 +19,21 @@ fun AuthenticationFlowDsl.deploy(authFlowsClient: AuthenticationManagementResour
         this.isTopLevel = this@deploy.isTopLevel
     }
 
-    val dd = authFlowsClient.createFlow(newFlow)
-    print(dd.status)
+    authFlowsClient.createFlow(newFlow)
+    subObjects.create(alias, authFlowsClient)
+}
 
-    executions.forEach { execution ->
-        authFlowsClient.addExecution(alias, execution.provider, execution.requirement, execution.config)
-    }
-
-    subFlows.forEach { subFlow ->
-        deploySubFlow(authFlowsClient, alias, subFlow)
+private fun List<FlowObject>.create(parentAlias: String, authFlowsClient: AuthenticationManagementResource) {
+    forEach { subObject ->
+        when (subObject) {
+            is SubFlow -> deploySubFlow(authFlowsClient, parentAlias, subObject)
+            is Execution -> authFlowsClient.addExecution(
+                parentAlias,
+                subObject.provider,
+                subObject.requirement,
+                subObject.config
+            )
+        }
     }
 }
 
@@ -36,13 +44,7 @@ private fun deploySubFlow(
 ) {
     authFlowsClient.addExecutionFlowLocal(parentAlias, subFlow)
 
-    subFlow.executions.forEach { execution ->
-        authFlowsClient.addExecution(subFlow.alias, execution.provider, execution.requirement, execution.config)
-    }
-
-    subFlow.subFlows.forEach { nestedSubFlow ->
-        deploySubFlow(authFlowsClient, subFlow.alias, nestedSubFlow)
-    }
+    subFlow.subObjects.create(subFlow.alias, authFlowsClient)
 }
 
 private fun AuthenticationManagementResource.addExecution(

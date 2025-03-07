@@ -19,66 +19,68 @@ enum class AuthenticationProvider(val id: String) {
     CONDITIONAL_USER_ROLE("conditional-user-role"),
     CONDITIONAL_USER_CONFIGURED("conditional-user-configured"),
     CONDITIONAL_LEVEL_OF_AUTHENTICATION("conditional-level-of-authentication"),
+    CONDITIONAL_SUB_FLOW_EXECUTED("conditional-sub-flow-executed"),
     KERBEROS("auth-kerberos");
 
     override fun toString(): String = id
 }
+
+interface FlowObject
 
 class AuthenticationFlowDsl(val alias: String) {
     var description: String? = null
     var type: FlowType = FlowType.BASIC_FLOW
     var isBuiltIn: Boolean = false
     var isTopLevel: Boolean = true
-    val executions = mutableListOf<Execution>()
-    val subFlows = mutableListOf<SubFlow>()
+    val subObjects = arrayListOf<FlowObject>()
 
     fun execution(block: Execution.() -> Unit) {
-        executions.add(Execution().apply(block))
+        subObjects.add(Execution().apply(block))
     }
 
-    fun subFlow(block: SubFlow.() -> Unit) {
-        val subFlow = SubFlow().apply(block)
-        subFlows.add(subFlow)
+    fun subFlow(alias: String, block: SubFlow.() -> Unit) {
+        val subFlow = SubFlow(alias).apply(block)
+        subObjects.add(subFlow)
     }
 }
 
-class SubFlow {
-    lateinit var alias: String
+
+class SubFlow(val alias: String): FlowObject {
     var type: FlowType = FlowType.BASIC_FLOW
     lateinit var provider: AuthenticationProvider
     var description: String? = null
     var requirement: Requirement = Requirement.ALTERNATIVE
-    val executions = mutableListOf<Execution>()
-    val subFlows = mutableListOf<SubFlow>()
+    val subObjects = arrayListOf<FlowObject>()
 
     fun execution(block: Execution.() -> Unit) {
-        executions.add(Execution().apply(block))
+        subObjects.add(Execution().apply(block))
     }
 
-    fun conditional(block: Conditional.() -> Unit) {
-        val conditional = Conditional().apply(block)
-        executions.add(conditional)
+    fun conditional(block: ConditionalExecution.() -> Unit) {
+        val conditional = ConditionalExecution().apply(block)
+        subObjects.add(conditional)
     }
 
     fun conditionalLoa(block: ConditionalLoa.() -> Unit) {
         val conditionalLoa = ConditionalLoa().apply(block)
-        executions.add(conditionalLoa)
+        subObjects.add(conditionalLoa)
     }
 
     @Suppress("MemberNameEqualsClassName")
-    fun subFlow(block: SubFlow.() -> Unit) {
-        val subFlow = SubFlow().apply(block)
-        subFlows.add(subFlow)
+    fun subFlow(alias: String, block: SubFlow.() -> Unit) {
+        val subFlow = SubFlow(alias).apply(block)
+        subObjects.add(subFlow)
     }
+
 }
 
-open class Execution {
+open class Execution: FlowObject {
     lateinit var provider: AuthenticationProvider
     var requirement: Requirement = Requirement.REQUIRED
     open var config: Map<String, String>? = null
 }
 
-class Conditional : Execution() {
+class ConditionalExecution : Execution() {
     fun config(vararg pairs: Pair<String, String>) {
         this.config = pairs.toMap()
     }

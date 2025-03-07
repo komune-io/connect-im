@@ -32,67 +32,12 @@ object ImMfaPasswordOtpFlow {
             requirement = Requirement.ALTERNATIVE
         }
 
-        subFlow {
-            alias = "login-with-username-password"
+        subFlow("login-with-username-password") {
             type = FlowType.BASIC_FLOW
             provider = AuthenticationProvider.FORM_FLOW
 
-            execution {
-                provider = AuthenticationProvider.USERNAME_PASSWORD
-                requirement = Requirement.REQUIRED
-            }
-
-            // Force OTP for users with the "force-mfa" role
-            subFlow {
-                alias = "force-mfa-user-role-${ImPermission.IM_FORCE_MFA_OTP.identifier}"
-                type = FlowType.BASIC_FLOW
-                provider = AuthenticationProvider.FORM_FLOW
-                requirement = Requirement.CONDITIONAL
-
-                conditional {
-                    provider = AuthenticationProvider.CONDITIONAL_USER_ROLE
-                    config(
-                        "role" to ImPermission.IM_FORCE_MFA_OTP.identifier,
-                        "condUserRole" to ImPermission.IM_FORCE_MFA_OTP.identifier
-                    )
-                }
-
-                execution {
-                    provider = AuthenticationProvider.OTP_FORM
-                    requirement = Requirement.REQUIRED
-                }
-
-                execution {
-                    provider = AuthenticationProvider.ALLOW_ACCESS
-                    requirement = Requirement.REQUIRED
-                }
-            }
-
-            // password-only: Simple authentication (password only)
-            subFlow {
-                alias = "login-with-otp"
-                type = FlowType.BASIC_FLOW
-                provider = AuthenticationProvider.FORM_FLOW
-                requirement = Requirement.CONDITIONAL
-
-                conditional {
-                    provider = AuthenticationProvider.CONDITIONAL_USER_CONFIGURED
-                    requirement = Requirement.REQUIRED
-                }
-
-                execution {
-                    provider = AuthenticationProvider.OTP_FORM
-                    requirement = Requirement.REQUIRED
-                }
-                execution {
-                    provider = AuthenticationProvider.ALLOW_ACCESS
-                    requirement = Requirement.REQUIRED
-                }
-            }
-
-            // password-only: Simple authentication (password only)
-            subFlow {
-                alias = "loa-password-only"
+            // loa-password-only: Simple authentication (password only)
+            subFlow("loa-password-only") {
                 type = FlowType.BASIC_FLOW
                 provider = AuthenticationProvider.FORM_FLOW
                 requirement = Requirement.CONDITIONAL
@@ -103,32 +48,13 @@ object ImMfaPasswordOtpFlow {
                 }
 
                 execution {
-                    provider = AuthenticationProvider.ALLOW_ACCESS
+                    provider = AuthenticationProvider.USERNAME_PASSWORD
                     requirement = Requirement.REQUIRED
                 }
             }
 
-            // password-optional-otp: Conditional MFA (OTP if required)
-            subFlow {
-                alias = "loa-password-optional-otp"
-                type = FlowType.BASIC_FLOW
-                provider = AuthenticationProvider.FORM_FLOW
-                requirement = Requirement.CONDITIONAL
-
-                conditionalLoa {
-                    loaConditionLevel = Acr.PASSWORD_OPTIONAL_OTP.level
-                    loaMaxAge = 0
-                }
-
-                execution {
-                    provider = AuthenticationProvider.ALLOW_ACCESS
-                    requirement = Requirement.REQUIRED
-                }
-            }
-
-            // password-otp: Strict MFA enforcement (always require OTP)
-            subFlow {
-                alias = "loa-password-otp"
+            // loa-password-otp: Strict MFA enforcement (always require OTP)
+            subFlow("loa-password-otp") {
                 type = FlowType.BASIC_FLOW
                 provider = AuthenticationProvider.FORM_FLOW
                 requirement = Requirement.CONDITIONAL
@@ -142,6 +68,60 @@ object ImMfaPasswordOtpFlow {
                     provider = AuthenticationProvider.OTP_FORM
                     requirement = Requirement.REQUIRED
                 }
+            }
+
+            // otp-form: OTP form
+            subFlow("login-with-conditional-otp") {
+                type = FlowType.BASIC_FLOW
+                provider = AuthenticationProvider.FORM_FLOW
+                requirement = Requirement.CONDITIONAL
+
+                conditional {
+                    provider = AuthenticationProvider.CONDITIONAL_SUB_FLOW_EXECUTED
+                    requirement = Requirement.REQUIRED
+                    config(
+                        "check_result" to "not-executed",
+                        "default.reference.maxAge" to "",
+                        "default.reference.value" to "",
+                        "flow_to_check"  to "loa-password-otp"
+                    )
+                }
+
+                subFlow("login-with-conditional-otp-conditional") {
+                    type = FlowType.BASIC_FLOW
+                    provider = AuthenticationProvider.FORM_FLOW
+                    requirement = Requirement.CONDITIONAL
+
+                    conditional {
+                        provider = AuthenticationProvider.CONDITIONAL_USER_CONFIGURED
+                        requirement = Requirement.REQUIRED
+                    }
+
+                    execution {
+                        provider = AuthenticationProvider.OTP_FORM
+                        requirement = Requirement.REQUIRED
+                    }
+                }
+                subFlow("force-mfa-user-role-${ImPermission.IM_FORCE_MFA_OTP.identifier}") {
+                    type = FlowType.BASIC_FLOW
+                    provider = AuthenticationProvider.FORM_FLOW
+                    requirement = Requirement.CONDITIONAL  // ✅ Change to REQUIRED to stop the flow
+
+                    conditional {
+                        provider = AuthenticationProvider.CONDITIONAL_USER_ROLE
+                        config(
+                            "role" to ImPermission.IM_FORCE_MFA_OTP.identifier,
+                            "condUserRole" to ImPermission.IM_FORCE_MFA_OTP.identifier
+                        )
+                    }
+
+                    execution {
+                        provider = AuthenticationProvider.OTP_FORM
+                        requirement = Requirement.REQUIRED
+                    }
+
+                }
+
                 execution {
                     provider = AuthenticationProvider.ALLOW_ACCESS
                     requirement = Requirement.REQUIRED
