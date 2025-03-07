@@ -7,5 +7,5 @@ plugins {
 dependencies {
     Dependencies.Jvm.cache(::implementation)
 
-    Dependencies.Jvm.f2(::implementation)
+    Dependencies.Jvm.f2Http(::implementation)
 }

@@ -7,12 +7,12 @@ import io.komune.im.core.client.api.ClientCoreAggregateService
 import io.komune.im.core.client.api.ClientCoreFinderService
 import io.komune.im.core.client.domain.command.ClientGrantClientRolesCommand
 import io.komune.im.core.commons.CoreService
+import io.komune.im.core.mfa.api.SpaceOtpFlowService
+import io.komune.im.core.mfa.domain.model.ImMfaPasswordOtpFlow
 import io.komune.im.f2.space.domain.command.SpaceDefineCommand
 import io.komune.im.f2.space.domain.command.SpaceDefinedEvent
 import io.komune.im.f2.space.domain.command.SpaceDeleteCommand
 import io.komune.im.f2.space.domain.command.SpaceDeletedEvent
-import io.komune.im.f2.space.lib.flow.ImMfaPasswordOtpFlow
-import io.komune.im.f2.space.lib.flow.SpaceOtpFlowService
 import io.komune.im.infra.redis.CacheName
 import org.keycloak.representations.idm.RealmRepresentation
 import org.keycloak.representations.userprofile.config.UPConfig

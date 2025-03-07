@@ -1,7 +1,6 @@
-package io.komune.im.f2.space.lib.flow
+package io.komune.im.core.mfa.domain.model
 
 import io.komune.im.commons.auth.ImPermission
-
 
 object ImMfaPasswordOtpFlow {
 
@@ -17,7 +16,7 @@ object ImMfaPasswordOtpFlow {
         }
     }
 
-    val flow = authenticationFlow(ImMfaPasswordOtpFlow.name) {
+    val flow = authenticationFlow(name) {
         description = "Custom browser flow with password authentication and conditional OTP"
         type = FlowType.BASIC_FLOW
         isBuiltIn = false
@@ -34,67 +33,13 @@ object ImMfaPasswordOtpFlow {
         }
 
         subFlow {
-            alias = "username-password"
+            alias = "login-with-username-password"
             type = FlowType.BASIC_FLOW
             provider = AuthenticationProvider.FORM_FLOW
 
             execution {
                 provider = AuthenticationProvider.USERNAME_PASSWORD
                 requirement = Requirement.REQUIRED
-            }
-
-            // password-only: Simple authentication (password only)
-            subFlow {
-                alias = "loa-password-only"
-                type = FlowType.BASIC_FLOW
-                provider = AuthenticationProvider.FORM_FLOW
-                requirement = Requirement.CONDITIONAL
-
-                conditionalLoa {
-                    loaConditionLevel = ImMfaPasswordOtpFlow.Acr.PASSWORD_ONLY.level
-                    loaMaxAge = 0
-                }
-
-                execution {
-                    provider = AuthenticationProvider.ALLOW_ACCESS
-                    requirement = Requirement.REQUIRED
-                }
-            }
-
-            // password-optional-otp: Conditional MFA (OTP if required)
-            subFlow {
-                alias = "loa-password-optional-otp"
-                type = FlowType.BASIC_FLOW
-                provider = AuthenticationProvider.FORM_FLOW
-                requirement = Requirement.CONDITIONAL
-
-                conditionalLoa {
-                    loaConditionLevel = ImMfaPasswordOtpFlow.Acr.PASSWORD_OPTIONAL_OTP.level
-                    loaMaxAge = 0
-                }
-
-                execution {
-                    provider = AuthenticationProvider.ALLOW_ACCESS
-                    requirement = Requirement.REQUIRED
-                }
-            }
-
-            // password-otp: Strict MFA enforcement (always require OTP)
-            subFlow {
-                alias = "loa-password-otp"
-                type = FlowType.BASIC_FLOW
-                provider = AuthenticationProvider.FORM_FLOW
-                requirement = Requirement.CONDITIONAL
-
-                conditionalLoa {
-                    loaConditionLevel = ImMfaPasswordOtpFlow.Acr.PASSWORD_OTP.level
-                    loaMaxAge = 0
-                }
-
-                execution {
-                    provider = AuthenticationProvider.OTP_FORM
-                    requirement = Requirement.REQUIRED
-                }
             }
 
             // Force OTP for users with the "force-mfa" role
@@ -112,9 +57,93 @@ object ImMfaPasswordOtpFlow {
                     )
                 }
 
+                execution {
+                    provider = AuthenticationProvider.OTP_FORM
+                    requirement = Requirement.REQUIRED
+                }
+
+                execution {
+                    provider = AuthenticationProvider.ALLOW_ACCESS
+                    requirement = Requirement.REQUIRED
+                }
+            }
+
+            // password-only: Simple authentication (password only)
+            subFlow {
+                alias = "login-with-otp"
+                type = FlowType.BASIC_FLOW
+                provider = AuthenticationProvider.FORM_FLOW
+                requirement = Requirement.CONDITIONAL
+
+                conditional {
+                    provider = AuthenticationProvider.CONDITIONAL_USER_CONFIGURED
+                    requirement = Requirement.REQUIRED
+                }
 
                 execution {
                     provider = AuthenticationProvider.OTP_FORM
+                    requirement = Requirement.REQUIRED
+                }
+                execution {
+                    provider = AuthenticationProvider.ALLOW_ACCESS
+                    requirement = Requirement.REQUIRED
+                }
+            }
+
+            // password-only: Simple authentication (password only)
+            subFlow {
+                alias = "loa-password-only"
+                type = FlowType.BASIC_FLOW
+                provider = AuthenticationProvider.FORM_FLOW
+                requirement = Requirement.CONDITIONAL
+
+                conditionalLoa {
+                    loaConditionLevel = Acr.PASSWORD_ONLY.level
+                    loaMaxAge = 0
+                }
+
+                execution {
+                    provider = AuthenticationProvider.ALLOW_ACCESS
+                    requirement = Requirement.REQUIRED
+                }
+            }
+
+            // password-optional-otp: Conditional MFA (OTP if required)
+            subFlow {
+                alias = "loa-password-optional-otp"
+                type = FlowType.BASIC_FLOW
+                provider = AuthenticationProvider.FORM_FLOW
+                requirement = Requirement.CONDITIONAL
+
+                conditionalLoa {
+                    loaConditionLevel = Acr.PASSWORD_OPTIONAL_OTP.level
+                    loaMaxAge = 0
+                }
+
+                execution {
+                    provider = AuthenticationProvider.ALLOW_ACCESS
+                    requirement = Requirement.REQUIRED
+                }
+            }
+
+            // password-otp: Strict MFA enforcement (always require OTP)
+            subFlow {
+                alias = "loa-password-otp"
+                type = FlowType.BASIC_FLOW
+                provider = AuthenticationProvider.FORM_FLOW
+                requirement = Requirement.CONDITIONAL
+
+                conditionalLoa {
+                    loaConditionLevel = Acr.PASSWORD_OTP.level
+                    loaMaxAge = 0
+                }
+
+                execution {
+                    provider = AuthenticationProvider.OTP_FORM
+                    requirement = Requirement.REQUIRED
+                }
+                execution {
+                    provider = AuthenticationProvider.ALLOW_ACCESS
                     requirement = Requirement.REQUIRED
                 }
             }

@@ -6,5 +6,5 @@ plugins {
 
 dependencies {
     api(project(Modules.Commons.domain))
-    Dependencies.Jvm.f2(::api)
+    Dependencies.Jvm.f2Http(::api)
 }

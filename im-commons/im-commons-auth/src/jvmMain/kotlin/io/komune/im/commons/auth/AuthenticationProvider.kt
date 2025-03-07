@@ -34,6 +34,10 @@ object AuthenticationProvider {
         return getPrincipal()?.issuer.toString()
     }
 
+    suspend fun getAcr(): String? {
+        return getPrincipal()?.getClaimAsString("acr")
+    }
+
 	suspend fun info(): TokenInfo {
 		return TokenInfo(getAuthentication())
 	}
@@ -44,15 +48,19 @@ object AuthenticationProvider {
 
     suspend fun getAuthedUser(): AuthedUser? = getPrincipal()?.let {
         val tokenInfo = info()
+
         AuthedUser(
-            id = getPrincipal()!!.subject.orEmpty(),
+            id = getPrincipal()?.subject.orEmpty(),
             identifier = tokenInfo.getEmail() ?: tokenInfo.getClientId(),
             memberOf = tokenInfo.getOrganizationId(),
-            roles = getAuthentication()!!.authorities
-                .map { it.authority.removePrefix("ROLE_") }
-                .toTypedArray()
+            roles = tokenInfo.getRoles(),
+            acr = tokenInfo.getAcr()
         )
     }
+
+    private suspend fun getRoles() = getAuthentication()?.authorities
+        ?.map { it.authority.removePrefix("ROLE_") }
+        ?.toTypedArray() ?: emptyArray()
 }
 
 class TokenInfo(private val authentication: JwtAuthenticationToken?) {
@@ -88,4 +96,13 @@ class TokenInfo(private val authentication: JwtAuthenticationToken?) {
 	fun getUserId(): String? {
 		return authentication?.token?.getClaimAsString("preferred_username")
 	}
+
+    fun getAcr(): String? {
+        return authentication?.token?.getClaimAsString("acr")
+    }
+
+    fun getRoles() = authentication?.authorities
+        ?.map { it.authority.removePrefix("ROLE_") }
+        ?.toTypedArray() ?: emptyArray()
+
 }

@@ -7,5 +7,6 @@ plugins {
 
 dependencies {
     commonMainApi(project(Modules.Core.userDomain))
+    commonMainApi(project(Modules.Core.mfaDomain))
     commonMainApi(project(Modules.F2.organizationDomain))
 }

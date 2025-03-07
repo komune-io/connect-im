@@ -1,5 +1,6 @@
-package io.komune.im.f2.space.lib.flow
+package io.komune.im.core.mfa.api
 
+import io.komune.im.core.mfa.domain.model.ImMfaPasswordOtpFlow
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import org.keycloak.admin.client.resource.AuthenticationManagementResource
 import org.springframework.stereotype.Service

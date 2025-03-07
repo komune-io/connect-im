@@ -5,7 +5,8 @@
         "login": {
             "registrationAllowed": true,
             "resetPasswordAllowed": true,
-            "rememberMe": true
+            "rememberMe": true,
+            "registrationEmailAsUsername": true
         }
     },
     "appClients": [

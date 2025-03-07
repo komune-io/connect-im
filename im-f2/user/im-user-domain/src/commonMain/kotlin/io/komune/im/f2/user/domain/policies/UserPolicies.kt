@@ -2,9 +2,11 @@ package io.komune.im.f2.user.domain.policies
 
 import io.komune.im.commons.auth.AuthedUserDTO
 import io.komune.im.commons.auth.ImPermission
+import io.komune.im.commons.auth.hasAcr
 import io.komune.im.commons.auth.hasOneOfRoles
 import io.komune.im.commons.auth.hasRole
 import io.komune.im.commons.model.OrganizationId
+import io.komune.im.core.mfa.domain.model.ImMfaPasswordOtpFlow
 import io.komune.im.f2.user.domain.model.UserDTO
 import kotlin.js.JsExport
 import kotlin.js.JsName
@@ -61,6 +63,13 @@ object UserPolicies {
      */
     fun canDisableMfa(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
         return isMySelf(authedUser, user) && !authedUser.hasRole(ImPermission.IM_FORCE_MFA_OTP)
+    }
+
+    /**
+     * User can disable mfa
+     */
+    fun canDisableMfaAcr(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
+        return authedUser.hasAcr(ImMfaPasswordOtpFlow.Acr.PASSWORD_OTP.key)
     }
 
     /**

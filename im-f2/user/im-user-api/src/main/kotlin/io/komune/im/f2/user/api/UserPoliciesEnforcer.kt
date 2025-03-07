@@ -49,6 +49,7 @@ class UserPoliciesEnforcer(
     suspend fun checkDisableMfa(userId: UserId) = checkAuthed("disable mfa") { authedUser ->
         val user = userFinderService.get(userId)
         UserPolicies.canDisableMfa(authedUser, user)
+        UserPolicies.canDisableMfaAcr(authedUser, user)
     }
 
     suspend fun checkUpdate(userId: UserId) = checkAuthed("update an user") { authedUser ->

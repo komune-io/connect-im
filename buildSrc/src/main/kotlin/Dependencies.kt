@@ -69,7 +69,7 @@ object Dependencies {
                 serverSpiPrivate(scope)
             }
 		}
-		fun f2(scope: Scope) = scope.add(
+		fun f2Http(scope: Scope) = scope.add(
 			"io.komune.f2:f2-spring-boot-starter-function-http:${Versions.f2}"
 		)
 
@@ -181,6 +181,10 @@ object Modules {
         private const val CLIENT = "$BASE:client-core:im-client-core"
         const val clientApi = "$CLIENT-api"
         const val clientDomain = "$CLIENT-domain"
+
+        private const val MFA = "$BASE:mfa-core:im-mfa-core"
+        const val mfaApi = "$MFA-api"
+        const val mfaDomain = "$MFA-domain"
 
         private const val ORGANIZATION = "$BASE:organization-core:im-organization-core"
         const val organizationApi = "$ORGANIZATION-api"
