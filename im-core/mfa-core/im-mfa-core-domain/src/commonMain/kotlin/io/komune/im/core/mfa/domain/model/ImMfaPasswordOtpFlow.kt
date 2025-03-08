@@ -96,6 +96,17 @@ object ImMfaPasswordOtpFlow {
                         requirement = Requirement.REQUIRED
                     }
 
+                    conditional {
+                        provider = AuthenticationProvider.CONDITIONAL_SUB_FLOW_EXECUTED
+                        requirement = Requirement.REQUIRED
+                        config(
+                            "check_result" to "not-executed",
+                            "default.reference.maxAge" to "",
+                            "default.reference.value" to "",
+                            "flow_to_check"  to "force-mfa-user-role-${ImPermission.IM_FORCE_MFA_OTP.identifier}"
+                        )
+                    }
+
                     execution {
                         provider = AuthenticationProvider.OTP_FORM
                         requirement = Requirement.REQUIRED
@@ -104,7 +115,7 @@ object ImMfaPasswordOtpFlow {
                 subFlow("force-mfa-user-role-${ImPermission.IM_FORCE_MFA_OTP.identifier}") {
                     type = FlowType.BASIC_FLOW
                     provider = AuthenticationProvider.FORM_FLOW
-                    requirement = Requirement.CONDITIONAL  // ✅ Change to REQUIRED to stop the flow
+                    requirement = Requirement.CONDITIONAL
 
                     conditional {
                         provider = AuthenticationProvider.CONDITIONAL_USER_ROLE
