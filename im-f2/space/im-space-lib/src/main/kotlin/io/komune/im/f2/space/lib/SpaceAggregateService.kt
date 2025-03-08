@@ -75,7 +75,7 @@ class SpaceAggregateService(
 
         val realm = RealmRepresentation()
             .applyBaseConfig()
-            .apply(command)
+            .applyCommand(command)
 
         client.realms().create(realm)
         logger.info("Realm created for space with identifier: ${command.identifier}")
@@ -110,7 +110,7 @@ class SpaceAggregateService(
         val client = keycloakClientProvider.get()
         val realm = client.realm(command.identifier)
             .toRepresentation()
-            .apply(command)
+            .applyCommand(command)
         client.realm(command.identifier).update(realm)
         logger.info("Space updated with identifier: ${command.identifier}")
     }
@@ -154,11 +154,11 @@ class SpaceAggregateService(
         emailTheme = BASE_THEME
     }
 
-    private fun RealmRepresentation.apply(command: SpaceDefineCommand) = apply {
+    private fun RealmRepresentation.applyCommand(command: SpaceDefineCommand) = apply {
         logger.info("Setting realm to ${command.identifier}")
         realm = command.identifier
-        logger.info("Setting displayName to ${command.identifier}")
-        displayName = command.identifier
+        logger.info("Setting displayName to ${command.displayName ?: this.displayName ?: command.identifier}")
+        displayName = command.displayName ?: this.displayName ?: command.identifier
         logger.info("Setting smtpServer to ${command.smtp}")
         smtpServer = command.smtp
         logger.info("Setting loginTheme to ${command.theme}")

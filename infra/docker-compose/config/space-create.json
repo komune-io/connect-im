@@ -1,5 +1,6 @@
 {
-    "space": "${KC_REALM}",
+    "identifier": "${KC_REALM}",
+    "displayName": "${KC_REALM_NAME}",
     "settings": {
         "login": {
             "registrationAllowed": true,

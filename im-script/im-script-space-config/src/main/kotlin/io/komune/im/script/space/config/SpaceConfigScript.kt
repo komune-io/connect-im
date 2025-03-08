@@ -68,7 +68,7 @@ class SpaceConfigScript(
             logger.info("****************************************************")
             logger.info("Start processing configuration file [$jsonPath]...")
             val properties = ParserUtils.getConfiguration(jsonPath, SpaceConfigProperties::class.java)
-            val auth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
+            val auth = imScriptSpaceProperties.auth.toAuthRealm(properties.spaceIdentifier)
             config(auth, properties)
         }
     }
@@ -129,8 +129,10 @@ class SpaceConfigScript(
     private suspend fun initRoles(
         roles: List<RoleData>?
     ): List<RoleIdentifier> = roles.initNotEmpty("Roles") { items ->
-        val existingRoles = privilegeFinderService.listRoles().plus(privilegeFinderService.listPermissions())
-            .plus(privilegeFinderService.listFeatures()).map(PrivilegeDTO::identifier).toMutableSet()
+        val roles = privilegeFinderService.listRoles()
+        val permissions = privilegeFinderService.listPermissions()
+        val features = privilegeFinderService.listFeatures()
+        val existingRoles = (roles + permissions + features).map(PrivilegeDTO::identifier).toMutableSet()
 
         val remainingRoles = items.filter { it.name !in existingRoles }.toMutableSet()
         var anyRoleInitialized = true
@@ -161,10 +163,11 @@ class SpaceConfigScript(
     }
 
     private suspend fun SpaceConfigProperties.verifyAndUpdateSpace() {
-        val space = spaceFinderService.get(space)
+        val space = spaceFinderService.get(spaceIdentifier)
         if (theme != null || locales != null) {
             SpaceDefineCommand(
                 identifier = space.identifier,
+                displayName = space.displayName,
                 theme = theme ?: space.theme,
                 smtp = space.smtp,
                 locales = locales ?: space.locales,

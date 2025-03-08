@@ -19,6 +19,11 @@ interface SpaceDTO {
      * @example "sb-dev"
      */
     val identifier: SpaceIdentifier?
+    /**
+     * Display name of the space.
+     * @example "sb-dev"
+     */
+    val displayName: String?
 
     val smtp: Map<String, String>?
 
@@ -38,6 +43,7 @@ interface SpaceDTO {
 @Serializable
 data class Space(
     override val identifier: SpaceIdentifier,
+    override val displayName: String?,
     override val theme: String?,
     override val smtp: Map<String, String>?,
     override val locales: List<String>?

@@ -32,7 +32,7 @@ class SpaceCreateScriptTest: SpringTestConfiguration() {
         val spaceName = "im-test-${UUID.randomUUID().hashCode().absoluteValue}"
         val clientId = defaultSpaceRootClientId(spaceName)
         val data = SpaceCreateProperties(
-            space = spaceName,
+            identifier = spaceName,
             rootClient = ClientCredentials(
                 clientId = clientId,
                 clientSecret = "secret"
@@ -41,7 +41,7 @@ class SpaceCreateScriptTest: SpringTestConfiguration() {
 
         spaceCreateScript.createScript(data)
 
-        val newRealmAuth = imScriptSpaceProperties.auth.toAuthRealm(data.space)
+        val newRealmAuth = imScriptSpaceProperties.auth.toAuthRealm(data.spaceIdentifier)
         withContext(AuthContext(newRealmAuth)) {
             val client = clientInitService.getAppClientId(clientId)
 

@@ -9,9 +9,13 @@ import io.komune.im.script.core.model.FeatureData
 import io.komune.im.script.core.model.PermissionData
 import io.komune.im.script.core.model.RoleData
 import io.komune.im.script.core.model.WebClient
+import org.slf4j.LoggerFactory
 
 data class SpaceConfigProperties(
-    val space: SpaceIdentifier,
+    @Deprecated("Use identifier instead")
+    val space: SpaceIdentifier? = null,
+    val identifier: String? = null,
+    val displayName: String? = null,
     val settings: SpaceSettingsProperties? = null,
     val theme: String? = null,
     val locales: List<String>? = null,
@@ -24,7 +28,20 @@ data class SpaceConfigProperties(
     val roles: List<RoleData>? = null,
     val organizations: List<OrganizationData>? = null,
     val users: List<UserData>? = null,
-)
+) {
+    private val logger = LoggerFactory.getLogger(SpaceConfigProperties::class.java)
+    val spaceIdentifier: SpaceIdentifier
+        get() {
+            if(identifier != null) {
+                return identifier
+            }
+            else if (space != null) {
+                logger.warn("The 'space' property is deprecated. Use 'identifier' instead.")
+                return space
+            }
+            throw IllegalStateException("Identifier is required")
+        }
+}
 
 data class UserData(
     val email: String,

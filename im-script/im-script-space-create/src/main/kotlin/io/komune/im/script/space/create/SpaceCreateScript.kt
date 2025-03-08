@@ -70,7 +70,7 @@ class SpaceCreateScript(
             initRealm(properties)
         }
 
-        val newRealmAuth = imScriptSpaceProperties.auth.toAuthRealm(properties.space)
+        val newRealmAuth = imScriptSpaceProperties.auth.toAuthRealm(properties.spaceIdentifier)
         withContext(AuthContext(newRealmAuth)) {
             configureRealm(properties)
         }
@@ -90,7 +90,7 @@ class SpaceCreateScript(
         logger.info("Initialized Client Scopes")
 
         logger.info("Initializing Space Root Client...")
-        properties.rootClient?.initImClient(properties.space)
+        properties.rootClient?.initImClient(properties.spaceIdentifier)
         logger.info("Initialized Space Root Client")
 
         properties.adminUsers?.forEach { adminUser ->
@@ -102,14 +102,15 @@ class SpaceCreateScript(
     }
 
     private suspend fun initRealm(properties: SpaceCreateProperties) {
-        logger.info("Initializing Space[${properties.space}]...")
-        if (spaceFinderService.getOrNull(properties.space) != null) {
-            logger.info("Space[${properties.space}] already created")
+        logger.info("Initializing Space[${properties.spaceIdentifier}]...")
+        if (spaceFinderService.getOrNull(properties.spaceIdentifier) != null) {
+            logger.info("Space[${properties.spaceIdentifier}] already created")
         } else {
             logger.info("Space create: $${properties}")
             spaceAggregateService.define(
                 SpaceDefineCommand(
-                    identifier = properties.space,
+                    identifier = properties.spaceIdentifier,
+                    displayName = properties.displayName,
                     theme = properties.theme,
                     smtp = properties.smtp,
                     locales = properties.locales ?: listOf("en", "fr"),

@@ -75,6 +75,7 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
     private suspend fun createSpace(params: SpaceCreateParams) = context.spaceIdentifiers.register(params.identifier) {
         command = SpaceDefineCommand(
             identifier = params.identifier,
+            displayName = params.displayName,
             smtp = null,
             theme = null,
             locales = null,
@@ -86,11 +87,13 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
 
     private fun spaceCreateParams(entry: Map<String, String>?): SpaceCreateParams {
         return SpaceCreateParams(
-            identifier = entry?.get("identifier").orRandom()
+            identifier = entry?.get("identifier").orRandom(),
+            displayName = entry?.get("displayName").orRandom()
         )
     }
 
     private data class SpaceCreateParams(
         val identifier: SpaceIdentifier,
+        val displayName: String? = null,
     )
 }
