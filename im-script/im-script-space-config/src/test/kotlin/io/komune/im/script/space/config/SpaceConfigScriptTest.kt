@@ -3,6 +3,7 @@ package io.komune.im.script.space.config
 import io.komune.im.apikey.lib.ApiKeyAggregateService
 import io.komune.im.bdd.spring.SpringTestConfiguration
 import io.komune.im.commons.auth.AuthContext
+import io.komune.im.commons.model.SpaceIdentifier
 import io.komune.im.f2.organization.lib.OrganizationFinderService
 import io.komune.im.script.core.config.properties.ImAuthProperties
 import io.komune.im.script.core.config.properties.ImScriptSpaceProperties
@@ -37,8 +38,8 @@ class SpaceConfigScriptTest: SpringTestConfiguration() {
 
     val organizationName = "Komune-ApiKey-${UUID.randomUUID()}"
     val apiKeyName = "Apikeys-Test-${UUID.randomUUID()}"
-    fun spaceConfig(spaceName: String) = SpaceConfigProperties(
-        space = spaceName,
+    fun spaceConfig(spaceIdentifier: SpaceIdentifier) = SpaceConfigProperties(
+        identifier = spaceIdentifier,
         organizations = listOf(
             OrganizationData(
                 name = organizationName,
@@ -55,7 +56,7 @@ class SpaceConfigScriptTest: SpringTestConfiguration() {
     @Test
     fun apiKeyOfOrganizationMustBeCreated(): Unit = runTest {
         val data = spaceConfig("im-test")
-        val auth = imScriptSpaceProperties.auth.toAuthRealm(data.space)
+        val auth = imScriptSpaceProperties.auth.toAuthRealm(data.spaceIdentifier)
         spaceConfigScript.config(auth, data)
 
         withContext(AuthContext(auth)) {
@@ -71,13 +72,13 @@ class SpaceConfigScriptTest: SpringTestConfiguration() {
 
     @Test
     fun mustBeConfigurableFromSpaceRootClientId(): Unit = runTest {
-        val spaceName = "im-test-${UUID.randomUUID().toString().hashCode().absoluteValue}"
+        val spaceIdentifier = "im-test-${UUID.randomUUID().toString().hashCode().absoluteValue}"
 
-        val clientId = defaultSpaceRootClientId(spaceName)
+        val clientId = defaultSpaceRootClientId(spaceIdentifier)
 
         // Given a space
         val data = SpaceCreateProperties(
-            space = spaceName,
+            identifier = spaceIdentifier,
             rootClient = ClientCredentials(
                 clientId = clientId,
                 clientSecret = "secret"
@@ -89,12 +90,12 @@ class SpaceConfigScriptTest: SpringTestConfiguration() {
         val auth = ImAuthProperties(
             clientId = clientId,
             clientSecret = "secret",
-            realmId = spaceName,
+            realmId = spaceIdentifier,
             serverUrl = imScriptSpaceProperties.auth.serverUrl
         ).toAuthRealm()
 
 
-        val spaceConfig = spaceConfig(spaceName)
+        val spaceConfig = spaceConfig(spaceIdentifier)
         spaceConfigScript.config(auth, spaceConfig)
 
         // Then the organization and apiKey must be created

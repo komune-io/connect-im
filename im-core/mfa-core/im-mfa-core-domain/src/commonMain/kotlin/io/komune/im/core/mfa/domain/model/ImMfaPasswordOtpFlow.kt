@@ -8,8 +8,7 @@ object ImMfaPasswordOtpFlow {
 
     enum class Acr(val key: String, val level: Int) {
         PASSWORD_ONLY(key = "password-only", level = 1),
-        PASSWORD_OPTIONAL_OTP(key = "password-optional-otp", level = 2),
-        PASSWORD_OTP(key = "password-otp", level = 3);
+        PASSWORD_OTP(key = "password-otp", level = 2);
 
         companion object {
             fun asKeycloakMap() = entries.map { it.key to it.level.toString() }.toMap()

@@ -27,6 +27,11 @@ interface SpaceDefineCommandDTO: Command {
     val identifier: SpaceIdentifier
 
     /**
+     * Display name of the space to create.
+     */
+    val displayName: String?
+
+    /**
      * Name of the theme to use for the space.
      * @example "im"
      */
@@ -54,6 +59,7 @@ interface SpaceDefineCommandDTO: Command {
 @Serializable
 data class SpaceDefineCommand(
     override val identifier: String,
+    override val displayName: String?,
     override val theme: String?,
     override val smtp: Map<String, String>?,
     override val locales: List<String>?,

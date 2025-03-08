@@ -68,7 +68,9 @@ class PrivilegeFinderService(
             targets = targets
         ).onEach { role ->
             cache.roles.register(role.identifier, role as RoleModel)
-        }.map { it.toDTOCached(cache) as Role }
+        }.map {
+            it.toDTOCached(cache) as Role
+        }
     }
 
     suspend fun listPermissions(): List<Permission> {

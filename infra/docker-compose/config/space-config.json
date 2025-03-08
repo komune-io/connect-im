@@ -1,5 +1,5 @@
 {
-    "space": "${KC_REALM}",
+    "identifier": "${KC_REALM}",
     "theme": "${KC_REALM_THEME}",
     "settings": {
         "login": {
@@ -81,6 +81,7 @@
                 "im_role_read",  "im_role_write",
                 "im_apikey_read", "im_apikey_write",
                 "im_organization_apikey_read", "im_organization_status_write",
+                "im_mfa_force_otp",
                 "fs_file_write", "fs_file_read", "fs_policy_write"
             ]
         }
@@ -110,7 +111,7 @@
                 "password":  "traceconnect",
                 "firstname": "Sandra",
                 "lastname":  "Geffroi",
-                "roles": ["tr_orchestrator_admin"],
+                "roles": ["tr_orchestrator_user"],
                 "attributes": {
                     "job": "Frileuse"
                 }
@@ -142,7 +143,7 @@
                 "password":  "traceconnect",
                 "firstname": "Thibault",
                 "lastname":  "Métyfeppeur",
-                "roles": ["tr_orchestrator_admin"]
+                "roles": ["tr_orchestrator_user"]
             }, {
                 "email": "jess@croke.com",
                 "password":  "traceconnect",
