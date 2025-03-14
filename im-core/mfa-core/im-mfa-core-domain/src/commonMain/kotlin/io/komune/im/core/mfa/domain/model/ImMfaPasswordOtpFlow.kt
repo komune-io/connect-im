@@ -1,19 +1,24 @@
 package io.komune.im.core.mfa.domain.model
 
 import io.komune.im.commons.auth.ImPermission
+import kotlin.js.JsExport
+
+
+@JsExport
+enum class ImMfaPasswordOtpFlowAcr(val key: String, val level: Int) {
+    PASSWORD_ONLY(key = "password-only", level = 1),
+    PASSWORD_OTP(key = "password-otp", level = 2);
+
+    companion object {
+        fun asKeycloakMap() = entries.map { it.key to it.level.toString() }.toMap()
+    }
+}
 
 object ImMfaPasswordOtpFlow {
 
     const val name = "browser-im-mfa-password-otp"
 
-    enum class Acr(val key: String, val level: Int) {
-        PASSWORD_ONLY(key = "password-only", level = 1),
-        PASSWORD_OTP(key = "password-otp", level = 2);
 
-        companion object {
-            fun asKeycloakMap() = entries.map { it.key to it.level.toString() }.toMap()
-        }
-    }
 
     val flow = authenticationFlow(name) {
         description = "Custom browser flow with password authentication and conditional OTP"
@@ -42,7 +47,7 @@ object ImMfaPasswordOtpFlow {
                 requirement = Requirement.CONDITIONAL
 
                 conditionalLoa {
-                    loaConditionLevel = Acr.PASSWORD_ONLY.level
+                    loaConditionLevel = ImMfaPasswordOtpFlowAcr.PASSWORD_ONLY.level
                     loaMaxAge = 0
                 }
 
@@ -59,7 +64,7 @@ object ImMfaPasswordOtpFlow {
                 requirement = Requirement.CONDITIONAL
 
                 conditionalLoa {
-                    loaConditionLevel = Acr.PASSWORD_OTP.level
+                    loaConditionLevel = ImMfaPasswordOtpFlowAcr.PASSWORD_OTP.level
                     loaMaxAge = 0
                 }
 

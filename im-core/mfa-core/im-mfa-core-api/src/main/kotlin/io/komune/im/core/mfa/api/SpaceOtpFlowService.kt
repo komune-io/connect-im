@@ -1,6 +1,7 @@
 package io.komune.im.core.mfa.api
 
 import io.komune.im.core.mfa.domain.model.ImMfaPasswordOtpFlow
+import io.komune.im.core.mfa.domain.model.ImResetPasswordFlow
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import org.keycloak.admin.client.resource.AuthenticationManagementResource
 import org.springframework.stereotype.Service
@@ -24,6 +25,7 @@ class SpaceOtpFlowService {
      */
     private fun create(authFlowsClient: AuthenticationManagementResource) {
         ImMfaPasswordOtpFlow.flow.deploy(authFlowsClient)
+        ImResetPasswordFlow.flow.deploy(authFlowsClient)
     }
 
     suspend fun setAsDefault(keycloakClientProvider: KeycloakClientProvider, space: String) {
@@ -32,6 +34,7 @@ class SpaceOtpFlowService {
 
         val realmRepresentation = realmResource.toRepresentation()
         realmRepresentation.browserFlow = ImMfaPasswordOtpFlow.name
+        realmRepresentation.resetCredentialsFlow = ImResetPasswordFlow.name
         realmResource.update(realmRepresentation)
     }
 }

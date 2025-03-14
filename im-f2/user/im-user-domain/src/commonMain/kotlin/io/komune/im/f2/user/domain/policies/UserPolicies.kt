@@ -7,6 +7,7 @@ import io.komune.im.commons.auth.hasOneOfRoles
 import io.komune.im.commons.auth.hasRole
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.core.mfa.domain.model.ImMfaPasswordOtpFlow
+import io.komune.im.core.mfa.domain.model.ImMfaPasswordOtpFlowAcr
 import io.komune.im.f2.user.domain.model.UserDTO
 import kotlin.js.JsExport
 import kotlin.js.JsName
@@ -69,7 +70,7 @@ object UserPolicies {
      * User can disable mfa
      */
     fun canDisableMfaAcr(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return authedUser.hasAcr(ImMfaPasswordOtpFlow.Acr.PASSWORD_OTP.key)
+        return authedUser.hasAcr(ImMfaPasswordOtpFlowAcr.PASSWORD_OTP.key)
     }
 
     /**

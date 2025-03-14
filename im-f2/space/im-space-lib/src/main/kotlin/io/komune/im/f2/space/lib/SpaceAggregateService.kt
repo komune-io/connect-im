@@ -9,6 +9,7 @@ import io.komune.im.core.client.domain.command.ClientGrantClientRolesCommand
 import io.komune.im.core.commons.CoreService
 import io.komune.im.core.mfa.api.SpaceOtpFlowService
 import io.komune.im.core.mfa.domain.model.ImMfaPasswordOtpFlow
+import io.komune.im.core.mfa.domain.model.ImMfaPasswordOtpFlowAcr
 import io.komune.im.f2.space.domain.command.SpaceDefineCommand
 import io.komune.im.f2.space.domain.command.SpaceDefinedEvent
 import io.komune.im.f2.space.domain.command.SpaceDeleteCommand
@@ -118,7 +119,7 @@ class SpaceAggregateService(
     private suspend fun createFlow(command: SpaceDefineCommand) {
         if(command.mfa?.contains(SpaceOtpFlowService.OTP_FLOW_USER_ATTRIBUTE_VALUE) == true) {
             val client = keycloakClientProvider.get()
-            val acrLoaMap = objectMapper.writeValueAsString(ImMfaPasswordOtpFlow.Acr.asKeycloakMap())
+            val acrLoaMap = objectMapper.writeValueAsString(ImMfaPasswordOtpFlowAcr.asKeycloakMap())
             val settings = client.realm(command.identifier)
                 .toRepresentation().apply {
                     attributes["acr.loa.map"] = acrLoaMap
