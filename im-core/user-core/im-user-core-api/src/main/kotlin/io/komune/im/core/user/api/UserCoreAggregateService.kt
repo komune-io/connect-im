@@ -82,7 +82,11 @@ class UserCoreAggregateService(
 
         val clientId = AuthenticationProvider.getClientId()
         val redirectUri = clientId?.let {
-            client.getClientByIdentifier(clientId)?.redirectUris?.firstOrNull()
+            val client = client.getClientByIdentifier(clientId)
+            val baseUrl = client?.baseUrl
+            val rootUrl = client?.rootUrl
+            val redirectUri = client?.redirectUris?.firstOrNull()
+            baseUrl ?: rootUrl ?: redirectUri
         }
         client.user(command.id).executeActionsEmail(clientId, redirectUri, command.actions.toList())
 
