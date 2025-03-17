@@ -88,6 +88,10 @@ class UserCoreAggregateService(
             val redirectUri = client?.redirectUris?.firstOrNull()
             baseUrl ?: rootUrl ?: redirectUri
         }
+        logger.info("Sending email actions [${command.actions.joinToString(", ")}] " +
+            "userId[${command.id}] " +
+            "clientId[$clientId] " +
+            "redirectUri[$redirectUri]")
         client.user(command.id).executeActionsEmail(clientId, redirectUri, command.actions.toList())
 
         UserCoreSentEmailEvent(command.id, command.actions)
