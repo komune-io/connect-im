@@ -44,38 +44,66 @@ class ClientInitService(
             clientCoreFinderService.getByIdentifierOrNull(appClient.clientId)?.id
         }, {
             val secret = appClient.clientSecret ?: UUID.randomUUID().toString()
+            val clientId = appClient.createClient(secret)
 
-            val clientId = ClientCreateCommand(
-                identifier = appClient.clientId,
-                secret = secret,
-                isPublicClient = false,
-                isDirectAccessGrantsEnabled = false,
-                isServiceAccountsEnabled = true,
-                authorizationServicesEnabled = false,
-                isStandardFlowEnabled = false,
-            ).let { clientCoreAggregateService.create(it).id }
+            appClient.grantRealmRoles(clientId)
+            appClient.grantClientRoles(clientId)
 
-            appClient.roles?.let { roles ->
-                ClientGrantRealmRolesCommand(
-                    id = clientId,
-                    roles = roles
-                ).let { clientCoreAggregateService.grantRealmRoles(it) }
-            }
-
-            if (appClient.realmManagementRoles == null || appClient.realmManagementRoles.isNotEmpty()) {
-                val realmManagementId = clientCoreFinderService.getByIdentifier("realm-management").id
-                ClientGrantClientRolesCommand(
-                    id = clientId,
-                    providerClientId = realmManagementId,
-                    roles = appClient.realmManagementRoles ?: DEFAULT_REALM_MANAGEMENT_ROLES
-                ).let { clientCoreAggregateService.grantClientRoles(it) }
-            }
             val secretLogging = if(logger.isTraceEnabled) secret else "******"
             logger.info("Client [${appClient.clientId}] secret: $secretLogging")
             clientId
         })
 
 
+    }
+
+    private suspend fun AppClient.createClient(
+        secret: String
+    ): ClientId {
+        val redirectUrls = this.buildRedirectUrl()
+        val clientId = ClientCreateCommand(
+            identifier = this.clientId,
+            secret = secret,
+            isPublicClient = false,
+            isDirectAccessGrantsEnabled = false,
+            isServiceAccountsEnabled = true,
+            authorizationServicesEnabled = false,
+            isStandardFlowEnabled = false,
+            baseUrl = this.homeUrl,
+            redirectUris = redirectUrls,
+        ).let { clientCoreAggregateService.create(it).id }
+        return clientId
+    }
+
+    private suspend fun AppClient.grantClientRoles(
+        clientId: ClientId
+    ) {
+        if (this.realmManagementRoles == null || this.realmManagementRoles.isNotEmpty()) {
+            val realmManagementId = clientCoreFinderService.getByIdentifier("realm-management").id
+            ClientGrantClientRolesCommand(
+                id = clientId,
+                providerClientId = realmManagementId,
+                roles = this.realmManagementRoles ?: DEFAULT_REALM_MANAGEMENT_ROLES
+            ).let { clientCoreAggregateService.grantClientRoles(it) }
+        }
+    }
+
+    private suspend fun AppClient.grantRealmRoles(
+        clientId: ClientId
+    ) {
+        roles?.let { roles ->
+            ClientGrantRealmRolesCommand(
+                id = clientId,
+                roles = roles
+            ).let { clientCoreAggregateService.grantRealmRoles(it) }
+        }
+    }
+
+    private fun AppClient.buildRedirectUrl(): List<String> {
+        val redirectUrls = this.homeUrl?.let { homeUrl ->
+            if (homeUrl.endsWith("/")) "$homeUrl*" else "$homeUrl/*"
+        }?.let { redirectUrl -> listOf(redirectUrl) } ?: emptyList()
+        return redirectUrls
     }
 
     suspend fun initWebClient(webClient: WebClient): ClientId {

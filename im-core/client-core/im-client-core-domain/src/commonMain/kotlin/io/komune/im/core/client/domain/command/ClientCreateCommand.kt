@@ -15,8 +15,8 @@ data class ClientCreateCommand(
     val isStandardFlowEnabled: Boolean,
     val rootUrl: String? = null,
     val redirectUris: List<String> = emptyList(),
-    val baseUrl: String = "",
-    val adminUrl: String = "",
+    val baseUrl: String? = null,
+    val adminUrl: String? = null,
     val webOrigins: List<String> = emptyList(),
     val additionalAccessTokenClaim: List<String> = emptyList()
 )
