@@ -1,5 +1,6 @@
 package io.komune.im.core.client.api
 
+import io.komune.im.commons.addWildcard
 import io.komune.im.commons.utils.mapAsync
 import io.komune.im.core.client.domain.command.ClientCreateCommand
 import io.komune.im.core.client.domain.command.ClientCreatedEvent
@@ -34,7 +35,7 @@ class ClientCoreAggregateService(
             isStandardFlowEnabled = command.isStandardFlowEnabled
             isPublicClient = command.isPublicClient
             rootUrl = command.rootUrl
-            redirectUris = command.redirectUris.map { url -> "${url}/*" }
+            redirectUris = command.redirectUris.map { url -> url.addWildcard() }
             baseUrl = command.baseUrl
             adminUrl = command.adminUrl
             webOrigins = command.webOrigins
