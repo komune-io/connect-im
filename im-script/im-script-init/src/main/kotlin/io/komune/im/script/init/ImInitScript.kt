@@ -54,7 +54,8 @@ class ImInitScript(
             clientId = clientId,
             clientSecret = clientSecret,
             roles = listOf("admin"),
-            realmManagementRoles = emptyList()
+            realmManagementRoles = emptyList(),
+            homeUrl = null
         ).let { clientInitService.initAppClient(it) }
 
         val realmClientId = clientCoreFinderService.getByIdentifier("master-realm").id
