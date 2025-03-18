@@ -1,5 +1,6 @@
 package io.komune.im.script.core.service
 
+import io.komune.im.commons.addWildcard
 import io.komune.im.commons.model.ClientId
 import io.komune.im.commons.model.ClientIdentifier
 import io.komune.im.core.client.api.ClientCoreAggregateService
@@ -100,9 +101,9 @@ class ClientInitService(
     }
 
     private fun AppClient.buildRedirectUrl(): List<String> {
-        val redirectUrls = this.homeUrl?.let { homeUrl ->
-            if (homeUrl.endsWith("/")) "$homeUrl*" else "$homeUrl/*"
-        }?.let { redirectUrl -> listOf(redirectUrl) } ?: emptyList()
+        val redirectUrls = this.homeUrl?.addWildcard()
+            ?.let { redirectUrl -> listOf(redirectUrl) }
+            ?: emptyList()
         return redirectUrls
     }
 
