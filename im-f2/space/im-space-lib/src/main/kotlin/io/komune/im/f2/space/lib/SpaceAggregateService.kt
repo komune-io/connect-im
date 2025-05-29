@@ -64,7 +64,7 @@ class SpaceAggregateService(
 
     suspend fun delete(command: SpaceDeleteCommand): SpaceDeletedEvent = mutate(command.id) {
         logger.info("Deleting space with identifier: ${command.id}")
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         client.realm(command.id).remove()
         logger.info("Space deleted with identifier: ${command.id}")
         SpaceDeletedEvent(command.id)
@@ -72,7 +72,7 @@ class SpaceAggregateService(
 
     private suspend fun create(command: SpaceDefineCommand) {
         logger.info("Creating space with identifier: ${command.identifier}")
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
 
         val realm = RealmRepresentation()
             .applyBaseConfig()
@@ -94,12 +94,11 @@ class SpaceAggregateService(
         enableUserAttributes(realm.realm)
         logger.info("Enabled user attributes for space with identifier: ${command.identifier}")
 
-        keycloakClientProvider.reset()
     }
 
     private suspend fun enableUserAttributes(realm: String) {
         logger.info("Enabling user attributes for realm: $realm")
-        val client = keycloakClientProvider.get(realm)
+        val client = keycloakClientProvider.getClient(realm)
         val upConfiguration = client.userProfile().configuration
         upConfiguration.unmanagedAttributePolicy = UPConfig.UnmanagedAttributePolicy.ENABLED
         client.userProfile().update(upConfiguration)
@@ -108,7 +107,7 @@ class SpaceAggregateService(
 
     private suspend fun update(command: SpaceDefineCommand) {
         logger.info("Updating space with identifier: ${command.identifier}")
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         val realm = client.realm(command.identifier)
             .toRepresentation()
             .applyCommand(command)
@@ -118,7 +117,7 @@ class SpaceAggregateService(
 
     private suspend fun createFlow(command: SpaceDefineCommand) {
         if(command.mfa?.contains(SpaceOtpFlowService.OTP_FLOW_USER_ATTRIBUTE_VALUE) == true) {
-            val client = keycloakClientProvider.get()
+            val client = keycloakClientProvider.getClient()
             val acrLoaMap = objectMapper.writeValueAsString(ImMfaPasswordOtpFlowAcr.asKeycloakMap())
             val settings = client.realm(command.identifier)
                 .toRepresentation().apply {

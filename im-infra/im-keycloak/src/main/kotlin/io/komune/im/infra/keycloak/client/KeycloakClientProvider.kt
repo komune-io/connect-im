@@ -9,32 +9,19 @@ import org.springframework.stereotype.Service
 open class KeycloakClientProvider(
     private val authenticationResolver: ImAuthenticationProvider
 ) {
-    private var connection: KeycloakClientBuilder.KeycloakClientConnection? = null
-    private val cache = mutableMapOf<RealmId, KeycloakClient>()
 
-    suspend fun get(space: RealmId): KeycloakClient {
+    suspend fun getClient(space: RealmId): KeycloakClient {
         val currentAuth = currentAuth()
         val auth = currentAuth ?: authenticationResolver.getAuth()
         val copy = auth.copy(space = space)
-        val keycloakConnection = connection
-            ?: KeycloakClientBuilder.openConnection(copy)
-        return cache.getOrPut(copy.space) {
-            keycloakConnection.forRealm(copy.space)
-        }
+        val keycloakConnection = KeycloakClientBuilder.getConnection(copy)
+        return keycloakConnection.forRealm(copy.space)
     }
-    suspend fun get(): KeycloakClient {
+    suspend fun getClient(): KeycloakClient {
         val currentAuth = currentAuth()
         val auth = currentAuth ?: authenticationResolver.getAuth()
-        val keycloakConnection = connection
-            ?: KeycloakClientBuilder.openConnection(auth)
-        return cache.getOrPut(auth.space) {
-            keycloakConnection.forRealm(auth.space)
-        }
+        val keycloakConnection = KeycloakClientBuilder.getConnection(auth)
+        return keycloakConnection.forRealm(auth.space)
     }
 
-    open fun reset() {
-        connection?.keycloak?.close()
-        connection = null
-        cache.clear()
-    }
 }

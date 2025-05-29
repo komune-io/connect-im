@@ -15,7 +15,7 @@ class SpaceOtpFlowService {
     }
 
     suspend fun create(keycloakClientProvider: KeycloakClientProvider, space: String) {
-        val keycloakClient = keycloakClientProvider.get(space)
+        val keycloakClient = keycloakClientProvider.getClient(space)
         val authFlowsClient = keycloakClient.keycloak.realm(space).flows()
         return create(authFlowsClient)
     }
@@ -29,7 +29,7 @@ class SpaceOtpFlowService {
     }
 
     suspend fun setAsDefault(keycloakClientProvider: KeycloakClientProvider, space: String) {
-        val keycloakClient = keycloakClientProvider.get(space)
+        val keycloakClient = keycloakClientProvider.getClient(space)
         val realmResource = keycloakClient.keycloak.realm(space)
 
         val realmRepresentation = realmResource.toRepresentation()

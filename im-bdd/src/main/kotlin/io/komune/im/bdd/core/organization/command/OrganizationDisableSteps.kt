@@ -54,7 +54,8 @@ class OrganizationDisableSteps: En, ImCucumberStepsDefinition() {
         Then("The organization should be disabled") {
             step {
                 val organizationId = context.organizationIds.lastUsed
-                val assertThat = AssertionBdd.organization(keycloakClient()).assertThatId(organizationId)
+                val client = keycloakClientProvider.getClient()
+                val assertThat = AssertionBdd.organization(client).assertThatId(organizationId)
 
                 assertThat.hasFields(enabled = false)
                 if (command.anonymize) {

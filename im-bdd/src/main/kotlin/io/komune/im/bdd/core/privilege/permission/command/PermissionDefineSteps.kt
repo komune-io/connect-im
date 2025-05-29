@@ -55,7 +55,7 @@ class PermissionDefineSteps: En, ImCucumberStepsDefinition() {
 
         Then("The permission should be defined") {
             step {
-                AssertionBdd.permission(keycloakClientProvider.get()).assertThatId(command.identifier).hasFields(
+                AssertionBdd.permission(keycloakClientProvider.getClient()).assertThatId(command.identifier).hasFields(
                     identifier = command.identifier,
                     description = command.description,
                 )

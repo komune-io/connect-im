@@ -19,7 +19,7 @@ class PrivilegeCoreAggregateService(
 ): CachedService(CacheName.Privilege) {
 
     suspend fun define(command: PrivilegeCoreDefineCommand): PrivilegeCoreDefinedEvent = mutate(command.identifier) {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
 
         val oldPrivilege = privilegeCoreFinderService.getPrivilegeOrNull(command.identifier)
         val newPrivilege = command.toPrivilege(oldPrivilege?.id)

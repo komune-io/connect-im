@@ -61,7 +61,7 @@ class ApiKeyFinderService(
 
     suspend fun getUserOfKeyOrNull(id: ApiKeyId): UserModel? {
         return try {
-            val client = keycloakClientProvider.get()
+            val client = keycloakClientProvider.getClient()
             client.client(id).serviceAccountUser
                 .let { userRepresentationTransformer.transform(it) }
         } catch (e: JakartaNotFoundException) {

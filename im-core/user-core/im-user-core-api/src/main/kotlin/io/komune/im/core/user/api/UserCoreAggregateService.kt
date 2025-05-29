@@ -15,6 +15,7 @@ import io.komune.im.core.user.domain.command.UserCoreRemovedCredentialsEvent
 import io.komune.im.core.user.domain.command.UserCoreSendEmailCommand
 import io.komune.im.core.user.domain.command.UserCoreSentEmailEvent
 import io.komune.im.core.user.domain.model.UserModel
+import io.komune.im.infra.keycloak.client.KeycloakClient
 import io.komune.im.infra.keycloak.handleResponseError
 import io.komune.im.infra.redis.CacheName
 import java.util.UUID
@@ -34,14 +35,13 @@ class UserCoreAggregateService(
         command.id.orEmpty(),
         "Error while defining user (id: [${command.id}], email: [${command.email}])"
     ) {
-        val client = keycloakClientProvider.get()
-
+        val client = keycloakClientProvider.getClient()
         val existingUser = command.id?.let { client.user(it).toRepresentation() }
         val newRoles = command.roles?.mapAsync {
             client.role(it).toRepresentation()
         }
 
-        val user = (existingUser ?: UserRepresentation()).apply(command)
+        val user = (existingUser ?: UserRepresentation()).apply(client, command)
 
         val userId = if (existingUser == null) {
             user.isEnabled = true
@@ -68,7 +68,7 @@ class UserCoreAggregateService(
             client.user(userId).resetPassword(credentials)
         }
 
-        newRoles?.let { user.assignRoles(it) }
+        newRoles?.let { user.assignRoles(client, it) }
 
         UserCoreDefinedEvent(userId)
     }
@@ -78,14 +78,13 @@ class UserCoreAggregateService(
             "userId[${command.id}] " +
             "clientId[${AuthenticationProvider.getClientId()}]"
     ) {
-        val client = keycloakClientProvider.get()
-
+        val client = keycloakClientProvider.getClient()
         val clientId = AuthenticationProvider.getClientId()
         val redirectUri = clientId?.let {
-            val client = client.getClientByIdentifier(clientId)
-            val baseUrl = client?.baseUrl
-            val rootUrl = client?.rootUrl
-            val redirectUri = client?.redirectUris?.firstOrNull()
+            val clientObj = client.getClientByIdentifier(clientId)
+            val baseUrl = clientObj?.baseUrl
+            val rootUrl = clientObj?.rootUrl
+            val redirectUri = clientObj?.redirectUris?.firstOrNull()
             baseUrl ?: rootUrl ?: redirectUri
         }
         logger.info("Sending email actions [${command.actions.joinToString(", ")}] " +
@@ -101,12 +100,16 @@ class UserCoreAggregateService(
         command.id,
         "Error disabling user [${command.id}]"
     ) {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         val user = client.user(command.id).toRepresentation()
 
         user.isEnabled = false
-        user.singleAttribute<UserRepresentation>(UserModel::disabledBy.name, command.disabledBy)
-        user.singleAttribute<UserRepresentation>(UserModel::disabledDate.name, System.currentTimeMillis().toString())
+        user.singleAttribute<UserRepresentation>(
+            UserModel::disabledBy.name, command.disabledBy
+        )
+        user.singleAttribute<UserRepresentation>(
+            UserModel::disabledDate.name, System.currentTimeMillis().toString()
+        )
 
         client.user(command.id).update(user)
         UserCoreDisabledEvent(command.id)
@@ -116,24 +119,28 @@ class UserCoreAggregateService(
         command.id,
         "User[${command.id}] Error removing credentials with type ${command.type}."
     ) {
-        val useClient = keycloakClientProvider.get().user(command.id)
-        val credentials = useClient.credentials()
+        val client = keycloakClientProvider.getClient()
+        val userResource = client.user(command.id)
+        val credentials = userResource.credentials()
         credentials.forEach {
             if(it.type == command.type.value) {
-                useClient.removeCredential(it.id)
+                userResource.removeCredential(it.id)
             }
         }
         UserCoreRemovedCredentialsEvent(command.id)
     }
 
     suspend fun delete(command: UserCoreDeleteCommand) = mutate(command.id, "Error deleting user [${command.id}]") {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         client.user(command.id).remove()
         UserCoreDeletedEvent(command.id)
     }
 
-    private suspend fun UserRepresentation.apply(command: UserCoreDefineCommand): UserRepresentation {
-        val emailAsUsername = getIsRegistrationEmailAsUsername()
+    private suspend fun UserRepresentation.apply(
+        client: KeycloakClient,
+        command: UserCoreDefineCommand
+    ): UserRepresentation {
+        val emailAsUsername = getIsRegistrationEmailAsUsername(client)
         return this.apply {
             username =
                 username ?: if (emailAsUsername) email ?: UUID.randomUUID().toString() else UUID.randomUUID().toString()
@@ -162,18 +169,23 @@ class UserCoreAggregateService(
         }
     }
 
-    private suspend fun getIsRegistrationEmailAsUsername(): Boolean {
+    private suspend fun getIsRegistrationEmailAsUsername(client: KeycloakClient): Boolean {
         val emailAsUsername = properties.user?.emailAsUsername
-            ?: keycloakClientProvider.get().realm().toRepresentation()?.let {
-                logger.info("Using realm[${it.displayName}] configuration " +
-                    "for emailAsUsername: ${it.isRegistrationEmailAsUsername}")
-                it.isRegistrationEmailAsUsername
-            } ?: false
+            ?: fetchIsRegistrationEmailAsUsername(client) ?: false
         return emailAsUsername
     }
 
-    private suspend fun UserRepresentation.assignRoles(roles: List<RoleRepresentation>) {
-        val client = keycloakClientProvider.get()
+    private suspend fun fetchIsRegistrationEmailAsUsername(client: KeycloakClient): Boolean? {
+       return client.realm().toRepresentation()?.let {
+            logger.info(
+                "Using realm[${it.displayName}] configuration " +
+                    "for emailAsUsername: ${it.isRegistrationEmailAsUsername}"
+            )
+            it.isRegistrationEmailAsUsername
+        }
+    }
+
+    private suspend fun UserRepresentation.assignRoles(client: KeycloakClient, roles: List<RoleRepresentation>) {
         with(client.user(id).roles().realmLevel()) {
             val allRoles = listAll()
             logger.info("All roles: ${allRoles.map { it.name }}")

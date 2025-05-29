@@ -60,7 +60,7 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
         Then("The space should be created") {
             step {
                 withAuth("master") {
-                    val keycloakClient = keycloakClientProvider.get()
+                    val keycloakClient = keycloakClientProvider.getClient()
                     AssertionBdd.space(keycloakClient).exists(command.identifier)
 
                     val spaceMasterClient = keycloakClient.getClientByIdentifier("${command.identifier}-realm")!!

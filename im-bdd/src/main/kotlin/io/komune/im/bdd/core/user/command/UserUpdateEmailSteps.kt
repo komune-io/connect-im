@@ -47,7 +47,8 @@ class UserUpdateEmailSteps: En, ImCucumberStepsDefinition() {
             step {
                 val userId = context.userIds.lastUsed
 
-                AssertionBdd.user(keycloakClient()).assertThatId(userId).hasFields(
+                val client = keycloakClientProvider.getClient()
+                AssertionBdd.user(client).assertThatId(userId).hasFields(
                     email = command.email
                 )
             }

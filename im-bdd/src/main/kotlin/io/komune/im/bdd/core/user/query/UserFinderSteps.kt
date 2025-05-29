@@ -52,7 +52,8 @@ class UserFinderSteps: En, ImCucumberStepsDefinition() {
         val expectedIds = identifiers.map(context.userIds::safeGet).toTypedArray()
         Assertions.assertThat(fetchedIds).containsExactlyInAnyOrder(*expectedIds)
 
-        val userAsserter = AssertionBdd.user(keycloakClient())
+        val client = keycloakClientProvider.getClient()
+        val userAsserter = AssertionBdd.user(client)
         context.fetched.users.mapAsync { user ->
             userAsserter.assertThatId(user.id).matches(user)
         }

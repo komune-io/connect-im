@@ -24,8 +24,7 @@ class ClientCoreAggregateService(
 
     suspend fun create(command: ClientCreateCommand): ClientCreatedEvent {
         logger.info("Creating client with identifier: ${command.identifier}")
-        val keycloakClient = keycloakClientProvider.get()
-
+        val keycloakClient = keycloakClientProvider.getClient()
         val response = ClientRepresentation().apply {
             clientId = command.identifier
             secret = command.secret
@@ -52,7 +51,7 @@ class ClientCoreAggregateService(
 
     suspend fun grantClientRoles(command: ClientGrantClientRolesCommand): ClientGrantedClientRolesEvent {
         logger.info("Granting client roles[${command.roles.joinToString(",")}] for client ID: ${command.id}")
-        val keycloakClient = keycloakClientProvider.get()
+        val keycloakClient = keycloakClientProvider.getClient()
         val newRoles = command.roles.mapAsync { role ->
             keycloakClient.client(command.providerClientId).roles().get(role).toRepresentation()
                 .also {
@@ -64,15 +63,16 @@ class ClientCoreAggregateService(
             .clientLevel(command.providerClientId)
             .add(newRoles)
 
-        return ClientGrantedClientRolesEvent(command.id).also {
-            logger.info("Granted client roles[${newRoles.joinToString(",") { it.name }}] for client ID: ${command.id}")
+        val result = ClientGrantedClientRolesEvent(command.id).also {
+            val roles = newRoles.joinToString(",") { it.name }
+            logger.info("Granted client roles[$roles] for client ID: ${command.id}")
         }
+        return result
     }
 
     suspend fun grantRealmRoles(command: ClientGrantRealmRolesCommand): ClientGrantedRealmRolesEvent {
         logger.info("Granting realm roles[${command.roles.joinToString(",")}] for client ID: ${command.id}")
-        val keycloakClient = keycloakClientProvider.get()
-
+        val keycloakClient = keycloakClientProvider.getClient()
         val newRoles = command.roles.mapAsync { role ->
             keycloakClient.role(role).toRepresentation()
         }
@@ -82,9 +82,11 @@ class ClientCoreAggregateService(
             .realmLevel()
             .add(newRoles)
 
-        return ClientGrantedRealmRolesEvent(command.id).also {
-            logger.info("Granted realm roles[${newRoles.joinToString(",") { it.name }}] for client ID: ${command.id}")
+        val result = ClientGrantedRealmRolesEvent(command.id).also {
+            val roles = newRoles.joinToString(",") { it.name }
+            logger.info("Granted realm roles[$roles] for client ID: ${command.id}")
         }
+        return result
     }
 
     private fun accessTokenClaim(name: String): ProtocolMapperRepresentation {

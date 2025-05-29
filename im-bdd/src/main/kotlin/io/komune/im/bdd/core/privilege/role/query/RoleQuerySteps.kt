@@ -50,7 +50,7 @@ class RoleQuerySteps: En, ImCucumberStepsDefinition() {
         val expectedIdentifiers = identifiers.map { context.roleIdentifiers[it] ?: it }
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 
-        val roleAsserter = AssertionBdd.role(keycloakClientProvider.get())
+        val roleAsserter = AssertionBdd.role(keycloakClientProvider.getClient())
         fetchedRoles.map { role ->
             async { roleAsserter.assertThatId(role.identifier).matches(role) }
         }.awaitAll()

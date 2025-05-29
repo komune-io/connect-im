@@ -21,7 +21,7 @@ class OrganizationCoreAggregateService: CoreService(CacheName.Organization) {
     suspend fun define(command: OrganizationCoreDefineCommand) = mutate(command.id.orEmpty(),
         "Error while defining organization (id: [${command.id}], identifier: [${command.identifier}])"
     ) {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
 
         val existingGroup = command.id?.let { client.group(it).toRepresentation() }
         val newRoles = command.roles.orEmpty().mapAsync {
@@ -73,7 +73,7 @@ class OrganizationCoreAggregateService: CoreService(CacheName.Organization) {
     suspend fun setSomeAttributes(command: OrganizationCoreSetSomeAttributesCommand) = mutate(command.id,
         "Error while setting some attributes of organization [${command.id}]"
     ) {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         val group = client.group(command.id).toRepresentation()
         command.attributes.forEach { (key, value) ->
             group.singleAttribute(key, value)
@@ -89,7 +89,7 @@ class OrganizationCoreAggregateService: CoreService(CacheName.Organization) {
     suspend fun delete(command: OrganizationCoreDeleteCommand): OrganizationCoreDeletedEvent = mutate(command.id,
         "Error while deleting organization [${command.id}]"
     ) {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         client.group(command.id).remove()
         OrganizationCoreDeletedEvent(command.id)
     }

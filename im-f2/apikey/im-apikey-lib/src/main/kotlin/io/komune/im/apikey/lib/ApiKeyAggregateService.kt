@@ -56,7 +56,7 @@ class ApiKeyAggregateService(
     ): ApiKeyOrganizationAddedEvent {
         checkRoles(command.roles)
         val organization = organizationCoreFinderService.get(command.organizationId)
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
 
         val keyIdentifier = toKeyIdentifier(organization, command.name)
         val keySecret = command.secret ?: UUID.randomUUID().toString()
@@ -115,7 +115,7 @@ class ApiKeyAggregateService(
     }
 
     suspend fun remove(command: ApikeyRemoveCommand): ApikeyRemoveEvent {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
 
         val user = apiKeyFinderService.getUserOfKey(command.id)
         val organizationId = user.memberOf!!

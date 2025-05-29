@@ -14,14 +14,13 @@ class ClientCoreFinderService(
     private val keycloakClientProvider: KeycloakClientProvider
 ) {
     suspend fun getOrNull(id: ClientId): ClientModel? {
-        val keycloakClient = keycloakClientProvider.get()
-
-        return try {
-            keycloakClient.client(id)
+        val keycloakClient = keycloakClientProvider.getClient()
+        try {
+            return keycloakClient.client(id)
                 .toRepresentation()
                 .toClient()
         } catch (e: JakartaNotFoundException) {
-            null
+            return null
         }
     }
 
@@ -30,12 +29,11 @@ class ClientCoreFinderService(
     }
 
     suspend fun getByIdentifierOrNull(identifier: ClientIdentifier): ClientModel? {
-        val keycloakClient = keycloakClientProvider.get()
-
-        return try {
-            keycloakClient.getClientByIdentifier(identifier)?.toClient()
+        val keycloakClient = keycloakClientProvider.getClient()
+        try {
+            return keycloakClient.getClientByIdentifier(identifier)?.toClient()
         } catch (e: JakartaNotFoundException) {
-            null
+            return null
         }
     }
 
@@ -44,10 +42,9 @@ class ClientCoreFinderService(
     }
 
     suspend fun listClientRoles(id: ClientId): List<String> {
-        val keycloakClient = keycloakClientProvider.get()
-
-        return try {
-            keycloakClient.client(id)
+        val keycloakClient = keycloakClientProvider.getClient()
+        try {
+            return keycloakClient.client(id)
                 .roles()
                 .list()
                 .map { it.name }

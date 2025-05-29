@@ -150,7 +150,7 @@ class SpaceCreateScript(
             sendResetPassword = false
         ).let { userAggregateService.create(it).id }
 
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         val realmManagementClientId = client.getClientByIdentifier("realm-management")!!.id
         val realmAdminRole = client.role("realm-admin").toRepresentation()
         client.user(userId).roles().clientLevel(realmManagementClientId).add(listOf(realmAdminRole))
@@ -185,7 +185,7 @@ class SpaceCreateScript(
     }
 
     private suspend fun initClientScopes() {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         val scopesClient = client.realm().clientScopes()
         val rolesScope = scopesClient.findAll()
             .firstOrNull { it.name == "roles" }

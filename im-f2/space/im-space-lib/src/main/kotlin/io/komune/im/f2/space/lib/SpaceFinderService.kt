@@ -17,7 +17,7 @@ import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 class SpaceFinderService: CoreService(CacheName.Space) {
 
     suspend fun getOrNull(id: SpaceIdentifier): Space? = query(id) {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
 
         try {
             client.realm(id)
@@ -37,7 +37,7 @@ class SpaceFinderService: CoreService(CacheName.Space) {
         page: Int?,
         size: Int?
     ): SpacePageResult {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         val actualPage = page ?: PageDefault.PAGE_NUMBER
         val actualSize = size ?: PageDefault.PAGE_SIZE
 
