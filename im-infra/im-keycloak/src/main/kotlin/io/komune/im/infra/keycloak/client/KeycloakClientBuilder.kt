@@ -26,19 +26,9 @@ object KeycloakClientBuilder {
         logger.info("Creating shared RESTEasy client with connection pool")
         val builder = ResteasyClientBuilder.newBuilder() as ResteasyClientBuilder
         return builder.connectionPoolSize(CONNECTION_POOL_SIZE)
-            .connectionPoolSize(CONNECTION_POOL_SIZE)
             .maxPooledPerRoute(MAX_PER_ROUTE)
             .connectionTTL(CONNECTION_TTL, TimeUnit.SECONDS)
             .build()
-    }
-
-    fun create() {
-        if (resteasyClient.isClosed == true) {
-            resteasyClient = createClient()
-            logger.info("Created new RESTEasy client")
-        } else {
-            logger.info("RESTEasy client already exists and is not closed")
-        }
     }
 
     fun getConnection(auth: AuthSubRealm): KeycloakClientConnection {
@@ -82,8 +72,10 @@ object KeycloakClientBuilder {
         fun forAuthedRealm() = forRealm(null)
     }
 
-    fun close() {
-        resteasyClient.close()
+    fun reset() {
         logger.info("Closed and cleared RESTEasy client")
+        resteasyClient.close()
+        logger.info("Created new RESTEasy client")
+        resteasyClient = createClient()
     }
 }
