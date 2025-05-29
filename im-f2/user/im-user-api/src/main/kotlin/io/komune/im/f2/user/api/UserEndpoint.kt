@@ -89,7 +89,7 @@ class UserEndpoint(
 
     @Bean
     override fun userCreate(): UserCreateFunction = f2Function { command ->
-        logger.info("userCreate: $command")
+        logger.info("userCreate: ${command.copy(password = "*****")}")
         policiesEnforcer.checkCreate(command.memberOf)
         userAggregateService.create(command)
     }
@@ -124,7 +124,7 @@ class UserEndpoint(
 
     @Bean
     override fun userUpdatePassword(): UserUpdatePasswordFunction = f2Function { command ->
-        logger.info("userUpdatePassword: $command")
+        logger.info("userUpdatePassword: ${command.copy(password = "*****")}")
         policiesEnforcer.checkUpdate(command.id)
         userAggregateService.updatePassword(command)
     }
