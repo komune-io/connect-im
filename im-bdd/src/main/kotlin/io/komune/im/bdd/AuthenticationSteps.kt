@@ -16,7 +16,8 @@ class AuthenticationSteps: En, ImCucumberStepsDefinition() {
             step {
                 coroutineScope {
                     val userId = context.userIds.safeGet(params.identifier)
-                    val userResource = keycloakClientProvider.get().user(userId)
+                    val client = keycloakClientProvider.getClient()
+                    val userResource = client.user(userId)
                     val user = async { userResource.toRepresentation() }
                     val userRoles = async { userResource.roles().realmLevel().listEffective() }
                     context.authedUser = AuthedUser(
@@ -24,13 +25,16 @@ class AuthenticationSteps: En, ImCucumberStepsDefinition() {
                         memberOf = user.await()?.attributes?.get("memberOf")?.firstOrNull(),
                         roles = userRoles.await().map { it.name }.toTypedArray()
                     )
+
                 }
             }
         }
 
         Given("I am authenticated as admin") {
             step {
-                val allRoles = keycloakClientProvider.get(context.realmId).roles().list().map { it.name }
+                val client = keycloakClientProvider.getClient(context.realmId)
+                val allRoles =  client.roles().list().map { it.name }
+
                 context.authedUser = AuthedUser(
                     id = "admin",
                     roles = allRoles.toTypedArray(),

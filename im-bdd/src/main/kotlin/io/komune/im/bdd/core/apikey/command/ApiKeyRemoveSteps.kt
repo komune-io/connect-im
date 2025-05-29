@@ -78,8 +78,9 @@ class ApiKeyRemoveSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun assertApiKey(id: ApiKeyId) {
-        AssertionBdd.client(keycloakClient()).notExists(id)
-        AssertionBdd.apiKey(keycloakClient()).notExists(id)
+        val client = keycloakClientProvider.getClient()
+        AssertionBdd.client(client).notExists(id)
+        AssertionBdd.apiKey(client).notExists(id)
     }
 
     private fun apiKeyRemoveParams(entry: Map<String, String>?) = ApiKeyRemoveParams(

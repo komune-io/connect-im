@@ -48,7 +48,7 @@ class PermissionQuerySteps: En, ImCucumberStepsDefinition() {
         val expectedIdentifiers = identifiers.map(context.permissionIdentifiers::safeGet)
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 
-        val permissionAsserter = AssertionBdd.permission(keycloakClientProvider.get())
+        val permissionAsserter = AssertionBdd.permission(keycloakClientProvider.getClient())
         fetchedPermissions.mapAsync { permission ->
             permissionAsserter.assertThatId(permission.identifier).matches(permission)
         }

@@ -54,7 +54,8 @@ class OrganizationDeleteSteps: En, ImCucumberStepsDefinition() {
 
         Then("The organization should be deleted") {
             step {
-                AssertionBdd.organization(keycloakClient()).notExists(command.id)
+                val client = keycloakClientProvider.getClient()
+                AssertionBdd.organization(client).notExists(command.id)
             }
         }
     }

@@ -59,7 +59,8 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
             step {
                 val userId = context.userIds.lastUsed
 
-                AssertionBdd.user(keycloakClient()).assertThatId(userId).hasFields(
+                val client = keycloakClientProvider.getClient()
+                AssertionBdd.user(client).assertThatId(userId).hasFields(
                     email = command.email,
                     givenName = command.givenName,
                     familyName = command.familyName,
@@ -75,7 +76,8 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
 
         Then("The user should not be created") {
             step {
-                AssertionBdd.user(keycloakClient()).notExistsByEmail(command.email)
+                val client = keycloakClientProvider.getClient()
+                AssertionBdd.user(client).notExistsByEmail(command.email)
             }
         }
     }

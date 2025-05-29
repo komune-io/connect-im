@@ -54,7 +54,8 @@ class UserDeleteSteps: En, ImCucumberStepsDefinition() {
 
         Then("The user should be deleted") {
             step {
-                AssertionBdd.user(keycloakClient()).notExists(command.id)
+                val client = keycloakClientProvider.getClient()
+                AssertionBdd.user(client).notExists(command.id)
             }
         }
     }

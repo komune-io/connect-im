@@ -21,7 +21,7 @@ class OrganizationCoreFinderService : CoreService(CacheName.Organization) {
     suspend fun getOrNull(
         id: OrganizationId
     ): OrganizationModel? = query(id, "Error while fetching organization [$id]") {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         try {
             client.group(id).toRepresentation().toOrganization()
         } catch (e: JakartaNotFoundException) {
@@ -42,7 +42,7 @@ class OrganizationCoreFinderService : CoreService(CacheName.Organization) {
         withDisabled: Boolean = false,
         offset: OffsetPagination? = null,
     ): PageDTO<OrganizationModel> {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
 
         val compositeRoles = client.roles().list().associate { role ->
             val composites = client.role(role.name).realmRoleComposites.mapNotNull { it.name }

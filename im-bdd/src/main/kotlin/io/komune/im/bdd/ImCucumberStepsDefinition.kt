@@ -32,8 +32,6 @@ open class ImCucumberStepsDefinition: s2.bdd.CucumberStepsDefinition() {
         return withAuth(imProperties.keycloak.toAuthRealm(), space, block)
     }
 
-    suspend fun keycloakClient() = keycloakClientProvider.get()
-
     override fun authedContext(): ReactorContext {
         val authedUser = context.authedUser
             ?: return ReactorContext(Context.of(SecurityContext::class.java, Mono.empty<SecurityContext>()))

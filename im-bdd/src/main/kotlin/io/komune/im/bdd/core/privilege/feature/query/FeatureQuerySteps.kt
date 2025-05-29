@@ -48,7 +48,7 @@ class FeatureQuerySteps: En, ImCucumberStepsDefinition() {
         val expectedIdentifiers = identifiers.map(context.featureIdentifiers::safeGet)
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 
-        val featureAsserter = AssertionBdd.feature(keycloakClientProvider.get())
+        val featureAsserter = AssertionBdd.feature(keycloakClientProvider.getClient())
         fetchedFeatures.mapAsync { feature ->
             featureAsserter.assertThatId(feature.identifier).matches(feature)
         }

@@ -12,7 +12,7 @@ class UserRepresentationTransformer(
     private val keycloakClientProvider: KeycloakClientProvider
 ): Transformer<UserRepresentation, UserModel>() {
     override suspend fun transform(item: UserRepresentation): UserModel {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         val roles = client.user(item.id)
             .roles()
             .realmLevel()

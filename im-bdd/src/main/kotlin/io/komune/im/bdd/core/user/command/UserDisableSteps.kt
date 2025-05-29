@@ -54,7 +54,8 @@ class UserDisableSteps: En, ImCucumberStepsDefinition() {
 
         Then("The user should be disabled") {
             step {
-                val assertThat = AssertionBdd.user(keycloakClient()).assertThatId(command.id)
+                val client = keycloakClientProvider.getClient()
+                val assertThat = AssertionBdd.user(client).assertThatId(command.id)
                 assertThat.hasFields(
                     enabled = false,
                     disabledBy = command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id,

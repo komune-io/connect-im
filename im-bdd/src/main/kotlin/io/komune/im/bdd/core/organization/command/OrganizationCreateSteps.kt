@@ -59,7 +59,8 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
         Then("The organization should be created") {
             step {
                 val organizationId = context.organizationIds.lastUsed
-                AssertionBdd.organization(keycloakClient()).assertThatId(organizationId).hasFields(
+                val client = keycloakClientProvider.getClient()
+                AssertionBdd.organization(client).assertThatId(organizationId).hasFields(
                     siret = command.siret,
                     name = command.name,
                     description = command.description,

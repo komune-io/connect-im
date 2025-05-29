@@ -55,7 +55,7 @@ class FeatureDefineSteps: En, ImCucumberStepsDefinition() {
 
         Then("The feature should be defined") {
             step {
-                AssertionBdd.feature(keycloakClientProvider.get()).assertThatId(command.identifier).hasFields(
+                AssertionBdd.feature(keycloakClientProvider.getClient()).assertThatId(command.identifier).hasFields(
                     identifier = command.identifier,
                     description = command.description,
                 )

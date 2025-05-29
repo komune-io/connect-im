@@ -65,7 +65,8 @@ class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
                     .invoke(OrganizationGetQuery(organizationId))
                     .item!!
 
-                AssertionBdd.organization(keycloakClient()).assertThatId(organizationId).hasFields(
+                val client = keycloakClientProvider.getClient()
+                AssertionBdd.organization(client).assertThatId(organizationId).hasFields(
                     name = command.name,
                     description = command.description ?: organization.description,
                     address = command.address ?: organization.address,

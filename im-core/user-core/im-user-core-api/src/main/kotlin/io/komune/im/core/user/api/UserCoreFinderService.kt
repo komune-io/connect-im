@@ -22,7 +22,7 @@ class UserCoreFinderService(
 ) : CoreService(CacheName.User) {
 
     suspend fun getOrNull(id: UserId): UserModel? = query(id, "Error while fetching user [$id]") {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         try {
             client.user(id).toRepresentation().let { userRepresentationTransformer.transform(it) }
         } catch (e: JakartaNotFoundException) {
@@ -36,7 +36,7 @@ class UserCoreFinderService(
 
     suspend fun getByEmailOrNull(email: String): UserModel? =
         handleErrors("Error while fetching user by email [$email]") {
-            val client = keycloakClientProvider.get()
+            val client = keycloakClientProvider.getClient()
             client.users().search(null, null, null, email, null, null, true, false)
                 .firstOrNull { it.email == email }
                 .let { userRepresentationTransformer.transform(it) }
@@ -52,7 +52,7 @@ class UserCoreFinderService(
         withDisabled: Boolean = false,
         offset: OffsetPagination? = null
     ): PageDTO<UserModel> {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
 
         val compositeRoles = client.roles().list().mapAsync { role ->
             role.name to client.role(role.name).realmRoleComposites.mapNotNull { it.name }
@@ -79,7 +79,7 @@ class UserCoreFinderService(
         ids: Collection<UserId>? = null,
         organizationIds: Collection<OrganizationId>? = null
     ): List<UserModel> {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         return when {
             ids != null -> {
                 ids.mapAsync(::getOrNull).filterNotNull()

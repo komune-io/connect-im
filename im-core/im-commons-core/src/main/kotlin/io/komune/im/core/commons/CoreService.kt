@@ -42,7 +42,7 @@ open class CoreService(
         } catch (e: F2Exception) {
             throw e
         } catch (e: Exception) {
-            val client = keycloakClientProvider.get()
+            val client = keycloakClientProvider.getClient()
             throw IMApiError(
                 description = "Space [${client.realmId}, ${client.auth.realmId}]: $errorMessage",
                 payload = emptyMap()

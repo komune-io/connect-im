@@ -89,8 +89,8 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun assertApiKey(params: ApiKeyAssertParams) {
-        val kcClient = keycloakClient()
-        val assertionApiKey = AssertionBdd.apiKey(kcClient)
+        val client = keycloakClientProvider.getClient()
+        val assertionApiKey = AssertionBdd.apiKey(client)
         val apiKeyId = context.apikeyIds.safeGet(params.identifier)
         val apiKey = assertionApiKey.findById(apiKeyId)
 
@@ -101,7 +101,7 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
             roles = params.roles ?: apiKey.roles,
         )
 
-        AssertionBdd.client(kcClient).assertThatId(apiKeyId).hasFields(
+        AssertionBdd.client(client).assertThatId(apiKeyId).hasFields(
             identifier = apiKey.identifier,
             isPublicClient = false,
             isDirectAccessGrantsEnabled = false,
@@ -109,10 +109,10 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
             isStandardFlowEnabled = false
         )
 
-        val user = kcClient.client(apiKeyId).serviceAccountUser
+        val user = client.client(apiKeyId).serviceAccountUser
         val memberOf = params.organization?.let(context.organizationIds::safeGet)
             ?: user.attributes?.get("memberOf")?.firstOrNull()
-        AssertionBdd.user(kcClient).assertThat(user).hasFields(
+        AssertionBdd.user(client).assertThat(user).hasFields(
             memberOf = memberOf,
             roles = params.roles ?: apiKey.roles,
             enabled = true,

@@ -21,9 +21,8 @@ class PrivilegeCoreFinderService(
 ): CachedService(CacheName.Privilege) {
 
     suspend fun getPrivilegeOrNull(identifier: PrivilegeIdentifier): Privilege? = query(identifier) {
-        val client = keycloakClientProvider.get()
-
         try {
+            val client = keycloakClientProvider.getClient()
             client.role(identifier)
                 .toRepresentation()
                 .toPrivilege()
@@ -40,7 +39,7 @@ class PrivilegeCoreFinderService(
         types: Collection<PrivilegeType>? = null,
         targets: Collection<RoleTarget>? = null
     ): List<Privilege> {
-        val client = keycloakClientProvider.get()
+        val client = keycloakClientProvider.getClient()
         return client.roles().list(false)
             .map(RoleRepresentation::toPrivilege)
             .filter { privilege ->

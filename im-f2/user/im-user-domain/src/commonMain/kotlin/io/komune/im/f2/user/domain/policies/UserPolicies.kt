@@ -6,7 +6,6 @@ import io.komune.im.commons.auth.hasAcr
 import io.komune.im.commons.auth.hasOneOfRoles
 import io.komune.im.commons.auth.hasRole
 import io.komune.im.commons.model.OrganizationId
-import io.komune.im.core.mfa.domain.model.ImMfaPasswordOtpFlow
 import io.komune.im.core.mfa.domain.model.ImMfaPasswordOtpFlowAcr
 import io.komune.im.f2.user.domain.model.UserDTO
 import kotlin.js.JsExport

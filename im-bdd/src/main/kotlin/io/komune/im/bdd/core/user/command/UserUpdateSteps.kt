@@ -9,7 +9,6 @@ import io.komune.im.commons.model.Address
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserUpdateCommand
-import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
@@ -59,7 +58,8 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
             step {
                 val userId = context.userIds.lastUsed
 
-                AssertionBdd.user(keycloakClient()).assertThatId(userId).hasFields(
+                val client = keycloakClientProvider.getClient()
+                AssertionBdd.user(client).assertThatId(userId).hasFields(
                     givenName = command.givenName,
                     familyName = command.familyName,
                     address = command.address,
@@ -73,9 +73,10 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
         Then("The user should be updated:") { dataTable: DataTable ->
             step {
                 val userId = context.userIds.lastUsed
+                val client = keycloakClientProvider.getClient()
                 dataTable.asList(UserUpdateParams::class.java)
                     .forEach {
-                        AssertionBdd.user(keycloakClient()).assertThatId(userId).hasFields(
+                        AssertionBdd.user(client).assertThatId(userId).hasFields(
                             givenName = it.givenName,
                             familyName = it.familyName,
                             address = it.address,
@@ -83,7 +84,6 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
                             roles = it.roles,
                             attributes = it.attributes,
                         )
-
                     }
             }
         }
