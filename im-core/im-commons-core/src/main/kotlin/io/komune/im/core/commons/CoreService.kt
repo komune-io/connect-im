@@ -4,7 +4,6 @@ import f2.dsl.cqrs.exception.F2Exception
 import io.komune.im.commons.exception.IMApiError
 import io.komune.im.commons.exception.IMException
 import io.komune.im.commons.exception.asException
-import io.komune.im.infra.keycloak.client.KeycloakClient
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.infra.redis.CacheName
 import io.komune.im.infra.redis.CachedService

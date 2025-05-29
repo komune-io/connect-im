@@ -12,9 +12,9 @@ import io.komune.im.script.core.model.defaultSpaceRootClientId
 import io.komune.im.script.space.config.config.ApiKeyData
 import io.komune.im.script.space.config.config.OrganizationData
 import io.komune.im.script.space.config.config.SpaceConfigProperties
+import io.komune.im.script.space.create.SpaceCreateScript
 import io.komune.im.script.space.create.config.ClientCredentials
 import io.komune.im.script.space.create.config.SpaceCreateProperties
-import io.komune.im.script.space.create.SpaceCreateScript
 import java.util.UUID
 import kotlin.math.absoluteValue
 import kotlinx.coroutines.test.runTest

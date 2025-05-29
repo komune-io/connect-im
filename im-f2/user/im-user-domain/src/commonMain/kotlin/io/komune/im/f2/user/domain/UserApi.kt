@@ -1,9 +1,9 @@
 package io.komune.im.f2.user.domain
 
-import io.komune.im.f2.user.domain.command.UserDisableMfaFunction
 import io.komune.im.f2.user.domain.command.UserCreateFunction
 import io.komune.im.f2.user.domain.command.UserDeleteFunction
 import io.komune.im.f2.user.domain.command.UserDisableFunction
+import io.komune.im.f2.user.domain.command.UserDisableMfaFunction
 import io.komune.im.f2.user.domain.command.UserResetPasswordFunction
 import io.komune.im.f2.user.domain.command.UserUpdateEmailFunction
 import io.komune.im.f2.user.domain.command.UserUpdateFunction
