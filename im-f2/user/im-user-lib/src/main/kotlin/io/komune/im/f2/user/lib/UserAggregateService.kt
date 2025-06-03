@@ -38,7 +38,6 @@ import io.komune.im.f2.user.domain.command.UserUpdatedPasswordEvent
 import io.komune.im.f2.user.domain.model.UserDTO
 import org.keycloak.events.EventType
 import org.springframework.stereotype.Service
-import org.yaml.snakeyaml.error.MissingEnvironmentVariableException
 
 @Service
 class UserAggregateService(
