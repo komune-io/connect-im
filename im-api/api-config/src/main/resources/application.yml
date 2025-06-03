@@ -39,6 +39,8 @@ connect:
       insee:
         token: ${INSEE_TOKEN}
         sireneApi: https://api.insee.fr/entreprises/sirene/V3
+    user:
+      defaultRoleIdentifiers: ""
     smtp:
         host: connect-fake-smtp,
         port: 1025,

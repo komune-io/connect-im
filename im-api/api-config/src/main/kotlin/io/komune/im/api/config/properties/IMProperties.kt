@@ -19,7 +19,8 @@ class OrganizationProperties(
 )
 
 class UserProperties(
-    val emailAsUsername: Boolean = false
+    val emailAsUsername: Boolean = false,
+    val defaultRoleIdentifiers: String = "",
 )
 
 class KeycloakProperties(
