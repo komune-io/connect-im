@@ -11,6 +11,7 @@ import io.komune.im.commons.utils.toJson
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.privilege.api.PrivilegeCoreFinderService
 import io.komune.im.core.privilege.api.model.checkTarget
+import io.komune.im.core.privilege.domain.model.PrivilegeType
 import io.komune.im.core.privilege.domain.model.RoleModel
 import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.core.user.api.UserCoreAggregateService
@@ -180,13 +181,22 @@ class UserAggregateService(
         organizationId: OrganizationId?,
         roles: List<RoleIdentifier>
     ): List<RoleIdentifier> {
-        val organizationRoles = organizationId?.let {
-            organizationCoreFinderService.get(it).roles.flatMap { roleIdentifier ->
-                (privilegeCoreFinderService.getPrivilege(roleIdentifier) as RoleModel).bindings[RoleTarget.USER].orEmpty()
+        return organizationId?.let {
+            val organizationRoles = organizationCoreFinderService.get(organizationId).roles.flatMap { roleIdentifier ->
+                val privilege = privilegeCoreFinderService.getPrivilege(roleIdentifier)
+                if (PrivilegeType.ROLE == privilege.type){
+                    (privilege as RoleModel).bindings[RoleTarget.USER].orEmpty()
+                } else listOf()
             }
-        } ?: emptyList()
-        return roles.filter { organizationRoles.contains(it) }.ifEmpty {
-            properties.user?.defaultRoleIdentifiers?.split(",")?.map(String::trim) ?: emptyList()
-        }
+            roles.filter { role ->
+                organizationRoles.contains(role)
+            }.ifEmpty {
+                properties.user?.defaultRoleIdentifiers
+                    ?.split(",")
+                    ?.onEach(String::trim)
+                    ?.filter(String::isNotBlank)
+                    ?: emptyList()
+            }
+        } ?: roles
     }
 }
