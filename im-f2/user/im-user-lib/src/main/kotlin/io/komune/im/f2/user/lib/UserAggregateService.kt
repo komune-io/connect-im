@@ -193,7 +193,7 @@ class UserAggregateService(
             }.ifEmpty {
                 properties.user?.defaultRoleIdentifiers
                     ?.split(",")
-                    ?.onEach(String::trim)
+                    ?.map(String::trim)
                     ?.filter(String::isNotBlank)
                     ?: emptyList()
             }
