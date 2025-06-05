@@ -87,6 +87,17 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
                     }
             }
         }
+
+        Then("The user roles should be:") { params: UserUpdateParams ->
+            step {
+                val userId = context.userIds.lastUsed
+                val client = keycloakClientProvider.getClient()
+
+                AssertionBdd.user(client).assertThatId(userId).hasFields(
+                    roles = params.roles,
+                )
+            }
+        }
     }
 
     private suspend fun updateUser(params: UserUpdateParams) {
@@ -97,7 +108,7 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
             address = params.address,
             phone = params.phone,
             roles = params.roles,
-            memberOf = params.memberOf,
+            memberOf = params.memberOf?.let { context.organizationIds[it] ?: it },
             attributes = params.attributes,
         )
 
@@ -117,7 +128,7 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
             phone = entry?.get("phone") ?: "0600000000",
             roles = entry?.extractList<String>("roles")?.map { context.roleIdentifiers[it] ?: it }
                 ?: listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
-            memberOf = entry?.get("memberOf").parseNullableOrDefault(context.organizationIds.lastUsedOrNull),
+            memberOf = entry?.get("memberOf").parseNullableOrDefault(null),
             attributes = userAttributesParams(entry),
         )
     }

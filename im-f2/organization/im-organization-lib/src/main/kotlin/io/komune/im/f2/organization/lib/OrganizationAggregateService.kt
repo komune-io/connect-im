@@ -3,6 +3,7 @@ package io.komune.im.f2.organization.lib
 import io.komune.fs.s2.file.client.FileClient
 import io.komune.fs.s2.file.domain.features.command.FileUploadCommand
 import io.komune.im.commons.auth.AuthenticationProvider
+import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.PrivilegeIdentifier
 import io.komune.im.commons.utils.EmptyAddress
 import io.komune.im.core.organization.api.OrganizationCoreAggregateService
@@ -27,8 +28,10 @@ import io.komune.im.f2.organization.domain.model.Organization
 import io.komune.im.f2.organization.domain.model.OrganizationDTO
 import io.komune.im.f2.organization.domain.model.OrganizationStatus
 import io.komune.im.f2.organization.lib.config.OrganizationFsConfig
+import io.komune.im.f2.privilege.domain.role.model.Role
 import io.komune.im.f2.user.domain.command.UserDisableCommand
 import io.komune.im.f2.user.domain.command.UserDisabledEvent
+import io.komune.im.f2.user.domain.command.UserUpdateCommand
 import io.komune.im.f2.user.lib.UserAggregateService
 import io.komune.im.f2.user.lib.UserFinderService
 import kotlinx.coroutines.async
@@ -86,6 +89,8 @@ class OrganizationAggregateService(
                 command.status?.let { OrganizationDTO::status.name to OrganizationStatus.valueOf(it).name }).toMap()
                 .filterValues { it.isNotBlank() },
         ).let { organizationCoreAggregateService.define(it).id }
+        // WCO2-251 - synchronize user roles with the organization's new ones
+        refreshUsersOf(command.id)
 
         return OrganizationUpdatedResult(command.id)
     }
@@ -164,5 +169,28 @@ class OrganizationAggregateService(
                 privilege.checkTarget(RoleTarget.ORGANIZATION)
             }
         }.awaitAll()
+    }
+
+    /**
+     * Update each user of the given organization without any modification to trigger
+     * their role filters to match the organization's new roles.
+     * */
+    private suspend fun refreshUsersOf(id: OrganizationId) {
+        val users = userFinderService.page(organizationIds = listOf(id))
+        users.items.forEach { user ->
+            userAggregateService.update(
+                UserUpdateCommand(
+                    id = user.id,
+                    givenName = user.givenName,
+                    familyName = user.familyName,
+                    address = user.address,
+                    phone = user.phone,
+                    roles = user.roles.map(Role::identifier),
+                    memberOf = id,
+                    attributes = user.attributes
+
+                )
+            )
+        }
     }
 }

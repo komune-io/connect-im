@@ -54,8 +54,13 @@ class UserCoreAggregateService(
         }
 
         if (command.canUpdateMemberOf()) {
-            command.memberOf?.let {
-                client.user(userId).joinGroup(it)
+            command.memberOf?.let { organizationId ->
+                client.user(userId).apply {
+                    groups().forEach {
+                        leaveGroup(it.id)
+                    }
+                    joinGroup(organizationId)
+                }
             }
         }
 

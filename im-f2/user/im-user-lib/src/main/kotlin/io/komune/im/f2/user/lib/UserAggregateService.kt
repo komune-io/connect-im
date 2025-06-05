@@ -1,14 +1,18 @@
 package io.komune.im.f2.user.lib
 
+import io.komune.im.api.config.properties.IMProperties
 import io.komune.im.commons.auth.AuthenticationProvider
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.PrivilegeIdentifier
+import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.utils.EmptyAddress
 import io.komune.im.commons.utils.mapAsync
 import io.komune.im.commons.utils.toJson
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.privilege.api.PrivilegeCoreFinderService
 import io.komune.im.core.privilege.api.model.checkTarget
+import io.komune.im.core.privilege.domain.model.PrivilegeType
+import io.komune.im.core.privilege.domain.model.RoleModel
 import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.core.user.api.UserCoreAggregateService
 import io.komune.im.core.user.domain.command.CredentialType
@@ -41,6 +45,7 @@ class UserAggregateService(
     private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val privilegeCoreFinderService: PrivilegeCoreFinderService,
     private val userCoreAggregateService: UserCoreAggregateService,
+    private val properties: IMProperties
 ) {
     suspend fun create(command: UserCreateCommand): UserCreatedEvent {
         checkOrganizationExist(command.memberOf)
@@ -100,7 +105,7 @@ class UserAggregateService(
             id = command.id,
             givenName = command.givenName,
             familyName = command.familyName,
-            roles = command.roles,
+            roles = getValidUserRoleIdentifiers(command.memberOf, command.roles),
             memberOf = command.memberOf,
             attributes = command.attributes.orEmpty().plus(listOfNotNull(
                 command.address?.let { UserDTO::address.name to it.toJson() },
@@ -170,5 +175,28 @@ class UserAggregateService(
             val privilege = privilegeCoreFinderService.getPrivilege(it)
             privilege.checkTarget(RoleTarget.USER)
         }
+    }
+
+    private suspend fun getValidUserRoleIdentifiers(
+        organizationId: OrganizationId?,
+        roles: List<RoleIdentifier>
+    ): List<RoleIdentifier> {
+        return organizationId?.let {
+            val organizationRoles = organizationCoreFinderService.get(organizationId).roles.flatMap { roleIdentifier ->
+                val privilege = privilegeCoreFinderService.getPrivilege(roleIdentifier)
+                if (PrivilegeType.ROLE == privilege.type){
+                    (privilege as RoleModel).bindings[RoleTarget.USER].orEmpty()
+                } else listOf()
+            }
+            roles.filter { role ->
+                organizationRoles.contains(role)
+            }.ifEmpty {
+                properties.user?.defaultRoleIdentifiers
+                    ?.split(",")
+                    ?.map(String::trim)
+                    ?.filter(String::isNotBlank)
+                    ?: emptyList()
+            }
+        } ?: roles
     }
 }
