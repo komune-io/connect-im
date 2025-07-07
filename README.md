@@ -137,3 +137,38 @@ lateinit var imUrl: String
     )
 }
 ```
+
+
+# Keycloak Plugin
+
+## Create a plugin
+
+1. Create a module inside `i2-keycloak:keycloak-plugin`
+2. Build it with `./gradlew i2-keycloak:keycloak-plugin:shadowJar`
+3. Build the Dockerfile located in `i2-keycloak/docker/`
+4. Enjoy
+
+(steps 2 and 3 can be done automatically with `make package-keycloak`)
+
+## I2-Event-HTTP
+
+client ("xxx-web" + "account") hardcoded claim: `event-http-wehbook` = url to send the events to
+> if local and keycloak is within docker container, use ip address instead of localhost
+
+It is possible to filter the events to send from the keycloak GUI by going to Events > Login Events Settings > Save Events ON > Saved Types
+
+Endpoint example:
+```kotlin
+@Configuration
+class KeycloakEventEndpoint(
+    private val applicationContext: ApplicationContext
+) {
+
+    @PermitAll
+    @Bean
+    fun keycloakEvent(): F2Consumer<KeycloakHttpEvent> = f2Consumer { event ->
+        println(event.type)
+        applicationContext.publishEvent(event)
+    }
+}
+```
