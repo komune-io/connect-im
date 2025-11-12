@@ -2,6 +2,8 @@ name: Dev
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
   pull_request:
     types: [opened, synchronize, labeled]
   push:
@@ -25,8 +27,8 @@ jobs:
       GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
       PKG_GITHUB_USERNAME: ${{ github.actor }}
       PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PKG_SONATYPE_OSS_USERNAME: ${{ secrets.PKG_SONATYPE_OSS_USERNAME }}
-      PKG_SONATYPE_OSS_TOKEN: ${{ secrets.PKG_SONATYPE_OSS_TOKEN }}
+      JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.JRELEASER_MAVENCENTRAL_USERNAME }}
+      JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.JRELEASER_MAVENCENTRAL_PASSWORD }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   kotkin-js:
@@ -36,7 +38,7 @@ jobs:
       packages: write
     with:
       make-file: 'Makefile_libsJs.mk'
-      on-tag: 'publish_promote'
+      on-tag: 'stage promote'
     secrets:
       NPM_PKG_PUBLISH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_PKG_PROMOTE_TOKEN: ${{ secrets.NPM_PKG_NPMJS_TOKEN}}
@@ -50,14 +52,15 @@ jobs:
       packages: write
     with:
       make-file: 'Makefile_docker.mk'
-      with-docker-registry-login: 'true'
-      on-tag: 'publish_promote'
+      with-stage-docker-registry-login: 'true'
+      with-promote-docker-registry-login: 'true'
+      on-tag: 'stage promote'
       docker-buildx-platform: linux/amd64,linux/arm64
     secrets:
       PKG_GITHUB_USERNAME: ${{ github.actor }}
       PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      DOCKER_PUBLISH_USERNAME: ${{ github.actor }}
-      DOCKER_PUBLISH_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+      DOCKER_STAGE_USERNAME: ${{ github.actor }}
+      DOCKER_STAGE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       DOCKER_PROMOTE_USERNAME: ${{ secrets.DOCKER_IO_USERNAME }}
       DOCKER_PROMOTE_PASSWORD: ${{ secrets.DOCKER_IO_PASSWORD }}
 
@@ -69,16 +72,17 @@ jobs:
       pages: write
       id-token: write
     with:
-      on-tag: 'publish_promote'
+      on-tag: 'stage promote'
       with-chromatic: false
       make-file: 'Makefile_docs.mk'
+      base-dir: "storybook"
       storybook-dir: storybook
       storybook-static-dir: storybook-static
       with-setup-npm-github-pkg: 'false'
     secrets:
       NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-      DOCKER_PUBLISH_USERNAME: ${{ github.actor }}
-      DOCKER_PUBLISH_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+      DOCKER_STAGE_USERNAME: ${{ github.actor }}
+      DOCKER_STAGE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       DOCKER_PROMOTE_USERNAME: ${{ secrets.DOCKER_IO_USERNAME }}
       DOCKER_PROMOTE_PASSWORD: ${{ secrets.DOCKER_IO_PASSWORD }}
