@@ -43,8 +43,8 @@ fixers {
     npm {
         organization = "komune-io"
     }
-//    sonar {
-//        organization = "komune-io"
-//        projectKey = "komune-io_connect-im"
-//    }
+    sonar {
+        organization = "komune-io"
+        projectKey = "komune-io_connect-im"
+    }
 }
