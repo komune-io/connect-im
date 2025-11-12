@@ -96,6 +96,11 @@ class UserPoliciesEnforcer(
         UserPolicies.canDisable(authedUser, user)
     }
 
+    suspend fun checkEnable(userId: UserId) = checkAuthed("enable an user") { authedUser ->
+        val user = userFinderService.get(userId)
+        UserPolicies.canEnable(authedUser, user)
+    }
+
     suspend fun checkDelete(userId: UserId) = checkAuthed("delete an user") { authedUser ->
         val user = userFinderService.get(userId)
         UserPolicies.canDelete(authedUser, user)

@@ -7,6 +7,7 @@ import io.komune.im.f2.user.domain.command.UserCreateFunction
 import io.komune.im.f2.user.domain.command.UserDeleteFunction
 import io.komune.im.f2.user.domain.command.UserDisableFunction
 import io.komune.im.f2.user.domain.command.UserDisableMfaFunction
+import io.komune.im.f2.user.domain.command.UserEnableFunction
 import io.komune.im.f2.user.domain.command.UserResetPasswordFunction
 import io.komune.im.f2.user.domain.command.UserUpdateEmailFunction
 import io.komune.im.f2.user.domain.command.UserUpdateFunction
@@ -134,6 +135,13 @@ class UserEndpoint(
         logger.info("userDisable: $command")
         policiesEnforcer.checkDisable(command.id)
         userAggregateService.disable(command)
+    }
+
+    @Bean
+    override fun userEnable(): UserEnableFunction = f2Function { command ->
+        logger.info("userEnable: $command")
+        policiesEnforcer.checkEnable(command.id)
+        userAggregateService.enable(command)
     }
 
     @Bean
