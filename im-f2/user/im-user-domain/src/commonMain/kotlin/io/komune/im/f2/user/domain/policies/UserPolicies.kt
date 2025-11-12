@@ -94,6 +94,13 @@ object UserPolicies {
     }
 
     /**
+     * User can enable a user
+     */
+    fun canEnable(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
+        return canWriteUser(authedUser, user) && isNotMySelf(authedUser, user)
+    }
+
+    /**
      * User can delete a user
      */
     fun canDelete(authedUser: AuthedUserDTO, user: UserDTO): Boolean {

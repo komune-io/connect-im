@@ -18,6 +18,7 @@ import io.komune.im.core.user.api.UserCoreAggregateService
 import io.komune.im.core.user.domain.command.CredentialType
 import io.komune.im.core.user.domain.command.UserCoreDefineCommand
 import io.komune.im.core.user.domain.command.UserCoreDisableCommand
+import io.komune.im.core.user.domain.command.UserCoreEnableCommand
 import io.komune.im.core.user.domain.command.UserCoreRemoveCredentialsCommand
 import io.komune.im.core.user.domain.command.UserCoreSendEmailCommand
 import io.komune.im.f2.user.domain.command.UserCreateCommand
@@ -28,6 +29,8 @@ import io.komune.im.f2.user.domain.command.UserDisableCommand
 import io.komune.im.f2.user.domain.command.UserDisableMfaCommand
 import io.komune.im.f2.user.domain.command.UserDisabledEvent
 import io.komune.im.f2.user.domain.command.UserDisabledMfavent
+import io.komune.im.f2.user.domain.command.UserEnableCommand
+import io.komune.im.f2.user.domain.command.UserEnabledEvent
 import io.komune.im.f2.user.domain.command.UserResetPasswordCommand
 import io.komune.im.f2.user.domain.command.UserResetPasswordEvent
 import io.komune.im.f2.user.domain.command.UserUpdateCommand
@@ -154,6 +157,14 @@ class UserAggregateService(
         }
 
         return UserDisabledEvent(command.id)
+    }
+
+    suspend fun enable(command: UserEnableCommand): UserEnabledEvent {
+        UserCoreEnableCommand(
+            id = command.id
+        ).let { userCoreAggregateService.enable(it) }
+
+        return UserEnabledEvent(command.id)
     }
 
     suspend fun delete(command: UserDeleteCommand): UserDeletedEvent {

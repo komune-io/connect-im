@@ -10,6 +10,8 @@ import io.komune.im.core.user.domain.command.UserCoreDeleteCommand
 import io.komune.im.core.user.domain.command.UserCoreDeletedEvent
 import io.komune.im.core.user.domain.command.UserCoreDisableCommand
 import io.komune.im.core.user.domain.command.UserCoreDisabledEvent
+import io.komune.im.core.user.domain.command.UserCoreEnableCommand
+import io.komune.im.core.user.domain.command.UserCoreEnabledEvent
 import io.komune.im.core.user.domain.command.UserCoreRemoveCredentialsCommand
 import io.komune.im.core.user.domain.command.UserCoreRemovedCredentialsEvent
 import io.komune.im.core.user.domain.command.UserCoreSendEmailCommand
@@ -118,6 +120,23 @@ class UserCoreAggregateService(
 
         client.user(command.id).update(user)
         UserCoreDisabledEvent(command.id)
+    }
+
+    suspend fun enable(command: UserCoreEnableCommand) = mutate(
+        command.id,
+        "Error enabling user [${command.id}]"
+    ) {
+        val client = keycloakClientProvider.getClient()
+        val user = client.user(command.id).toRepresentation()
+
+        user.isEnabled = true
+
+        // Remove disabled attributes
+        user.attributes?.remove(UserModel::disabledBy.name)
+        user.attributes?.remove(UserModel::disabledDate.name)
+
+        client.user(command.id).update(user)
+        UserCoreEnabledEvent(command.id)
     }
 
     suspend fun removeCredentials(command: UserCoreRemoveCredentialsCommand) = mutate(
