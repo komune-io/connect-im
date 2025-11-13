@@ -3,6 +3,8 @@ import io.komune.gradle.dependencies.FixersPluginVersions
 import io.komune.gradle.dependencies.FixersVersions
 import io.komune.gradle.dependencies.Scope
 import io.komune.gradle.dependencies.add
+import org.gradle.api.artifacts.dsl.RepositoryHandler
+import java.net.URI
 
 object Framework {
 	val fixers = FixersPluginVersions.fixers
@@ -260,4 +262,12 @@ object Modules {
 	object Bdd {
         const val base = ":im-bdd"
 	}
+}
+
+fun RepositoryHandler.defaultRepo() {
+    mavenCentral()
+    maven { url = URI("https://central.sonatype.com/repository/maven-snapshots") }
+    if(System.getenv("MAVEN_LOCAL_USE") == "true") {
+        mavenLocal()
+    }
 }
