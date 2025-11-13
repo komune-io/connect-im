@@ -18,10 +18,10 @@ test:
 	./gradlew test
 
 stage:
-	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew stage -Dorg.gradle.parallel=true -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
+	VERSION=$(VERSION) PKG_MAVEN_REPO=github ./gradlew publish -Dorg.gradle.parallel=true -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
 
 check:
 	./gradlew sonar -Dsonar.token=${SONAR_TOKEN} -Dorg.gradle.parallel=true
 
 promote:
-	VERSION=$(VERSION) PKG_MAVEN_REPO=sonatype_oss ./gradlew stage -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
+	VERSION=$(VERSION) PKG_MAVEN_REPO=sonatype_oss ./gradlew publish -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
