@@ -1,8 +1,8 @@
-import io.komune.gradle.dependencies.FixersDependencies
-import io.komune.gradle.dependencies.FixersPluginVersions
-import io.komune.gradle.dependencies.FixersVersions
-import io.komune.gradle.dependencies.Scope
-import io.komune.gradle.dependencies.add
+import io.komune.fixers.gradle.dependencies.FixersDependencies
+import io.komune.fixers.gradle.dependencies.FixersPluginVersions
+import io.komune.fixers.gradle.dependencies.FixersVersions
+import io.komune.fixers.gradle.dependencies.Scope
+import io.komune.fixers.gradle.dependencies.add
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import java.net.URI
 
