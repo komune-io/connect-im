@@ -1,6 +1,6 @@
 VERSION = $(shell cat VERSION)
 
-.PHONY: lint build test publish promote
+.PHONY: lint build test stage promote
 
 lint:
 	echo 'No Lint'
@@ -13,7 +13,8 @@ build:
 
 test:
 	echo 'No Tests'
-publish:
+
+stage:
 	VERSION=${VERSION} ./gradlew :im-f2:apikey:im-apikey-domain:publishJsPackageToGithubRegistry
 	VERSION=${VERSION} ./gradlew :im-f2:organization:im-organization-domain:publishJsPackageToGithubRegistry
 	VERSION=${VERSION} ./gradlew :im-f2:privilege:im-privilege-domain:publishJsPackageToGithubRegistry

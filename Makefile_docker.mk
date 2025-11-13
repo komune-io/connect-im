@@ -19,7 +19,7 @@ KEYCLOAK_IMG        := ${KEYCLOAK_NAME}:${VERSION}
 KEYCLOAK_AUTH_NAME	:= im-keycloak-auth
 KEYCLOAK_AUTH_IMG   := ${KEYCLOAK_AUTH_NAME}:${VERSION}
 
-.PHONY: lint build test publish promote
+.PHONY: lint build test stage promote
 
 lint: docker-keycloak-lint
 
@@ -28,7 +28,7 @@ build: docker-im-gateway-build docker-script-build docker-keycloak-build docker-
 test:
 	echo 'No Tests'
 
-publish: docker-im-gateway-publish docker-script-publish docker-keycloak-publish docker-keycloak-auth-publish
+stage: docker-im-gateway-stage docker-script-stage docker-keycloak-stage docker-keycloak-auth-stage
 
 promote: docker-im-gateway-promote docker-script-promote docker-keycloak-promote docker-keycloak-auth-promote
 
@@ -36,7 +36,7 @@ promote: docker-im-gateway-promote docker-script-promote docker-keycloak-promote
 docker-im-gateway-build:
 	VERSION=${VERSION} ./gradlew build ${IM_APP_PACKAGE} -Dorg.gradle.parallel=true --imageName ${IM_APP_IMG} -x test
 
-docker-im-gateway-publish:
+docker-im-gateway-stage:
 	@docker tag ${IM_APP_IMG} ghcr.io/komune-io/${IM_APP_IMG}
 	@docker push ghcr.io/komune-io/${IM_APP_IMG}
 
@@ -48,7 +48,7 @@ docker-im-gateway-promote:
 docker-script-build:
 	VERSION=${VERSION} ./gradlew build ${IM_SCRIPT_PACKAGE} -Dorg.gradle.parallel=true  --imageName ${IM_SCRIPT_IMG} -x test
 
-docker-script-publish:
+docker-script-stage:
 	@docker tag ${IM_SCRIPT_IMG} ghcr.io/komune-io/${IM_SCRIPT_IMG}
 	@docker push ghcr.io/komune-io/${IM_SCRIPT_IMG}
 
@@ -70,7 +70,7 @@ docker-keycloak-build:
 		-f ${KEYCLOAK_DOCKERFILE} \
 		-t ${KEYCLOAK_IMG} .
 
-docker-keycloak-publish:
+docker-keycloak-stage:
 	@docker buildx build --push \
 		--platform ${DOCKER_PLATFORM} \
 		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/ \
@@ -98,7 +98,7 @@ docker-keycloak-auth-build:
 		-f ${KEYCLOAK_DOCKERFILE} \
 		-t ${KEYCLOAK_AUTH_IMG} .
 
-docker-keycloak-auth-publish:
+docker-keycloak-auth-stage:
 	@docker buildx build --push \
 		--platform ${DOCKER_PLATFORM} \
 		--no-cache --build-arg KC_HTTP_RELATIVE_PATH=/auth \
