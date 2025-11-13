@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-	implementation(project(":im-api:api-config"))
+	implementation(project(Modules.Api.config))
 	implementation(project(Modules.Infra.redis))
 
 	implementation(project(Modules.F2.apikeyApi))
@@ -14,6 +14,6 @@ dependencies {
 	implementation(project(Modules.F2.userApi))
 	implementation(project(Modules.F2.spaceApi))
 
-	implementation("io.komune.f2:f2-spring-boot-starter-function-http:${Versions.f2}")
-	implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")
+	Dependencies.Jvm.f2Http(::implementation)
+	Dependencies.Jvm.springBootWebflux(::implementation)
 }

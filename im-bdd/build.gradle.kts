@@ -29,6 +29,5 @@ dependencies {
 	Dependencies.Jvm.s2Bdd(::implementation)
 
 	Dependencies.Jvm.testcontainers(::implementation)
-
-	implementation("org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}")
+	Dependencies.Jvm.springBootWebflux(::implementation)
 }

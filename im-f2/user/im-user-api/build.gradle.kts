@@ -10,6 +10,6 @@ dependencies {
     implementation(project(Modules.F2.userLib))
     implementation(project(Modules.Core.mfaApi))
 
-    implementation(project(":im-api:api-config"))
+    implementation(project(Modules.Api.config))
     implementation(project(Modules.Commons.auth))
 }

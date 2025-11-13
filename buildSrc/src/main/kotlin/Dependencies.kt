@@ -1,8 +1,8 @@
-import io.komune.gradle.dependencies.FixersDependencies
-import io.komune.gradle.dependencies.FixersPluginVersions
-import io.komune.gradle.dependencies.FixersVersions
-import io.komune.gradle.dependencies.Scope
-import io.komune.gradle.dependencies.add
+import io.komune.fixers.gradle.dependencies.FixersDependencies
+import io.komune.fixers.gradle.dependencies.FixersPluginVersions
+import io.komune.fixers.gradle.dependencies.FixersVersions
+import io.komune.fixers.gradle.dependencies.Scope
+import io.komune.fixers.gradle.dependencies.add
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import java.net.URI
 
@@ -44,6 +44,7 @@ object Versions {
 	const val testcontainers = FixersVersions.Test.testcontainers
 
 	const val slf4j = FixersVersions.Logging.slf4j
+	const val jackson = FixersVersions.Json.jacksonKotlin
 }
 
 object Dependencies {
@@ -125,6 +126,18 @@ object Dependencies {
 
 		fun testcontainers(scope: Scope) = scope.add(
 			"org.testcontainers:junit-jupiter:${Versions.testcontainers}"
+		)
+
+		fun jackson(scope: Scope) = scope.add(
+			"com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}"
+		)
+
+		fun springBootWebflux(scope: Scope) = scope.add(
+			"org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}"
+		)
+
+		fun ktorSerializationJackson(scope: Scope) = scope.add(
+			"io.ktor:ktor-serialization-jackson:${Versions.ktor}"
 		)
 
 	}
