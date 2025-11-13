@@ -8,7 +8,7 @@ plugins {
 dependencies {
     api(project(Modules.Commons.api))
     api(project(Modules.Commons.auth))
-    api("com.fasterxml.jackson.module:jackson-module-kotlin")
+    Dependencies.Jvm.jackson(::api)
 
     Dependencies.Jvm.Fs.client(::api)
     Dependencies.Jvm.f2Auth(::api)

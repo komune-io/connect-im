@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":im-api:api-config"))
+    implementation(project(Modules.Api.config))
 
     implementation(project(Modules.Commons.auth))
     implementation(project(Modules.Infra.redis))

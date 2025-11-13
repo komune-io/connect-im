@@ -44,6 +44,7 @@ object Versions {
 	const val testcontainers = FixersVersions.Test.testcontainers
 
 	const val slf4j = FixersVersions.Logging.slf4j
+	const val jackson = FixersVersions.Json.jacksonKotlin
 }
 
 object Dependencies {
@@ -125,6 +126,18 @@ object Dependencies {
 
 		fun testcontainers(scope: Scope) = scope.add(
 			"org.testcontainers:junit-jupiter:${Versions.testcontainers}"
+		)
+
+		fun jackson(scope: Scope) = scope.add(
+			"com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}"
+		)
+
+		fun springBootWebflux(scope: Scope) = scope.add(
+			"org.springframework.boot:spring-boot-starter-webflux:${Versions.springBoot}"
+		)
+
+		fun ktorSerializationJackson(scope: Scope) = scope.add(
+			"io.ktor:ktor-serialization-jackson:${Versions.ktor}"
 		)
 
 	}
