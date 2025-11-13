@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("io.komune.fixers.gradle.publish")
+//    id("io.komune.fixers.gradle.publish")
 }
 
 dependencies {
