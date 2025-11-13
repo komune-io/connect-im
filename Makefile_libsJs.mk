@@ -4,6 +4,7 @@ VERSION = $(shell cat VERSION)
 
 lint:
 	echo 'No Lint'
+
 build:
 	VERSION=${VERSION} ./gradlew :im-f2:apikey:im-apikey-domain:build
 	VERSION=${VERSION} ./gradlew :im-f2:organization:im-organization-domain:build
