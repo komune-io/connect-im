@@ -223,7 +223,7 @@ class SpaceCreateScript(
     }
 
     private suspend fun initEventWebhook(webhookConfig: EventWebhookConfig?) {
-        if (webhookConfig?.url.isNullOrBlank()) {
+        if (webhookConfig == null || webhookConfig.url.isBlank()) {
             logger.info("No event webhook URL provided, skipping configuration.")
             return
         }
@@ -249,9 +249,9 @@ class SpaceCreateScript(
         }
         realm.eventsListeners = listeners
 
-        if (!webhookConfig.eventTypes.isNullOrEmpty()) {
-            realm.setEnabledEventTypes(webhookConfig.eventTypes)
-            logger.info("Enabled event types: ${webhookConfig.eventTypes.joinToString(", ")}")
+        if (!webhookConfig.events.isNullOrEmpty()) {
+            realm.setEnabledEventTypes(webhookConfig.events.map { it.toString() })
+            logger.info("Enabled event types: ${webhookConfig.events.joinToString(", ")}")
         } else {
             logger.info("No event types specified - all events will be sent")
         }
