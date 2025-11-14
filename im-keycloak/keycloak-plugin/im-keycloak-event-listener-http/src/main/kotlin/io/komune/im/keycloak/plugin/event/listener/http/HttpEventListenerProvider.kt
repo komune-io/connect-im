@@ -6,7 +6,6 @@ import org.keycloak.events.Event
 import org.keycloak.events.EventListenerProvider
 import org.keycloak.events.admin.AdminEvent
 import org.keycloak.models.KeycloakSession
-import kotlin.streams.toList as streamToList
 
 class HttpEventListenerProvider(
     private val session: KeycloakSession
@@ -49,7 +48,7 @@ class HttpEventListenerProvider(
     private fun Event.toKeycloakHttpEvent() = KeycloakHttpEvent(
         id = id,
         time = time,
-        type = type,
+        type = type.name,
         realmId = realmId,
         clientId = clientId,
         userId = userId,
