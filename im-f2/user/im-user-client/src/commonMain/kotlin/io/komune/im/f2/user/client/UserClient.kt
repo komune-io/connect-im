@@ -12,6 +12,7 @@ import io.komune.im.f2.user.domain.command.UserCreateFunction
 import io.komune.im.f2.user.domain.command.UserDeleteFunction
 import io.komune.im.f2.user.domain.command.UserDisableFunction
 import io.komune.im.f2.user.domain.command.UserDisableMfaFunction
+import io.komune.im.f2.user.domain.command.UserEnableFunction
 import io.komune.im.f2.user.domain.command.UserResetPasswordFunction
 import io.komune.im.f2.user.domain.command.UserUpdateEmailFunction
 import io.komune.im.f2.user.domain.command.UserUpdateFunction
@@ -59,5 +60,6 @@ open class UserClient(private val client: F2Client): UserApi {
     override fun userDisableMfa(): UserDisableMfaFunction = client.function(this::userDisableMfa.name)
 
     override fun userDisable(): UserDisableFunction = client.function(this::userDisable.name)
+    override fun userEnable(): UserEnableFunction = client.function(this::userEnable.name)
     override fun userDelete(): UserDeleteFunction = client.function(this::userDelete.name)
 }
