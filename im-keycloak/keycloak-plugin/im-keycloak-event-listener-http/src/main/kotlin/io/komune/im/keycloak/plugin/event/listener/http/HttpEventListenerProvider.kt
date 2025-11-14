@@ -6,7 +6,6 @@ import org.keycloak.events.Event
 import org.keycloak.events.EventListenerProvider
 import org.keycloak.events.admin.AdminEvent
 import org.keycloak.models.KeycloakSession
-import kotlin.streams.toList as streamToList
 
 class HttpEventListenerProvider(
     private val session: KeycloakSession
@@ -20,21 +19,21 @@ class HttpEventListenerProvider(
 
         println("Realm: ${realm.name}")
 
+        val webhookUrl = realm.getAttribute("event-http-webhook")
+        if (webhookUrl.isNullOrBlank()) {
+            println("No webhook URL configured for realm ${realm.name}")
+            return@timed
+        }
+
+        val webhookSecret = realm.getAttribute("event-http-webhook-secret")
+
         if (realm.isEventsEnabled && realm.enabledEventTypesStream.noneMatch { it == event.type.name }) {
             println("Event type [${event.type}] disabled in realm. Not sending.")
             return@timed
         }
 
-        val client = session.clients().getClientByClientId(realm, event.clientId)
-            ?: return@timed
-
-        println("Client: ${client.clientId}")
-
-        client.protocolMappersStream.streamToList()
-            .firstOrNull { it.name == "event-http-webhook" }
-            ?.config
-            ?.get("claim.value")
-            ?.let { url -> WebhookClient.send(url, event.toKeycloakHttpEvent()) }
+        println("Sending to webhook: $webhookUrl")
+        WebhookClient.send(webhookUrl, event.toKeycloakHttpEvent(), webhookSecret)
     }
 
     private fun timed(block: suspend () -> Unit) = runBlocking {
@@ -49,7 +48,7 @@ class HttpEventListenerProvider(
     private fun Event.toKeycloakHttpEvent() = KeycloakHttpEvent(
         id = id,
         time = time,
-        type = type,
+        type = type.name,
         realmId = realmId,
         clientId = clientId,
         userId = userId,

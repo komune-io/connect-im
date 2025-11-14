@@ -38,6 +38,7 @@ services:
   connect-fake-smtp:
     container_name: ${SMTP_HOST}
     image: reachfive/fake-smtp-server:latest
+    platform: linux/amd64
     ports:
       - "${SMTP_PORT}:1025"
       - "1080:1080"

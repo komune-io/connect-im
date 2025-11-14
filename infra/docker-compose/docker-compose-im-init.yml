@@ -1,6 +1,7 @@
 services:
   im-init:
     image: ${DOCKER_REPOSITORY}im-script:${VERSION_IM}
+    platform: linux/amd64
     container_name: im-init
     environment:
       - im_script_init_auth_serverUrl=${AUTH_HOST_URL}

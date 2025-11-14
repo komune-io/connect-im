@@ -24,6 +24,7 @@ import io.komune.im.script.core.model.defaultSpaceRootClientId
 import io.komune.im.script.core.service.ClientInitService
 import io.komune.im.script.space.create.config.AdminUserData
 import io.komune.im.script.space.create.config.ClientCredentials
+import io.komune.im.script.space.create.config.EventWebhookConfig
 import io.komune.im.script.space.create.config.SpaceCreateProperties
 import java.util.UUID
 import kotlinx.coroutines.async
@@ -88,6 +89,10 @@ class SpaceCreateScript(
         logger.info("Initializing Client Scopes...")
         initClientScopes()
         logger.info("Initialized Client Scopes")
+
+        logger.info("Initializing Event Webhook...")
+        initEventWebhook(properties.eventWebhook)
+        logger.info("Initialized Event Webhook")
 
         logger.info("Initializing Space Root Client...")
         properties.rootClient?.initImClient(properties.spaceIdentifier)
@@ -215,6 +220,46 @@ class SpaceCreateScript(
                 )
             }
         )
+    }
+
+    private suspend fun initEventWebhook(webhookConfig: EventWebhookConfig?) {
+        if (webhookConfig == null || webhookConfig.url.isBlank()) {
+            logger.info("No event webhook URL provided, skipping configuration.")
+            return
+        }
+
+        val client = keycloakClientProvider.getClient()
+        val realm = client.realm().toRepresentation()
+
+        val attributes = realm.attributes?.toMutableMap() ?: mutableMapOf()
+        attributes["event-http-webhook"] = webhookConfig.url
+
+        if (!webhookConfig.secret.isNullOrBlank()) {
+            attributes["event-http-webhook-secret"] = webhookConfig.secret
+            logger.info("Configured event webhook with HMAC signature authentication")
+        } else {
+            logger.warn("No webhook secret provided - webhook will be sent without authentication!")
+        }
+
+        // Configure event types
+        realm.isEventsEnabled = true
+        val listeners = realm.eventsListeners?.toMutableList() ?: mutableListOf()
+        if (KeycloakPluginIds.EVENT_WEBHOOK !in listeners) {
+            listeners.add(KeycloakPluginIds.EVENT_WEBHOOK)
+        }
+        realm.eventsListeners = listeners
+
+        if (!webhookConfig.events.isNullOrEmpty()) {
+            realm.setEnabledEventTypes(webhookConfig.events.map { it.toString() })
+            logger.info("Enabled event types: ${webhookConfig.events.joinToString(", ")}")
+        } else {
+            logger.info("No event types specified - all events will be sent")
+        }
+
+        realm.attributes = attributes
+        client.realm().update(realm)
+
+        logger.info("Configured event webhook URL: ${webhookConfig.url}")
     }
 
     private suspend fun ClientCredentials.initImClient(spaceName: String): ClientId {

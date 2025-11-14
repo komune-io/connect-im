@@ -3,6 +3,7 @@ package io.komune.im.script.space.create.config
 import io.komune.im.commons.model.ClientIdentifier
 import io.komune.im.commons.model.SpaceIdentifier
 import io.komune.im.script.core.config.properties.SpaceSettingsProperties
+import org.keycloak.events.EventType
 import org.slf4j.LoggerFactory
 
 data class SpaceCreateProperties(
@@ -17,6 +18,7 @@ data class SpaceCreateProperties(
     val mfa: List<String>? = null,
     val adminUsers: List<AdminUserData>? = null,
     val rootClient: ClientCredentials? = null,
+    val eventWebhook: EventWebhookConfig? = null
 ) {
     private val logger = LoggerFactory.getLogger(SpaceCreateProperties::class.java)
     val spaceIdentifier: SpaceIdentifier
@@ -43,4 +45,10 @@ data class AdminUserData(
     val username: String?,
     val firstName: String?,
     val lastName: String?
+)
+
+data class EventWebhookConfig(
+    val url: String,
+    val secret: String?,
+    val events: List<EventType>?
 )

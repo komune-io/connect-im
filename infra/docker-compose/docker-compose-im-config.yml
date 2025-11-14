@@ -1,6 +1,7 @@
 services:
   im-config:
     image: ${DOCKER_REPOSITORY}im-script:${VERSION_IM}
+    platform: linux/amd64
     container_name: im-config
     environment:
       - im_script_space_auth_serverUrl=${AUTH_HOST_URL}
