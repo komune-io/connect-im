@@ -20,21 +20,21 @@ class HttpEventListenerProvider(
 
         println("Realm: ${realm.name}")
 
+        val webhookUrl = realm.getAttribute("event-http-webhook")
+        if (webhookUrl.isNullOrBlank()) {
+            println("No webhook URL configured for realm ${realm.name}")
+            return@timed
+        }
+
+        val webhookSecret = realm.getAttribute("event-http-webhook-secret")
+
         if (realm.isEventsEnabled && realm.enabledEventTypesStream.noneMatch { it == event.type.name }) {
             println("Event type [${event.type}] disabled in realm. Not sending.")
             return@timed
         }
 
-        val client = session.clients().getClientByClientId(realm, event.clientId)
-            ?: return@timed
-
-        println("Client: ${client.clientId}")
-
-        client.protocolMappersStream.streamToList()
-            .firstOrNull { it.name == "event-http-webhook" }
-            ?.config
-            ?.get("claim.value")
-            ?.let { url -> WebhookClient.send(url, event.toKeycloakHttpEvent()) }
+        println("Sending to webhook: $webhookUrl")
+        WebhookClient.send(webhookUrl, event.toKeycloakHttpEvent(), webhookSecret)
     }
 
     private fun timed(block: suspend () -> Unit) = runBlocking {

@@ -17,6 +17,7 @@ data class SpaceCreateProperties(
     val mfa: List<String>? = null,
     val adminUsers: List<AdminUserData>? = null,
     val rootClient: ClientCredentials? = null,
+    val eventWebhook: EventWebhookConfig? = null
 ) {
     private val logger = LoggerFactory.getLogger(SpaceCreateProperties::class.java)
     val spaceIdentifier: SpaceIdentifier
@@ -43,4 +44,10 @@ data class AdminUserData(
     val username: String?,
     val firstName: String?,
     val lastName: String?
+)
+
+data class EventWebhookConfig(
+    val url: String,
+    val secret: String?,
+    val eventTypes: List<String>?
 )
