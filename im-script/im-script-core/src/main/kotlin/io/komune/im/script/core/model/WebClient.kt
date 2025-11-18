@@ -4,5 +4,6 @@ import io.komune.im.commons.model.ClientIdentifier
 
 data class WebClient(
     val clientId: ClientIdentifier,
-    val webUrl: String
+    val secret: String?,
+    val webUrl: String,
 )

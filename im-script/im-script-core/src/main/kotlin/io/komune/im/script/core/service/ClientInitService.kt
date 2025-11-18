@@ -12,9 +12,9 @@ import io.komune.im.core.client.domain.model.ClientModel
 import io.komune.im.script.core.init
 import io.komune.im.script.core.model.AppClient
 import io.komune.im.script.core.model.WebClient
-import java.util.UUID
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 const val ORGANIZATION_ID_CLAIM_NAME = "memberOf"
 
@@ -111,18 +111,21 @@ class ClientInitService(
         return init("WebClient[clientId: ${webClient.clientId}]", logger, {
             clientCoreFinderService.getByIdentifierOrNull(webClient.clientId)?.id
         }, {
+            val urls = webClient.webUrl.split(",").map { it.trim() }
+            val baseUrl = urls.firstOrNull()
             ClientCreateCommand(
                 identifier = webClient.clientId,
-                isPublicClient = true,
+                secret = webClient.secret,
+                isPublicClient = webClient.secret == null,
                 isDirectAccessGrantsEnabled = true,
                 isServiceAccountsEnabled = false,
                 authorizationServicesEnabled = false,
                 isStandardFlowEnabled = true,
-                rootUrl = webClient.webUrl,
-                redirectUris = listOf(webClient.webUrl),
-                baseUrl = webClient.webUrl,
-                adminUrl = webClient.webUrl,
-                webOrigins = listOf(webClient.webUrl),
+                rootUrl = baseUrl,
+                redirectUris = urls.map { it.addWildcard() },
+                baseUrl = baseUrl,
+                adminUrl = baseUrl,
+                webOrigins = urls,
                 additionalAccessTokenClaim = listOf(ORGANIZATION_ID_CLAIM_NAME)
             ).let { clientCoreAggregateService.create(it).id }
         })
