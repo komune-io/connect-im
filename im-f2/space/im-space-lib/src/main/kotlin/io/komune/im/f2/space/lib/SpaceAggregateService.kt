@@ -92,6 +92,10 @@ class SpaceAggregateService(
         ).let { clientCoreAggregateService.grantClientRoles(it) }
         logger.info("Granted client roles for space with identifier: ${command.identifier}")
 
+        // Invalidate token to force refresh and pick up newly granted roles
+        keycloak.tokenManager().invalidate(keycloak.tokenManager().accessTokenString)
+        logger.info("Invalidated token to refresh permissions")
+
         enableUserAttributes(realm.realm)
         logger.info("Enabled user attributes for space with identifier: ${command.identifier}")
 
@@ -99,9 +103,15 @@ class SpaceAggregateService(
 
     private suspend fun KeycloakClient.enableUserAttributes(realm: String) {
         logger.info("Enabling user attributes for realm: $realm")
-        val upConfiguration = userProfile().configuration
+        val realmUserProfile = realm(realm).users().userProfile()
+        val upConfiguration = realmUserProfile.configuration
         upConfiguration.unmanagedAttributePolicy = UPConfig.UnmanagedAttributePolicy.ENABLED
-        userProfile().update(upConfiguration)
+
+        // Make firstName and lastName not required to avoid Keycloak asking for them on first login
+        upConfiguration.getAttribute("firstName")?.required = null
+        upConfiguration.getAttribute("lastName")?.required = null
+
+        realmUserProfile.update(upConfiguration)
         logger.info("User attributes enabled for realm: $realm")
     }
 
