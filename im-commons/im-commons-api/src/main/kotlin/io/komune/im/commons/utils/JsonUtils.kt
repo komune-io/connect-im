@@ -1,10 +1,10 @@
 package io.komune.im.commons.utils
 
+import java.io.InputStream
 import tools.jackson.core.json.JsonReadFeature
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.kotlin.jacksonMapperBuilder
-import java.io.InputStream
 
 val mapper: JsonMapper = jacksonMapperBuilder()
     .enable(JsonReadFeature.ALLOW_UNQUOTED_PROPERTY_NAMES)

@@ -9,11 +9,11 @@ import io.komune.im.bdd.core.organization.data.AssertionOrganizationRef
 import io.komune.im.commons.utils.parseJson
 import io.komune.im.f2.privilege.domain.role.model.Role
 import io.komune.im.infra.keycloak.client.KeycloakClient
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.assertj.core.api.Assertions
 import org.slf4j.LoggerFactory
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.repository.AssertionApiEntity
-import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 fun AssertionBdd.apiKey(client: KeycloakClient) = AssertionApiKey(client)
 

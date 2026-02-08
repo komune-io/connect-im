@@ -5,12 +5,12 @@ import io.komune.im.commons.utils.ParserUtils
 import io.komune.im.core.client.api.ClientCoreAggregateService
 import io.komune.im.core.client.api.ClientCoreFinderService
 import io.komune.im.core.client.domain.command.ClientGrantClientRolesCommand
+import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.script.core.config.properties.ImScriptInitProperties
 import io.komune.im.script.core.config.properties.toAuthRealm
 import io.komune.im.script.core.model.AppClient
 import io.komune.im.script.core.model.ClientCredentials
 import io.komune.im.script.core.model.DEFAULT_ROOT_CLIENT_ID
-import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.script.core.service.ClientInitService
 import io.komune.im.script.init.config.ImInitProperties
 import kotlinx.coroutines.withContext

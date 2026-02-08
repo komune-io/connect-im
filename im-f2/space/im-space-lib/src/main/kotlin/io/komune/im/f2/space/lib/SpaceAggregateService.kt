@@ -1,6 +1,5 @@
 package io.komune.im.f2.space.lib
 
-import tools.jackson.databind.ObjectMapper
 import io.komune.im.api.config.bean.ImAuthenticationProvider
 import io.komune.im.commons.auth.withAuth
 import io.komune.im.core.client.api.ClientCoreAggregateService
@@ -16,11 +15,12 @@ import io.komune.im.f2.space.domain.command.SpaceDeleteCommand
 import io.komune.im.f2.space.domain.command.SpaceDeletedEvent
 import io.komune.im.infra.keycloak.client.KeycloakClient
 import io.komune.im.infra.redis.CacheName
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.keycloak.representations.idm.RealmRepresentation
 import org.keycloak.representations.userprofile.config.UPConfig
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
+import tools.jackson.databind.ObjectMapper
 
 @Service
 class SpaceAggregateService(

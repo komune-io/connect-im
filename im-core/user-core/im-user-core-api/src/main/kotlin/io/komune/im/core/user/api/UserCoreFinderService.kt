@@ -13,8 +13,8 @@ import io.komune.im.core.commons.CoreService
 import io.komune.im.core.user.api.service.UserRepresentationTransformer
 import io.komune.im.core.user.domain.model.UserModel
 import io.komune.im.infra.redis.CacheName
-import org.springframework.stereotype.Service
 import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
+import org.springframework.stereotype.Service
 
 @Service
 class UserCoreFinderService(

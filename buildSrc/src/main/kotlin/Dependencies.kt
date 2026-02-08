@@ -3,8 +3,8 @@ import io.komune.fixers.gradle.dependencies.FixersPluginVersions
 import io.komune.fixers.gradle.dependencies.FixersVersions
 import io.komune.fixers.gradle.dependencies.Scope
 import io.komune.fixers.gradle.dependencies.add
-import org.gradle.api.artifacts.dsl.RepositoryHandler
 import java.net.URI
+import org.gradle.api.artifacts.dsl.RepositoryHandler
 
 object Framework {
 	val fixers = FixersPluginVersions.fixers

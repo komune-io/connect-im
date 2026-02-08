@@ -15,8 +15,8 @@ import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.user.api.service.UserRepresentationTransformer
 import io.komune.im.core.user.domain.model.UserModel
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
-import org.springframework.stereotype.Service
 import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
+import org.springframework.stereotype.Service
 
 @Service
 class ApiKeyFinderService(

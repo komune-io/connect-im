@@ -6,9 +6,9 @@ import io.komune.im.commons.model.ClientIdentifier
 import io.komune.im.core.client.api.model.toClient
 import io.komune.im.core.client.domain.model.ClientModel
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
 class ClientCoreFinderService(

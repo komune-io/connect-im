@@ -11,9 +11,9 @@ import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.infra.redis.CacheName
 import io.komune.im.infra.redis.CachedService
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.keycloak.representations.idm.RoleRepresentation
 import org.springframework.stereotype.Service
-import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
 class PrivilegeCoreFinderService(

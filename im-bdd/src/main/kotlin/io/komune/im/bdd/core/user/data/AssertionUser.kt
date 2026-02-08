@@ -10,12 +10,12 @@ import io.komune.im.core.user.domain.model.UserModel
 import io.komune.im.f2.privilege.domain.role.model.Role
 import io.komune.im.f2.user.domain.model.User
 import io.komune.im.infra.keycloak.client.KeycloakClient
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.UserRepresentation
 import org.slf4j.LoggerFactory
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.repository.AssertionApiEntity
-import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 fun AssertionBdd.user(client: KeycloakClient) = AssertionUser(client)
 
