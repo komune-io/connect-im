@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.cache.RedisCacheConfiguration
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
+import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializationContext
 
 
@@ -21,12 +22,12 @@ class RedisCacheAutoconfigure {
     }
 
     @Bean
-    fun cacheConfiguration(): RedisCacheConfiguration? {
+    fun cacheConfiguration(objectMapper: ObjectMapper): RedisCacheConfiguration? {
         return RedisCacheConfiguration.defaultCacheConfig()
             .entryTtl(Duration.ofMinutes(CACHE_TTL_MINUTE))
             .disableCachingNullValues()
             .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
-                GenericJackson2JsonRedisSerializer()
+                GenericJacksonJsonRedisSerializer(objectMapper)
             ))
     }
 

@@ -1,8 +1,5 @@
 package io.komune.im.commons.utils
 
-import tools.jackson.core.json.JsonReadFeature
-import tools.jackson.databind.DeserializationFeature
-import tools.jackson.module.kotlin.jacksonMapperBuilder
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -81,14 +78,5 @@ object ParserUtils {
         }
 
         return null
-    }
-
-    private fun <T> String.parseTo(targetClass: Class<T>): T {
-        val mapper = jacksonMapperBuilder()
-            .enable(JsonReadFeature.ALLOW_UNQUOTED_PROPERTY_NAMES)
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .build()
-
-        return mapper.readValue(this, targetClass)
     }
 }
