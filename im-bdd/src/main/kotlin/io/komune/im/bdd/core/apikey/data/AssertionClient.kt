@@ -6,12 +6,12 @@ import io.komune.im.commons.model.ClientIdentifier
 import io.komune.im.commons.model.PrivilegeIdentifier
 import io.komune.im.core.client.domain.model.ClientModel
 import io.komune.im.infra.keycloak.client.KeycloakClient
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.ClientRepresentation
 import org.slf4j.LoggerFactory
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.repository.AssertionApiEntity
-import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 fun AssertionBdd.client(keycloakClient: KeycloakClient) = AssertionClient(keycloakClient)
 
@@ -24,14 +24,14 @@ class AssertionClient(
     override suspend fun findById(id: ClientId): ClientRepresentation? = try {
         keycloakClient.client(id).toRepresentation()
     } catch (e: JakartaNotFoundException) {
-        logger.debug("Client not found with id: $id")
+        logger.debug("Client not found with id: $id", e)
         null
     }
 
     fun findByIdentifier(identifier: ClientIdentifier): ClientRepresentation? = try {
         keycloakClient.getClientByIdentifier(identifier)
     } catch (e: JakartaNotFoundException) {
-        logger.debug("Client not found with identifier: $identifier")
+        logger.debug("Client not found with identifier: $identifier", e)
         null
     }
 

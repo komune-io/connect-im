@@ -6,12 +6,12 @@ import io.komune.im.commons.utils.parseJson
 import io.komune.im.f2.organization.domain.model.Organization
 import io.komune.im.f2.privilege.domain.role.model.Role
 import io.komune.im.infra.keycloak.client.KeycloakClient
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.assertj.core.api.Assertions
 import org.keycloak.representations.idm.GroupRepresentation
 import org.slf4j.LoggerFactory
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.repository.AssertionApiEntity
-import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 fun AssertionBdd.organization(client: KeycloakClient) = AssertionOrganization(client)
 
@@ -24,7 +24,7 @@ class AssertionOrganization(
     override suspend fun findById(id: OrganizationId): GroupRepresentation? = try {
         client.group(id).toRepresentation()
     } catch (e: JakartaNotFoundException) {
-        logger.debug("Group not found with id: $id")
+        logger.debug("Group not found with id: $id", e)
         null
     }
     override suspend fun assertThat(entity: GroupRepresentation) = OrganizationAssert(entity)

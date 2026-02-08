@@ -1,3 +1,5 @@
+@file:Suppress("detekt.PackageNaming")
+
 package f2.spring.exception
 
 import org.springframework.http.HttpStatus

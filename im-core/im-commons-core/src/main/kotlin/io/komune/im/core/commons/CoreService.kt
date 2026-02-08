@@ -33,7 +33,7 @@ open class CoreService(
         handleErrors(errorMessage) { exec() }
     }
 
-    @Suppress("ThrowsCount")
+    @Suppress("ThrowsCount", "TooGenericExceptionCaught")
     protected suspend fun <R> handleErrors(errorMessage: String, exec: suspend () -> R): R {
         return try {
             exec()

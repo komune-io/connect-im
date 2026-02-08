@@ -1,5 +1,5 @@
-import { ThemeContextProvider } from "@komune-io/g2-themes";
-import { StorybookCanvas } from "@komune-io/g2-storybook-documentation";
+import {ThemeContextProvider} from "@komune-io/g2-themes";
+import {StorybookCanvas} from "@komune-io/g2-storybook-documentation";
 
 import "./default.css";
 

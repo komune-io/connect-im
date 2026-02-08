@@ -59,7 +59,7 @@ object AuthenticationProvider {
     }
 
     private suspend fun getRoles() = getAuthentication()?.authorities
-        ?.map { it.authority.removePrefix("ROLE_") }
+        ?.mapNotNull { it.authority?.removePrefix("ROLE_") }
         ?.toTypedArray() ?: emptyArray()
 }
 
@@ -102,7 +102,7 @@ class TokenInfo(private val authentication: JwtAuthenticationToken?) {
     }
 
     fun getRoles() = authentication?.authorities
-        ?.map { it.authority.removePrefix("ROLE_") }
+        ?.mapNotNull { it.authority?.removePrefix("ROLE_") }
         ?.toTypedArray() ?: emptyArray()
 
 }

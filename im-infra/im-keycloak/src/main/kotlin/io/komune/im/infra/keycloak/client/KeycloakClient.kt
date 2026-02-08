@@ -17,6 +17,7 @@ import org.keycloak.admin.client.resource.UsersResource
 import org.keycloak.representations.idm.ClientRepresentation
 import org.slf4j.LoggerFactory
 
+@Suppress("TooManyFunctions")
 class KeycloakClient(
 	val keycloak: Keycloak,
     val auth: AuthRealm,

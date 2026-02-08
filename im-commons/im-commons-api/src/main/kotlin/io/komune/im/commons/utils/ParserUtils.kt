@@ -1,9 +1,7 @@
 package io.komune.im.commons.utils
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.io.File
+import java.io.IOException
 import java.io.InputStream
 import java.net.MalformedURLException
 import java.net.URL
@@ -24,7 +22,7 @@ object ParserUtils {
         try {
             logger.info("Loading configuration from json file [$configPath]...")
             return getFile(configPath, classLoader)?.parseTo(clazz) ?: exitProcess(-1)
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             logger.error("Error configuration from json file [${configPath}]", e)
             exitProcess(-1)
         }
@@ -38,7 +36,7 @@ object ParserUtils {
         try {
             logger.info("Loading configuration from json file [$configPath]...")
             return getFile(configPath, classLoader)?.parseJsonTo(clazz) ?: exitProcess(-1)
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             logger.error("Error configuration from json file [${configPath}]", e)
             exitProcess(-1)
         }
@@ -80,13 +78,5 @@ object ParserUtils {
         }
 
         return null
-    }
-
-    private fun <T> String.parseTo(targetClass: Class<T>): T {
-        val mapper = jacksonObjectMapper()
-            .enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
-        return mapper.readValue(this, targetClass)
     }
 }

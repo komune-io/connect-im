@@ -1,7 +1,7 @@
 package io.komune.im.commons.exception
 
 
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 
 open class IMError(
 	open val type: String,

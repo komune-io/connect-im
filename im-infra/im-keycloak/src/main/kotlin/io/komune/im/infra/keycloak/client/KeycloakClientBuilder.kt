@@ -4,7 +4,6 @@ import f2.client.domain.AuthRealmClientSecret
 import f2.client.domain.AuthRealmPassword
 import f2.client.domain.RealmId
 import io.komune.im.commons.model.AuthSubRealm
-import io.komune.im.infra.keycloak.AuthRealmException
 import java.util.concurrent.TimeUnit
 import org.jboss.resteasy.client.jaxrs.ResteasyClient
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder
@@ -45,8 +44,6 @@ object KeycloakClientBuilder {
                 grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 clientSecret(master.clientSecret)
             }
-
-            else -> throw AuthRealmException("Invalid AuthRealm type[${auth::class.simpleName}]")
         }
     }
 

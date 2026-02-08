@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
+@Suppress("TooManyFunctions")
 class UserPoliciesEnforcer(
     private val userFinderService: UserFinderService
 ): PolicyEnforcer() {

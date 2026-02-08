@@ -9,9 +9,9 @@ import io.komune.im.f2.space.domain.model.Space
 import io.komune.im.f2.space.domain.query.SpacePageResult
 import io.komune.im.f2.space.lib.model.toSpace
 import io.komune.im.infra.redis.CacheName
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.keycloak.representations.idm.RealmRepresentation
 import org.springframework.stereotype.Service
-import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
 class SpaceFinderService: CoreService(CacheName.Space) {
@@ -19,6 +19,7 @@ class SpaceFinderService: CoreService(CacheName.Space) {
     suspend fun getOrNull(id: SpaceIdentifier): Space? = query(id) {
         val client = keycloakClientProvider.getClient()
 
+        @Suppress("SwallowedException")
         try {
             client.realm(id)
                 .toRepresentation()

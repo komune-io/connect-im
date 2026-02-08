@@ -19,5 +19,6 @@ public class DbSchemaMigrationProvider: JpaEntityProvider {
     }
 
     override fun close() {
+        // No-op: nothing to clean up
     }
 }

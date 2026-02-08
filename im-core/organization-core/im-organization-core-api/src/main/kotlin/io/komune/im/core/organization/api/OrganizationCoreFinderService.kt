@@ -11,9 +11,9 @@ import io.komune.im.core.commons.CoreService
 import io.komune.im.core.organization.api.model.toOrganization
 import io.komune.im.core.organization.domain.model.OrganizationModel
 import io.komune.im.infra.redis.CacheName
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.keycloak.representations.idm.GroupRepresentation
 import org.springframework.stereotype.Service
-import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 
 @Service
 class OrganizationCoreFinderService : CoreService(CacheName.Organization) {
@@ -22,6 +22,7 @@ class OrganizationCoreFinderService : CoreService(CacheName.Organization) {
         id: OrganizationId
     ): OrganizationModel? = query(id, "Error while fetching organization [$id]") {
         val client = keycloakClientProvider.getClient()
+        @Suppress("SwallowedException")
         try {
             client.group(id).toRepresentation().toOrganization()
         } catch (e: JakartaNotFoundException) {

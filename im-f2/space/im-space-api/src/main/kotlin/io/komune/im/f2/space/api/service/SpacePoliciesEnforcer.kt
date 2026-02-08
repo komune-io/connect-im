@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service
 @Service
 class SpacePoliciesEnforcer: PolicyEnforcer() {
 
+    @Suppress("UnusedParameter")
     suspend fun checkGet(spaceIdentifier: SpaceIdentifier) = checkAuthed("get space") { authedUser ->
         SpacePolicies.canGet(authedUser)
     }

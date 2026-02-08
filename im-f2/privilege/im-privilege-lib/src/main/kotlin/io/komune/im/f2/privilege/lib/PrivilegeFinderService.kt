@@ -19,6 +19,7 @@ import io.komune.im.f2.privilege.lib.model.toDTO
 import org.springframework.stereotype.Service
 
 @Service
+@Suppress("TooManyFunctions")
 class PrivilegeFinderService(
     private val privilegeCoreFinderService: PrivilegeCoreFinderService
 ) {

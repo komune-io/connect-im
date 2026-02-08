@@ -1,6 +1,5 @@
 package io.komune.im.f2.space.lib
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.komune.im.api.config.bean.ImAuthenticationProvider
 import io.komune.im.commons.auth.withAuth
 import io.komune.im.core.client.api.ClientCoreAggregateService
@@ -16,11 +15,12 @@ import io.komune.im.f2.space.domain.command.SpaceDeleteCommand
 import io.komune.im.f2.space.domain.command.SpaceDeletedEvent
 import io.komune.im.infra.keycloak.client.KeycloakClient
 import io.komune.im.infra.redis.CacheName
+import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
 import org.keycloak.representations.idm.RealmRepresentation
 import org.keycloak.representations.userprofile.config.UPConfig
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
+import tools.jackson.databind.ObjectMapper
 
 @Service
 class SpaceAggregateService(
@@ -52,7 +52,7 @@ class SpaceAggregateService(
         val client = keycloakClientProvider.getClient()
         try {
             update(command)
-        } catch (e: JakartaNotFoundException) {
+        } catch (_: JakartaNotFoundException) {
             logger.info("Space not found, creating new space with identifier: ${command.identifier}")
             client.create(command)
         }
@@ -148,6 +148,7 @@ class SpaceAggregateService(
     private fun RealmRepresentation.applyBaseConfig() = apply {
         isEnabled = true
         isInternationalizationEnabled = IS_INTERNATIONALIZATION_ENABLED
+        sslRequired = "EXTERNAL"
 
         accessTokenLifespan = ACCESS_TOKEN_LIFESPAN
         ssoSessionIdleTimeout = SSO_SESSSION_IDLE_TIMEOUT
@@ -169,6 +170,10 @@ class SpaceAggregateService(
         realm = command.identifier
         logger.info("Setting displayName to ${command.displayName ?: this.displayName ?: command.identifier}")
         displayName = command.displayName ?: this.displayName ?: command.identifier
+        command.sslRequired?.let {
+            logger.info("Setting sslRequired to $it")
+            sslRequired = it
+        }
         logger.info("Setting smtpServer to ${command.smtp}")
         smtpServer = command.smtp
         logger.info("Setting loginTheme to ${command.theme}")

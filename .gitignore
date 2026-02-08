@@ -1,5 +1,5 @@
-### Storybook ###
-storybook-static
+### Kotlin ###
+.kotlin
 
 ### Gradle ###
 .gradle
@@ -22,15 +22,17 @@ storybook-static
 *.ipr
 **/out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+### Storybook ###
+storybook-static
+**/node_modules
 
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-### npm ###
-node_modules
-
-kotlin-js-store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

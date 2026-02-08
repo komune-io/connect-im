@@ -5,6 +5,7 @@ import io.komune.im.commons.utils.ParserUtils
 import io.komune.im.core.client.api.ClientCoreAggregateService
 import io.komune.im.core.client.api.ClientCoreFinderService
 import io.komune.im.core.client.domain.command.ClientGrantClientRolesCommand
+import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.script.core.config.properties.ImScriptInitProperties
 import io.komune.im.script.core.config.properties.toAuthRealm
 import io.komune.im.script.core.model.AppClient
@@ -21,6 +22,7 @@ class ImInitScript(
     private val clientInitService: ClientInitService,
     private val clientCoreAggregateService: ClientCoreAggregateService,
     private val clientCoreFinderService: ClientCoreFinderService,
+    private val keycloakClientProvider: KeycloakClientProvider,
     private val imScriptInitProperties: ImScriptInitProperties,
 ) {
     private val logger = LoggerFactory.getLogger(ImInitScript::class.java)
@@ -33,6 +35,7 @@ class ImInitScript(
 
             val masterAuth = imScriptInitProperties.auth.toAuthRealm()
             withContext(AuthContext(masterAuth)) {
+                configureMasterRealm(properties)
                 logger.info("Initializing imMasterClient...")
                 logger.warn("******************************")
                 logger.warn("Deprecated: imMasterClient is deprecated and will be removed in the future")
@@ -46,6 +49,16 @@ class ImInitScript(
             }
         }
 
+    }
+
+    private suspend fun configureMasterRealm(properties: ImInitProperties) {
+        val sslRequired = properties.sslRequired ?: return
+        logger.info("Configuring master realm sslRequired to $sslRequired")
+        val client = keycloakClientProvider.getClient()
+        val realm = client.realm("master").toRepresentation()
+        realm.sslRequired = sslRequired
+        client.realm("master").update(realm)
+        logger.info("Master realm sslRequired set to $sslRequired")
     }
 
     private suspend fun ClientCredentials.initImClient() {

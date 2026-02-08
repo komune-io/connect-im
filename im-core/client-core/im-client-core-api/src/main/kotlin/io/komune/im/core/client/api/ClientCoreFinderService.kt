@@ -6,13 +6,16 @@ import io.komune.im.commons.model.ClientIdentifier
 import io.komune.im.core.client.api.model.toClient
 import io.komune.im.core.client.domain.model.ClientModel
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
-import org.springframework.stereotype.Service
 import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 
 @Service
 class ClientCoreFinderService(
     private val keycloakClientProvider: KeycloakClientProvider
 ) {
+    private val logger = LoggerFactory.getLogger(ClientCoreFinderService::class.java)
+
     suspend fun getOrNull(id: ClientId): ClientModel? {
         val keycloakClient = keycloakClientProvider.getClient()
         try {
@@ -20,6 +23,7 @@ class ClientCoreFinderService(
                 .toRepresentation()
                 .toClient()
         } catch (e: JakartaNotFoundException) {
+            logger.debug("Client not found with id: $id", e)
             return null
         }
     }
@@ -33,6 +37,7 @@ class ClientCoreFinderService(
         try {
             return keycloakClient.getClientByIdentifier(identifier)?.toClient()
         } catch (e: JakartaNotFoundException) {
+            logger.debug("Client not found with identifier: $identifier", e)
             return null
         }
     }
@@ -49,7 +54,7 @@ class ClientCoreFinderService(
                 .list()
                 .map { it.name }
         } catch (e: JakartaNotFoundException) {
-            throw NotFoundException("Client", id)
+            throw NotFoundException("Client", id).initCause(e)
         }
     }
 }

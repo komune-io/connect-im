@@ -120,6 +120,7 @@ class ApiKeyAggregateService(
         val user = apiKeyFinderService.getUserOfKey(command.id)
         val organizationId = user.memberOf!!
 
+        @Suppress("TooGenericExceptionCaught")
         try {
             client.client(command.id).remove()
         } catch (e: Exception) {

@@ -7,5 +7,5 @@ class ActionTokenRestResourceProvider(
     private val session: KeycloakSession
 ): RealmResourceProvider {
     override fun getResource() = ActionTokenRestResource(session)
-    override fun close() { }
+    override fun close() { /* No-op */ }
 }

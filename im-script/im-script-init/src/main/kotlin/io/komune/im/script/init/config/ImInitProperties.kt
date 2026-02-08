@@ -4,6 +4,7 @@ import io.komune.im.script.core.model.ClientCredentials
 
 data class ImInitProperties(
     val rootClient: ClientCredentials?,
+    val sslRequired: String? = null,
     @Deprecated("Use rootClient instead")
     val imMasterClient: ClientCredentials?
 )
