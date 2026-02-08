@@ -1,5 +1,5 @@
-### Storybook ###
-storybook-static
+### Kotlin ###
+.kotlin
 
 ### Gradle ###
 .gradle
@@ -22,15 +22,6 @@ storybook-static
 *.ipr
 **/out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-
-### npm ###
-node_modules
-
-kotlin-js-store
+### Storybook ###
+storybook-static
+**/node_modules
