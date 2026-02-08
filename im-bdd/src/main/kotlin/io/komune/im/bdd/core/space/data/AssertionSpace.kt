@@ -21,8 +21,14 @@ class AssertionSpace(
     ) {
         fun hasFields(
             identifier: SpaceIdentifier = space.id,
+            sslRequired: String? = space.sslRequired,
         ) = also {
             Assertions.assertThat(space.id).isEqualTo(identifier)
+            Assertions.assertThat(space.sslRequired).isEqualTo(sslRequired)
+        }
+
+        fun hasSslRequired(expected: String) = also {
+            Assertions.assertThat(space.sslRequired).isEqualToIgnoringCase(expected)
         }
 
         fun matches(space: Space) = hasFields(

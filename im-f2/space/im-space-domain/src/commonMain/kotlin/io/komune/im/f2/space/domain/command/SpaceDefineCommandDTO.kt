@@ -51,6 +51,13 @@ interface SpaceDefineCommandDTO: Command {
     val locales: List<String>?
     val settings: SpaceSettingsDTO?
     val mfa: List<String>?
+
+    /**
+     * SSL required mode for the space. Valid values: "NONE", "EXTERNAL", "ALL".
+     * Defaults to "EXTERNAL" if not specified.
+     * @example "EXTERNAL"
+     */
+    val sslRequired: String?
 }
 
 /**
@@ -65,6 +72,7 @@ data class SpaceDefineCommand(
     override val locales: List<String>?,
     override val settings: SpaceSettings?,
     override val mfa: List<String>?,
+    override val sslRequired: String? = null,
 ): SpaceDefineCommandDTO
 
 /**

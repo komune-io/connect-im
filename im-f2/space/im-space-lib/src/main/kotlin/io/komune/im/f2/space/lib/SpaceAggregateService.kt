@@ -148,6 +148,7 @@ class SpaceAggregateService(
     private fun RealmRepresentation.applyBaseConfig() = apply {
         isEnabled = true
         isInternationalizationEnabled = IS_INTERNATIONALIZATION_ENABLED
+        sslRequired = "EXTERNAL"
 
         accessTokenLifespan = ACCESS_TOKEN_LIFESPAN
         ssoSessionIdleTimeout = SSO_SESSSION_IDLE_TIMEOUT
@@ -169,6 +170,10 @@ class SpaceAggregateService(
         realm = command.identifier
         logger.info("Setting displayName to ${command.displayName ?: this.displayName ?: command.identifier}")
         displayName = command.displayName ?: this.displayName ?: command.identifier
+        command.sslRequired?.let {
+            logger.info("Setting sslRequired to $it")
+            sslRequired = it
+        }
         logger.info("Setting smtpServer to ${command.smtp}")
         smtpServer = command.smtp
         logger.info("Setting loginTheme to ${command.theme}")

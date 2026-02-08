@@ -79,6 +79,7 @@ class SpaceConfigScriptTest: SpringTestConfiguration() {
         // Given a space
         val data = SpaceCreateProperties(
             identifier = spaceIdentifier,
+            sslRequired = "none",
             rootClient = ClientCredentials(
                 clientId = clientId,
                 clientSecret = "secret"

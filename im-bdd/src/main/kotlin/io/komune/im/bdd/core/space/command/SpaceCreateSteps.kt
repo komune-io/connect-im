@@ -70,6 +70,16 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
                 }
             }
         }
+
+        Then("The space should have sslRequired {string}") { expectedSslRequired: String ->
+            step {
+                withAuth("master") {
+                    val keycloakClient = keycloakClientProvider.getClient()
+                    AssertionBdd.space(keycloakClient).assertThatId(command.identifier)
+                        .hasSslRequired(expectedSslRequired)
+                }
+            }
+        }
     }
 
     private suspend fun createSpace(params: SpaceCreateParams) = context.spaceIdentifiers.register(params.identifier) {
@@ -80,7 +90,8 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
             theme = null,
             locales = null,
             mfa = null,
-            settings = null
+            settings = null,
+            sslRequired = params.sslRequired
         )
         command.invokeWith(spaceEndpoint.spaceDefine()).identifier
     }
@@ -88,12 +99,14 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
     private fun spaceCreateParams(entry: Map<String, String>?): SpaceCreateParams {
         return SpaceCreateParams(
             identifier = entry?.get("identifier").orRandom(),
-            displayName = entry?.get("displayName").orRandom()
+            displayName = entry?.get("displayName").orRandom(),
+            sslRequired = entry?.get("sslRequired")
         )
     }
 
     private data class SpaceCreateParams(
         val identifier: SpaceIdentifier,
         val displayName: String? = null,
+        val sslRequired: String? = null,
     )
 }

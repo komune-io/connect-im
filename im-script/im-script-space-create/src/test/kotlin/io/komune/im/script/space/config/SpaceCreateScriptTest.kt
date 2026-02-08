@@ -2,6 +2,7 @@ package io.komune.im.script.space.config
 
 import io.komune.im.bdd.spring.SpringTestConfiguration
 import io.komune.im.commons.auth.AuthContext
+import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.script.core.config.properties.ImScriptSpaceProperties
 import io.komune.im.script.core.config.properties.toAuthRealm
 import io.komune.im.script.core.model.defaultSpaceRootClientId
@@ -26,6 +27,32 @@ class SpaceCreateScriptTest: SpringTestConfiguration() {
 
     @Autowired
     lateinit var clientInitService: ClientInitService
+
+    @Autowired
+    lateinit var keycloakClientProvider: KeycloakClientProvider
+
+    @Test
+    fun sslRequiredMustBeAppliedToCreatedSpace(): Unit = runTest {
+        val spaceName = "im-test-${UUID.randomUUID().hashCode().absoluteValue}"
+        val clientId = defaultSpaceRootClientId(spaceName)
+        val data = SpaceCreateProperties(
+            identifier = spaceName,
+            sslRequired = "NONE",
+            rootClient = ClientCredentials(
+                clientId = clientId,
+                clientSecret = "secret"
+            )
+        )
+
+        spaceCreateScript.createScript(data)
+
+        val masterAuth = imScriptSpaceProperties.auth.toAuthRealm()
+        withContext(AuthContext(masterAuth)) {
+            val client = keycloakClientProvider.getClient()
+            val realm = client.realm(spaceName).toRepresentation()
+            Assertions.assertThat(realm.sslRequired).isEqualToIgnoringCase("NONE")
+        }
+    }
 
     @Test
     fun spaceRootClientMustBeCreated(): Unit = runTest {

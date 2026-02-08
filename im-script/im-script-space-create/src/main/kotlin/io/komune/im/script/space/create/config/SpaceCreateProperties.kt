@@ -16,6 +16,7 @@ data class SpaceCreateProperties(
     val smtp: Map<String, String>? = null,
     val locales: List<String>? = null,
     val mfa: List<String>? = null,
+    val sslRequired: String? = null,
     val adminUsers: List<AdminUserData>? = null,
     val rootClient: ClientCredentials? = null,
     val eventWebhook: EventWebhookConfig? = null

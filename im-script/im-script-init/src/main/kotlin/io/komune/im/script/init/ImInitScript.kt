@@ -35,6 +35,7 @@ class ImInitScript(
 
             val masterAuth = imScriptInitProperties.auth.toAuthRealm()
             withContext(AuthContext(masterAuth)) {
+                configureMasterRealm(properties)
                 logger.info("Initializing imMasterClient...")
                 logger.warn("******************************")
                 logger.warn("Deprecated: imMasterClient is deprecated and will be removed in the future")
@@ -48,6 +49,16 @@ class ImInitScript(
             }
         }
 
+    }
+
+    private suspend fun configureMasterRealm(properties: ImInitProperties) {
+        val sslRequired = properties.sslRequired ?: return
+        logger.info("Configuring master realm sslRequired to $sslRequired")
+        val client = keycloakClientProvider.getClient()
+        val realm = client.realm("master").toRepresentation()
+        realm.sslRequired = sslRequired
+        client.realm("master").update(realm)
+        logger.info("Master realm sslRequired set to $sslRequired")
     }
 
     private suspend fun ClientCredentials.initImClient() {

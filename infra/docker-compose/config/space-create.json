@@ -17,6 +17,7 @@
         "clientSecret": "${KC_REALM_ROOT_CLIENT_SECRET}"
     },
     "mfa": ["OTP"],
+    "sslRequired": "NONE",
     "smtp": {
         "from": "dev@komune.io",
         "fromDisplayName": "Dev Komune",
