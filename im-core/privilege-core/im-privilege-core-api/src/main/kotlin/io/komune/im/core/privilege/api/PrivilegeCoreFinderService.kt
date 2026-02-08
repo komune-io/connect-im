@@ -21,6 +21,7 @@ class PrivilegeCoreFinderService(
 ): CachedService(CacheName.Privilege) {
 
     suspend fun getPrivilegeOrNull(identifier: PrivilegeIdentifier): Privilege? = query(identifier) {
+        @Suppress("SwallowedException")
         try {
             val client = keycloakClientProvider.getClient()
             client.role(identifier)

@@ -44,6 +44,7 @@ import org.keycloak.events.EventType
 import org.springframework.stereotype.Service
 
 @Service
+@Suppress("TooManyFunctions")
 class UserAggregateService(
     private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val privilegeCoreFinderService: PrivilegeCoreFinderService,

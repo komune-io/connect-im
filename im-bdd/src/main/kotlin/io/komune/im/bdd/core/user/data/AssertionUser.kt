@@ -28,7 +28,7 @@ class AssertionUser(
     override suspend fun findById(id: UserId): UserRepresentation? = try {
         client.user(id).toRepresentation()
     } catch (e: JakartaNotFoundException) {
-        logger.debug("User not found with id: $id")
+        logger.debug("User not found with id: $id", e)
         null
     }
 

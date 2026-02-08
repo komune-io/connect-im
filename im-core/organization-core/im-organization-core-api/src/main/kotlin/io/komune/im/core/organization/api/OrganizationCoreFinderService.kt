@@ -22,6 +22,7 @@ class OrganizationCoreFinderService : CoreService(CacheName.Organization) {
         id: OrganizationId
     ): OrganizationModel? = query(id, "Error while fetching organization [$id]") {
         val client = keycloakClientProvider.getClient()
+        @Suppress("SwallowedException")
         try {
             client.group(id).toRepresentation().toOrganization()
         } catch (e: JakartaNotFoundException) {

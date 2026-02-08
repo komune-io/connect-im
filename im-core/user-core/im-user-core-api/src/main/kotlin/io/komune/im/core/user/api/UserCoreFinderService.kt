@@ -23,6 +23,7 @@ class UserCoreFinderService(
 
     suspend fun getOrNull(id: UserId): UserModel? = query(id, "Error while fetching user [$id]") {
         val client = keycloakClientProvider.getClient()
+        @Suppress("SwallowedException")
         try {
             client.user(id).toRepresentation().let { userRepresentationTransformer.transform(it) }
         } catch (e: JakartaNotFoundException) {

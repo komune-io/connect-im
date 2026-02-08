@@ -36,7 +36,7 @@ class OrganizationFinderService(
         return organizationCoreFinderService.get(id).toDTOInternal()
     }
 
-    @Suppress("SwallowedException")
+    @Suppress("SwallowedException", "TooGenericExceptionCaught")
     suspend fun getFromInsee(siret: String): Organization? {
         return try {
             inseeHttpClient?.getOrganizationBySiret(siret)

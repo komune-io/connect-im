@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping
 @Configuration
+@Suppress("TooManyFunctions")
 class UserEndpoint(
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService,

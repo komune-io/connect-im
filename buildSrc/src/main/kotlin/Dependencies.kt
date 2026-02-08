@@ -16,7 +16,7 @@ object PluginVersions {
 	const val springBoot = FixersPluginVersions.springBoot
 	const val kotlin = FixersPluginVersions.kotlin
 
-	const val shadowJar = "8.1.1"
+	const val shadowJar = "9.3.1"
 }
 
 object Versions {
@@ -40,8 +40,8 @@ object Versions {
         println("org.keycloak:keycloak-admin-client version: $version")
     }
 
-	const val mockito = "5.14.1"
-	const val testcontainers = FixersVersions.Test.testcontainers
+	const val mockito = "5.21.0"
+	const val testcontainers = FixersVersions.Test.TestContainers.deps
 
 	const val slf4j = FixersVersions.Logging.slf4j
 	const val jackson = FixersVersions.Json.jacksonKotlin
@@ -129,7 +129,7 @@ object Dependencies {
 		)
 
 		fun jackson(scope: Scope) = scope.add(
-			"com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}"
+			"tools.jackson.module:jackson-module-kotlin:${Versions.jackson}"
 		)
 
 		fun springBootWebflux(scope: Scope) = scope.add(

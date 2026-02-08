@@ -19,6 +19,7 @@ class SpaceFinderService: CoreService(CacheName.Space) {
     suspend fun getOrNull(id: SpaceIdentifier): Space? = query(id) {
         val client = keycloakClientProvider.getClient()
 
+        @Suppress("SwallowedException")
         try {
             client.realm(id)
                 .toRepresentation()

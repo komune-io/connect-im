@@ -60,6 +60,7 @@ class ApiKeyFinderService(
     }
 
     suspend fun getUserOfKeyOrNull(id: ApiKeyId): UserModel? {
+        @Suppress("SwallowedException")
         return try {
             val client = keycloakClientProvider.getClient()
             client.client(id).serviceAccountUser

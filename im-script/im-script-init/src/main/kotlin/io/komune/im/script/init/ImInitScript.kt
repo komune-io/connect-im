@@ -10,6 +10,7 @@ import io.komune.im.script.core.config.properties.toAuthRealm
 import io.komune.im.script.core.model.AppClient
 import io.komune.im.script.core.model.ClientCredentials
 import io.komune.im.script.core.model.DEFAULT_ROOT_CLIENT_ID
+import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.script.core.service.ClientInitService
 import io.komune.im.script.init.config.ImInitProperties
 import kotlinx.coroutines.withContext
@@ -21,6 +22,7 @@ class ImInitScript(
     private val clientInitService: ClientInitService,
     private val clientCoreAggregateService: ClientCoreAggregateService,
     private val clientCoreFinderService: ClientCoreFinderService,
+    private val keycloakClientProvider: KeycloakClientProvider,
     private val imScriptInitProperties: ImScriptInitProperties,
 ) {
     private val logger = LoggerFactory.getLogger(ImInitScript::class.java)

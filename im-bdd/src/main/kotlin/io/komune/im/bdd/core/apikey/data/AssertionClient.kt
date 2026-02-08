@@ -24,14 +24,14 @@ class AssertionClient(
     override suspend fun findById(id: ClientId): ClientRepresentation? = try {
         keycloakClient.client(id).toRepresentation()
     } catch (e: JakartaNotFoundException) {
-        logger.debug("Client not found with id: $id")
+        logger.debug("Client not found with id: $id", e)
         null
     }
 
     fun findByIdentifier(identifier: ClientIdentifier): ClientRepresentation? = try {
         keycloakClient.getClientByIdentifier(identifier)
     } catch (e: JakartaNotFoundException) {
-        logger.debug("Client not found with identifier: $identifier")
+        logger.debug("Client not found with identifier: $identifier", e)
         null
     }
 

@@ -1,6 +1,6 @@
 package io.komune.im.infra.redis.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.komune.im.infra.redis.RedisCache
 import java.time.Duration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

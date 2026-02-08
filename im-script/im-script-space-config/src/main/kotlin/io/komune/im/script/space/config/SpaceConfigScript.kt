@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
+@Suppress("TooManyFunctions")
 class SpaceConfigScript(
     private val apiKeyAggregateService: ApiKeyAggregateService,
     private val clientInitService: ClientInitService,
@@ -201,6 +202,7 @@ class SpaceConfigScript(
                     status = OrganizationStatus.VALIDATED.name
                 ).let { organizationAggregateService.create(it).id }
             } catch (e: ConflictException) {
+                logger.debug("Organization[${organization.name}] already exists", e)
                 val organizationsCreated = organizationFinderService.page(name = organization.name).items
                 if (organizationsCreated.isEmpty() || organizationsCreated.size > 1) {
                     return@mapAsync

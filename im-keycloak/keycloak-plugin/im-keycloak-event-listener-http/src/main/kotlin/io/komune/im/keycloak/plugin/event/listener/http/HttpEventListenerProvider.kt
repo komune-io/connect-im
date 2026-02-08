@@ -42,8 +42,8 @@ class HttpEventListenerProvider(
         println("${System.currentTimeMillis() - start} ms")
     }
 
-    override fun onEvent(event: AdminEvent, includeRepresentation: Boolean) {}
-    override fun close() {}
+    override fun onEvent(event: AdminEvent, includeRepresentation: Boolean) { /* No-op */ }
+    override fun close() { /* No-op */ }
 
     private fun Event.toKeycloakHttpEvent() = KeycloakHttpEvent(
         id = id,

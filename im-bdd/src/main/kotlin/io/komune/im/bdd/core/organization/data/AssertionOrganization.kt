@@ -24,7 +24,7 @@ class AssertionOrganization(
     override suspend fun findById(id: OrganizationId): GroupRepresentation? = try {
         client.group(id).toRepresentation()
     } catch (e: JakartaNotFoundException) {
-        logger.debug("Group not found with id: $id")
+        logger.debug("Group not found with id: $id", e)
         null
     }
     override suspend fun assertThat(entity: GroupRepresentation) = OrganizationAssert(entity)

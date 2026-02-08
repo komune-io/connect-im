@@ -11,10 +11,10 @@ class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
                 context.reset()
                 withAuth(context.realmId) {
                     val client = keycloakClientProvider.getClient()
+                    client.cleanKeycloakClients()
                     client.cleanKeycloakUsers()
                     client.cleanKeycloakOrganizations()
                     client.cleanKeycloakRoles()
-                    client.cleanKeycloakClients()
                 }
 
             }
@@ -44,7 +44,7 @@ class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
     private suspend fun KeycloakClient.cleanKeycloakRoles() {
         roles().list().filter { role ->
             role.name !in context.permanentRoles()
-        }.mapAsync { role ->
+        }.forEach { role ->
             role(role.name).remove()
         }
     }

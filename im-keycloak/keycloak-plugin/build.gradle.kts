@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 plugins {
     kotlin("jvm")
-    id("com.github.johnrengelman.shadow") version PluginVersions.shadowJar
+    id("com.gradleup.shadow") version PluginVersions.shadowJar
 }
 
 dependencies {

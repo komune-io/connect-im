@@ -39,7 +39,7 @@ class AssertionApiKey(
                 ?.parseJson<Array<ApiKeyModel>>()
             apiKeys?.firstOrNull { it.id == id }
         } catch (e: JakartaNotFoundException) {
-            logger.debug("Api key not found with id: $id")
+            logger.debug("Api key not found with id: $id", e)
             null
         }
     }

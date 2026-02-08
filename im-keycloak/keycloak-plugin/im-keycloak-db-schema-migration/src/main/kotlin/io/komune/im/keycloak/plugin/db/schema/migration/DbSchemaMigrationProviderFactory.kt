@@ -13,8 +13,8 @@ class DbSchemaMigrationProviderFactory: JpaEntityProviderFactory {
         return DbSchemaMigrationProvider()
     }
 
-    override fun init(config: Config.Scope) {}
-    override fun postInit(factory: KeycloakSessionFactory) {}
+    override fun init(config: Config.Scope) { /* No-op */ }
+    override fun postInit(factory: KeycloakSessionFactory) { /* No-op */ }
     override fun getId(): String = KeycloakPluginIds.DB_SCHEMA_MIGRATION
-    override fun close() {}
+    override fun close() { /* No-op */ }
 }

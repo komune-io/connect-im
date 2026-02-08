@@ -45,8 +45,6 @@ object KeycloakClientBuilder {
                 grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 clientSecret(master.clientSecret)
             }
-
-            else -> throw AuthRealmException("Invalid AuthRealm type[${auth::class.simpleName}]")
         }
     }
 

@@ -22,7 +22,7 @@ class ScriptServiceRunner(
 
     private val logger = LoggerFactory.getLogger(ScriptServiceRunner::class.java)
 
-    override fun run(vararg args: String?) = runBlocking {
+    override fun run(vararg args: String) = runBlocking {
         try {
             runScript("Init", imInitScript::run)
             runScript("Realm-Create", spaceCreateScript::run)

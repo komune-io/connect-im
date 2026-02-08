@@ -23,6 +23,7 @@ class ApiKeyPoliciesEnforcer: PolicyEnforcer() {
         ApiKeyPolicies.canCreate(authedUser)
     }
 
+    @Suppress("UnusedParameter")
     suspend fun checkRemove(apikeyId: ApiKeyId) = checkAuthed("delete an apikey") { authedUser ->
         ApiKeyPolicies.canDelete(authedUser)
     }

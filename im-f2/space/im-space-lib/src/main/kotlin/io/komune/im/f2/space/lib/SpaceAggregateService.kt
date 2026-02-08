@@ -1,6 +1,6 @@
 package io.komune.im.f2.space.lib
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.komune.im.api.config.bean.ImAuthenticationProvider
 import io.komune.im.commons.auth.withAuth
 import io.komune.im.core.client.api.ClientCoreAggregateService
@@ -52,7 +52,7 @@ class SpaceAggregateService(
         val client = keycloakClientProvider.getClient()
         try {
             update(command)
-        } catch (e: JakartaNotFoundException) {
+        } catch (_: JakartaNotFoundException) {
             logger.info("Space not found, creating new space with identifier: ${command.identifier}")
             client.create(command)
         }
