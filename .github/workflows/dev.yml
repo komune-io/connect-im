@@ -15,7 +15,7 @@ on:
 
 jobs:
   libs:
-    uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@main
+    uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@0.26.0
     permissions:
       contents: read
       packages: write
