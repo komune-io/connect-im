@@ -8,7 +8,7 @@ import java.net.URI
 
 object Framework {
 	val fixers = FixersPluginVersions.fixers
-	val connect = "0.21.1"
+	val connect = "0.21.0"
 }
 
 object PluginVersions {
