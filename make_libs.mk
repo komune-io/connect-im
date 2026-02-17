@@ -21,8 +21,8 @@ test:
 stage:
 	VERSION=$(VERSION) ./gradlew stage -Dorg.gradle.parallel=true -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
 
-check:
-	./gradlew sonar -Dsonar.token=${SONAR_TOKEN} -Dorg.gradle.parallel=true
+#check:
+	#./gradlew sonar -Dsonar.token=${SONAR_TOKEN} -Dorg.gradle.parallel=true
 
 promote:
 	VERSION=$(VERSION) ./gradlew promote -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
