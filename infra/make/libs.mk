@@ -1,6 +1,9 @@
 VERSION = $(shell cat VERSION)
 
-.PHONY: lint build test stage promote
+.PHONY: clean lint build test stage promote
+
+clean:
+	./gradlew clean
 
 lint:
 	echo 'No Lint'
