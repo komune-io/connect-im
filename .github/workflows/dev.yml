@@ -10,8 +10,6 @@ on:
     branches:
       - main
       - 'release/*'
-    tags:
-      - '*'
 
 jobs:
   libs:
@@ -21,7 +19,6 @@ jobs:
       packages: write
     with:
       make-file: 'infra/make/libs.mk'
-      on-tag: 'promote'
     secrets:
       GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
       GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
@@ -38,7 +35,6 @@ jobs:
       packages: write
     with:
       make-file: 'infra/make/libsJs.mk'
-      on-tag: 'stage promote'
     secrets:
       NPM_PKG_STAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_PKG_PROMOTE_TOKEN: ${{ secrets.NPM_PKG_NPMJS_TOKEN}}
@@ -54,7 +50,6 @@ jobs:
       make-file: 'infra/make/docker.mk'
       with-stage-docker-registry-login: 'true'
       with-promote-docker-registry-login: 'true'
-      on-tag: 'stage promote'
       docker-buildx-platform: linux/amd64,linux/arm64
     secrets:
       PKG_GITHUB_USERNAME: ${{ github.actor }}
@@ -72,7 +67,6 @@ jobs:
       pages: write
       id-token: write
     with:
-      on-tag: 'stage promote'
       with-chromatic: false
       make-file: 'infra/make/docs.mk'
       base-dir: "storybook"
