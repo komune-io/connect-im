@@ -8,7 +8,7 @@ import org.gradle.api.artifacts.dsl.RepositoryHandler
 
 object Framework {
 	val fixers = FixersPluginVersions.fixers
-	val connect = "0.22.0-SNAPSHOT"
+	val connect = "0.22.0"
 }
 
 object PluginVersions {
