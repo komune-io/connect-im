@@ -5,7 +5,10 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(Modules.F2.organizationDomain))
-    Dependencies.Mpp.f2Client(::commonMainApi)
-    Dependencies.Jvm.ktorSerializationJackson(::jvmMainImplementation)
+    commonMainApi(project(":im-f2:organization:im-organization-domain"))
+    commonMainApi(catalogue.client.core)
+    commonMainApi(catalogue.client.ktor)
+    commonMainApi(catalogue.client.ktor.http)
+    commonMainApi(libs.ktor.client.auth)
+    jvmMainImplementation(libs.ktor.serialization.jackson)
 }

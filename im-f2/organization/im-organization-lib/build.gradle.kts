@@ -5,18 +5,20 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.F2.organizationDomain))
+    api(project(":im-f2:organization:im-organization-domain"))
 
-    implementation(project(Modules.Core.organizationApi))
-    implementation(project(Modules.Core.privilegeApi))
+    implementation(project(":im-core:organization-core:im-organization-core-api"))
+    implementation(project(":im-core:privilege-core:im-privilege-core-api"))
 
-    implementation(project(Modules.F2.apikeyLib))
-    implementation(project(Modules.F2.privilegeLib))
-    implementation(project(Modules.F2.userLib))
+    implementation(project(":im-f2:apikey:im-apikey-lib"))
+    implementation(project(":im-f2:privilege:im-privilege-lib"))
+    implementation(project(":im-f2:user:im-user-lib"))
 
-    implementation(project(Modules.Api.config))
-    implementation(project(Modules.Infra.redis))
+    implementation(project(":im-api:api-config"))
+    implementation(project(":im-infra:im-redis"))
 
-    Dependencies.Mpp.f2Client(::implementation)
-    Dependencies.Jvm.ktor(::implementation)
+    implementation(catalogue.client.ktor)
+    implementation(catalogue.client.ktor.http)
+    implementation(libs.ktor.client.auth)
+    implementation(libs.bundles.ktor.client)
 }

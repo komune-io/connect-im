@@ -5,6 +5,9 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(Modules.F2.apikeyDomain))
-    Dependencies.Mpp.f2Client(::commonMainApi)
+    commonMainApi(project(":im-f2:apikey:im-apikey-domain"))
+    commonMainApi(catalogue.client.core)
+    commonMainApi(catalogue.client.ktor)
+    commonMainApi(catalogue.client.ktor.http)
+    commonMainApi(libs.ktor.client.auth)
 }

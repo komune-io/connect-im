@@ -5,13 +5,13 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.F2.organizationLib))
+    api(project(":im-f2:organization:im-organization-lib"))
 
-    implementation(project(Modules.Api.config))
-    implementation(project(Modules.Commons.auth))
-    implementation(project(Modules.Infra.redis))
+    implementation(project(":im-api:api-config"))
+    implementation(project(":im-commons:im-commons-auth"))
+    implementation(project(":im-infra:im-redis"))
 
-    implementation(project(Modules.F2.apikeyLib))
-    implementation(project(Modules.F2.userLib))
-    implementation(project(Modules.F2.privilegeLib))
+    implementation(project(":im-f2:apikey:im-apikey-lib"))
+    implementation(project(":im-f2:user:im-user-lib"))
+    implementation(project(":im-f2:privilege:im-privilege-lib"))
 }

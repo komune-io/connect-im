@@ -5,12 +5,12 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.Api.config))
-    api(project(Modules.Commons.api))
+    api(project(":im-api:api-config"))
+    api(project(":im-commons:im-commons-api"))
 
-    implementation(project(Modules.Infra.keycloak))
-    api(project(Modules.F2.privilegeLib))
+    implementation(project(":im-infra:im-keycloak"))
+    api(project(":im-f2:privilege:im-privilege-lib"))
 
-    api(project(Modules.Core.clientDomain))
-    implementation(project(Modules.Core.clientApi))
+    api(project(":im-core:client-core:im-client-core-domain"))
+    implementation(project(":im-core:client-core:im-client-core-api"))
 }

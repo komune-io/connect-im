@@ -5,6 +5,6 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.Core.organizationDomain))
-    implementation(project(Modules.Infra.redis))
+    api(project(":im-core:organization-core:im-organization-core-domain"))
+    implementation(project(":im-infra:im-redis"))
 }

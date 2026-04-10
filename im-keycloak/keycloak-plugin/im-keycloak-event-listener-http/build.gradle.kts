@@ -4,6 +4,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.Keycloak.pluginDomain))
-    Dependencies.Jvm.ktor(::implementation)
+    implementation(project(":im-keycloak:keycloak-plugin:im-keycloak-plugin-domain"))
+    implementation(libs.bundles.ktor.client)
 }

@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 plugins {
     kotlin("jvm")
-    id("com.gradleup.shadow") version PluginVersions.shadowJar
+    alias(libs.plugins.shadow)
 }
 
 dependencies {
@@ -14,7 +14,7 @@ tasks {
         archiveFileName.set("keycloak-plugin-with-dependencies.jar")
         dependencies {
             exclude(dependency("org.keycloak:.*:.*"))
-            exclude(project(Modules.Keycloak.pluginClient))
+            exclude(project(":im-keycloak:keycloak-plugin:im-keycloak-plugin-client"))
         }
     }
 }
@@ -26,7 +26,7 @@ subprojects {
         }
         dependencies {
             val compileOnly by configurations
-            Dependencies.Jvm.Keycloak.all(::compileOnly)
+            compileOnly(libs.bundles.keycloak.all)
         }
     }
 }

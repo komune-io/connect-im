@@ -3,10 +3,10 @@ subprojects {
         dependencies {
             val implementation by configurations
             if (!project.path.endsWith("-client") && !project.path.endsWith("-domain")) {
-                implementation(project(Modules.Infra.keycloak))
-                implementation(project(Modules.Infra.redis))
-                implementation(project(Modules.Commons.api))
-                implementation(project(Modules.Core.commons))
+                implementation(project(":im-infra:im-keycloak"))
+                implementation(project(":im-infra:im-redis"))
+                implementation(project(":im-commons:im-commons-api"))
+                implementation(project(":im-core:im-commons-core"))
             }
         }
     }
@@ -14,7 +14,8 @@ subprojects {
     plugins.withType(org.jetbrains.kotlin.gradle.plugin.KotlinMultiplatformPluginWrapper::class.java).whenPluginAdded {
         dependencies {
             val commonMainApi by configurations
-            Dependencies.Mpp.f2 { commonMainApi(it) }
+            commonMainApi(rootProject.catalogue.dsl.cqrs)
+            commonMainApi(rootProject.catalogue.dsl.function)
         }
     }
 }

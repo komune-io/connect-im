@@ -9,6 +9,21 @@ pluginManagement {
     }
 }
 
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+    versionCatalogs {
+        val fixersVersion = file("gradle/libs.versions.toml")
+            .readLines()
+            .first { it.startsWith("fixers") }
+            .substringAfter("\"").substringBefore("\"")
+        create("catalogue") {
+            from("io.komune.f2:f2-gradle-catalog:$fixersVersion")
+        }
+    }
+}
+
 rootProject.name = "connect-im"
 
 include(

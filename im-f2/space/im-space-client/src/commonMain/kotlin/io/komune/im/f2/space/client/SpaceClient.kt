@@ -8,10 +8,18 @@ import f2.client.ktor.http.plugin.F2Auth
 import f2.dsl.fnc.F2SupplierSingle
 import f2.dsl.fnc.f2SupplierSingle
 import io.komune.im.f2.space.domain.SpaceApi
+import io.komune.im.f2.space.domain.command.SpaceDefineCommand
 import io.komune.im.f2.space.domain.command.SpaceDefineFunction
+import io.komune.im.f2.space.domain.command.SpaceDefinedEvent
+import io.komune.im.f2.space.domain.command.SpaceDeleteCommand
 import io.komune.im.f2.space.domain.command.SpaceDeleteFunction
+import io.komune.im.f2.space.domain.command.SpaceDeletedEvent
 import io.komune.im.f2.space.domain.query.SpaceGetFunction
+import io.komune.im.f2.space.domain.query.SpaceGetQuery
+import io.komune.im.f2.space.domain.query.SpaceGetResult
 import io.komune.im.f2.space.domain.query.SpacePageFunction
+import io.komune.im.f2.space.domain.query.SpacePageQuery
+import io.komune.im.f2.space.domain.query.SpacePageResult
 import io.ktor.client.plugins.HttpTimeout
 import kotlin.js.JsExport
 
@@ -38,8 +46,8 @@ fun spaceClient(
 
 @JsExport
 open class SpaceClient(private val client: F2Client): SpaceApi {
-    override fun spaceDefine(): SpaceDefineFunction = client.function(this::spaceDefine.name)
-    override fun spaceDelete(): SpaceDeleteFunction = client.function(this::spaceDelete.name)
-    override fun spaceGet(): SpaceGetFunction = client.function(this::spaceGet.name)
-    override fun spacePage(): SpacePageFunction = client.function(this::spacePage.name)
+    override fun spaceDefine(): SpaceDefineFunction = client.function<SpaceDefineCommand, SpaceDefinedEvent>(this::spaceDefine.name)
+    override fun spaceDelete(): SpaceDeleteFunction = client.function<SpaceDeleteCommand, SpaceDeletedEvent>(this::spaceDelete.name)
+    override fun spaceGet(): SpaceGetFunction = client.function<SpaceGetQuery, SpaceGetResult>(this::spaceGet.name)
+    override fun spacePage(): SpacePageFunction = client.function<SpacePageQuery, SpacePageResult>(this::spacePage.name)
 }

@@ -6,8 +6,8 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(Modules.Core.organizationDomain))
-    commonMainApi(project(Modules.F2.privilegeDomain))
+    commonMainApi(project(":im-core:organization-core:im-organization-core-domain"))
+    commonMainApi(project(":im-f2:privilege:im-privilege-domain"))
 
-    commonMainApi(project(Modules.Commons.domain))
+    commonMainApi(project(":im-commons:im-commons-domain"))
 }

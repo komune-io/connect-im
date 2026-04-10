@@ -5,11 +5,11 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.F2.userDomain))
+    api(project(":im-f2:user:im-user-domain"))
 
-    implementation(project(Modules.F2.userLib))
-    implementation(project(Modules.Core.mfaApi))
+    implementation(project(":im-f2:user:im-user-lib"))
+    implementation(project(":im-core:mfa-core:im-mfa-core-api"))
 
-    implementation(project(Modules.Api.config))
-    implementation(project(Modules.Commons.auth))
+    implementation(project(":im-api:api-config"))
+    implementation(project(":im-commons:im-commons-auth"))
 }

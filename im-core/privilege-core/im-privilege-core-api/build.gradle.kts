@@ -5,5 +5,5 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.Core.privilegeDomain))
+    api(project(":im-core:privilege-core:im-privilege-core-domain"))
 }

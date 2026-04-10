@@ -5,15 +5,15 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.F2.userDomain))
+    api(project(":im-f2:user:im-user-domain"))
 
-    implementation(project(Modules.F2.privilegeLib))
+    implementation(project(":im-f2:privilege:im-privilege-lib"))
 
-    implementation(project(Modules.Api.config))
-    implementation(project(Modules.Core.organizationApi))
-    implementation(project(Modules.Core.privilegeApi))
-    implementation(project(Modules.Core.userApi))
+    implementation(project(":im-api:api-config"))
+    implementation(project(":im-core:organization-core:im-organization-core-api"))
+    implementation(project(":im-core:privilege-core:im-privilege-core-api"))
+    implementation(project(":im-core:user-core:im-user-core-api"))
 
-    implementation(project(Modules.Infra.keycloak))
-    implementation(project(Modules.Infra.redis))
+    implementation(project(":im-infra:im-keycloak"))
+    implementation(project(":im-infra:im-redis"))
 }

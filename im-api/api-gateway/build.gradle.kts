@@ -5,15 +5,15 @@ plugins {
 }
 
 dependencies {
-	implementation(project(Modules.Api.config))
-	implementation(project(Modules.Infra.redis))
+	implementation(project(":im-api:api-config"))
+	implementation(project(":im-infra:im-redis"))
 
-	implementation(project(Modules.F2.apikeyApi))
-	implementation(project(Modules.F2.organizationApi))
-	implementation(project(Modules.F2.privilegeApi))
-	implementation(project(Modules.F2.userApi))
-	implementation(project(Modules.F2.spaceApi))
+	implementation(project(":im-f2:apikey:im-apikey-api"))
+	implementation(project(":im-f2:organization:im-organization-api"))
+	implementation(project(":im-f2:privilege:im-privilege-api"))
+	implementation(project(":im-f2:user:im-user-api"))
+	implementation(project(":im-f2:space:im-space-api"))
 
-	Dependencies.Jvm.f2Http(::implementation)
-	Dependencies.Jvm.springBootWebflux(::implementation)
+	implementation(catalogue.spring.boot.starter.function.http)
+	implementation(libs.spring.boot.starter.webflux)
 }

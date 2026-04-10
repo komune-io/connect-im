@@ -1,24 +1,29 @@
 plugins {
-    kotlin("plugin.spring") version PluginVersions.kotlin apply false
-    kotlin("plugin.serialization") version PluginVersions.kotlin apply false
-    kotlin("kapt") version PluginVersions.kotlin apply false
-    id("org.springframework.boot") version PluginVersions.springBoot apply false
+    alias(catalogue.plugins.f2.bom)
+    alias(catalogue.plugins.kotlin.spring) apply false
+    alias(catalogue.plugins.kotlin.serialization) apply false
+    alias(catalogue.plugins.kotlin.kapt) apply false
+    alias(catalogue.plugins.spring.boot) apply false
 
-    id("io.komune.fixers.gradle.config") version PluginVersions.fixers
-    id("io.komune.fixers.gradle.check") version PluginVersions.fixers
-    id("io.komune.fixers.gradle.d2") version PluginVersions.fixers
+    alias(catalogue.plugins.fixers.gradle.config)
+    alias(catalogue.plugins.fixers.gradle.check)
+    id("io.komune.fixers.gradle.d2") version catalogue.versions.fixers.get()
 
-    id("io.komune.fixers.gradle.kotlin.mpp") version PluginVersions.fixers apply false
-    id("io.komune.fixers.gradle.kotlin.jvm") version PluginVersions.fixers apply false
-    id("io.komune.fixers.gradle.publish") version PluginVersions.fixers
-    id("io.komune.fixers.gradle.npm") version PluginVersions.fixers apply false
+    alias(catalogue.plugins.fixers.gradle.kotlin.mpp) apply false
+    alias(catalogue.plugins.fixers.gradle.kotlin.jvm) apply false
+    alias(catalogue.plugins.fixers.gradle.publish)
+    id("io.komune.fixers.gradle.npm") version catalogue.versions.fixers.get() apply false
 }
 
 allprojects {
     group = "io.komune.im"
     version = System.getenv("VERSION") ?: "latest"
     repositories {
-        defaultRepo()
+        mavenCentral()
+        maven { url = uri("https://central.sonatype.com/repository/maven-snapshots") }
+        if(System.getenv("MAVEN_LOCAL_USE") == "true") {
+            mavenLocal()
+        }
     }
 }
 

@@ -5,5 +5,5 @@ plugins {
 }
 
 dependencies {
-    Dependencies.Jvm.Keycloak.serverSpiPrivate(::api)
+    api(libs.keycloak.server.spi.private)
 }
