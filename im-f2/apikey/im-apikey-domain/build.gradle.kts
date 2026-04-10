@@ -6,6 +6,6 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(Modules.F2.privilegeDomain))
-    commonMainApi(project(Modules.Commons.domain))
+    commonMainApi(project(":im-f2:privilege:im-privilege-domain"))
+    commonMainApi(project(":im-commons:im-commons-domain"))
 }

@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    commonMainApi("io.komune.f2:f2-dsl-cqrs:${Versions.f2}")
-    commonMainApi("io.komune.f2:f2-client-domain:${Versions.f2}")
-    Dependencies.Mpp.datetime(::commonMainApi)
+    commonMainApi(catalogue.dsl.cqrs)
+    commonMainApi(catalogue.client.domain)
+    commonMainApi(libs.kotlinx.datetime)
 }

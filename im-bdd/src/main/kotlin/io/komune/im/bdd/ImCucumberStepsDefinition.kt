@@ -1,6 +1,6 @@
 package io.komune.im.bdd
 
-import io.komune.f2.spring.boot.auth.config.WebSecurityConfig
+import io.komune.f2.spring.boot.auth.ROLE_PREFIX
 import io.komune.im.api.config.properties.IMProperties
 import io.komune.im.api.config.properties.toAuthRealm
 import io.komune.im.commons.auth.withAuth
@@ -46,7 +46,7 @@ open class ImCucumberStepsDefinition: s2.bdd.CucumberStepsDefinition() {
         ).let { claims -> Jwt("fake", null, null, mapOf("header" to "fake"), claims) }
             .let { jwt ->
                 val authorities = authedUser.roles.map {
-                    SimpleGrantedAuthority("${WebSecurityConfig.ROLE_PREFIX}$it")
+                    SimpleGrantedAuthority("${ROLE_PREFIX}$it")
                 }
                 JwtAuthenticationToken(
                     jwt,

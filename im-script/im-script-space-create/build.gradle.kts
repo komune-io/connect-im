@@ -4,21 +4,21 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.Infra.keycloak))
+    api(project(":im-infra:im-keycloak"))
 
-    api(project(Modules.Commons.api))
+    api(project(":im-commons:im-commons-api"))
 
-    api(project(Modules.Script.core))
+    api(project(":im-script:im-script-core"))
 
-    implementation(project(Modules.Core.clientApi))
+    implementation(project(":im-core:client-core:im-client-core-api"))
 
-    implementation(project(Modules.F2.privilegeLib))
-    implementation(project(Modules.F2.spaceLib))
-    implementation(project(Modules.F2.userLib))
+    implementation(project(":im-f2:privilege:im-privilege-lib"))
+    implementation(project(":im-f2:space:im-space-lib"))
+    implementation(project(":im-f2:user:im-user-lib"))
 
-    implementation(project(Modules.Keycloak.pluginDomain))
+    implementation(project(":im-keycloak:keycloak-plugin:im-keycloak-plugin-domain"))
 
-    Dependencies.Jvm.junit(::testImplementation)
-    testImplementation(project(Modules.Bdd.base))
-    testImplementation(project(Modules.F2.apikeyLib))
+    testImplementation(libs.bundles.junit)
+    testImplementation(project(":im-bdd"))
+    testImplementation(project(":im-f2:apikey:im-apikey-lib"))
 }

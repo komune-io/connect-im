@@ -5,12 +5,12 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.F2.spaceDomain))
-    api(project(Modules.F2.spaceLib))
+    api(project(":im-f2:space:im-space-domain"))
+    api(project(":im-f2:space:im-space-lib"))
 
-    implementation(project(Modules.Api.config))
-    implementation(project(Modules.Infra.redis))
+    implementation(project(":im-api:api-config"))
+    implementation(project(":im-infra:im-redis"))
 
-    implementation(project(Modules.Commons.auth))
+    implementation(project(":im-commons:im-commons-auth"))
 
 }

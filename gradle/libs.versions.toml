@@ -1,0 +1,73 @@
+[versions]
+fixers = "0.34.0"
+connect = "0.23.0-SNAPSHOT"
+keycloak = "26.1.4"
+keycloakAdmin = "26.0.4"
+mockito = "5.21.0"
+shadowJar = "9.3.1"
+testcontainers = "1.20.6"
+
+[libraries]
+# S2
+s2-automate-dsl = { module = "io.komune.s2:s2-automate-dsl", version.ref = "fixers" }
+s2-test-bdd = { module = "io.komune.s2:s2-test-bdd", version.ref = "fixers" }
+
+# FS
+fs-file-client = { module = "io.komune.fs:fs-file-client", version.ref = "connect" }
+
+# Jackson
+jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin" }
+
+# Keycloak
+keycloak-admin-client = { module = "org.keycloak:keycloak-admin-client", version.ref = "keycloakAdmin" }
+keycloak-core = { module = "org.keycloak:keycloak-core", version.ref = "keycloak" }
+keycloak-model-jpa = { module = "org.keycloak:keycloak-model-jpa", version.ref = "keycloak" }
+keycloak-saml-core-public = { module = "org.keycloak:keycloak-saml-core-public", version.ref = "keycloak" }
+keycloak-server-spi = { module = "org.keycloak:keycloak-server-spi", version.ref = "keycloak" }
+keycloak-server-spi-private = { module = "org.keycloak:keycloak-server-spi-private", version.ref = "keycloak" }
+keycloak-services = { module = "org.keycloak:keycloak-services", version.ref = "keycloak" }
+
+# Kotlinx
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime" }
+
+# Ktor
+ktor-client-auth = { module = "io.ktor:ktor-client-auth" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation" }
+ktor-client-core = { module = "io.ktor:ktor-client-core" }
+ktor-serialization-jackson = { module = "io.ktor:ktor-serialization-jackson" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json" }
+
+# Mockito
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+
+# SLF4J
+slf4j-api = { module = "org.slf4j:slf4j-api" }
+
+# Spring Boot starters
+spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure" }
+spring-boot-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+
+# Spring Data
+spring-data-redis = { module = "org.springframework.data:spring-data-redis" }
+
+# Test
+cucumber-java8 = { module = "io.cucumber:cucumber-java8" }
+cucumber-java = { module = "io.cucumber:cucumber-java" }
+cucumber-junit-platform-engine = { module = "io.cucumber:cucumber-junit-platform-engine" }
+cucumber-spring = { module = "io.cucumber:cucumber-spring" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-platform-suite = { module = "org.junit.platform:junit-platform-suite" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
+
+[bundles]
+ktor-client = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-client-cio", "ktor-serialization-kotlinx-json", "ktor-serialization-jackson"]
+junit = ["junit-jupiter", "junit-platform-suite"]
+cucumber = ["cucumber-java", "cucumber-java8", "cucumber-junit-platform-engine"]
+keycloak-all = ["keycloak-core", "keycloak-server-spi", "keycloak-server-spi-private", "keycloak-services", "keycloak-saml-core-public"]
+spring-cache = ["spring-boot-starter-cache", "spring-data-redis"]
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadowJar" }

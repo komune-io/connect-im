@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    Dependencies.Jvm.cache(::implementation)
+    implementation(libs.bundles.spring.cache)
 
-    Dependencies.Jvm.f2Http(::implementation)
+    implementation(catalogue.spring.boot.starter.function.http)
 }

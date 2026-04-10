@@ -5,6 +5,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.Infra.keycloak))
-    implementation(project(Modules.Infra.redis))
+    implementation(project(":im-infra:im-keycloak"))
+    implementation(project(":im-infra:im-redis"))
 }

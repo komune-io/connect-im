@@ -5,16 +5,16 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.F2.apikeyDomain))
+    api(project(":im-f2:apikey:im-apikey-domain"))
 
-    implementation(project(Modules.Api.config))
+    implementation(project(":im-api:api-config"))
 
-    implementation(project(Modules.F2.privilegeLib))
+    implementation(project(":im-f2:privilege:im-privilege-lib"))
 
-    implementation(project(Modules.Core.clientApi))
-    implementation(project(Modules.Core.organizationApi))
-    implementation(project(Modules.Core.privilegeApi))
-    implementation(project(Modules.Core.userApi))
+    implementation(project(":im-core:client-core:im-client-core-api"))
+    implementation(project(":im-core:organization-core:im-organization-core-api"))
+    implementation(project(":im-core:privilege-core:im-privilege-core-api"))
+    implementation(project(":im-core:user-core:im-user-core-api"))
 
-    implementation(project(Modules.Infra.redis))
+    implementation(project(":im-infra:im-redis"))
 }

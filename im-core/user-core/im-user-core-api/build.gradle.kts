@@ -5,6 +5,6 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.Core.userDomain))
-    implementation(project(Modules.Infra.redis))
+    api(project(":im-core:user-core:im-user-core-domain"))
+    implementation(project(":im-infra:im-redis"))
 }

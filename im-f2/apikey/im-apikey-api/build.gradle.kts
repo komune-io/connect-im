@@ -5,12 +5,12 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.Api.config))
+    implementation(project(":im-api:api-config"))
 
-    implementation(project(Modules.Commons.auth))
-    implementation(project(Modules.Infra.redis))
+    implementation(project(":im-commons:im-commons-auth"))
+    implementation(project(":im-infra:im-redis"))
 
-    api(project(Modules.F2.apikeyLib))
-    api(project(Modules.F2.apikeyDomain))
-    implementation(project(Modules.F2.userLib))
+    api(project(":im-f2:apikey:im-apikey-lib"))
+    api(project(":im-f2:apikey:im-apikey-domain"))
+    implementation(project(":im-f2:user:im-user-lib"))
 }

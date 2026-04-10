@@ -5,8 +5,8 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.Core.clientDomain))
+    api(project(":im-core:client-core:im-client-core-domain"))
 
-    implementation(project(Modules.Api.config))
-    implementation(project(Modules.Keycloak.pluginDomain))
+    implementation(project(":im-api:api-config"))
+    implementation(project(":im-keycloak:keycloak-plugin:im-keycloak-plugin-domain"))
 }

@@ -5,6 +5,6 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.Commons.domain))
-    Dependencies.Jvm.f2Http(::api)
+    api(project(":im-commons:im-commons-domain"))
+    api(catalogue.spring.boot.starter.function.http)
 }

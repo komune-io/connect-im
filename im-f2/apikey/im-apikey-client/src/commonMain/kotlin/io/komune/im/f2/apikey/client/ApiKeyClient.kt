@@ -9,9 +9,17 @@ import f2.dsl.fnc.F2SupplierSingle
 import f2.dsl.fnc.f2SupplierSingle
 import io.komune.im.apikey.domain.ApiKeyApi
 import io.komune.im.apikey.domain.command.ApiKeyOrganizationAddFunction
+import io.komune.im.apikey.domain.command.ApiKeyOrganizationAddKeyCommand
+import io.komune.im.apikey.domain.command.ApiKeyOrganizationAddedEvent
+import io.komune.im.apikey.domain.command.ApikeyRemoveCommand
+import io.komune.im.apikey.domain.command.ApikeyRemoveEvent
 import io.komune.im.apikey.domain.command.ApikeyRemoveFunction
 import io.komune.im.apikey.domain.query.ApiKeyGetFunction
+import io.komune.im.apikey.domain.query.ApiKeyGetQuery
+import io.komune.im.apikey.domain.query.ApiKeyGetResult
 import io.komune.im.apikey.domain.query.ApiKeyPageFunction
+import io.komune.im.apikey.domain.query.ApiKeyPageQuery
+import io.komune.im.apikey.domain.query.ApiKeyPageResult
 import io.ktor.client.plugins.HttpTimeout
 import kotlin.js.JsExport
 
@@ -39,8 +47,8 @@ fun apiKeyClient(
 
 @JsExport
 open class ApiKeyClient(private val client: F2Client): ApiKeyApi {
-    override fun apiKeyGet(): ApiKeyGetFunction = client.function(this::apiKeyGet.name)
-    override fun apiKeyPage(): ApiKeyPageFunction = client.function(this::apiKeyPage.name)
-    override fun apiKeyCreate(): ApiKeyOrganizationAddFunction = client.function(this::apiKeyCreate.name)
-    override fun apiKeyRemove(): ApikeyRemoveFunction = client.function(this::apiKeyRemove.name)
+    override fun apiKeyGet(): ApiKeyGetFunction = client.function<ApiKeyGetQuery, ApiKeyGetResult>(this::apiKeyGet.name)
+    override fun apiKeyPage(): ApiKeyPageFunction = client.function<ApiKeyPageQuery, ApiKeyPageResult>(this::apiKeyPage.name)
+    override fun apiKeyCreate(): ApiKeyOrganizationAddFunction = client.function<ApiKeyOrganizationAddKeyCommand, ApiKeyOrganizationAddedEvent>(this::apiKeyCreate.name)
+    override fun apiKeyRemove(): ApikeyRemoveFunction = client.function<ApikeyRemoveCommand, ApikeyRemoveEvent>(this::apiKeyRemove.name)
 }

@@ -4,18 +4,18 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.Infra.keycloak))
-    api(project(Modules.Infra.redis))
+    api(project(":im-infra:im-keycloak"))
+    api(project(":im-infra:im-redis"))
 
-    api(project(Modules.Commons.api))
-    api(project(Modules.Script.core))
+    api(project(":im-commons:im-commons-api"))
+    api(project(":im-script:im-script-core"))
 
-    implementation(project(Modules.F2.apikeyLib))
-    implementation(project(Modules.F2.organizationLib))
-    implementation(project(Modules.F2.spaceLib))
-    implementation(project(Modules.F2.userLib))
+    implementation(project(":im-f2:apikey:im-apikey-lib"))
+    implementation(project(":im-f2:organization:im-organization-lib"))
+    implementation(project(":im-f2:space:im-space-lib"))
+    implementation(project(":im-f2:user:im-user-lib"))
 
-    Dependencies.Jvm.junit(::testImplementation)
-    testImplementation(project(Modules.Bdd.base))
-    testImplementation(project(Modules.Script.spaceCreate))
+    testImplementation(libs.bundles.junit)
+    testImplementation(project(":im-bdd"))
+    testImplementation(project(":im-script:im-script-space-create"))
 }

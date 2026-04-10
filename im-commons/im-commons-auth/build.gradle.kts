@@ -4,10 +4,10 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(Modules.Commons.domain))
+    commonMainApi(project(":im-commons:im-commons-domain"))
 
-    Dependencies.Jvm.f2Auth(::jvmMainImplementation)
+    jvmMainImplementation(catalogue.spring.boot.starter.auth.tenant)
 
-    jvmMainImplementation("io.komune.f2:f2-dsl-function:${Versions.f2}")
-    jvmMainApi("io.komune.f2:f2-spring-boot-exception-http:${Versions.f2}")
+    jvmMainImplementation(catalogue.dsl.function)
+    jvmMainApi(catalogue.spring.boot.exception.http)
 }

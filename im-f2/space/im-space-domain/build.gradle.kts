@@ -6,5 +6,5 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(Modules.Commons.domain))
+    commonMainApi(project(":im-commons:im-commons-domain"))
 }

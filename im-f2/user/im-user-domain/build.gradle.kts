@@ -6,7 +6,7 @@ plugins {
 }
 
 dependencies {
-    commonMainApi(project(Modules.Core.userDomain))
-    commonMainApi(project(Modules.Core.mfaDomain))
-    commonMainApi(project(Modules.F2.organizationDomain))
+    commonMainApi(project(":im-core:user-core:im-user-core-domain"))
+    commonMainApi(project(":im-core:mfa-core:im-mfa-core-domain"))
+    commonMainApi(project(":im-f2:organization:im-organization-domain"))
 }

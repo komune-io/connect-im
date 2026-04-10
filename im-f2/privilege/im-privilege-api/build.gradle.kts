@@ -5,5 +5,5 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.F2.privilegeLib))
+    api(project(":im-f2:privilege:im-privilege-lib"))
 }

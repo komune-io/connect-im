@@ -6,10 +6,10 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.Commons.api))
-    api(project(Modules.Commons.auth))
-    Dependencies.Jvm.jackson(::api)
+    api(project(":im-commons:im-commons-api"))
+    api(project(":im-commons:im-commons-auth"))
+    api(libs.jackson.module.kotlin)
 
-    Dependencies.Jvm.Fs.client(::api)
-    Dependencies.Jvm.f2Auth(::api)
+    api(libs.fs.file.client)
+    api(catalogue.spring.boot.starter.auth.tenant)
 }

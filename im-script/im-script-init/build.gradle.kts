@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.Infra.keycloak))
-    implementation(project(Modules.Commons.api))
-    implementation(project(Modules.Script.core))
-    implementation(project(Modules.Core.clientApi))
+    implementation(project(":im-infra:im-keycloak"))
+    implementation(project(":im-commons:im-commons-api"))
+    implementation(project(":im-script:im-script-core"))
+    implementation(project(":im-core:client-core:im-client-core-api"))
 }

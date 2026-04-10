@@ -6,9 +6,9 @@ plugins {
 }
 
 dependencies {
-    api(project(Modules.Api.config))
-    api(project(Modules.Commons.api))
+    api(project(":im-api:api-config"))
+    api(project(":im-commons:im-commons-api"))
 
-    Dependencies.Jvm.Keycloak.adminClient(::api)
-    Dependencies.Jvm.Keycloak.serverSpiPrivate(::api)
+    api(libs.keycloak.admin.client)
+    api(libs.keycloak.server.spi.private)
 }

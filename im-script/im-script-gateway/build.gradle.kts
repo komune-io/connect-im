@@ -6,11 +6,11 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.Script.init))
-    implementation(project(Modules.Script.spaceConfig))
-    implementation(project(Modules.Script.spaceCreate))
+    implementation(project(":im-script:im-script-init"))
+    implementation(project(":im-script:im-script-space-config"))
+    implementation(project(":im-script:im-script-space-create"))
 
-    Dependencies.Jvm.f2Function(::implementation)
+    implementation(catalogue.spring.boot.starter.function)
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {}

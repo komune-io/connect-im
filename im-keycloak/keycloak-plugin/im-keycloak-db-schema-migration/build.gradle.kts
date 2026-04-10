@@ -4,6 +4,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.Keycloak.pluginDomain))
-    Dependencies.Jvm.Keycloak.modelJpa(::compileOnly)
+    implementation(project(":im-keycloak:keycloak-plugin:im-keycloak-plugin-domain"))
+    compileOnly(libs.keycloak.model.jpa)
 }
