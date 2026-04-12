@@ -36,7 +36,7 @@ jobs:
     with:
       make-file: 'infra/make/libsJs.mk'
     secrets:
-      FIXERS_PUBLISH_NPMJS_TOKEN: ${{ secrets.NPM_PKG_NPMJS_TOKEN }}
+      FIXERS_PUBLISH_NPMJS_TOKEN: ${{ secrets.FIXERS_PUBLISH_NPMJS_TOKEN }}
       PKG_GITHUB_USERNAME: ${{ github.actor }}
       PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
