@@ -11,12 +11,12 @@ plugins {
     alias(catalogue.plugins.fixers.gradle.kotlin.mpp) apply false
     alias(catalogue.plugins.fixers.gradle.kotlin.jvm) apply false
     alias(catalogue.plugins.fixers.gradle.publish)
-    id("io.komune.fixers.gradle.npm") version catalogue.versions.fixers.get() apply false
+    alias(catalogue.plugins.fixers.gradle.npm) apply false
 }
 
 fixers {
     bundle {
-        id = "im"
+        id = "connect-im"
         group = "io.komune.im"
         name = "IM"
         description = "Identity Management"
