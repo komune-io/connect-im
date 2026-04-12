@@ -1,7 +1,7 @@
 [versions]
 fixers = "0.37.0-SNAPSHOT"
 connect = "0.23.0-SNAPSHOT"
-keycloak = "26.1.4"
+keycloak = "26.6.0"
 keycloakAdmin = "26.0.4"
 shadowJar = "9.3.1"
 
