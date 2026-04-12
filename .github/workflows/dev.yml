@@ -20,15 +20,15 @@ jobs:
     with:
       make-file: 'infra/make/libs.mk'
     secrets:
-      GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
-      GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
-      PKG_GITHUB_USERNAME: ${{ github.actor }}
-      PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.JRELEASER_MAVENCENTRAL_USERNAME }}
-      JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.JRELEASER_MAVENCENTRAL_PASSWORD }}
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      FIXERS_PUBLISH_SIGNING_GPG_KEY: ${{ secrets.FIXERS_PUBLISH_SIGNING_GPG_KEY }}
+      FIXERS_PUBLISH_SIGNING_GPG_KEY_PASSWORD: ${{ secrets.FIXERS_PUBLISH_SIGNING_GPG_KEY_PASSWORD }}
+      FIXERS_PUBLISH_GITHUB_USERNAME: ${{ github.actor }}
+      FIXERS_PUBLISH_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      FIXERS_PUBLISH_MAVEN_CENTRAL_USERNAME: ${{ secrets.FIXERS_PUBLISH_MAVEN_CENTRAL_USERNAME }}
+      FIXERS_PUBLISH_MAVEN_CENTRAL_PASSWORD: ${{ secrets.FIXERS_PUBLISH_MAVEN_CENTRAL_PASSWORD }}
+      FIXERS_SONAR_TOKEN: ${{ secrets.FIXERS_SONAR_TOKEN }}
 
-  kotkin-js:
+  kotlin-js:
     uses: komune-io/fixers-gradle/.github/workflows/make-kotlin-npm-workflow.yml@main
     permissions:
       contents: read
@@ -37,8 +37,8 @@ jobs:
       make-file: 'infra/make/libsJs.mk'
     secrets:
       FIXERS_PUBLISH_NPMJS_TOKEN: ${{ secrets.FIXERS_PUBLISH_NPMJS_TOKEN }}
-      PKG_GITHUB_USERNAME: ${{ github.actor }}
-      PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      FIXERS_PUBLISH_GITHUB_USERNAME: ${{ github.actor }}
+      FIXERS_PUBLISH_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   docker:
     uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@main
@@ -51,12 +51,12 @@ jobs:
       with-promote-docker-registry-login: 'true'
       docker-buildx-platform: linux/amd64,linux/arm64
     secrets:
-      PKG_GITHUB_USERNAME: ${{ github.actor }}
-      PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      FIXERS_PUBLISH_GITHUB_USERNAME: ${{ github.actor }}
+      FIXERS_PUBLISH_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       DOCKER_STAGE_USERNAME: ${{ github.actor }}
       DOCKER_STAGE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      DOCKER_PROMOTE_USERNAME: ${{ secrets.DOCKER_IO_USERNAME }}
-      DOCKER_PROMOTE_PASSWORD: ${{ secrets.DOCKER_IO_PASSWORD }}
+      DOCKER_PROMOTE_USERNAME: ${{ secrets.FIXERS_DOCKER_HUB_USERNAME }}
+      DOCKER_PROMOTE_PASSWORD: ${{ secrets.FIXERS_DOCKER_HUB_PASSWORD }}
 
   docs:
     uses: komune-io/fixers-gradle/.github/workflows/publish-storybook-workflow.yml@main
@@ -73,9 +73,7 @@ jobs:
       storybook-static-dir: storybook-static
       with-setup-npm-github-pkg: 'false'
     secrets:
-      NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
       DOCKER_STAGE_USERNAME: ${{ github.actor }}
       DOCKER_STAGE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      DOCKER_PROMOTE_USERNAME: ${{ secrets.DOCKER_IO_USERNAME }}
-      DOCKER_PROMOTE_PASSWORD: ${{ secrets.DOCKER_IO_PASSWORD }}
+      DOCKER_PROMOTE_USERNAME: ${{ secrets.FIXERS_DOCKER_HUB_USERNAME }}
+      DOCKER_PROMOTE_PASSWORD: ${{ secrets.FIXERS_DOCKER_HUB_PASSWORD }}
