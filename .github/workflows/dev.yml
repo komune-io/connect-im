@@ -75,7 +75,6 @@ jobs:
       with-setup-npm-github-pkg: 'false'
     secrets:
       FIXERS_PUBLISH_NPM_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      CHROMATIC_PROJECT_TOKEN: ${{ secrets.FIXERS_CHROMATIC_PROJECT_TOKEN }}
       DOCKER_STAGE_USERNAME: ${{ github.actor }}
       DOCKER_STAGE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       DOCKER_PROMOTE_USERNAME: ${{ secrets.FIXERS_DOCKER_HUB_USERNAME }}
