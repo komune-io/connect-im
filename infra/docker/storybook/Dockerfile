@@ -20,7 +20,7 @@ RUN if [ ! -d "./storybook-static" ]; then \
       yarn build-storybook; \
     fi
 
-FROM nginx:1.25.4-alpine
+FROM nginx:1.29.8-alpine
 
 LABEL org.opencontainers.image.source="https://github.com/komune-io/connect-im"
 
