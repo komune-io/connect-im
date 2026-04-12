@@ -36,10 +36,9 @@ jobs:
     with:
       make-file: 'infra/make/libsJs.mk'
     secrets:
-      NPM_PKG_STAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      NPM_PKG_PROMOTE_TOKEN: ${{ secrets.NPM_PKG_NPMJS_TOKEN}}
-      PKG_GITHUB_USERNAME: ${{ github.actor }}
-      PKG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      FIXERS_PUBLISH_NPMJS_TOKEN: ${{ secrets.FIXERS_PUBLISH_NPMJS_TOKEN }}
+      FIXERS_PUBLISH_GITHUB_USERNAME: ${{ github.actor }}
+      FIXERS_PUBLISH_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   docker:
     uses: komune-io/fixers-gradle/.github/workflows/make-jvm-workflow.yml@main
@@ -74,7 +73,6 @@ jobs:
       storybook-static-dir: storybook-static
       with-setup-npm-github-pkg: 'false'
     secrets:
-      FIXERS_PUBLISH_NPM_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       DOCKER_STAGE_USERNAME: ${{ github.actor }}
       DOCKER_STAGE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       DOCKER_PROMOTE_USERNAME: ${{ secrets.FIXERS_DOCKER_HUB_USERNAME }}
