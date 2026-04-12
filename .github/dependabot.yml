@@ -12,11 +12,3 @@ updates:
     directory: "/infra/docker/keycloak"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "docker"
-    directory: "/infra/docker/storybook"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "npm"
-    directory: "/storybook"
-    schedule:
-      interval: "weekly"
