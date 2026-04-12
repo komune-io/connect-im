@@ -28,7 +28,7 @@ jobs:
       FIXERS_PUBLISH_MAVEN_CENTRAL_PASSWORD: ${{ secrets.FIXERS_PUBLISH_MAVEN_CENTRAL_PASSWORD }}
       FIXERS_SONAR_TOKEN: ${{ secrets.FIXERS_SONAR_TOKEN }}
 
-  kotkin-js:
+  kotlin-js:
     uses: komune-io/fixers-gradle/.github/workflows/make-kotlin-npm-workflow.yml@main
     permissions:
       contents: read
