@@ -1,5 +1,5 @@
 [versions]
-fixers = "0.39.0"
+fixers = "0.40.0"
 connect = "0.30.0-SNAPSHOT"
 keycloak = "26.1.4"
 keycloakAdmin = "26.0.4"
