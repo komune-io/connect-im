@@ -59,7 +59,11 @@ kill-containers:
 
 dev-service-action:
 	@if [ "$(ACTION)" = "up" ]; then \
-		docker compose --env-file $(DOCKER_COMPOSE_ENV) -f $(DOCKER_COMPOSE_PATH)/docker-compose-$(SERVICE).yml  up -d; \
+		if [ "$(SERVICE)" = "keycloak" ]; then \
+			docker compose --env-file $(DOCKER_COMPOSE_ENV) -f $(DOCKER_COMPOSE_PATH)/docker-compose-$(SERVICE).yml up -d --wait --wait-timeout 300; \
+		else \
+			docker compose --env-file $(DOCKER_COMPOSE_ENV) -f $(DOCKER_COMPOSE_PATH)/docker-compose-$(SERVICE).yml up -d; \
+		fi; \
 	elif [ "$(ACTION)" = "stop" ]; then \
 		docker compose --env-file $(DOCKER_COMPOSE_ENV) -f $(DOCKER_COMPOSE_PATH)/docker-compose-$(SERVICE).yml stop; \
 	elif [ "$(ACTION)" = "down" ]; then \
