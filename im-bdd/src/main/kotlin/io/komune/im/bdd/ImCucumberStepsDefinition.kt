@@ -36,14 +36,12 @@ open class ImCucumberStepsDefinition: s2.bdd.CucumberStepsDefinition() {
         val authedUser = context.authedUser
             ?: return ReactorContext(Context.of(SecurityContext::class.java, Mono.empty<SecurityContext>()))
         val iss = imProperties.keycloak.url + "/realms/" + context.realmId
-        val securityContext = mapOf(
-            "realm_access" to mapOf(
-                "roles" to authedUser.roles
-            ),
-            "memberOf" to authedUser.memberOf,
-            "sub" to authedUser.id,
-            "iss" to iss
-        ).let { claims -> Jwt("fake", null, null, mapOf("header" to "fake"), claims) }
+        val securityContext = buildMap<String, Any> {
+            put("realm_access", mapOf("roles" to authedUser.roles))
+            authedUser.memberOf?.let { put("memberOf", it) }
+            put("sub", authedUser.id)
+            put("iss", iss)
+        }.let { claims -> Jwt("fake", null, null, mapOf("header" to "fake"), claims) }
             .let { jwt ->
                 val authorities = authedUser.roles.map {
                     SimpleGrantedAuthority("${ROLE_PREFIX}$it")
