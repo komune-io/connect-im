@@ -1,6 +1,6 @@
 [versions]
-fixers = "0.40.0"
-connect = "0.30.0-SNAPSHOT"
+fixers = "0.43.0-SNAPSHOT"
+connect = "0.24.0-SNAPSHOT"
 keycloak = "26.1.4"
 keycloakAdmin = "26.0.4"
 shadowJar = "9.4.1"
@@ -12,6 +12,9 @@ s2-test-bdd = { module = "io.komune.s2:s2-test-bdd", version.ref = "fixers" }
 
 # FS
 fs-file-client = { module = "io.komune.fs:fs-file-client", version.ref = "connect" }
+
+# Coroutines
+kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor" }
 
 # Jackson
 jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin" }
@@ -58,11 +61,13 @@ cucumber-junit-platform-engine = { module = "io.cucumber:cucumber-junit-platform
 cucumber-spring = { module = "io.cucumber:cucumber-spring" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 junit-platform-suite = { module = "org.junit.platform:junit-platform-suite" }
+assertj-core = { module = "org.assertj:assertj-core" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter" }
 
 [bundles]
 ktor-client = ["ktor-client-core", "ktor-client-content-negotiation", "ktor-client-cio", "ktor-serialization-kotlinx-json", "ktor-serialization-jackson"]
-junit = ["junit-jupiter", "junit-platform-suite"]
+junit = ["junit-jupiter", "junit-platform-suite", "assertj-core", "kotlinx-coroutines-test"]
 cucumber = ["cucumber-java", "cucumber-java8", "cucumber-junit-platform-engine"]
 keycloak-all = ["keycloak-core", "keycloak-server-spi", "keycloak-server-spi-private", "keycloak-services", "keycloak-saml-core-public"]
 spring-cache = ["spring-boot-starter-cache", "spring-data-redis"]

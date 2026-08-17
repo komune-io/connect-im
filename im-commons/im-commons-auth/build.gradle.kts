@@ -9,5 +9,6 @@ dependencies {
     jvmMainImplementation(catalogue.spring.boot.starter.auth.tenant)
 
     jvmMainImplementation(catalogue.dsl.function)
+    jvmMainImplementation(libs.kotlinx.coroutines.reactor)
     jvmMainApi(catalogue.spring.boot.exception.http)
 }
