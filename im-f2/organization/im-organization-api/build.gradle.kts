@@ -14,4 +14,6 @@ dependencies {
     implementation(project(":im-f2:apikey:im-apikey-lib"))
     implementation(project(":im-f2:user:im-user-lib"))
     implementation(project(":im-f2:privilege:im-privilege-lib"))
+
+    testImplementation(libs.bundles.junit)
 }

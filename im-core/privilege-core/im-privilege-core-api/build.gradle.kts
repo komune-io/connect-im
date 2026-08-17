@@ -6,4 +6,6 @@ plugins {
 
 dependencies {
     api(project(":im-core:privilege-core:im-privilege-core-domain"))
+
+    testImplementation(libs.bundles.junit)
 }

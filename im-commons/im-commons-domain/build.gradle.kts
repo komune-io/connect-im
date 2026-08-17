@@ -8,4 +8,6 @@ dependencies {
     commonMainApi(catalogue.dsl.cqrs)
     commonMainApi(catalogue.client.domain)
     commonMainApi(libs.kotlinx.datetime)
+
+    commonTestImplementation(kotlin("test"))
 }

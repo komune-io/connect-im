@@ -1,9 +1,9 @@
 [versions]
 fixers = "0.43.0-SNAPSHOT"
 connect = "0.24.0-SNAPSHOT"
-keycloak = "26.1.4"
-keycloakAdmin = "26.0.4"
-shadowJar = "9.4.1"
+keycloak = "26.7.1"
+keycloakAdmin = "26.0.12"
+shadowJar = "9.6.1"
 
 [libraries]
 # S2
@@ -36,6 +36,7 @@ ktor-client-auth = { module = "io.ktor:ktor-client-auth" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation" }
 ktor-client-core = { module = "io.ktor:ktor-client-core" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json" }
 ktor-serialization-jackson = { module = "io.ktor:ktor-serialization-jackson" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json" }
 

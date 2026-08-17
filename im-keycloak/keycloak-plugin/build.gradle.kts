@@ -27,6 +27,7 @@ subprojects {
         dependencies {
             val compileOnly by configurations
             compileOnly(libs.bundles.keycloak.all)
+
         }
     }
 }

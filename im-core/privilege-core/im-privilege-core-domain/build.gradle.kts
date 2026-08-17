@@ -5,4 +5,6 @@ plugins {
 }
 
 dependencies {
+
+    commonTestImplementation(kotlin("test"))
 }

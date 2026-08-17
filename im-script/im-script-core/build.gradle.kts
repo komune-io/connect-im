@@ -13,4 +13,6 @@ dependencies {
 
     api(project(":im-core:client-core:im-client-core-domain"))
     implementation(project(":im-core:client-core:im-client-core-api"))
+
+    testImplementation(libs.bundles.junit)
 }

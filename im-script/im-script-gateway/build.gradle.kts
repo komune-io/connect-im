@@ -11,6 +11,9 @@ dependencies {
     implementation(project(":im-script:im-script-space-create"))
 
     implementation(catalogue.spring.boot.starter.function)
+
+    testImplementation(libs.bundles.junit)
 }
 
-tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {}
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
+}

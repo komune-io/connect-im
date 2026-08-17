@@ -12,4 +12,6 @@ dependencies {
 
     api(libs.fs.file.client)
     api(catalogue.spring.boot.starter.auth.tenant)
+
+    testImplementation(libs.bundles.junit)
 }

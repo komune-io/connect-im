@@ -6,4 +6,6 @@ plugins {
 
 dependencies {
     api(libs.keycloak.server.spi.private)
+
+    testImplementation(libs.bundles.junit)
 }

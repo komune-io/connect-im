@@ -9,4 +9,6 @@ dependencies {
 
     implementation(project(":im-api:api-config"))
     implementation(project(":im-keycloak:keycloak-plugin:im-keycloak-plugin-domain"))
+
+    testImplementation(libs.bundles.junit)
 }

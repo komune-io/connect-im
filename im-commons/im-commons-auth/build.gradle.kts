@@ -11,4 +11,6 @@ dependencies {
     jvmMainImplementation(catalogue.dsl.function)
     jvmMainImplementation(libs.kotlinx.coroutines.reactor)
     jvmMainApi(catalogue.spring.boot.exception.http)
+
+    jvmTestImplementation(libs.bundles.junit)
 }

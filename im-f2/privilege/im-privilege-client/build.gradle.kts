@@ -10,4 +10,7 @@ dependencies {
     commonMainApi(catalogue.client.ktor)
     commonMainApi(catalogue.client.ktor.http)
     commonMainApi(libs.ktor.client.auth)
+
+    jvmTestImplementation(libs.bundles.junit)
+    jvmTestImplementation(kotlin("reflect"))
 }

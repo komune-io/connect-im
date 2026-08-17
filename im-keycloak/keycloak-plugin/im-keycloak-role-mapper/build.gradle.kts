@@ -6,4 +6,6 @@ plugins {
 dependencies {
     implementation(project(":im-keycloak:keycloak-plugin:im-keycloak-plugin-domain"))
     implementation(libs.jackson.module.kotlin)
+
+    testImplementation(libs.bundles.junit)
 }
