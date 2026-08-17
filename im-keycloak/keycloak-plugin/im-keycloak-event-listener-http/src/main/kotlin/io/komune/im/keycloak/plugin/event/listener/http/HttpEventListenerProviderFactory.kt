@@ -7,7 +7,7 @@ import org.keycloak.events.EventListenerProviderFactory
 import org.keycloak.models.KeycloakSession
 import org.keycloak.models.KeycloakSessionFactory
 
-class HttpEventListenerProviderFactory: EventListenerProviderFactory {
+open class HttpEventListenerProviderFactory: EventListenerProviderFactory {
     override fun create(session: KeycloakSession): EventListenerProvider {
         return HttpEventListenerProvider(session)
     }

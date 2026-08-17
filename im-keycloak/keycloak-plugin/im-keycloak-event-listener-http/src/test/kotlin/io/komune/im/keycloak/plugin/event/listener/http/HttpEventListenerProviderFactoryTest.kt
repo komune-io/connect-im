@@ -18,6 +18,22 @@ class HttpEventListenerProviderFactoryTest {
     }
 
     @Test
+    fun `the legacy factory registers the same listener under the pre-rename id`() {
+        @Suppress("DEPRECATION")
+        val legacyId = io.komune.im.keycloak.plugin.domain.model.KeycloakPluginIds.EVENT_WEBHOOK_LEGACY
+
+        assertThat(LegacyHttpEventListenerProviderFactory().id).isEqualTo(legacyId)
+    }
+
+    @Test
+    fun `the legacy factory is the same implementation, only the id differs`() {
+        assertThat(HttpEventListenerProviderFactory::class.java)
+            .isAssignableFrom(LegacyHttpEventListenerProviderFactory::class.java)
+        assertThat(LegacyHttpEventListenerProviderFactory().id)
+            .isNotEqualTo(HttpEventListenerProviderFactory().id)
+    }
+
+    @Test
     fun `implements the SPI factory keycloak loads through ServiceLoader`() {
         assertThat(org.keycloak.provider.ProviderFactory::class.java)
             .isAssignableFrom(HttpEventListenerProviderFactory::class.java)

@@ -7,7 +7,7 @@ enum class ImPermission(val identifier: String) {
     IM_FORCE_MFA_OTP("im_mfa_force_otp"),
 
     IM_USER_READ("im_user_read"),
-    IM_USER_ROLE_READ("im_user_role_write"),
+    IM_USER_ROLE_WRITE("im_user_role_write"),
     IM_USER_WRITE("im_user_write"),
 
     IM_ORGANIZATION_READ("im_organization_read"),

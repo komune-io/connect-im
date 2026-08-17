@@ -32,15 +32,30 @@ class RoleSerializationTest {
     }
 
     @Test
-    fun typeIsROLEInMemoryButIsNotSerialized() {
-        // `type` is declared in the class body rather than the constructor, so kotlinx
-        // leaves it out of the JSON entirely. A consumer discriminating privileges by a
-        // `type` field on the wire will not find one here.
+    fun typeIsSerializedSoConsumersCanDiscriminatePrivileges() {
         assertEquals(PrivilegeType.ROLE.name, role.type)
 
         val encoded = json.encodeToString(Role.serializer(), role)
 
-        assertTrue(!encoded.contains("\"type\""), encoded)
+        assertTrue(encoded.contains("\"type\":\"ROLE\""), encoded)
+    }
+
+    @Test
+    fun typeIsEmittedEvenThoughItIsADefault() {
+        // @EncodeDefault(ALWAYS) — without it kotlinx omits defaults and the
+        // discriminator would silently vanish from the wire again.
+        val encoded = json.encodeToString(Role.serializer(), role)
+
+        assertTrue(encoded.contains("\"type\""), encoded)
+    }
+
+    @Test
+    fun olderPayloadsWithoutTypeStillDecode() {
+        val withoutType = """{"id":"role-1","identifier":"r","description":"d","targets":[],"locale":{},"bindings":{},"permissions":[]}"""
+
+        val decoded = json.decodeFromString(Role.serializer(), withoutType)
+
+        assertEquals(PrivilegeType.ROLE.name, decoded.type)
     }
 
     @Test

@@ -39,9 +39,10 @@ class ImPermissionTest {
     }
 
     @Test
-    fun imUserRoleReadStillMapsToTheWriteIdentifier() {
-        // Looks like a typo, but it is the identifier stored in existing realms.
-        // Pinned so that "fixing" it is a deliberate migration, not a silent rename.
-        assertEquals("im_user_role_write", ImPermission.IM_USER_ROLE_READ.identifier)
+    fun roleAssignmentIsGuardedByASingleWritePermission() {
+        // There is no `im_user_role_read` in imPermissions.json — assigning roles is the
+        // only guarded operation, and `canUpdateRole` is the sole caller.
+        assertEquals("im_user_role_write", ImPermission.IM_USER_ROLE_WRITE.identifier)
+        assertTrue(ImPermission.entries.none { it.identifier == "im_user_role_read" })
     }
 }
