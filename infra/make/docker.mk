@@ -48,11 +48,21 @@ DEV_LOCAL_IMAGES = VERSION_IM=$(VERSION) DOCKER_REPOSITORY=
 # im-script:${VERSION} already exists here — docker-script-build uses gradle's
 # bootBuildImage, which does load into the local daemon (docker-script-stage merely tags
 # it). Only the keycloak image needs the extra loadable build.
+# im-init and im-config are one-shot containers and are ordered: im-config configures the
+# realm that im-init creates. `docker compose up -d` returns as soon as a container starts,
+# so bringing all three up together races them — im-config fails, and the previous
+# arrangement papered over it by running `up` a second time and hoping the retry landed
+# after im-init had finished.
+#
+# Each is now started and waited on explicitly. Waiting on the exit code also turns a
+# provisioning failure into one readable error here instead of several dozen confusing
+# test failures later.
 test-pre: docker-keycloak-build-local
-	@make dev up $(DEV_LOCAL_IMAGES)
-	@make dev im-init logs $(DEV_LOCAL_IMAGES)
-	@make dev im-config logs $(DEV_LOCAL_IMAGES)
-	@make dev up $(DEV_LOCAL_IMAGES)
+	@make dev keycloak up $(DEV_LOCAL_IMAGES)
+	@make dev im-init up $(DEV_LOCAL_IMAGES)
+	@docker wait im-init | grep -qx 0 || { docker logs im-init; echo 'im-init failed'; exit 1; }
+	@make dev im-config up $(DEV_LOCAL_IMAGES)
+	@docker wait im-config | grep -qx 0 || { docker logs im-config; echo 'im-config failed'; exit 1; }
 
 test:
 	sudo echo "127.0.0.1 im-keycloak" | sudo tee -a /etc/hosts
