@@ -16,7 +16,6 @@ plugins {
 
 fixers {
     bundle {
-        id = "connect-im"
         group = "io.komune.im"
         name = "IM"
         description = "Identity Management"
