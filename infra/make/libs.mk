@@ -1,5 +1,7 @@
 VERSION = $(shell cat VERSION)
 
+include infra/make/integration-tests.mk
+
 .PHONY: clean lint build test stage promote
 
 clean:
@@ -11,30 +13,11 @@ lint:
 build:
 	./gradlew build publishToMavenLocal -Dorg.gradle.parallel=true -x test
 
-# Images built from this working tree, so the BDD suite exercises the commit under test.
-# Without this the stack comes up from published images (see .env_dev) and any change to
-# the Keycloak image or the provisioning scripts is invisible to CI.
-test-images:
-	./gradlew im-keycloak:keycloak-plugin:shadowJar
-	docker build \
-		--build-arg KC_HTTP_RELATIVE_PATH=/ \
-		-f infra/docker/keycloak/Dockerfile \
-		-t im-keycloak:$(VERSION) .
-	VERSION=$(VERSION) ./gradlew :im-script:im-script-gateway:bootBuildImage \
-		--imageName im-script:$(VERSION) -x test
-
-# DOCKER_REPOSITORY is emptied so compose resolves the local tags rather than docker.io.
-DEV_LOCAL_IMAGES = VERSION_IM=$(VERSION) DOCKER_REPOSITORY=
-
-test-pre: test-images
-	@make dev up $(DEV_LOCAL_IMAGES)
-	@make dev im-init logs $(DEV_LOCAL_IMAGES)
-	@make dev im-config logs $(DEV_LOCAL_IMAGES)
-	@make dev up $(DEV_LOCAL_IMAGES)
-
+# Unit tests only: no Docker, no Keycloak, no /etc/hosts entry. The suites that need a
+# provisioned Keycloak run from docker.mk, where the images they need have just been
+# built — see integration-tests.mk.
 test:
-	sudo echo "127.0.0.1 im-keycloak" | sudo tee -a /etc/hosts
-	./gradlew test
+	./gradlew test $(addprefix -x ,$(INTEGRATION_TESTS))
 
 stage:
 	VERSION=$(VERSION) ./gradlew stage -Dorg.gradle.parallel=true -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
