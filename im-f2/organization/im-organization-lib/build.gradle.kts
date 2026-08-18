@@ -21,4 +21,6 @@ dependencies {
     implementation(catalogue.client.ktor.http)
     implementation(libs.ktor.client.auth)
     implementation(libs.bundles.ktor.client)
+
+    testImplementation(libs.bundles.junit)
 }

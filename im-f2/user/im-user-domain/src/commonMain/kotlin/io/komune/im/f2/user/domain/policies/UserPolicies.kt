@@ -83,7 +83,7 @@ object UserPolicies {
      * User can update roles of the given user
      */
     fun canUpdateRole(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_USER_ROLE_READ)
+        return authedUser.hasRole(ImPermission.IM_USER_ROLE_WRITE)
     }
 
     /**

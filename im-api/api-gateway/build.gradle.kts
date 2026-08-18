@@ -16,4 +16,6 @@ dependencies {
 
 	implementation(catalogue.spring.boot.starter.function.http)
 	implementation(libs.spring.boot.starter.webflux)
+
+    testImplementation(libs.bundles.junit)
 }

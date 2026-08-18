@@ -6,4 +6,6 @@ plugins {
 
 dependencies {
     commonMainApi(project(":im-core:privilege-core:im-privilege-core-domain"))
+
+    commonTestImplementation(kotlin("test"))
 }

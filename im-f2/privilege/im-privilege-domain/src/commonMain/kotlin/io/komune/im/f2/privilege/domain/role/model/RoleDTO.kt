@@ -6,6 +6,7 @@ import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.core.privilege.domain.model.PrivilegeType
 import io.komune.im.f2.privilege.domain.model.PrivilegeDTO
 import kotlin.js.JsExport
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 /**
@@ -114,6 +115,6 @@ data class Role(
     override val locale: Map<String, String>,
     override val bindings: Map<String, List<Role>>,
     override val permissions: List<PermissionIdentifier>,
-): RoleDTO {
-    override val type = PrivilegeType.ROLE.name
-}
+    @EncodeDefault(EncodeDefault.Mode.ALWAYS)
+    override val type: String = PrivilegeType.ROLE.name,
+): RoleDTO

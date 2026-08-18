@@ -11,4 +11,7 @@ dependencies {
     commonMainApi(catalogue.client.ktor.http)
     commonMainApi(libs.ktor.client.auth)
     jvmMainImplementation(libs.ktor.serialization.jackson)
+
+    jvmTestImplementation(libs.bundles.junit)
+    jvmTestImplementation(kotlin("reflect"))
 }

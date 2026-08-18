@@ -245,6 +245,13 @@ class SpaceCreateScript(
         // Configure event types
         realm.isEventsEnabled = true
         val listeners = realm.eventsListeners?.toMutableList() ?: mutableListOf()
+        @Suppress("DEPRECATION")
+        if (listeners.remove(KeycloakPluginIds.EVENT_WEBHOOK_LEGACY)) {
+            logger.info(
+                "Migrated event listener ${KeycloakPluginIds.EVENT_WEBHOOK_LEGACY}" +
+                        " -> ${KeycloakPluginIds.EVENT_WEBHOOK}"
+            )
+        }
         if (KeycloakPluginIds.EVENT_WEBHOOK !in listeners) {
             listeners.add(KeycloakPluginIds.EVENT_WEBHOOK)
         }

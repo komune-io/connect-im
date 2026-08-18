@@ -22,6 +22,24 @@ services:
       - net
     depends_on:
       - im-keycloak-postgres
+    # `make dev up` used to start im-init as soon as this container existed, which raced
+    # Keycloak's boot; on 26.7 the race became deterministic (~21s to serve, im-init
+    # connected at ~13s). dev-compose.mk waits on this healthcheck before moving on.
+    #
+    # Probes the public HTTP port rather than the management port: this compose file runs
+    # a *published* image, and health on port 9000 is a build-time option that image was
+    # not built with. The image ships no curl or wget, hence bash's /dev/tcp.
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          exec 3<>/dev/tcp/127.0.0.1/8080 &&
+          printf 'GET /realms/master HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 &&
+          grep -q '200 OK' <&3
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 20s
 
   im-keycloak-postgres:
     image: postgres

@@ -5,6 +5,7 @@ import io.komune.im.commons.model.FeatureIdentifier
 import io.komune.im.core.privilege.domain.model.PrivilegeType
 import io.komune.im.f2.privilege.domain.model.PrivilegeDTO
 import kotlin.js.JsExport
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 /**
@@ -47,7 +48,7 @@ interface FeatureDTO: PrivilegeDTO {
 data class Feature(
     override val id: FeatureId,
     override val identifier: FeatureIdentifier,
-    override val description: String
-): FeatureDTO {
-    override val type = PrivilegeType.FEATURE.name
-}
+    override val description: String,
+    @EncodeDefault(EncodeDefault.Mode.ALWAYS)
+    override val type: String = PrivilegeType.FEATURE.name,
+): FeatureDTO

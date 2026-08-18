@@ -7,4 +7,6 @@ plugins {
 dependencies {
     api(project(":im-commons:im-commons-domain"))
     api(catalogue.spring.boot.starter.function.http)
+
+    testImplementation(libs.bundles.junit)
 }

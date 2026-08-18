@@ -13,4 +13,6 @@ dependencies {
 
     api(project(":im-infra:im-redis"))
     api(project(":im-core:im-commons-core"))
+
+    testImplementation(libs.bundles.junit)
 }

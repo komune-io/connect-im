@@ -13,4 +13,5 @@ dependencies {
 
     implementation(project(":im-commons:im-commons-auth"))
 
+    testImplementation(libs.bundles.junit)
 }

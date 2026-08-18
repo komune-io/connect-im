@@ -6,6 +6,7 @@ import io.komune.im.commons.model.PermissionIdentifier
 import io.komune.im.core.privilege.domain.model.PrivilegeType
 import io.komune.im.f2.privilege.domain.model.PrivilegeDTO
 import kotlin.js.JsExport
+import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 /**
@@ -56,7 +57,7 @@ data class Permission(
     override val id: PermissionId,
     override val identifier: PermissionIdentifier,
     override val description: String,
-    override val features: List<List<FeatureIdentifier>>?
-): PermissionDTO {
-    override val type = PrivilegeType.PERMISSION.name
-}
+    override val features: List<List<FeatureIdentifier>>?,
+    @EncodeDefault(EncodeDefault.Mode.ALWAYS)
+    override val type: String = PrivilegeType.PERMISSION.name,
+): PermissionDTO

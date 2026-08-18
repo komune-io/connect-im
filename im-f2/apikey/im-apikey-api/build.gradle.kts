@@ -13,4 +13,6 @@ dependencies {
     api(project(":im-f2:apikey:im-apikey-lib"))
     api(project(":im-f2:apikey:im-apikey-domain"))
     implementation(project(":im-f2:user:im-user-lib"))
+
+    testImplementation(libs.bundles.junit)
 }

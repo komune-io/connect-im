@@ -10,4 +10,7 @@ dependencies {
     commonMainApi(project(":im-f2:privilege:im-privilege-domain"))
 
     commonMainApi(project(":im-commons:im-commons-domain"))
+
+    commonTestImplementation(kotlin("test"))
+    commonTestImplementation(libs.kotlinx.serialization.json)
 }

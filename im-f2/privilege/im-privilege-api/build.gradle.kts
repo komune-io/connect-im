@@ -6,4 +6,6 @@ plugins {
 
 dependencies {
     api(project(":im-f2:privilege:im-privilege-lib"))
+
+    testImplementation(libs.bundles.junit)
 }

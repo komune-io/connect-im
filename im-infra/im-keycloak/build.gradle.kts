@@ -11,4 +11,6 @@ dependencies {
 
     api(libs.keycloak.admin.client)
     api(libs.keycloak.server.spi.private)
+
+    testImplementation(libs.bundles.junit)
 }

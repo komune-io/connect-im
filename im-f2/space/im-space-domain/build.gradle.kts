@@ -7,4 +7,7 @@ plugins {
 
 dependencies {
     commonMainApi(project(":im-commons:im-commons-domain"))
+
+    commonTestImplementation(kotlin("test"))
+    commonTestImplementation(libs.kotlinx.serialization.json)
 }
