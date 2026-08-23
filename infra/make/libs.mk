@@ -1,5 +1,7 @@
 VERSION = $(shell cat VERSION)
 
+include infra/make/integration-tests.mk
+
 .PHONY: clean lint build test stage promote
 
 clean:
@@ -11,15 +13,11 @@ lint:
 build:
 	./gradlew build publishToMavenLocal -Dorg.gradle.parallel=true -x test
 
-test-pre:
-	@make dev up
-	@make dev im-init logs
-	@make dev im-config logs
-	@make dev up
-
+# Unit tests only: no Docker, no Keycloak, no /etc/hosts entry. The suites that need a
+# provisioned Keycloak run from docker.mk, where the images they need have just been
+# built — see integration-tests.mk.
 test:
-	sudo echo "127.0.0.1 im-keycloak" | sudo tee -a /etc/hosts
-	./gradlew test
+	./gradlew test $(addprefix -x ,$(INTEGRATION_TESTS))
 
 stage:
 	VERSION=$(VERSION) ./gradlew stage -Dorg.gradle.parallel=true -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
