@@ -5,7 +5,10 @@ ENV KC_DB=postgres
 ENV KC_FEATURES=passkeys
 ENV KC_LOG_LEVEL=INFO
 
-ARG KC_HTTP_RELATIVE_PATH
+# Defaulted: Keycloak 26.7 rejects an empty quarkus.management.root-path, so an unset
+# ARG becomes an empty ENV and `kc.sh build` fails. Only infra/make/docker.mk passed a
+# value, which made a plain `docker build` of this file impossible.
+ARG KC_HTTP_RELATIVE_PATH=/
 RUN echo "KC_HTTP_RELATIVE_PATH=${KC_HTTP_RELATIVE_PATH}"
 ENV KC_HTTP_RELATIVE_PATH=${KC_HTTP_RELATIVE_PATH}
 
