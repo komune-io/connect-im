@@ -55,7 +55,7 @@ class OrganizationFinderSteps: En, ImCucumberStepsDefinition() {
 
         Then("I should receive a list of organizations:") { dataTable: DataTable ->
             step {
-                dataTable.asList(OrganizationFetchedParams::class.java)
+                dataTable.asList(OrganizationFetchedParams::class.java).filterNotNull()
                     .map(OrganizationFetchedParams::identifier)
                     .let { assertOrganizationsFetched(it) }
             }

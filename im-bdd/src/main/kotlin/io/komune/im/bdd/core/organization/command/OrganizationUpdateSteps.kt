@@ -53,7 +53,7 @@ class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
 
         Given("Some organizations are updated:") { dataTable: DataTable ->
             step {
-                dataTable.asList(OrganizationUpdateParams::class.java)
+                dataTable.asList(OrganizationUpdateParams::class.java).filterNotNull()
                     .forEach { updateOrganization(it) }
             }
         }

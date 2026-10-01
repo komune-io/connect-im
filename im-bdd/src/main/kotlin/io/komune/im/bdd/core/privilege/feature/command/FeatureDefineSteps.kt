@@ -48,7 +48,7 @@ class FeatureDefineSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some/The features are defined:") { dataTable: DataTable ->
             step {
-                dataTable.asList(FeatureDefineParams::class.java)
+                dataTable.asList(FeatureDefineParams::class.java).filterNotNull()
                     .forEach { defineFeature(it) }
             }
         }

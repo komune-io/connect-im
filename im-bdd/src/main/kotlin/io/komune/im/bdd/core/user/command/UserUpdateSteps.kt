@@ -49,7 +49,7 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some users are updated:") { dataTable: DataTable ->
             step {
-                dataTable.asList(UserUpdateParams::class.java)
+                dataTable.asList(UserUpdateParams::class.java).filterNotNull()
                     .forEach { updateUser(it) }
             }
         }
@@ -74,7 +74,7 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
             step {
                 val userId = context.userIds.lastUsed
                 val client = keycloakClientProvider.getClient()
-                dataTable.asList(UserUpdateParams::class.java)
+                dataTable.asList(UserUpdateParams::class.java).filterNotNull()
                     .forEach {
                         AssertionBdd.user(client).assertThatId(userId).hasFields(
                             givenName = it.givenName,

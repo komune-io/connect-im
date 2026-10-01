@@ -51,7 +51,7 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some organizations are created:") { dataTable: DataTable ->
             step {
-                dataTable.asList(OrganizationInitParams::class.java)
+                dataTable.asList(OrganizationInitParams::class.java).filterNotNull()
                     .forEach { createOrganization(it) }
             }
         }

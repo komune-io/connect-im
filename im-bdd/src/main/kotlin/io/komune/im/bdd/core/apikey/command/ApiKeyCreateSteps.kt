@@ -53,7 +53,7 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some API keys are created:") { dataTable: DataTable ->
             step {
-                dataTable.asList(ApiKeyCreateParams::class.java)
+                dataTable.asList(ApiKeyCreateParams::class.java).filterNotNull()
                     .forEach { createApiKey(it) }
             }
         }

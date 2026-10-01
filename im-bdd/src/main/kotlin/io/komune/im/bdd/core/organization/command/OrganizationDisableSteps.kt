@@ -46,7 +46,7 @@ class OrganizationDisableSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some organizations are disabled:") { dataTable: DataTable ->
             step {
-                dataTable.asList(OrganizationDisableParams::class.java)
+                dataTable.asList(OrganizationDisableParams::class.java).filterNotNull()
                     .forEach { disableOrganization(it) }
             }
         }

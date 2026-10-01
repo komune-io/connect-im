@@ -47,7 +47,7 @@ class UserDisableSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some users are disabled:") { dataTable: DataTable ->
             step {
-                dataTable.asList(UserDisableParams::class.java)
+                dataTable.asList(UserDisableParams::class.java).filterNotNull()
                     .forEach { disableUser(it) }
             }
         }

@@ -48,7 +48,7 @@ class PermissionDefineSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some/The permissions are defined:") { dataTable: DataTable ->
             step {
-                dataTable.asList(PermissionDefineParams::class.java)
+                dataTable.asList(PermissionDefineParams::class.java).filterNotNull()
                     .forEach { definePermission(it) }
             }
         }

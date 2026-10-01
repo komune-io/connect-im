@@ -52,7 +52,7 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some/The roles are defined:") { dataTable: DataTable ->
             step {
-                dataTable.asList(RoleDefineParams::class.java)
+                dataTable.asList(RoleDefineParams::class.java).filterNotNull()
                     .forEach { defineRole(it) }
             }
         }

@@ -35,7 +35,7 @@ class PermissionQuerySteps: En, ImCucumberStepsDefinition() {
 
         Then("I should receive a list of permissions:") { dataTable: DataTable ->
             step {
-                dataTable.asList(PermissionFetchedParams::class.java)
+                dataTable.asList(PermissionFetchedParams::class.java).filterNotNull()
                     .map(PermissionFetchedParams::identifier)
                     .let { assertFetchedPermissions(it) }
             }
