@@ -9,7 +9,7 @@ lint:
 	echo 'No Lint'
 
 build:
-	./gradlew build publishToMavenLocal -Dorg.gradle.parallel=true -x test
+	./gradlew build publishToMavenLocal -Dorg.gradle.parallel=true -x test -x jvmTest -x jsTest -x jsBrowserTest -x kotlinStoreYarnLock
 
 test-pre:
 	@make dev up
@@ -19,7 +19,7 @@ test-pre:
 
 test:
 	sudo echo "127.0.0.1 im-keycloak" | sudo tee -a /etc/hosts
-	./gradlew test
+	./gradlew allTests test
 
 stage:
 	VERSION=$(VERSION) ./gradlew stage -Dorg.gradle.parallel=true -x publishJsPackageToGithubRegistry -x publishJsPackageToNpmjsRegistry
