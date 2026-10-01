@@ -40,7 +40,7 @@ class UserFinderSteps: En, ImCucumberStepsDefinition() {
 
         Then("I should receive a list of users:") { dataTable: DataTable ->
             step {
-                dataTable.asList(UserFetchedParams::class.java)
+                dataTable.asList(UserFetchedParams::class.java).filterNotNull()
                     .map(UserFetchedParams::identifier)
                     .let { assertUsersFetched(it) }
             }

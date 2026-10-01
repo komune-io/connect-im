@@ -47,7 +47,7 @@ class UserDeleteSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some users are deleted:") { dataTable: DataTable ->
             step {
-                dataTable.asList(UserDeleteParams::class.java)
+                dataTable.asList(UserDeleteParams::class.java).filterNotNull()
                     .forEach { deleteUser(it) }
             }
         }

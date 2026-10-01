@@ -52,7 +52,7 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some spaces are created:") { dataTable: DataTable ->
             step {
-                dataTable.asList(SpaceCreateParams::class.java)
+                dataTable.asList(SpaceCreateParams::class.java).filterNotNull()
                     .forEach { createSpace(it) }
             }
         }

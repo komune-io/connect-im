@@ -35,7 +35,7 @@ class FeatureQuerySteps: En, ImCucumberStepsDefinition() {
 
         Then("I should receive a list of features:") { dataTable: DataTable ->
             step {
-                dataTable.asList(FeatureFetchedParams::class.java)
+                dataTable.asList(FeatureFetchedParams::class.java).filterNotNull()
                     .map(FeatureFetchedParams::identifier)
                     .let { assertFetchedFeatures(it) }
             }

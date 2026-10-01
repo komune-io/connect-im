@@ -47,7 +47,7 @@ class OrganizationDeleteSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some organizations are deleted:") { dataTable: DataTable ->
             step {
-                dataTable.asList(OrganizationDeleteParams::class.java)
+                dataTable.asList(OrganizationDeleteParams::class.java).filterNotNull()
                     .forEach { deleteOrganization(it) }
             }
         }

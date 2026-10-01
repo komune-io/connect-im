@@ -37,7 +37,7 @@ class RoleQuerySteps: En, ImCucumberStepsDefinition() {
 
         Then("I should receive a list of roles:") { dataTable: DataTable ->
             step {
-                dataTable.asList(RoleFetchedParams::class.java)
+                dataTable.asList(RoleFetchedParams::class.java).filterNotNull()
                     .map(RoleFetchedParams::identifier)
                     .let { assertFetchedRoles(it) }
             }

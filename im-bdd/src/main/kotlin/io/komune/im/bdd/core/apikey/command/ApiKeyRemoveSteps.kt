@@ -51,7 +51,7 @@ class ApiKeyRemoveSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some API keys are removed:") { dataTable: DataTable ->
             step {
-                dataTable.asList(ApiKeyRemoveParams::class.java)
+                dataTable.asList(ApiKeyRemoveParams::class.java).filterNotNull()
                     .forEach { removeApiKey(it) }
             }
         }

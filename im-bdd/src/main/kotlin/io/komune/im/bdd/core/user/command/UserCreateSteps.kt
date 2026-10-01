@@ -50,7 +50,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
 
         Given("Some users are created:") { dataTable: DataTable ->
             step {
-                dataTable.asList(UserCreateParams::class.java)
+                dataTable.asList(UserCreateParams::class.java).filterNotNull()
                     .forEach { createUser(it) }
             }
         }
