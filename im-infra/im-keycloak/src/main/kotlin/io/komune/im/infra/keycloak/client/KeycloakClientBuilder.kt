@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit
 import org.jboss.resteasy.client.jaxrs.ResteasyClient
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder
 import org.keycloak.OAuth2Constants
+import org.keycloak.admin.client.JacksonProvider
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
 import org.slf4j.LoggerFactory
@@ -17,6 +18,8 @@ object KeycloakClientBuilder {
     private const val CONNECTION_TTL: Long = 30
     private const val CONNECTION_POOL_SIZE = 10
     private const val MAX_PER_ROUTE = 20
+    // Same priority KeycloakBuilder uses when it builds its own client.
+    private const val JACKSON_PROVIDER_PRIORITY = 100
     private val logger = LoggerFactory.getLogger(KeycloakClientBuilder::class.java)
 
     private var resteasyClient: ResteasyClient = createClient()
@@ -24,6 +27,9 @@ object KeycloakClientBuilder {
     private fun createClient(): ResteasyClient {
         logger.info("Creating shared RESTEasy client with connection pool")
         val builder = ResteasyClientBuilder.newBuilder() as ResteasyClientBuilder
+        // KeycloakBuilder only registers this provider on clients it creates itself. Without it the
+        // mapper fails on fields newer servers send and serializes nulls older servers reject.
+        builder.register(JacksonProvider::class.java, JACKSON_PROVIDER_PRIORITY)
         return builder.connectionPoolSize(CONNECTION_POOL_SIZE)
             .maxPooledPerRoute(MAX_PER_ROUTE)
             .connectionTTL(CONNECTION_TTL, TimeUnit.SECONDS)
