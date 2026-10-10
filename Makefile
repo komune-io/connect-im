@@ -11,6 +11,7 @@ lint:
 
 build:
 	@make -f infra/make/libs.mk build
+	@make -f infra/make/docker.mk build
 
 test-pre:
 	@make -f infra/make/libs.mk test-pre
@@ -20,9 +21,17 @@ test:
 
 stage:
 	@make -f infra/make/libs.mk stage
+	@make -f infra/make/docker.mk stage
+ifeq ($(findstring SNAPSHOT,$(VERSION)),)
+	@make -f infra/make/libsJs.mk stage
+endif
 
 promote:
 	@make -f infra/make/libs.mk promote
+	@make -f infra/make/docker.mk promote
+ifeq ($(findstring SNAPSHOT,$(VERSION)),)
+	@make -f infra/make/libsJs.mk promote
+endif
 
 ## DOCKER-COMPOSE DEV ENVIRONMENT
 include infra/docker-compose/dev-compose.mk
