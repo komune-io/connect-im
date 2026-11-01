@@ -150,6 +150,12 @@ lateinit var imUrl: String
 
 (steps 2 and 3 can be done automatically with `make package-keycloak`)
 
+## Welcome email
+
+`PUT /admin/realms/{realm}/im-welcome-email/users/{id}` sends `welcome.ftl` with the subject `welcomeSubject`, `manage-users` required. IM calls it for a creation handing over the password, and for a password reset on an account without credentials. The link lasts `connect.im.user.welcomeLinkLifespanSeconds` (7 days by default).
+
+To use it, an email theme adds `html/welcome.ftl`, `text/welcome.ftl` and the `welcomeSubject` message. A theme without them keeps Keycloak's `executeActions` mail with the realm's lifespan. Re-read the endpoint against Keycloak's `UserResource.executeActionsEmail` at every Keycloak upgrade.
+
 ## I2-Event-HTTP
 
 client ("xxx-web" + "account") hardcoded claim: `event-http-wehbook` = url to send the events to
