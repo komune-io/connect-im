@@ -63,15 +63,12 @@ class WelcomeEmailAdminResource(
 
         val theme = session.theme().getTheme(Theme.Type.EMAIL)
         // A realm whose theme has no welcome template keeps the mail, and the lifespan, it always had.
-        val hasWelcome = theme.getTemplate("html/$WELCOME_TEMPLATE") != null
+        val hasWelcome = listOf("html", "text").all { theme.getTemplate("$it/$WELCOME_TEMPLATE") != null }
         val seconds = lifespan.takeIf { hasWelcome } ?: realm.actionTokenGeneratedByAdminLifespan
         val token = ExecuteActionsActionToken(
             user.id, user.email, Time.currentTime() + seconds, actions, target.redirectUri, target.clientId
         )
-        val link = LoginActionsService.actionTokenProcessor(session.context.uri)
-            .queryParam("key", token.serialize(session, realm, session.context.uri))
-            .build(realm.name)
-            .toString()
+        val link = linkOf(token)
         val minutes = TimeUnit.SECONDS.toMinutes(seconds.toLong())
         val mail = session.getProvider(EmailTemplateProvider::class.java).setRealm(realm).setUser(user)
 
@@ -104,6 +101,12 @@ class WelcomeEmailAdminResource(
             .resourcePath(session.context.uri).success()
         return Response.noContent().build()
     }
+
+    private fun linkOf(token: ExecuteActionsActionToken) =
+        LoginActionsService.actionTokenProcessor(session.context.uri)
+            .queryParam("key", token.serialize(session, realm, session.context.uri))
+            .build(realm.name)
+            .toString()
 
     private fun findManagedUser(id: String): UserModel {
         val user = session.users().getUserById(realm, id)
