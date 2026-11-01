@@ -21,7 +21,12 @@ class OrganizationProperties(
 class UserProperties(
     val emailAsUsername: Boolean = false,
     val defaultRoleIdentifiers: String = "",
-)
+    val welcomeLinkLifespanSeconds: Int = DEFAULT_WELCOME_LINK_LIFESPAN_SECONDS,
+) {
+    companion object {
+        const val DEFAULT_WELCOME_LINK_LIFESPAN_SECONDS = 7 * 24 * 60 * 60
+    }
+}
 
 class KeycloakProperties(
     val url: String,

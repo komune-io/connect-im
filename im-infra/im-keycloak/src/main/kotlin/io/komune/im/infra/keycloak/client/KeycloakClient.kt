@@ -16,6 +16,7 @@ import org.keycloak.admin.client.resource.UserResource
 import org.keycloak.admin.client.resource.UsersResource
 import org.keycloak.representations.idm.ClientRepresentation
 import org.slf4j.LoggerFactory
+import java.net.URI
 
 @Suppress("TooManyFunctions")
 class KeycloakClient(
@@ -57,6 +58,18 @@ class KeycloakClient(
 	fun user(id: String): UserResource {
         log("user[id=$id]")
 		return  realm(realmId).users().get(id)
+	}
+
+	fun sendWelcomeEmail(
+		userId: String,
+		clientId: String?,
+		redirectUri: String?,
+		lifespanSeconds: Int,
+		actions: List<String>
+	) {
+		log("sendWelcomeEmail[id=$userId]")
+		keycloak.proxy(WelcomeEmailResource::class.java, URI.create(auth.serverUrl))
+			.send(realmId, userId, clientId, redirectUri, lifespanSeconds, actions)
 	}
 
 	fun userProfile(): UserProfileResource {

@@ -1,10 +1,12 @@
 package io.komune.im.core.user.api
 
 import io.komune.im.api.config.properties.IMProperties
+import io.komune.im.api.config.properties.UserProperties
 import io.komune.im.commons.auth.AuthenticationProvider
 import io.komune.im.commons.utils.mapAsync
 import io.komune.im.core.commons.CoreService
 import io.komune.im.core.user.domain.command.UserCoreDefineCommand
+import io.komune.im.core.user.domain.command.UserCoreEmailReason
 import io.komune.im.core.user.domain.command.UserCoreDefinedEvent
 import io.komune.im.core.user.domain.command.UserCoreDeleteCommand
 import io.komune.im.core.user.domain.command.UserCoreDeletedEvent
@@ -20,6 +22,7 @@ import io.komune.im.core.user.domain.model.UserModel
 import io.komune.im.infra.keycloak.client.KeycloakClient
 import io.komune.im.infra.keycloak.handleResponseError
 import io.komune.im.infra.redis.CacheName
+import jakarta.ws.rs.NotFoundException
 import java.util.UUID
 import org.keycloak.representations.idm.CredentialRepresentation
 import org.keycloak.representations.idm.RoleRepresentation
@@ -98,7 +101,23 @@ class UserCoreAggregateService(
             "userId[${command.id}] " +
             "clientId[$clientId] " +
             "redirectUri[$redirectUri]")
-        client.user(command.id).executeActionsEmail(clientId, redirectUri, command.actions.toList())
+        when (command.reason) {
+            UserCoreEmailReason.ACCOUNT_ACTION ->
+                client.user(command.id).executeActionsEmail(clientId, redirectUri, command.actions.toList())
+            UserCoreEmailReason.WELCOME -> try {
+                client.sendWelcomeEmail(
+                    command.id,
+                    clientId,
+                    redirectUri,
+                    properties.user?.welcomeLinkLifespanSeconds ?: UserProperties.DEFAULT_WELCOME_LINK_LIFESPAN_SECONDS,
+                    command.actions.toList()
+                )
+            } catch (e: NotFoundException) {
+                // A Keycloak image older than this gateway has no plugin yet.
+                logger.warn("Welcome email endpoint missing, sending the action email for user[${command.id}]", e)
+                client.user(command.id).executeActionsEmail(clientId, redirectUri, command.actions.toList())
+            }
+        }
 
         UserCoreSentEmailEvent(command.id, command.actions)
     }

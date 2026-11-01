@@ -17,6 +17,7 @@ class KeycloakPluginIdsTest {
         assertThat(KeycloakPluginIds.EVENT_WEBHOOK).isEqualTo("im-event-http")
         assertThat(KeycloakPluginIds.MAPPER_REALM_ROLE_FEATURE)
             .isEqualTo("oidc-usermodel-realm-role-feature-mapper")
+        assertThat(KeycloakPluginIds.WELCOME_EMAIL).isEqualTo("im-welcome-email")
     }
 
     @Test
@@ -41,7 +42,8 @@ class KeycloakPluginIdsTest {
             KeycloakPluginIds.ACTION_TOKEN,
             KeycloakPluginIds.EVENT_WEBHOOK,
             KeycloakPluginIds.EVENT_WEBHOOK_LEGACY,
-            KeycloakPluginIds.MAPPER_REALM_ROLE_FEATURE
+            KeycloakPluginIds.MAPPER_REALM_ROLE_FEATURE,
+            KeycloakPluginIds.WELCOME_EMAIL
         )
 
         assertThat(ids).doesNotHaveDuplicates()

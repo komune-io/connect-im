@@ -35,6 +35,10 @@ class UserCoreFinderService(
         return getOrNull(id) ?: throw NotFoundException("User", id)
     }
 
+    suspend fun hasCredentials(id: UserId): Boolean = handleErrors("Error while fetching credentials of user [$id]") {
+        keycloakClientProvider.getClient().user(id).credentials().isNotEmpty()
+    }
+
     suspend fun getByEmailOrNull(email: String): UserModel? =
         handleErrors("Error while fetching user by email [$email]") {
             val client = keycloakClientProvider.getClient()
