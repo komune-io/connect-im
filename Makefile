@@ -1,6 +1,6 @@
 VERSION = $(shell cat VERSION)
 
-.PHONY: clean lint build test stage promote
+.PHONY: clean lint build test-pre test test-integration stage promote
 
 clean:
 	@make -f infra/make/libs.mk clean
@@ -13,11 +13,17 @@ build:
 	@make -f infra/make/libs.mk build
 	@make -f infra/make/docker.mk build
 
+# Provisions Keycloak from images built from this checkout. In CI, docker.mk's own `build`
+# has already produced im-script; locally it has to be built here first.
 test-pre:
-	@make -f infra/make/libs.mk test-pre
+	@make -f infra/make/docker.mk docker-script-build test-pre
 
+# Unit tests only; the Keycloak-dependent suites are `test-integration`, after `test-pre`.
 test:
 	@make -f infra/make/libs.mk test
+
+test-integration:
+	@make -f infra/make/docker.mk test
 
 stage:
 	@make -f infra/make/libs.mk stage
