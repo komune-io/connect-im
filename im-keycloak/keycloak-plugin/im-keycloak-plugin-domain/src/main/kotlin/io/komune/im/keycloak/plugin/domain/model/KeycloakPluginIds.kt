@@ -5,6 +5,7 @@ object KeycloakPluginIds {
     const val ACTION_TOKEN = "generate-action-token"
     const val EVENT_WEBHOOK = "im-event-http"
     const val MAPPER_REALM_ROLE_FEATURE = "oidc-usermodel-realm-role-feature-mapper"
+    const val WELCOME_EMAIL = "im-welcome-email"
 
     /**
      * Previous id of the event webhook listener, from before the i2 -> im rename.

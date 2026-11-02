@@ -103,6 +103,7 @@ include(
     "im-keycloak:keycloak-plugin:im-keycloak-plugin-client",
     "im-keycloak:keycloak-plugin:im-keycloak-plugin-domain",
     "im-keycloak:keycloak-plugin:im-keycloak-role-mapper",
+    "im-keycloak:keycloak-plugin:im-keycloak-welcome-email",
 )
 
 include(

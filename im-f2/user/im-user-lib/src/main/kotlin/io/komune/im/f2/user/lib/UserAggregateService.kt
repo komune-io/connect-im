@@ -15,9 +15,11 @@ import io.komune.im.core.privilege.domain.model.PrivilegeType
 import io.komune.im.core.privilege.domain.model.RoleModel
 import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.core.user.api.UserCoreAggregateService
+import io.komune.im.core.user.api.UserCoreFinderService
 import io.komune.im.core.user.domain.command.CredentialType
 import io.komune.im.core.user.domain.command.UserCoreDefineCommand
 import io.komune.im.core.user.domain.command.UserCoreDisableCommand
+import io.komune.im.core.user.domain.command.UserCoreEmailReason
 import io.komune.im.core.user.domain.command.UserCoreEnableCommand
 import io.komune.im.core.user.domain.command.UserCoreRemoveCredentialsCommand
 import io.komune.im.core.user.domain.command.UserCoreSendEmailCommand
@@ -49,6 +51,7 @@ class UserAggregateService(
     private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val privilegeCoreFinderService: PrivilegeCoreFinderService,
     private val userCoreAggregateService: UserCoreAggregateService,
+    private val userCoreFinderService: UserCoreFinderService,
     private val properties: IMProperties
 ) {
     suspend fun create(command: UserCreateCommand): UserCreatedEvent {
@@ -79,7 +82,8 @@ class UserAggregateService(
         if (actions.isNotEmpty()) {
             UserCoreSendEmailCommand(
                 id = userId,
-                actions = actions
+                actions = actions,
+                reason = creationEmailReason(actions)
             ).let { userCoreAggregateService.sendEmail(it) }
         }
 
@@ -89,7 +93,8 @@ class UserAggregateService(
     suspend fun resetPassword(command: UserResetPasswordCommand): UserResetPasswordEvent {
         UserCoreSendEmailCommand(
             id = command.id,
-            actions = listOf(EventType.UPDATE_PASSWORD.name)
+            actions = listOf(EventType.UPDATE_PASSWORD.name),
+            reason = resetEmailReason(userCoreFinderService.hasCredentials(command.id))
         ).let { userCoreAggregateService.sendEmail(it) }
         return UserResetPasswordEvent(command.id)
     }
@@ -212,3 +217,11 @@ class UserAggregateService(
         } ?: roles
     }
 }
+
+/** A mail asking only to verify an address does not hand over an account: it is no welcome. */
+internal fun creationEmailReason(actions: List<String>): UserCoreEmailReason =
+    if (EventType.UPDATE_PASSWORD.name in actions) UserCoreEmailReason.WELCOME else UserCoreEmailReason.ACCOUNT_ACTION
+
+/** Nobody has chosen anything on an account without credentials: this link is still its invitation. */
+internal fun resetEmailReason(hasCredentials: Boolean): UserCoreEmailReason =
+    if (hasCredentials) UserCoreEmailReason.ACCOUNT_ACTION else UserCoreEmailReason.WELCOME
