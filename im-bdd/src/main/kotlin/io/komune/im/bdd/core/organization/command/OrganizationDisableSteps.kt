@@ -5,8 +5,11 @@ import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.organization.data.organization
+import io.komune.im.bdd.core.user.data.user
 import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.command.OrganizationDisableCommand
+import io.komune.im.f2.organization.domain.command.OrganizationDisabledEvent
+import org.assertj.core.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
@@ -16,6 +19,7 @@ class OrganizationDisableSteps: En, ImCucumberStepsDefinition() {
     private lateinit var organizationEndpoint: OrganizationEndpoint
 
     private lateinit var command: OrganizationDisableCommand
+    private lateinit var event: OrganizationDisabledEvent
 
     init {
         DataTableType(::organizationDisableParams)
@@ -63,6 +67,26 @@ class OrganizationDisableSteps: En, ImCucumberStepsDefinition() {
                 }
             }
         }
+
+        Then("The organization disable should have disabled only the users:") { dataTable: DataTable ->
+            step {
+                val rows = dataTable.asMaps()
+                Assertions.assertThat(event.userIds).containsExactlyInAnyOrderElementsOf(
+                    rows.map { context.userIds.safeGet(requireNotNull(it["identifier"])) }
+                )
+            }
+        }
+
+        Then("The users should be disabled by:") { dataTable: DataTable ->
+            step {
+                val client = keycloakClientProvider.getClient()
+                dataTable.asMaps().forEach { row ->
+                    AssertionBdd.user(client)
+                        .assertThatId(context.userIds.safeGet(requireNotNull(row["identifier"])))
+                        .hasFields(enabled = false, disabledBy = row["disabledBy"])
+                }
+            }
+        }
     }
 
     private suspend fun disableOrganization(params: OrganizationDisableParams) {
@@ -73,7 +97,7 @@ class OrganizationDisableSteps: En, ImCucumberStepsDefinition() {
             attributes = null,
             userAttributes = null
         )
-        organizationEndpoint.organizationDisable().invoke(command).id
+        event = organizationEndpoint.organizationDisable().invoke(command)
     }
 
     private fun organizationDisableParams(entry: Map<String, String>?): OrganizationDisableParams {
