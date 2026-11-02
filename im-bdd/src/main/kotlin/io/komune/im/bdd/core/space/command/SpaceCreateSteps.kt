@@ -88,7 +88,7 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
             displayName = params.displayName,
             smtp = null,
             theme = null,
-            locales = null,
+            locales = params.locales,
             mfa = null,
             settings = null,
             sslRequired = params.sslRequired
@@ -100,7 +100,8 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
         return SpaceCreateParams(
             identifier = entry?.get("identifier").orRandom(),
             displayName = entry?.get("displayName").orRandom(),
-            sslRequired = entry?.get("sslRequired")
+            sslRequired = entry?.get("sslRequired"),
+            locales = entry?.get("locales")?.split(",")
         )
     }
 
@@ -108,5 +109,6 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
         val identifier: SpaceIdentifier,
         val displayName: String? = null,
         val sslRequired: String? = null,
+        val locales: List<String>? = null,
     )
 }

@@ -13,6 +13,7 @@ import io.komune.im.f2.space.domain.command.SpaceDefineCommand
 import io.komune.im.f2.space.domain.command.SpaceDefinedEvent
 import io.komune.im.f2.space.domain.command.SpaceDeleteCommand
 import io.komune.im.f2.space.domain.command.SpaceDeletedEvent
+import io.komune.im.f2.space.lib.model.applyLocales
 import io.komune.im.infra.keycloak.client.KeycloakClient
 import io.komune.im.infra.redis.CacheName
 import jakarta.ws.rs.NotFoundException as JakartaNotFoundException
@@ -180,10 +181,8 @@ class SpaceAggregateService(
         loginTheme = command.theme
         logger.info("Setting emailTheme to ${command.theme}")
         emailTheme = command.theme
-        logger.info("Setting supportedLocales to ${command.locales?.toSet()}")
-        supportedLocales = command.locales?.toSet()
-        logger.info("Setting defaultLocale to ${command.locales?.firstOrNull()}")
-        defaultLocale = command.locales?.firstOrNull()
+        logger.info("Setting locales to ${command.locales}")
+        applyLocales(command.locales)
         command.settings?.let { settings ->
             logger.info("Setting isRegistrationAllowed to ${settings.registrationAllowed}")
             isRegistrationAllowed = settings.registrationAllowed

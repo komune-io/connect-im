@@ -31,6 +31,12 @@ class AssertionSpace(
             Assertions.assertThat(space.sslRequired).isEqualToIgnoringCase(expected)
         }
 
+        fun hasLocales(defaultLocale: String, supportedLocales: List<String>) = also {
+            Assertions.assertThat(space.isInternationalizationEnabled).isTrue()
+            Assertions.assertThat(space.defaultLocale).isEqualTo(defaultLocale)
+            Assertions.assertThat(space.supportedLocales).containsExactlyInAnyOrderElementsOf(supportedLocales)
+        }
+
         fun matches(space: Space) = hasFields(
             identifier = space.identifier
         )

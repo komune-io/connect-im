@@ -8,5 +8,6 @@ fun RealmRepresentation.toSpace() = Space(
     displayName = displayName,
     theme = loginTheme,
     smtp = smtpServer,
-    locales = supportedLocales?.toList()
+    // The first locale of a space is its realm's default; Keycloak returns them unordered.
+    locales = supportedLocales?.sortedByDescending { it == defaultLocale }
 )
