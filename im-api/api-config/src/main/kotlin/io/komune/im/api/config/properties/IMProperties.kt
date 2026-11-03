@@ -12,7 +12,15 @@ data class IMProperties(
     val organization: OrganizationProperties?,
     val user: UserProperties?,
     val theme: String? = null,
-    val keycloak: KeycloakProperties
+    val keycloak: KeycloakProperties,
+    val security: SecurityProperties? = null,
+)
+
+/**
+ * `allowedClients`: the clients (`azp`) whose tokens may call this service; empty allows every client.
+ */
+class SecurityProperties(
+    val allowedClients: List<String> = emptyList(),
 )
 class OrganizationProperties(
     val insee: InseeProperties?

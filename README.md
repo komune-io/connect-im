@@ -67,6 +67,22 @@ services:
       - "8004:8004"
 ```
 
+### Allowed clients
+
+Every token of a trusted realm authenticates here, including one a user hands to a third-party
+application. `connect.im.security.allowedClients` (env `connect_im_security_allowedClients`,
+comma-separated) lists the clients whose tokens may call IM, matched on the token's `azp` claim; any
+other token is refused with `403`. Empty, the default, allows every client. List every caller: the
+applications' service clients, the client IM's own scripts authenticate with, and the client of each
+API key.
+
+```yaml
+connect:
+    im:
+        security:
+            allowedClients: platform-app, im-root-platform
+```
+
 ## Features and Functionalities
 
 ### Users

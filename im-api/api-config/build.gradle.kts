@@ -14,4 +14,5 @@ dependencies {
     api(catalogue.spring.boot.starter.auth.tenant)
 
     testImplementation(libs.bundles.junit)
+    testImplementation(libs.spring.boot.starter.test)
 }
