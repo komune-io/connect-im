@@ -16,6 +16,8 @@ class ImPermissionTest {
         assertEquals("im_user_write", ImPermission.IM_USER_WRITE.identifier)
         assertEquals("im_organization_read", ImPermission.IM_ORGANIZATION_READ.identifier)
         assertEquals("im_organization_write_own", ImPermission.IM_MY_ORGANIZATION_WRITE.identifier)
+        assertEquals("im_user_self", ImPermission.IM_MY_USER.identifier)
+        assertEquals("im_organization_read_own", ImPermission.IM_MY_ORGANIZATION_READ.identifier)
         assertEquals("im_apikey_write", ImPermission.IM_APIKEY_WRITE.identifier)
         assertEquals("im_space_write", ImPermission.IM_SPACE_WRITE.identifier)
         assertEquals("im_role_write", ImPermission.IM_ROLE_WRITE.identifier)

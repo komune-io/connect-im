@@ -5,6 +5,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import s2.bdd.auth.AuthedUser
 import s2.bdd.data.TestContextKey
+import s2.bdd.data.parser.extractList
 import s2.bdd.data.parser.safeExtract
 
 class AuthenticationSteps: En, ImCucumberStepsDefinition() {
@@ -23,7 +24,7 @@ class AuthenticationSteps: En, ImCucumberStepsDefinition() {
                     context.authedUser = AuthedUser(
                         id = userId,
                         memberOf = user.await()?.attributes?.get("memberOf")?.firstOrNull(),
-                        roles = userRoles.await().map { it.name }.toTypedArray()
+                        roles = userRoles.await().map { it.name }.minus(params.withoutRoles.toSet()).toTypedArray()
                     )
 
                 }
@@ -52,10 +53,13 @@ class AuthenticationSteps: En, ImCucumberStepsDefinition() {
 
     private fun authenticationParams(entry: Map<String, String>) =
         AuthenticationParams(
-            identifier = entry.safeExtract("identifier")
+            identifier = entry.safeExtract("identifier"),
+            withoutRoles = entry.extractList<String>("withoutRoles").orEmpty()
         )
 
     private data class AuthenticationParams(
-        val identifier: TestContextKey
+        val identifier: TestContextKey,
+        /** Roles the token lacks, as when issued to a client whose scope drops them. */
+        val withoutRoles: List<String>
     )
 }

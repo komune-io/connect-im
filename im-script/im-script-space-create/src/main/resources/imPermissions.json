@@ -7,6 +7,10 @@
     "description": "Ability to modify any user data",
     "features":  [["feat_im_all"], ["feat_im_own"]]
 }, {
+    "name": "im_user_self",
+    "description": "Ability to view and modify one's own account (profile, email, password, MFA)",
+    "features":  [["feat_im_all"], ["feat_im_own"]]
+}, {
     "name": "im_user_role_write",
     "description": "Ability to modify the roles of user",
     "features":  [["feat_im_all"], ["feat_im_own"]]
@@ -18,6 +22,10 @@
     "name": "im_organization_write",
     "description": "Ability to modify any organization data",
     "features":  [["feat_im_all"]]
+}, {
+    "name": "im_organization_read_own",
+    "description": "Ability to view own organization data and its members",
+    "features":  [["feat_im_all"], ["feat_im_own"]]
 }, {
     "name": "im_organization_write_own",
     "description": "Ability to modify own organization data",

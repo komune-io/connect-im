@@ -77,4 +77,33 @@ class SpaceCreateScriptTest: SpringTestConfiguration() {
 
         }
     }
+    @Test
+    fun defaultRoleMustHoldTheSelfPermissionsOnNewAndExistingSpaces(): Unit = runTest {
+        val spaceName = "im-test-${UUID.randomUUID().hashCode().absoluteValue}"
+        val data = SpaceCreateProperties(identifier = spaceName)
+        val selfPermissions = listOf("im_user_self", "im_organization_read_own")
+
+        spaceCreateScript.createScript(data)
+
+        val newRealmAuth = imScriptSpaceProperties.auth.toAuthRealm(data.spaceIdentifier)
+        withContext(AuthContext(newRealmAuth)) {
+            val client = keycloakClientProvider.getClient()
+            val defaultRole = client.role(client.defaultRealmRole)
+            Assertions.assertThat(defaultRole.realmRoleComposites.map { it.name })
+                .describedAs("A new space grants the self permissions by default")
+                .containsAll(selfPermissions)
+
+            // An existing space provisioned before these permissions existed
+            defaultRole.deleteComposites(defaultRole.realmRoleComposites.filter { it.name in selfPermissions })
+        }
+
+        spaceCreateScript.createScript(data)
+
+        withContext(AuthContext(newRealmAuth)) {
+            val client = keycloakClientProvider.getClient()
+            Assertions.assertThat(client.role(client.defaultRealmRole).realmRoleComposites.map { it.name })
+                .describedAs("Re-running the script on an existing space adds what is missing")
+                .containsAll(selfPermissions)
+        }
+    }
 }

@@ -19,8 +19,8 @@ object UserPolicies {
      */
     fun canGet(authedUser: AuthedUserDTO, user: UserDTO?): Boolean {
         return authedUser.hasRole(ImPermission.IM_USER_READ)
-                || authedUser.id == user?.id
-                || user?.memberOf?.id == authedUser.memberOf
+                || user != null && isMySelf(authedUser, user)
+                || user != null && isMyOrganizationMember(authedUser, user)
     }
 
     /**
@@ -34,7 +34,8 @@ object UserPolicies {
     /**
      * User can list users ref
      */
-    fun checkRefList(authedUser: AuthedUserDTO) = true
+    fun checkRefList(authedUser: AuthedUserDTO) =
+        authedUser.hasOneOfRoles(ImPermission.IM_USER_READ, ImPermission.IM_MY_ORGANIZATION_READ)
 
     /**
      * User can create a user
@@ -108,17 +109,24 @@ object UserPolicies {
     }
 
     private fun canWriteUser(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return (authedUser.id == user.id || authedUser.hasRole(ImPermission.IM_USER_WRITE))
+        return (isMySelf(authedUser, user) || authedUser.hasRole(ImPermission.IM_USER_WRITE))
             && (authedUser.memberOf == user.memberOf?.id || authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE))
     }
 
     private fun isNotMySelf(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return !isMySelf(authedUser, user)
-
+        return authedUser.id != user.id
     }
 
+    /**
+     * The token acts on its own account and was granted the right to.
+     */
     private fun isMySelf(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return authedUser.id == user.id
+        return authedUser.id == user.id && authedUser.hasRole(ImPermission.IM_MY_USER)
+    }
 
+    private fun isMyOrganizationMember(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
+        return authedUser.memberOf != null
+            && user.memberOf?.id == authedUser.memberOf
+            && authedUser.hasRole(ImPermission.IM_MY_ORGANIZATION_READ)
     }
 }

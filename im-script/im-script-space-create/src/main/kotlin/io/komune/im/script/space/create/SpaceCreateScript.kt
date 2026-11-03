@@ -1,6 +1,7 @@
 package io.komune.im.script.space.create
 
 import io.komune.im.commons.auth.AuthContext
+import io.komune.im.commons.auth.ImPermission
 import io.komune.im.commons.model.ClientId
 import io.komune.im.commons.utils.ParserUtils
 import io.komune.im.f2.privilege.domain.permission.model.Permission
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
+@Suppress("TooManyFunctions")
 class SpaceCreateScript(
     private val keycloakClientProvider: KeycloakClientProvider,
     private val imScriptSpaceProperties: ImScriptSpaceProperties,
@@ -48,6 +50,11 @@ class SpaceCreateScript(
     private val clientInitService: ClientInitService,
 ) {
     private val logger = LoggerFactory.getLogger(SpaceCreateScript::class.java)
+
+    companion object {
+        val DEFAULT_PERMISSIONS = listOf(ImPermission.IM_MY_USER, ImPermission.IM_MY_ORGANIZATION_READ)
+            .map(ImPermission::identifier)
+    }
 
 
     suspend fun run() {
@@ -85,6 +92,10 @@ class SpaceCreateScript(
         logger.info("Initializing IM permissions...")
         initImPermissions()
         logger.info("Initialized IM permissions")
+
+        logger.info("Granting default IM permissions to every user...")
+        initDefaultRolePermissions()
+        logger.info("Granted default IM permissions")
 
         logger.info("Initializing Client Scopes...")
         initClientScopes()
@@ -188,6 +199,24 @@ class SpaceCreateScript(
                     ?: privilegeAggregateService.define(permission.toCommand())
             }
         }.awaitAll()
+    }
+
+    /**
+     * Every user and service account of the realm holds the realm's default role,
+     * so its composites are what every identity is granted without asking.
+     */
+    private suspend fun initDefaultRolePermissions() {
+        val client = keycloakClientProvider.getClient()
+        val defaultRoleName = client.realm().toRepresentation().defaultRole?.name ?: client.defaultRealmRole
+        val defaultRole = client.role(defaultRoleName)
+        val held = defaultRole.realmRoleComposites.map { it.name }.toSet()
+        val missing = DEFAULT_PERMISSIONS.filterNot(held::contains)
+        if (missing.isEmpty()) {
+            logger.info("Default role [$defaultRoleName] already holds $DEFAULT_PERMISSIONS")
+            return
+        }
+        logger.info("Adding $missing to default role [$defaultRoleName]")
+        defaultRole.addComposites(missing.map { client.role(it).toRepresentation() })
     }
 
     private suspend fun initClientScopes() {

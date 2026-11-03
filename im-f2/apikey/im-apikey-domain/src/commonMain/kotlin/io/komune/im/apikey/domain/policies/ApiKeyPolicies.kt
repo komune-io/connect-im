@@ -13,7 +13,8 @@ object ApiKeyPolicies {
      * User can get an apikey
      */
     fun canGet(authedUser: AuthedUserDTO, apikeyId: String): Boolean {
-        return authedUser.hasRole(ImPermission.IM_APIKEY_READ) || authedUser.memberOf == apikeyId
+        return authedUser.hasRole(ImPermission.IM_APIKEY_READ)
+                || authedUser.hasRole(ImPermission.IM_MY_ORGANIZATION_READ) && authedUser.memberOf == apikeyId
     }
 
     /**

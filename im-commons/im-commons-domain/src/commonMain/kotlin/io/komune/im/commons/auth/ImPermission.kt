@@ -9,10 +9,12 @@ enum class ImPermission(val identifier: String) {
     IM_USER_READ("im_user_read"),
     IM_USER_ROLE_WRITE("im_user_role_write"),
     IM_USER_WRITE("im_user_write"),
+    IM_MY_USER("im_user_self"),
 
     IM_ORGANIZATION_READ("im_organization_read"),
     IM_ORGANIZATION_WRITE("im_organization_write"),
     IM_MY_ORGANIZATION_WRITE("im_organization_write_own"),
+    IM_MY_ORGANIZATION_READ("im_organization_read_own"),
 
     IM_ORGANIZATION_API_KEY_READ("im_organization_apikey_read"),
     IM_ORGANIZATION_STATUS_WRITE("im_organization_status_write"),
