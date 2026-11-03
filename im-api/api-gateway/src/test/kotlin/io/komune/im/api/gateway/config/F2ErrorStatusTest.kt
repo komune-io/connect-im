@@ -56,6 +56,9 @@ class F2ErrorStatusTest {
         }
 
         @Bean
+        fun queryFunction(): F2Function<Query, String> = f2Function { it.id }
+
+        @Bean
         fun failingFunction(): F2Function<String, String> = f2Function {
             error("unexpected")
         }
@@ -64,11 +67,13 @@ class F2ErrorStatusTest {
     @LocalServerPort
     private var port: Int = 0
 
-    private fun call(function: String): WebTestClient.ResponseSpec =
+    data class Query(val id: String)
+
+    private fun call(function: String, body: String = "[\"id\"]"): WebTestClient.ResponseSpec =
         WebTestClient.bindToServer().baseUrl("http://localhost:$port").build()
             .post().uri("/$function")
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue("[\"id\"]")
+            .bodyValue(body)
             .exchange()
 
     @Test
@@ -88,8 +93,14 @@ class F2ErrorStatusTest {
     }
 
     @Test
+    fun `a missing required field answers 400`() {
+        call("queryFunction", "[{}]").expectStatus().isBadRequest
+            .expectBody().jsonPath("$.message").isEqualTo("Missing parameter `id`")
+    }
+
+    @Test
     fun `an unexpected error still answers 500 without its message`() {
-        call("failingFunction").expectStatus().is5xxServerError
+        call("failingFunction").expectStatus().isEqualTo(500)
             .expectBody().jsonPath("$.message").doesNotExist()
     }
 }
