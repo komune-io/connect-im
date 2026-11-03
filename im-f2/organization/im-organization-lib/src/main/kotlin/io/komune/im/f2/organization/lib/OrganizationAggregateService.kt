@@ -143,7 +143,8 @@ class OrganizationAggregateService(
         }
 
         val userEvents = userFinderService.page(
-            organizationIds = listOf(command.id)
+            organizationIds = listOf(command.id),
+            withDisabled = false,
         ).items.map { user ->
             UserDisableCommand(
                 id = user.id,
