@@ -88,7 +88,8 @@ class F2ErrorStatusTest {
     }
 
     @Test
-    fun `an unexpected error still answers 500`() {
+    fun `an unexpected error still answers 500 without its message`() {
         call("failingFunction").expectStatus().is5xxServerError
+            .expectBody().jsonPath("$.message").doesNotExist()
     }
 }
