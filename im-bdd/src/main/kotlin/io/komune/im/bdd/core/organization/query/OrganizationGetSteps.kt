@@ -63,7 +63,8 @@ class OrganizationGetSteps: En, ImCucumberStepsDefinition() {
     }
 
     private fun organizationGetParams(entry: Map<String, String>?) = OrganizationGetParams(
-        identifier = entry?.get("identifier") ?: context.organizationIds.lastUsed
+        identifier = entry?.get("identifier")?.let { context.organizationIds[it] ?: it }
+            ?: context.organizationIds.lastUsed
     )
 
     private data class OrganizationGetParams(

@@ -40,7 +40,7 @@ class UserGetSteps: En, ImCucumberStepsDefinition() {
     }
 
     private fun userGetParams(entry: Map<String, String>?) = UserGetParams(
-        identifier = entry?.get("identifier") ?: context.userIds.lastUsed
+        identifier = entry?.get("identifier")?.let { context.userIds[it] ?: it } ?: context.userIds.lastUsed
     )
 
     private data class UserGetParams(

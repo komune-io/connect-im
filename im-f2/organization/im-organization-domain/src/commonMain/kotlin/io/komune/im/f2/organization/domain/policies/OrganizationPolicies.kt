@@ -2,6 +2,7 @@ package io.komune.im.f2.organization.domain.policies
 
 import io.komune.im.commons.auth.AuthedUserDTO
 import io.komune.im.commons.auth.ImPermission
+import io.komune.im.commons.auth.hasOneOfRoles
 import io.komune.im.commons.auth.hasRole
 import io.komune.im.commons.model.OrganizationId
 import kotlin.js.JsExport
@@ -14,7 +15,8 @@ object OrganizationPolicies {
      * User can get an organization
      */
     fun canGet(authedUser: AuthedUserDTO, organizationId: String): Boolean {
-        return authedUser.hasRole(ImPermission.IM_ORGANIZATION_READ) || authedUser.memberOf == organizationId
+        return authedUser.hasRole(ImPermission.IM_ORGANIZATION_READ)
+                || authedUser.hasRole(ImPermission.IM_MY_ORGANIZATION_READ) && authedUser.memberOf == organizationId
     }
 
     /**
@@ -28,6 +30,7 @@ object OrganizationPolicies {
      * User can list organizations ref
      */
     fun checkRefList(authedUser: AuthedUserDTO?) = authedUser != null
+            && authedUser.hasOneOfRoles(ImPermission.IM_ORGANIZATION_READ, ImPermission.IM_MY_ORGANIZATION_READ)
 
     /**
      * User can create an organization

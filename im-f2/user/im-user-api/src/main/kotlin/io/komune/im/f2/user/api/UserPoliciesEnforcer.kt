@@ -49,8 +49,7 @@ class UserPoliciesEnforcer(
 
     suspend fun checkDisableMfa(userId: UserId) = checkAuthed("disable mfa") { authedUser ->
         val user = userFinderService.get(userId)
-        UserPolicies.canDisableMfa(authedUser, user)
-        UserPolicies.canDisableMfaAcr(authedUser, user)
+        UserPolicies.canDisableMfa(authedUser, user) && UserPolicies.canDisableMfaAcr(authedUser, user)
     }
 
     suspend fun checkUpdate(userId: UserId) = checkAuthed("update an user") { authedUser ->
@@ -110,7 +109,7 @@ class UserPoliciesEnforcer(
     suspend fun enforcePageQuery(query: UserPageQuery): UserPageQuery = enforceAuthed { authedUser ->
         if (OrganizationPolicies.canList(authedUser)) {
             query
-        } else if (query.organizationId != null && !OrganizationPolicies.canGet(authedUser, query.organizationId!!)) {
+        } else if (query.organizationId != null && query.organizationId != authedUser.memberOf) {
            throw ForbiddenAccessException("User can't list users from other organizations.")
         } else {
             query.copy(

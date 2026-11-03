@@ -95,8 +95,10 @@ Features act as access control filters, defining the specific contexts in which 
 | **im_user_read**                | Ability to view any user data             | feat_im_all, feat_im_own |
 | **im_user_write**               | Ability to modify any user data           | feat_im_all, feat_im_own |
 | **im_user_role_write**          | Ability to modify the roles of a user     | feat_im_all, feat_im_own |
+| **im_user_self**                | Ability to view and modify one's own account (profile, email, password, MFA) | feat_im_all, feat_im_own |
 | **im_organization_read**        | Ability to view any organization data     | feat_im_all              |
 | **im_organization_write**       | Ability to modify any organization data   | feat_im_all              |
+| **im_organization_read_own**    | Ability to view own organization data and its members | feat_im_all, feat_im_own |
 | **im_organization_write_own**   | Ability to modify own organization data   | feat_im_all, feat_im_own |
 | **im_organization_apikey_read** | Ability to read any organization API keys | feat_im_all              |
 | **im_organization_status_write**| Ability to write organization status      | feat_im_all              |
@@ -107,6 +109,50 @@ Features act as access control filters, defining the specific contexts in which 
 | **im_space_read**               | Ability to view space data                | feat_im_all              |
 | **im_space_write**              | Ability to modify space data              | feat_im_all              |
 | **im_mfa_force_otp**                | Ability to force MFA otp on a user        | feat_im_all              |
+
+#### Default permissions
+
+Every rule of IM requires a permission, acting on oneself included. Reading one's own account
+needs `im_user_self` (or `im_user_read`); modifying it, within the organization rule, needs
+`im_user_self` (or `im_user_write`); configuring its MFA needs `im_user_self`. Reading one's own
+organization, its members or the organization and user refs needs `im_organization_read_own`
+(or `im_organization_read` / `im_user_read`).
+
+Both are granted to every user by default, as composites of the realm's default role
+(`default-roles-<realm>`). Keycloak gives that role to every user it creates, through the
+admin API or self-registration, and to every client's service account (API keys included);
+IM keeps it when it reassigns a user's roles. Putting them on a user or admin role is
+therefore unnecessary, and would be lost each time IM rewrites that user's roles.
+
+Like every permission carrying `features`, they reach a token only when the client's scope
+holds `feat_im_all` or `feat_im_own` (see `UserRealmRoleFeatureMapper`): a full-scope client
+gets them, a client without full scope — a third-party application acting for the user —
+does not, and its token can neither read nor modify its own user or organization. A user
+whose roles hold neither feature gets neither permission, as for every other `feat_im_own`
+permission.
+
+**New realms**: `im-script` (`im.script.space.jsonCreate`) creates the permissions and adds
+them to the default role.
+
+**Existing realms**: re-run `im-script` with the realm's `space-create.json` as
+`im.script.space.jsonCreate`. The realm is kept as is; the script creates the IM permissions
+that are missing and adds those two to the default role if it does not hold them yet.
+Without that re-run, users of the realm lose access to their own account and organization
+through IM. If `im-script` cannot be run, do the same with `kcadm.sh`:
+
+```bash
+REALM=my-realm
+kcadm.sh config credentials --server "$KC_URL" --realm master --user "$KC_ROOT_USER" --password "$KC_ROOT_PASS"
+DEFAULT_ROLE=$(kcadm.sh get "realms/$REALM" --fields 'defaultRole(name)' | sed -n 's/^ *"name" : "\(.*\)",*$/\1/p')
+kcadm.sh create roles -r "$REALM" -s name=im_user_self \
+  -s "description=Ability to view and modify one's own account (profile, email, password, MFA)" \
+  -s 'attributes={"type":["PERMISSION"],"features":["[\"feat_im_all\"]","[\"feat_im_own\"]"]}'
+kcadm.sh create roles -r "$REALM" -s name=im_organization_read_own \
+  -s "description=Ability to view own organization data and its members" \
+  -s 'attributes={"type":["PERMISSION"],"features":["[\"feat_im_all\"]","[\"feat_im_own\"]"]}'
+kcadm.sh add-roles -r "$REALM" --rname "$DEFAULT_ROLE" \
+  --rolename im_user_self --rolename im_organization_read_own
+```
 
 ## Getting Started
 
