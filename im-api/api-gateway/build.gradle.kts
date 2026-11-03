@@ -15,6 +15,7 @@ dependencies {
 	implementation(project(":im-f2:space:im-space-api"))
 
 	implementation(catalogue.spring.boot.starter.function.http)
+	implementation(catalogue.spring.boot.exception.http.webflux)
 	implementation(libs.spring.boot.starter.webflux)
 
     testImplementation(libs.bundles.junit)
