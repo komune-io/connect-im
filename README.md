@@ -112,10 +112,11 @@ Features act as access control filters, defining the specific contexts in which 
 
 #### Default permissions
 
-Every rule of IM requires a permission, acting on oneself included: reading or modifying
-one's own account needs `im_user_self`, reading one's own organization, its members or the
-organization and user refs needs `im_organization_read_own` (or `im_organization_read` /
-`im_user_read`).
+Every rule of IM requires a permission, acting on oneself included. Reading one's own account
+needs `im_user_self` (or `im_user_read`); modifying it, within the organization rule, needs
+`im_user_self` (or `im_user_write`); configuring its MFA needs `im_user_self`. Reading one's own
+organization, its members or the organization and user refs needs `im_organization_read_own`
+(or `im_organization_read` / `im_user_read`).
 
 Both are granted to every user by default, as composites of the realm's default role
 (`default-roles-<realm>`). Keycloak gives that role to every user it creates, through the
@@ -142,14 +143,14 @@ through IM. If `im-script` cannot be run, do the same with `kcadm.sh`:
 ```bash
 REALM=my-realm
 kcadm.sh config credentials --server "$KC_URL" --realm master --user "$KC_ROOT_USER" --password "$KC_ROOT_PASS"
-kcadm.sh get "realms/$REALM" --fields defaultRole   # usually default-roles-$REALM
+DEFAULT_ROLE=$(kcadm.sh get "realms/$REALM" --fields 'defaultRole(name)' | sed -n 's/^ *"name" : "\(.*\)",*$/\1/p')
 kcadm.sh create roles -r "$REALM" -s name=im_user_self \
   -s "description=Ability to view and modify one's own account (profile, email, password, MFA)" \
   -s 'attributes={"type":["PERMISSION"],"features":["[\"feat_im_all\"]","[\"feat_im_own\"]"]}'
 kcadm.sh create roles -r "$REALM" -s name=im_organization_read_own \
   -s "description=Ability to view own organization data and its members" \
   -s 'attributes={"type":["PERMISSION"],"features":["[\"feat_im_all\"]","[\"feat_im_own\"]"]}'
-kcadm.sh add-roles -r "$REALM" --rname "default-roles-$REALM" \
+kcadm.sh add-roles -r "$REALM" --rname "$DEFAULT_ROLE" \
   --rolename im_user_self --rolename im_organization_read_own
 ```
 

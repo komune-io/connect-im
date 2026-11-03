@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
  * Reading one's own organization is a permission like any other, so that a token without
  * the IM features (a third-party application's) cannot read it.
  */
-class OrganizationPoliciesTest {
+internal class OrganizationPoliciesTest {
 
     private fun authed(memberOf: String?, vararg permissions: ImPermission) = AuthedUser(
         id = "u1",

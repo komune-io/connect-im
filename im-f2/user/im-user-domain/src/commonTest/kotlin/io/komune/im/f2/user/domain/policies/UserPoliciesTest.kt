@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
  * IM permissions guarded by a feature. Acting on oneself or on one's organization must
  * therefore require a permission too, or such a token could change its user's password.
  */
-class UserPoliciesTest {
+internal class UserPoliciesTest {
 
     private fun authed(id: String, memberOf: String?, vararg permissions: ImPermission) = AuthedUser(
         id = id,
@@ -50,6 +50,7 @@ class UserPoliciesTest {
     fun aUserReadsItselfOnlyWithTheSelfPermission() {
         assertTrue(UserPolicies.canGet(authed("u1", "o1", ImPermission.IM_MY_USER), me))
         assertFalse(UserPolicies.canGet(authed("u1", "o1"), me))
+        assertFalse(UserPolicies.canGet(authed("u1", "o1", ImPermission.IM_MY_ORGANIZATION_READ), me))
     }
 
     @Test

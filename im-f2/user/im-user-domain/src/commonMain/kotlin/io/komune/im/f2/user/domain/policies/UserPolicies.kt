@@ -126,6 +126,7 @@ object UserPolicies {
 
     private fun isMyOrganizationMember(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
         return authedUser.memberOf != null
+            && authedUser.id != user.id
             && user.memberOf?.id == authedUser.memberOf
             && authedUser.hasRole(ImPermission.IM_MY_ORGANIZATION_READ)
     }

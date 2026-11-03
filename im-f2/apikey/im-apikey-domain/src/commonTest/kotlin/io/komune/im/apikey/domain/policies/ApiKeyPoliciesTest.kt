@@ -6,7 +6,10 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class ApiKeyPoliciesTest {
+/**
+ * Reading an API key on identity alone needs the own-organization permission too.
+ */
+internal class ApiKeyPoliciesTest {
 
     private fun authed(memberOf: String?, vararg permissions: ImPermission) = AuthedUser(
         id = "u1",
