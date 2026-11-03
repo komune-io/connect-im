@@ -18,4 +18,5 @@ dependencies {
 	implementation(libs.spring.boot.starter.webflux)
 
     testImplementation(libs.bundles.junit)
+    testImplementation(libs.spring.boot.starter.test)
 }
