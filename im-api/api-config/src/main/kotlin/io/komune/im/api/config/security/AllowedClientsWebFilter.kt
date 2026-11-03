@@ -38,15 +38,13 @@ class AllowedClientsWebFilter(properties: IMProperties) : WebFilter {
         if (allowed.isEmpty()) return chain.filter(exchange)
         return ReactiveSecurityContextHolder.getContext()
             .mapNotNull { it.authentication }
-            .map { permits(it) }
+            .map { it.isPermitted() }
             .defaultIfEmpty(true)
             .flatMap { permitted -> if (permitted) chain.filter(exchange) else refuse(exchange) }
     }
 
-    fun permits(authentication: Authentication): Boolean {
-        if (authentication !is JwtAuthenticationToken) return true
-        return authentication.token.getClaimAsString(AUTHORIZED_PARTY) in allowed
-    }
+    private fun Authentication.isPermitted(): Boolean =
+        this !is JwtAuthenticationToken || token.getClaimAsString(AUTHORIZED_PARTY) in allowed
 
     private fun refuse(exchange: ServerWebExchange): Mono<Void> {
         logger.warn("Refused a token issued to a client outside the allowed list on {}", exchange.request.path)

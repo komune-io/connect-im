@@ -16,70 +16,74 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
 
-class AllowedClientsWebFilterTest {
+/**
+ * A token reaches the route only when its client (`azp`) is listed, or when the list is empty.
+ */
+internal class AllowedClientsWebFilterTest {
 
     @Test
     fun `a token of an allowed client passes`() {
-        val outcome = call(allowed = listOf("platform-app", "platform-web"), authentication = tokenOf("platform-web"))
+        val outcome = call(listOf(SERVICE, FRONT), tokenOf(FRONT))
         assertThat(outcome.passed).isTrue()
         assertThat(outcome.status).isNull()
     }
 
     @Test
     fun `a token of another client is refused with 403`() {
-        val outcome = call(allowed = listOf("platform-app"), authentication = tokenOf("platform-mcp"))
+        val outcome = call(listOf(SERVICE), tokenOf(ASSISTANT))
         assertThat(outcome.passed).isFalse()
         assertThat(outcome.status).isEqualTo(HttpStatus.FORBIDDEN)
     }
 
     @Test
     fun `a token without an authorized party is refused`() {
-        val outcome = call(allowed = listOf("platform-app"), authentication = tokenOf(null))
+        val outcome = call(listOf(SERVICE), tokenOf(null))
         assertThat(outcome.passed).isFalse()
         assertThat(outcome.status).isEqualTo(HttpStatus.FORBIDDEN)
     }
 
     @Test
     fun `an empty list lets every client through`() {
-        val outcome = call(allowed = emptyList(), authentication = tokenOf("platform-mcp"))
-        assertThat(outcome.passed).isTrue()
+        assertThat(call(emptyList(), tokenOf(ASSISTANT)).passed).isTrue()
     }
 
     @Test
     fun `blank entries do not turn the list on`() {
-        val outcome = call(allowed = listOf(" ", ""), authentication = tokenOf("platform-mcp"))
-        assertThat(outcome.passed).isTrue()
+        assertThat(call(listOf(" ", ""), tokenOf(ASSISTANT)).passed).isTrue()
     }
 
     @Test
     fun `entries are trimmed`() {
-        val outcome = call(allowed = listOf(" platform-app "), authentication = tokenOf("platform-app"))
-        assertThat(outcome.passed).isTrue()
+        assertThat(call(listOf(" $SERVICE "), tokenOf(SERVICE)).passed).isTrue()
     }
 
     @Test
     fun `a request without a token is left to the security rules`() {
-        val outcome = call(allowed = listOf("platform-app"), authentication = null)
-        assertThat(outcome.passed).isTrue()
+        assertThat(call(listOf(SERVICE), null).passed).isTrue()
     }
 
     @Test
     fun `an authentication that is not a token is left to the security rules`() {
-        val outcome = call(
-            allowed = listOf("platform-app"),
-            authentication = UsernamePasswordAuthenticationToken("someone", null, emptyList()),
-        )
+        val outcome = call(listOf(SERVICE), UsernamePasswordAuthenticationToken("someone", null, emptyList()))
         assertThat(outcome.passed).isTrue()
     }
 
     private class Outcome(val passed: Boolean, val status: HttpStatus?)
 
     private fun call(allowed: List<String>, authentication: Authentication?): Outcome {
-        val filter = AllowedClientsWebFilter(properties(allowed))
+        val filter = AllowedClientsWebFilter(
+            IMProperties(
+                organization = null,
+                user = null,
+                keycloak = KeycloakProperties(
+                    url = "http://keycloak", realm = "master", clientId = "im", clientSecret = "s",
+                ),
+                security = SecurityProperties(allowedClients = allowed),
+            )
+        )
         val exchange = MockServerWebExchange.from(MockServerHttpRequest.post("/userPage"))
         var passed = false
-        val chain = WebFilterChain { Mono.fromRunnable { passed = true } }
-        val run = filter.filter(exchange, chain)
+        val run = filter.filter(exchange, WebFilterChain { Mono.fromRunnable { passed = true } })
         val withIdentity = authentication
             ?.let { run.contextWrite(ReactiveSecurityContextHolder.withAuthentication(it)) }
             ?: run
@@ -94,10 +98,9 @@ class AllowedClientsWebFilterTest {
         return JwtAuthenticationToken(jwt)
     }
 
-    private fun properties(allowed: List<String>) = IMProperties(
-        organization = null,
-        user = null,
-        keycloak = KeycloakProperties(url = "http://keycloak", realm = "master", clientId = "im", clientSecret = "s"),
-        security = SecurityProperties(allowedClients = allowed),
-    )
+    private companion object {
+        const val SERVICE = "platform-app"
+        const val FRONT = "platform-web"
+        const val ASSISTANT = "platform-mcp"
+    }
 }
