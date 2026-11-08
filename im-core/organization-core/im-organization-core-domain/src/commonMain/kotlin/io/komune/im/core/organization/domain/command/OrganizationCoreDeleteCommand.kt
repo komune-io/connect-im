@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * @d2 command
  */
 @JsExport
-interface OrganizationDeleteCommandDTO: Command {
+interface OrganizationCoreDeleteCommandDTO: Command {
     /**
      * Id of the organization to delete.
      */
@@ -23,13 +23,13 @@ interface OrganizationDeleteCommandDTO: Command {
 @Serializable
 data class OrganizationCoreDeleteCommand(
     override val id: OrganizationId
-): OrganizationDeleteCommandDTO
+): OrganizationCoreDeleteCommandDTO
 
 /**
  * @d2 event
  */
 @JsExport
-interface OrganizationDeletedEventDTO: Event {
+interface OrganizationCoreDeletedEventDTO: Event {
     /**
      * Id of the deleted organization.
      */
@@ -42,4 +42,4 @@ interface OrganizationDeletedEventDTO: Event {
 @Serializable
 data class OrganizationCoreDeletedEvent(
     override val id: OrganizationId
-): OrganizationDeletedEventDTO
+): OrganizationCoreDeletedEventDTO

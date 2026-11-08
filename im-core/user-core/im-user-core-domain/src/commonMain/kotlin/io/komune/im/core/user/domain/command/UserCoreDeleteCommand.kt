@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
  * @d2 command
  */
 @JsExport
-interface UserDeleteCommandDTO {
+interface UserCoreDeleteCommandDTO {
     /**
      * Id of the user to delete.
      */
@@ -21,13 +21,13 @@ interface UserDeleteCommandDTO {
 @Serializable
 data class UserCoreDeleteCommand(
     override val id: UserId
-): UserDeleteCommandDTO
+): UserCoreDeleteCommandDTO
 
 /**
  * @d2 event
  */
 @JsExport
-interface UserDeletedEventDTO {
+interface UserCoreDeletedEventDTO {
     /**
      * Id of the deleted user.
      */
@@ -37,4 +37,4 @@ interface UserDeletedEventDTO {
 @Serializable
 data class UserCoreDeletedEvent(
     override val id: UserId
-): UserDeletedEventDTO
+): UserCoreDeletedEventDTO
