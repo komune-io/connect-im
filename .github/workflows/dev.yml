@@ -35,6 +35,7 @@ jobs:
       packages: write
     with:
       make-file: 'infra/make/libsJs.mk'
+      skip-tasks: ${{ github.event_name == 'schedule' && 'stage,promote' || '' }}
     secrets:
       FIXERS_PUBLISH_NPMJS_TOKEN: ${{ secrets.FIXERS_PUBLISH_NPMJS_TOKEN }}
       FIXERS_PUBLISH_GITHUB_USERNAME: ${{ github.actor }}
