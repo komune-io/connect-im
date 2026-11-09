@@ -118,7 +118,7 @@ class ApiKeyAggregateService(
         val client = keycloakClientProvider.getClient()
 
         val user = apiKeyFinderService.getUserOfKey(command.id)
-        val organizationId = user.memberOf!!
+        val organizationId = checkNotNull(user.memberOf) { "API key [${command.id}] belongs to no organization" }
 
         @Suppress("TooGenericExceptionCaught")
         try {

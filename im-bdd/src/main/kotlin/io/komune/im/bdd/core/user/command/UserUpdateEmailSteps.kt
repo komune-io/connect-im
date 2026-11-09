@@ -6,13 +6,12 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.user.data.user
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserUpdateEmailCommand
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
-class UserUpdateEmailSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+class UserUpdateEmailSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private lateinit var command: UserUpdateEmailCommand
 

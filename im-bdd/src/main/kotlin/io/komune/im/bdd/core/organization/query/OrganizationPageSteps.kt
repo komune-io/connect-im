@@ -5,12 +5,10 @@ import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.query.OrganizationPageQuery
-import org.springframework.beans.factory.annotation.Autowired
 
-class OrganizationPageSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var organizationEndpoint: OrganizationEndpoint
+class OrganizationPageSteps(
+    private val organizationEndpoint: OrganizationEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         DataTableType(::organizationPageParams)

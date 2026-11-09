@@ -74,19 +74,30 @@ fun userClient(
 @JsExport
 open class UserClient(private val client: F2Client): UserApi {
     override fun userGet(): UserGetFunction = client.function<UserGetQuery, UserGetResult>(this::userGet.name)
-    override fun userGetByEmail(): UserGetByEmailFunction = client.function<UserGetByEmailQuery, UserGetByEmailResult>(this::userGetByEmail.name)
-    override fun userExistsByEmail(): UserExistsByEmailFunction = client.function<UserExistsByEmailQuery, UserExistsByEmailResult>(this::userExistsByEmail.name)
+    override fun userGetByEmail(): UserGetByEmailFunction =
+        client.function<UserGetByEmailQuery, UserGetByEmailResult>(this::userGetByEmail.name)
+    override fun userExistsByEmail(): UserExistsByEmailFunction =
+        client.function<UserExistsByEmailQuery, UserExistsByEmailResult>(this::userExistsByEmail.name)
     override fun userPage(): UserPageFunction = client.function<UserPageQuery, UserPageResult>(this::userPage.name)
 
-    override fun userCreate(): UserCreateFunction = client.function<UserCreateCommand, UserCreatedEvent>(this::userCreate.name)
-    override fun userUpdate(): UserUpdateFunction = client.function<UserUpdateCommand, UserUpdatedEvent>(this::userUpdate.name)
-    override fun userResetPassword(): UserResetPasswordFunction = client.function<UserResetPasswordCommand, UserResetPasswordEvent>(this::userResetPassword.name)
-    override fun userUpdateEmail(): UserUpdateEmailFunction = client.function<UserUpdateEmailCommand, UserUpdatedEmailEvent>(this::userUpdateEmail.name)
-    override fun userUpdatePassword(): UserUpdatePasswordFunction = client.function<UserUpdatePasswordCommand, UserUpdatedPasswordEvent>(this::userUpdatePassword.name)
-    override fun userDisableMfa(): UserDisableMfaFunction = client.function<UserDisableMfaCommand, UserDisabledMfavent>(this::userDisableMfa.name)
+    override fun userCreate(): UserCreateFunction =
+        client.function<UserCreateCommand, UserCreatedEvent>(this::userCreate.name)
+    override fun userUpdate(): UserUpdateFunction =
+        client.function<UserUpdateCommand, UserUpdatedEvent>(this::userUpdate.name)
+    override fun userResetPassword(): UserResetPasswordFunction =
+        client.function<UserResetPasswordCommand, UserResetPasswordEvent>(this::userResetPassword.name)
+    override fun userUpdateEmail(): UserUpdateEmailFunction =
+        client.function<UserUpdateEmailCommand, UserUpdatedEmailEvent>(this::userUpdateEmail.name)
+    override fun userUpdatePassword(): UserUpdatePasswordFunction =
+        client.function<UserUpdatePasswordCommand, UserUpdatedPasswordEvent>(this::userUpdatePassword.name)
+    override fun userDisableMfa(): UserDisableMfaFunction =
+        client.function<UserDisableMfaCommand, UserDisabledMfavent>(this::userDisableMfa.name)
 
-    override fun userDisable(): UserDisableFunction = client.function<UserDisableCommand, UserDisabledEvent>(this::userDisable.name)
-    override fun userEnable(): UserEnableFunction = client.function<UserEnableCommand, UserEnabledEvent>(this::userEnable.name)
+    override fun userDisable(): UserDisableFunction =
+        client.function<UserDisableCommand, UserDisabledEvent>(this::userDisable.name)
+    override fun userEnable(): UserEnableFunction =
+        client.function<UserEnableCommand, UserEnabledEvent>(this::userEnable.name)
 
-    override fun userDelete(): UserDeleteFunction = client.function<UserDeleteCommand, UserDeletedEvent>(this::userDelete.name)
+    override fun userDelete(): UserDeleteFunction =
+        client.function<UserDeleteCommand, UserDeletedEvent>(this::userDelete.name)
 }

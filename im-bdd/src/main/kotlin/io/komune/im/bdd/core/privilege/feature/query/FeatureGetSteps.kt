@@ -5,13 +5,11 @@ import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.privilege.api.FeatureEndpoint
 import io.komune.im.f2.privilege.domain.feature.query.FeatureGetQuery
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.data.TestContextKey
 
-class FeatureGetSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var featureEndpoint: FeatureEndpoint
+class FeatureGetSteps(
+    private val featureEndpoint: FeatureEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         DataTableType(::featureGetParams)

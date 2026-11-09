@@ -23,7 +23,9 @@ import org.springframework.test.web.reactive.server.WebTestClient
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     properties = ["f2.tenant.issuer-base-uri="],
 )
-class F2ErrorStatusTest {
+class F2ErrorStatusTest(
+    @LocalServerPort private val port: Int,
+) {
 
     @SpringBootConfiguration
     @EnableAutoConfiguration
@@ -63,9 +65,6 @@ class F2ErrorStatusTest {
             error("unexpected")
         }
     }
-
-    @LocalServerPort
-    private var port: Int = 0
 
     data class Query(val id: String)
 

@@ -12,14 +12,12 @@ import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.f2.privilege.api.RoleEndpoint
 import io.komune.im.f2.privilege.domain.role.command.RoleDefineCommand
 import java.util.UUID
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.parser.extractList
 
-class RoleDefineSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var roleEndpoint: RoleEndpoint
+class RoleDefineSteps(
+    private val roleEndpoint: RoleEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private lateinit var command: RoleDefineCommand
 
@@ -89,7 +87,7 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
                 ?: context.roleIdentifiers.lastUsedOrNull.orRandom(),
             description = entry?.get(RoleDefineParams::description.name) ?: UUID.randomUUID().toString(),
             targets = entry?.extractList<RoleTarget>(RoleDefineParams::targets.name).orEmpty(),
-            locale = entry?.get(RoleDefineParams::locale.name)?.parseJson() ?: emptyMap(),
+            locale = entry?.get(RoleDefineParams::locale.name)?.parseJson<Map<String, String>>().orEmpty(),
             bindings = entry?.get(RoleDefineParams::bindings.name)
                 ?.parseJson<Map<String, List<RoleIdentifier>>>()
                 ?.mapKeys { (key) -> RoleTarget.valueOf(key) },

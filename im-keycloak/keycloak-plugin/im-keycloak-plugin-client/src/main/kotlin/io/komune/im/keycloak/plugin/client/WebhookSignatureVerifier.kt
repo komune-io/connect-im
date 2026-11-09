@@ -1,5 +1,6 @@
 package io.komune.im.keycloak.plugin.client
 
+import java.util.Locale
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -51,7 +52,7 @@ class WebhookSignatureVerifier(
         val secretKey = SecretKeySpec(secret.toByteArray(), "HmacSHA256")
         mac.init(secretKey)
         val hash = mac.doFinal(payload.toByteArray())
-        return hash.joinToString("") { "%02x".format(it) }
+        return hash.joinToString("") { "%02x".format(Locale.ROOT, it) }
     }
 
     /**

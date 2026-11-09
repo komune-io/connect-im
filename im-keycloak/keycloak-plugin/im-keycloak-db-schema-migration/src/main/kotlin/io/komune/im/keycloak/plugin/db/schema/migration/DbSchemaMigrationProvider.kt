@@ -4,7 +4,7 @@ import io.komune.im.keycloak.plugin.domain.model.KeycloakPluginIds
 import org.keycloak.connections.jpa.entityprovider.JpaEntityProvider
 
 
-public class DbSchemaMigrationProvider: JpaEntityProvider {
+class DbSchemaMigrationProvider: JpaEntityProvider {
 
     override fun getEntities(): List<Class<*>> {
         return emptyList()

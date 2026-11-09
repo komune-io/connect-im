@@ -7,12 +7,10 @@ import io.komune.im.f2.space.api.SpaceEndpoint
 import io.komune.im.f2.space.domain.model.Space
 import io.komune.im.f2.space.domain.query.SpaceGetQuery
 import org.assertj.core.api.Assertions
-import org.springframework.beans.factory.annotation.Autowired
 
-class SpaceGetSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var spaceEndpoint: SpaceEndpoint
+class SpaceGetSteps(
+    private val spaceEndpoint: SpaceEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private var fetched: Space? = null
 

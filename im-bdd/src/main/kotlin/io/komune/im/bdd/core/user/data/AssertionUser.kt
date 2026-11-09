@@ -34,7 +34,7 @@ class AssertionUser(
 
     override suspend fun assertThat(entity: UserRepresentation) = UserAssert(entity)
 
-    suspend fun notExistsByEmail(email: String) {
+    fun notExistsByEmail(email: String) {
         Assertions.assertThat(getByEmail(email)).isNull()
     }
 
@@ -46,8 +46,8 @@ class AssertionUser(
         private val user: UserRepresentation
     ) {
         private val singleAttributes = user.attributes.orEmpty()
-            .mapValues { (_, values) -> values.firstOrNull() }
-            .filterValues { !it.isNullOrBlank() } as Map<String, String>
+            .mapNotNull { (key, values) -> values.firstOrNull()?.takeIf { it.isNotBlank() }?.let { key to it } }
+            .toMap()
 
         private val userMemberOf: OrganizationId? = singleAttributes[User::memberOf.name]
         private val userAddress: Address? = singleAttributes[User::address.name]?.parseJson()

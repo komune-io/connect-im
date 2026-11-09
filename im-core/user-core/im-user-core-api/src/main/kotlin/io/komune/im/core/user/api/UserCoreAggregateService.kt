@@ -179,7 +179,7 @@ class UserCoreAggregateService(
         UserCoreDeletedEvent(command.id)
     }
 
-    private suspend fun UserRepresentation.apply(
+    private fun UserRepresentation.apply(
         client: KeycloakClient,
         command: UserCoreDefineCommand
     ): UserRepresentation {
@@ -212,13 +212,13 @@ class UserCoreAggregateService(
         }
     }
 
-    private suspend fun getIsRegistrationEmailAsUsername(client: KeycloakClient): Boolean {
+    private fun getIsRegistrationEmailAsUsername(client: KeycloakClient): Boolean {
         val emailAsUsername = properties.user?.emailAsUsername
             ?: fetchIsRegistrationEmailAsUsername(client) ?: false
         return emailAsUsername
     }
 
-    private suspend fun fetchIsRegistrationEmailAsUsername(client: KeycloakClient): Boolean? {
+    private fun fetchIsRegistrationEmailAsUsername(client: KeycloakClient): Boolean? {
        return client.realm().toRepresentation()?.let {
             logger.info(
                 "Using realm[${it.displayName}] configuration " +
@@ -228,7 +228,7 @@ class UserCoreAggregateService(
         }
     }
 
-    private suspend fun UserRepresentation.assignRoles(client: KeycloakClient, roles: List<RoleRepresentation>) {
+    private fun UserRepresentation.assignRoles(client: KeycloakClient, roles: List<RoleRepresentation>) {
         with(client.user(id).roles().realmLevel()) {
             val allRoles = listAll()
             logger.info("All roles: ${allRoles.map { it.name }}")

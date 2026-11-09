@@ -4,7 +4,7 @@ data class IMApiError(
 	override val description: String,
 	override val payload: Map<String, String>,
 ): IMError(
-	type = IMApiError::class.simpleName!!,
+	type = "IMApiError",
 	description = description,
 	payload = payload,
 )

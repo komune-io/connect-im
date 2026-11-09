@@ -63,15 +63,22 @@ fun privilegeClient(
 
 @JsExport
 open class PrivilegeClient(private val client: F2Client): FeatureApi, RoleApi, PermissionApi {
-    override fun featureDefine(): FeatureDefineFunction = client.function<FeatureDefineCommand, FeatureDefinedEvent>(this::featureDefine.name)
-    override fun featureGet(): FeatureGetFunction = client.function<FeatureGetQuery, FeatureGetResult>(this::featureGet.name)
-    override fun featureList(): FeatureListFunction = client.function<FeatureListQuery, FeatureListResult>(this::featureList.name)
+    override fun featureDefine(): FeatureDefineFunction =
+        client.function<FeatureDefineCommand, FeatureDefinedEvent>(this::featureDefine.name)
+    override fun featureGet(): FeatureGetFunction =
+        client.function<FeatureGetQuery, FeatureGetResult>(this::featureGet.name)
+    override fun featureList(): FeatureListFunction =
+        client.function<FeatureListQuery, FeatureListResult>(this::featureList.name)
 
-    override fun permissionDefine(): PermissionDefineFunction = client.function<PermissionDefineCommand, PermissionDefinedEvent>(this::permissionDefine.name)
-    override fun permissionGet(): PermissionGetFunction = client.function<PermissionGetQuery, PermissionGetResult>(this::permissionGet.name)
-    override fun permissionList(): PermissionListFunction = client.function<PermissionListQuery, PermissionListResult>(this::permissionList.name)
+    override fun permissionDefine(): PermissionDefineFunction =
+        client.function<PermissionDefineCommand, PermissionDefinedEvent>(this::permissionDefine.name)
+    override fun permissionGet(): PermissionGetFunction =
+        client.function<PermissionGetQuery, PermissionGetResult>(this::permissionGet.name)
+    override fun permissionList(): PermissionListFunction =
+        client.function<PermissionListQuery, PermissionListResult>(this::permissionList.name)
 
-    override fun roleDefine(): RoleDefineFunction = client.function<RoleDefineCommand, RoleDefinedEvent>(this::roleDefine.name)
+    override fun roleDefine(): RoleDefineFunction =
+        client.function<RoleDefineCommand, RoleDefinedEvent>(this::roleDefine.name)
     override fun roleGet(): RoleGetFunction = client.function<RoleGetQuery, RoleGetResult>(this::roleGet.name)
     override fun roleList(): RoleListFunction = client.function<RoleListQuery, RoleListResult>(this::roleList.name)
 }

@@ -37,7 +37,6 @@ import io.komune.im.f2.user.lib.UserFinderService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
@@ -47,9 +46,8 @@ class OrganizationAggregateService(
     private val privilegeCoreFinderService: PrivilegeCoreFinderService,
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService,
+    private val fileClient: FileClient?,
 ) {
-    @Autowired(required = false)
-    private lateinit var fileClient: FileClient
 
     suspend fun create(command: OrganizationCreateCommand): OrganizationCreatedEvent = coroutineScope {
         checkRoles(command.roles.orEmpty())
@@ -95,13 +93,10 @@ class OrganizationAggregateService(
         return OrganizationUpdatedResult(command.id)
     }
 
-    @Suppress("UseCheckOrError")
     suspend fun uploadLogo(command: OrganizationUploadLogoCommand, file: ByteArray): OrganizationUploadedLogoEvent {
-        if (!::fileClient.isInitialized) {
-            throw IllegalStateException("FileClient not initialized.")
-        }
+        val client = checkNotNull(fileClient) { "FileClient not initialized." }
 
-        val event = fileClient.fileUpload(
+        val event = client.fileUpload(
             command = FileUploadCommand(
                 path = OrganizationFsConfig.pathForOrganization(command.id),
             ), file = file

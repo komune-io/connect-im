@@ -51,7 +51,8 @@ class RoleSerializationTest {
 
     @Test
     fun olderPayloadsWithoutTypeStillDecode() {
-        val withoutType = """{"id":"role-1","identifier":"r","description":"d","targets":[],"locale":{},"bindings":{},"permissions":[]}"""
+        val withoutType = """{"id":"role-1","identifier":"r","description":"d",""" +
+            """"targets":[],"locale":{},"bindings":{},"permissions":[]}"""
 
         val decoded = json.decodeFromString(Role.serializer(), withoutType)
 

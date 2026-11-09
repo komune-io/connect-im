@@ -102,7 +102,7 @@ class SpaceAggregateService(
 
     }
 
-    private suspend fun KeycloakClient.enableUserAttributes(realm: String) {
+    private fun KeycloakClient.enableUserAttributes(realm: String) {
         logger.info("Enabling user attributes for realm: $realm")
         val realmUserProfile = realm(realm).users().userProfile()
         val upConfiguration = realmUserProfile.configuration

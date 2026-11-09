@@ -34,8 +34,8 @@ class AssertionOrganization(
     ) {
         private val groupAttributes = group.attributes.orEmpty()
         private val singleAttributes = groupAttributes
-            .mapValues { (_, values) -> values.firstOrNull() }
-            .filterValues { !it.isNullOrBlank() } as Map<String, String>
+            .mapNotNull { (key, values) -> values.firstOrNull()?.takeIf { it.isNotBlank() }?.let { key to it } }
+            .toMap()
 
         private val groupSiret: String? = singleAttributes[Organization::siret.name]
         private val groupDescription: String? = singleAttributes[Organization::description.name]

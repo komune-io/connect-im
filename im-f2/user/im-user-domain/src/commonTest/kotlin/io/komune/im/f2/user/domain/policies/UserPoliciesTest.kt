@@ -141,8 +141,8 @@ internal class UserPoliciesTest {
     fun disablingMfaStillNeedsAnOtpLogin() {
         val token = authed("u1", "o1", ImPermission.IM_MY_USER)
 
-        assertFalse(UserPolicies.canDisableMfaAcr(token, me))
-        assertTrue(UserPolicies.canDisableMfaAcr(token.copy(acr = ImMfaPasswordOtpFlowAcr.PASSWORD_OTP.key), me))
+        assertFalse(UserPolicies.canDisableMfaAcr(token))
+        assertTrue(UserPolicies.canDisableMfaAcr(token.copy(acr = ImMfaPasswordOtpFlowAcr.PASSWORD_OTP.key)))
     }
 
     @Test

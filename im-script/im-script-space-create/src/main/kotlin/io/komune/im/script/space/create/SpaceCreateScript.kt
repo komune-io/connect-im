@@ -168,7 +168,9 @@ class SpaceCreateScript(
         ).let { userAggregateService.create(it).id }
 
         val client = keycloakClientProvider.getClient()
-        val realmManagementClientId = client.getClientByIdentifier("realm-management")!!.id
+        val realmManagementClientId = checkNotNull(client.getClientByIdentifier("realm-management")) {
+            "Client [realm-management] not found"
+        }.id
         val realmAdminRole = client.role("realm-admin").toRepresentation()
         client.user(userId).roles().clientLevel(realmManagementClientId).add(listOf(realmAdminRole))
     }

@@ -28,20 +28,14 @@ data class AuthedUser(
 ) : AuthedUserDTO
 
 fun AuthedUserDTO.hasAcr(acrValue: String) = acr == acrValue
-fun AuthedUserDTO.hasRole(role: String) = role in (roles ?: emptyArray())
+fun AuthedUserDTO.hasRole(role: String) = role in roles.orEmpty()
 fun AuthedUserDTO.hasRole(role: ImPermission) = hasRole(role.identifier)
-fun AuthedUserDTO.hasRoles(vararg roles: String): Boolean {
-    val myRoles = this.roles ?: emptyArray()
-    return roles.all(myRoles::contains)
-}
+fun AuthedUserDTO.hasRoles(vararg roles: String): Boolean = roles.all(this.roles.orEmpty()::contains)
 
-fun AuthedUserDTO.hasRoles(vararg roles: ImPermission) =
-    hasRoles(*roles.map(ImPermission::identifier).toTypedArray())
+fun AuthedUserDTO.hasRoles(vararg roles: ImPermission): Boolean =
+    roles.map(ImPermission::identifier).all(this.roles.orEmpty()::contains)
 
-fun AuthedUserDTO.hasOneOfRoles(vararg roles: String): Boolean {
-    val myRoles = this.roles ?: emptyArray()
-    return roles.any(myRoles::contains)
-}
+fun AuthedUserDTO.hasOneOfRoles(vararg roles: String): Boolean = roles.any(this.roles.orEmpty()::contains)
 
-fun AuthedUserDTO.hasOneOfRoles(vararg roles: ImPermission) =
-    hasOneOfRoles(*roles.map(ImPermission::identifier).toTypedArray())
+fun AuthedUserDTO.hasOneOfRoles(vararg roles: ImPermission): Boolean =
+    roles.map(ImPermission::identifier).any(this.roles.orEmpty()::contains)

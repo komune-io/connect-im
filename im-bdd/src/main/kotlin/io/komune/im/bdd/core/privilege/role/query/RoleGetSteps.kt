@@ -5,13 +5,11 @@ import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.privilege.api.RoleEndpoint
 import io.komune.im.f2.privilege.domain.role.query.RoleGetQuery
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.data.TestContextKey
 
-class RoleGetSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var roleEndpoint: RoleEndpoint
+class RoleGetSteps(
+    private val roleEndpoint: RoleEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         DataTableType(::roleGetParams)

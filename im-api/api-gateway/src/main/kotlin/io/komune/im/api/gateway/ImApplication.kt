@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.EnableCaching
 @SpringBootApplication(scanBasePackages = ["io.komune.im"])
 class ImApplication
 
-fun main(args: Array<String>) {
+fun main(vararg args: String) {
 	SpringApplication(ImApplication::class.java).run {
 		run(*args)
 	}

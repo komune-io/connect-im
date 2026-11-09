@@ -103,7 +103,7 @@ class ClientInitService(
     private fun AppClient.buildRedirectUrl(): List<String> {
         val redirectUrls = this.homeUrl?.addWildcard()
             ?.let { redirectUrl -> listOf(redirectUrl) }
-            ?: emptyList()
+            .orEmpty()
         return redirectUrls
     }
 

@@ -6,12 +6,10 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.query.UserPageQuery
-import org.springframework.beans.factory.annotation.Autowired
 
-class UserPageSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+class UserPageSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         DataTableType(::userPageParams)

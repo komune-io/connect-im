@@ -6,8 +6,8 @@ import org.keycloak.representations.idm.GroupRepresentation
 
 fun GroupRepresentation.toOrganization(): OrganizationModel {
     val singleAttributes = attributes
-        .mapValues { (_, values) -> values.firstOrNull() }
-        .filterValues { !it.isNullOrBlank() } as Map<String, String>
+        .mapNotNull { (key, values) -> values.firstOrNull()?.takeIf { it.isNotBlank() }?.let { key to it } }
+        .toMap()
 
     return OrganizationModel(
         id = id,

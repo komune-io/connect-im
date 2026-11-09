@@ -45,7 +45,9 @@ class ApiKeyFinderService(
 
     suspend fun getOrNull(id: ApiKeyId): ApiKey? {
         val user = getUserOfKey(id)
-        val organization = organizationCoreFinderService.get(user.memberOf!!)
+        val organization = organizationCoreFinderService.get(
+            checkNotNull(user.memberOf) { "API key [$id] belongs to no organization" }
+        )
         return organization.apiKeys()
             .firstOrNull { it.id == id }
             ?.let { apiKeyToDTOTransformer.transform(it) }
@@ -99,6 +101,6 @@ class ApiKeyFinderService(
     }
 
     private fun List<ApiKeyModel>.filteredByName(search: String?): List<ApiKeyModel> {
-        return search?.let { this.filter { it.name.contains(search, true) } } ?: this
+        return search?.let { this.filter { apiKey -> apiKey.name.contains(search, true) } } ?: this
     }
 }

@@ -40,7 +40,7 @@ class ImTestContext: TestContext() {
         .plus("offline_access")
         .toSet()
 
-    suspend fun permanentRoles(space: String? = realmId) = permanentRoles + "default-roles-${space}"
+    fun permanentRoles(space: String? = realmId) = permanentRoles + "default-roles-${space}"
 
     final var fetched = FetchContext()
         private set

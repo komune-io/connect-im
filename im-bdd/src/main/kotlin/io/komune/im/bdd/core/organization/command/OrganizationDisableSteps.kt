@@ -10,13 +10,12 @@ import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.command.OrganizationDisableCommand
 import io.komune.im.f2.organization.domain.command.OrganizationDisabledEvent
 import org.assertj.core.api.Assertions
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
-class OrganizationDisableSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var organizationEndpoint: OrganizationEndpoint
+class OrganizationDisableSteps(
+    private val organizationEndpoint: OrganizationEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private lateinit var command: OrganizationDisableCommand
     private lateinit var event: OrganizationDisabledEvent

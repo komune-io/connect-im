@@ -10,6 +10,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.serialization.jackson.jackson
+import java.util.Locale
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -44,6 +45,6 @@ object WebhookClient {
         val secretKey = SecretKeySpec(secret.toByteArray(), "HmacSHA256")
         mac.init(secretKey)
         val hash = mac.doFinal(payload.toByteArray())
-        return hash.joinToString("") { "%02x".format(it) }
+        return hash.joinToString("") { "%02x".format(Locale.ROOT, it) }
     }
 }

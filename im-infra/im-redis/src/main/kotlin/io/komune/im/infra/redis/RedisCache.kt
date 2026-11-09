@@ -1,7 +1,9 @@
 package io.komune.im.infra.redis
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
@@ -12,10 +14,11 @@ import tools.jackson.module.kotlin.readValue
 class RedisCache(
     val cacheManager: CacheManager?,
     val objectMapper: ObjectMapper,
+    val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     companion object {
-        val logger = LoggerFactory.getLogger(RedisCache::class.java)
+        val logger: Logger = LoggerFactory.getLogger(RedisCache::class.java)
     }
 
     suspend fun <T> evictIfPresent(cacheName: CacheName, vararg id: String, exec: suspend () -> T): T {
@@ -52,7 +55,7 @@ class RedisCache(
         cache: Cache,
         key: SimpleKey,
     ) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             val json = objectMapper.writeValueAsString(newVal)
             cache.put(key, json)
         }

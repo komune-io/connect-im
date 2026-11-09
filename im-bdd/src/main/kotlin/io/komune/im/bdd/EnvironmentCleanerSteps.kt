@@ -41,7 +41,7 @@ class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
         }
     }
 
-    private suspend fun KeycloakClient.cleanKeycloakRoles() {
+    private fun KeycloakClient.cleanKeycloakRoles() {
         roles().list().filter { role ->
             role.name !in context.permanentRoles()
         }.forEach { role ->

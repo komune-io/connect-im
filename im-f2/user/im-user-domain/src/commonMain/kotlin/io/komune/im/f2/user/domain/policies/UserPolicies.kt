@@ -69,7 +69,7 @@ object UserPolicies {
     /**
      * User can disable mfa
      */
-    fun canDisableMfaAcr(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
+    fun canDisableMfaAcr(authedUser: AuthedUserDTO): Boolean {
         return authedUser.hasAcr(ImMfaPasswordOtpFlowAcr.PASSWORD_OTP.key)
     }
 

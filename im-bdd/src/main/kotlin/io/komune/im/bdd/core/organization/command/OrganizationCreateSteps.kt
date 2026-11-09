@@ -11,14 +11,13 @@ import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.command.OrganizationCreateCommand
 import io.komune.im.f2.organization.domain.model.OrganizationStatus
 import java.util.UUID
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extract
 
-class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var organizationEndpoint: OrganizationEndpoint
+class OrganizationCreateSteps(
+    private val organizationEndpoint: OrganizationEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private lateinit var command: OrganizationCreateCommand
 
@@ -67,7 +66,7 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
                     address = command.address,
                     website = command.website,
                     roles = command.roles,
-                    attributes = command.attributes ?: emptyMap(),
+                    attributes = command.attributes.orEmpty(),
                     status = command.status
                 )
             }

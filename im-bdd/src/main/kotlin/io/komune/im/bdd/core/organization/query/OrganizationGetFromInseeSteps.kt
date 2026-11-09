@@ -7,12 +7,10 @@ import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.model.Organization
 import io.komune.im.f2.organization.domain.query.OrganizationGetFromInseeQuery
 import org.assertj.core.api.Assertions
-import org.springframework.beans.factory.annotation.Autowired
 
-class OrganizationGetFromInseeSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var organizationEndpoint: OrganizationEndpoint
+class OrganizationGetFromInseeSteps(
+    private val organizationEndpoint: OrganizationEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private var organizationFromInsee: Organization? = null
 
@@ -33,10 +31,10 @@ class OrganizationGetFromInseeSteps: En, ImCucumberStepsDefinition() {
 
         Then("I should receive the organization from Insee") {
             step {
-                Assertions.assertThat(organizationFromInsee).isNotNull
-                Assertions.assertThat(organizationFromInsee!!.name).isNotNull
-                Assertions.assertThat(organizationFromInsee!!.siret).isNotNull
-                Assertions.assertThat(organizationFromInsee!!.attributes["original"]).isNotNull
+                val organization = checkNotNull(organizationFromInsee) { "No organization received from Insee" }
+                Assertions.assertThat(organization.name).isNotNull
+                Assertions.assertThat(organization.siret).isNotNull
+                Assertions.assertThat(organization.attributes["original"]).isNotNull
             }
         }
 

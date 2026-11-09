@@ -63,18 +63,28 @@ fun organizationClient(
 @JsExport
 open class OrganizationClient(private val client: F2Client) : OrganizationApi {
 
-    override fun organizationGet(): OrganizationGetFunction = client.function<OrganizationGetQuery, OrganizationGetResult>(this::organizationGet.name)
-    override fun organizationRefGet(): OrganizationRefGetFunction = client.function<OrganizationRefGetQuery, OrganizationRefGetResult>(this::organizationRefGet.name)
+    override fun organizationGet(): OrganizationGetFunction =
+        client.function<OrganizationGetQuery, OrganizationGetResult>(this::organizationGet.name)
+    override fun organizationRefGet(): OrganizationRefGetFunction =
+        client.function<OrganizationRefGetQuery, OrganizationRefGetResult>(this::organizationRefGet.name)
 
     override fun organizationGetFromInsee(): OrganizationGetFromInseeFunction =
-        client.function<OrganizationGetFromInseeQuery, OrganizationGetFromInseeResult>(this::organizationGetFromInsee.name)
+        client.function<OrganizationGetFromInseeQuery, OrganizationGetFromInseeResult>(
+            this::organizationGetFromInsee.name
+        )
 
-    override fun organizationPage(): OrganizationPageFunction = client.function<OrganizationPageQuery, OrganizationPageResult>(this::organizationPage.name)
-    override fun organizationRefList(): OrganizationRefListFunction = client.function<OrganizationRefListQuery, OrganizationRefListResult>(this::organizationRefList.name)
+    override fun organizationPage(): OrganizationPageFunction =
+        client.function<OrganizationPageQuery, OrganizationPageResult>(this::organizationPage.name)
+    override fun organizationRefList(): OrganizationRefListFunction =
+        client.function<OrganizationRefListQuery, OrganizationRefListResult>(this::organizationRefList.name)
 
-    override fun organizationCreate(): OrganizationCreateFunction = client.function<OrganizationCreateCommand, OrganizationCreatedEvent>(this::organizationCreate.name)
-    override fun organizationUpdate(): OrganizationUpdateFunction = client.function<OrganizationUpdateCommand, OrganizationUpdatedResult>(this::organizationUpdate.name)
-    override fun organizationDisable(): OrganizationDisableFunction = client.function<OrganizationDisableCommand, OrganizationDisabledEvent>(this::organizationDisable.name)
-    override fun organizationDelete(): OrganizationDeleteFunction = client.function<OrganizationDeleteCommand, OrganizationDeletedEvent>(this::organizationDelete.name)
+    override fun organizationCreate(): OrganizationCreateFunction =
+        client.function<OrganizationCreateCommand, OrganizationCreatedEvent>(this::organizationCreate.name)
+    override fun organizationUpdate(): OrganizationUpdateFunction =
+        client.function<OrganizationUpdateCommand, OrganizationUpdatedResult>(this::organizationUpdate.name)
+    override fun organizationDisable(): OrganizationDisableFunction =
+        client.function<OrganizationDisableCommand, OrganizationDisabledEvent>(this::organizationDisable.name)
+    override fun organizationDelete(): OrganizationDeleteFunction =
+        client.function<OrganizationDeleteCommand, OrganizationDeletedEvent>(this::organizationDelete.name)
 
 }

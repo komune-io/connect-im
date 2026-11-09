@@ -40,8 +40,9 @@ class PolicyEnforcerTest {
         val recording = F2Function<String, String> { msgs -> msgs.map { handled.add(it); it } }
         val guarded = enforce(recording) { error("denied") }
 
-        runCatching { guarded.invoke(flowOf("a")).toList() }
+        val outcome = runCatching { guarded.invoke(flowOf("a")).toList() }
 
+        assertThat(outcome.exceptionOrNull()).hasMessage("denied")
         assertThat(handled).isEmpty()
     }
 
@@ -60,8 +61,9 @@ class PolicyEnforcerTest {
         val recording = F2Function<String, String> { msgs -> msgs.map { handled.add(it); it } }
         val guarded = verify(recording) { error("denied") }
 
-        runCatching { guarded.invoke(flowOf("a")).toList() }
+        val outcome = runCatching { guarded.invoke(flowOf("a")).toList() }
 
+        assertThat(outcome.exceptionOrNull()).hasMessage("denied")
         assertThat(handled).isEmpty()
     }
 

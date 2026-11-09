@@ -74,9 +74,7 @@ private fun match(field: String?, matcher: StringMatch): Boolean {
 }
 
 private fun <F> match(field: F, matcher: ComparableMatch<F>): Boolean {
-    if (field !is Comparable<*>) {
-        throw IllegalArgumentException("Field with value [${field}] cannot be compared")
-    }
+    require(field is Comparable<*>) { "Field with value [${field}] cannot be compared" }
     @Suppress("UNCHECKED_CAST")
     field as Comparable<F>
 

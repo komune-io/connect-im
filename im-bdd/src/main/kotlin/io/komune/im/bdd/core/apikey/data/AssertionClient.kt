@@ -38,9 +38,8 @@ class AssertionClient(
     override suspend fun assertThat(entity: ClientRepresentation) = ClientAssert(entity)
 
     suspend fun assertThatIdentifier(identifier: ClientIdentifier): ClientAssert {
-        val entity = findByIdentifier(identifier)
-        Assertions.assertThat(entity).isNotNull
-        return assertThat(entity!!)
+        val entity = checkNotNull(findByIdentifier(identifier)) { "Client [$identifier] not found" }
+        return assertThat(entity)
     }
 
     inner class ClientAssert(

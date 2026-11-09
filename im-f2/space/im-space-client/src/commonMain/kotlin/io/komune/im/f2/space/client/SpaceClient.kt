@@ -46,8 +46,10 @@ fun spaceClient(
 
 @JsExport
 open class SpaceClient(private val client: F2Client): SpaceApi {
-    override fun spaceDefine(): SpaceDefineFunction = client.function<SpaceDefineCommand, SpaceDefinedEvent>(this::spaceDefine.name)
-    override fun spaceDelete(): SpaceDeleteFunction = client.function<SpaceDeleteCommand, SpaceDeletedEvent>(this::spaceDelete.name)
+    override fun spaceDefine(): SpaceDefineFunction =
+        client.function<SpaceDefineCommand, SpaceDefinedEvent>(this::spaceDefine.name)
+    override fun spaceDelete(): SpaceDeleteFunction =
+        client.function<SpaceDeleteCommand, SpaceDeletedEvent>(this::spaceDelete.name)
     override fun spaceGet(): SpaceGetFunction = client.function<SpaceGetQuery, SpaceGetResult>(this::spaceGet.name)
     override fun spacePage(): SpacePageFunction = client.function<SpacePageQuery, SpacePageResult>(this::spacePage.name)
 }

@@ -14,7 +14,7 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.parametersOf
 
-abstract class ClientJvm(
+open class ClientJvm(
     baseUrl: String,
     httpClientBuilder: HttpClientBuilder = httpClientBuilder(),
     generateBearerToken: suspend () -> String? = { null },
@@ -86,10 +86,9 @@ open class Client(
         withAuth: Boolean
     ) {
         basicSetup(path, withAuth)
-        val parameters = formData.map { (key, value) -> key to listOf(value) }
-            .toTypedArray()
+        val parameters = formData.mapValues { (_, value) -> listOf(value) }
 
-        setBody(FormDataContent(parametersOf(*parameters)))
+        setBody(FormDataContent(parametersOf(parameters)))
     }
 
     protected suspend fun HttpRequestBuilder.basicSetup(path: String, withAuth: Boolean) {

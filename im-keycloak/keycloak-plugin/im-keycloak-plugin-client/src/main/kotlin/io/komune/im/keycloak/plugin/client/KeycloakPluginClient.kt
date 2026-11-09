@@ -40,7 +40,7 @@ class KeycloakPluginClient(
                 "?client_id=${clientId}" +
                 "&action=${action}" +
                 "&user_id=${userId}" +
-                (redirectUri?.let { "&redirect_uri=$it" } ?: "")
+                redirectUri?.let { "&redirect_uri=$it" }.orEmpty()
         ) {
             header("Content-Type", ContentType.Application.Json)
             header("Authorization", "Bearer $bearerToken")
@@ -56,8 +56,8 @@ class KeycloakPluginClient(
                     "grant_type" to "client_credentials",
                     "client_id" to clientId,
                     "client_secret" to clientSecret
-                ).map { (key, value) -> key to listOf(value) }
-                    .let { FormDataContent(parametersOf(*it.toTypedArray())) }
+                ).mapValues { (_, value) -> listOf(value) }
+                    .let { FormDataContent(parametersOf(it)) }
             )
         }.body<AccessTokenResponse>().token
     }

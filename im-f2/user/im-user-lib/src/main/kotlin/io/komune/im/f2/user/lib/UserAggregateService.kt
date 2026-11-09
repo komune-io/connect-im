@@ -42,7 +42,6 @@ import io.komune.im.f2.user.domain.command.UserUpdatedEmailEvent
 import io.komune.im.f2.user.domain.command.UserUpdatedEvent
 import io.komune.im.f2.user.domain.command.UserUpdatedPasswordEvent
 import io.komune.im.f2.user.domain.model.UserDTO
-import org.keycloak.events.EventType
 import org.springframework.stereotype.Service
 
 @Service
@@ -75,9 +74,9 @@ class UserAggregateService(
         ).let { userCoreAggregateService.define(it).id }
 
         val actions = listOfNotNull(
-            EventType.VERIFY_EMAIL.takeIf { command.sendVerifyEmail },
-            EventType.UPDATE_PASSWORD.takeIf { command.sendResetPassword },
-        ).map(EventType::name)
+            VERIFY_EMAIL.takeIf { command.sendVerifyEmail },
+            UPDATE_PASSWORD.takeIf { command.sendResetPassword },
+        )
 
         if (actions.isNotEmpty()) {
             UserCoreSendEmailCommand(
@@ -93,7 +92,7 @@ class UserAggregateService(
     suspend fun resetPassword(command: UserResetPasswordCommand): UserResetPasswordEvent {
         UserCoreSendEmailCommand(
             id = command.id,
-            actions = listOf(EventType.UPDATE_PASSWORD.name),
+            actions = listOf(UPDATE_PASSWORD),
             reason = resetEmailReason(userCoreFinderService.hasCredentials(command.id))
         ).let { userCoreAggregateService.sendEmail(it) }
         return UserResetPasswordEvent(command.id)
@@ -135,7 +134,7 @@ class UserAggregateService(
         if (command.sendVerificationEmail) {
             UserCoreSendEmailCommand(
                 id = command.id,
-                actions = listOf(EventType.VERIFY_EMAIL.name)
+                actions = listOf(VERIFY_EMAIL)
             ).let { userCoreAggregateService.sendEmail(it) }
         }
 
@@ -145,7 +144,7 @@ class UserAggregateService(
     suspend fun disable(command: UserDisableCommand): UserDisabledEvent {
         UserCoreDisableCommand(
             id = command.id,
-            disabledBy = command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id ?: ""
+            disabledBy = command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id.orEmpty()
         ).let { userCoreAggregateService.disable(it) }
 
         if (command.anonymize) {
@@ -212,15 +211,19 @@ class UserAggregateService(
                     ?.split(",")
                     ?.map(String::trim)
                     ?.filter(String::isNotBlank)
-                    ?: emptyList()
+                    .orEmpty()
             }
         } ?: roles
     }
 }
 
+/** Keycloak required actions an execute-actions mail asks for. */
+private const val VERIFY_EMAIL = "VERIFY_EMAIL"
+private const val UPDATE_PASSWORD = "UPDATE_PASSWORD"
+
 /** A mail asking only to verify an address does not hand over an account: it is no welcome. */
 internal fun creationEmailReason(actions: List<String>): UserCoreEmailReason =
-    if (EventType.UPDATE_PASSWORD.name in actions) UserCoreEmailReason.WELCOME else UserCoreEmailReason.ACCOUNT_ACTION
+    if (UPDATE_PASSWORD in actions) UserCoreEmailReason.WELCOME else UserCoreEmailReason.ACCOUNT_ACTION
 
 /** Nobody has chosen anything on an account without credentials: this link is still its invitation. */
 internal fun resetEmailReason(hasCredentials: Boolean): UserCoreEmailReason =

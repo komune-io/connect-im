@@ -8,13 +8,12 @@ import io.komune.im.bdd.core.user.data.user
 import io.komune.im.commons.auth.AuthenticationProvider
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserDisableCommand
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
-class UserDisableSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+class UserDisableSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private lateinit var command: UserDisableCommand
 

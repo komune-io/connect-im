@@ -8,13 +8,12 @@ import io.komune.im.bdd.core.user.data.user
 import io.komune.im.core.user.domain.command.UserCoreDeleteCommand
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserDeleteCommand
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
-class UserDeleteSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+class UserDeleteSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private lateinit var command: UserDeleteCommand
 

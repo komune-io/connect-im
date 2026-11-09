@@ -37,7 +37,7 @@ class UserPoliciesEnforcer(
         UserPolicies.canCreate(authedUser, organizationId)
     }
 
-    suspend fun enforceUpdate(cmd: UserUpdateCommand) = enforceAuthed { authedUser ->
+    suspend fun enforceUpdate(cmd: UserUpdateCommand) = enforceAuthed { _ ->
         checkUpdate(cmd.id)
         enforceMemberOf(cmd)
         enforceRoles(cmd)
@@ -49,7 +49,7 @@ class UserPoliciesEnforcer(
 
     suspend fun checkDisableMfa(userId: UserId) = checkAuthed("disable mfa") { authedUser ->
         val user = userFinderService.get(userId)
-        UserPolicies.canDisableMfa(authedUser, user) && UserPolicies.canDisableMfaAcr(authedUser, user)
+        UserPolicies.canDisableMfa(authedUser, user) && UserPolicies.canDisableMfaAcr(authedUser)
     }
 
     suspend fun checkUpdate(userId: UserId) = checkAuthed("update an user") { authedUser ->

@@ -48,7 +48,10 @@ fun apiKeyClient(
 @JsExport
 open class ApiKeyClient(private val client: F2Client): ApiKeyApi {
     override fun apiKeyGet(): ApiKeyGetFunction = client.function<ApiKeyGetQuery, ApiKeyGetResult>(this::apiKeyGet.name)
-    override fun apiKeyPage(): ApiKeyPageFunction = client.function<ApiKeyPageQuery, ApiKeyPageResult>(this::apiKeyPage.name)
-    override fun apiKeyCreate(): ApiKeyOrganizationAddFunction = client.function<ApiKeyOrganizationAddKeyCommand, ApiKeyOrganizationAddedEvent>(this::apiKeyCreate.name)
-    override fun apiKeyRemove(): ApikeyRemoveFunction = client.function<ApikeyRemoveCommand, ApikeyRemoveEvent>(this::apiKeyRemove.name)
+    override fun apiKeyPage(): ApiKeyPageFunction =
+        client.function<ApiKeyPageQuery, ApiKeyPageResult>(this::apiKeyPage.name)
+    override fun apiKeyCreate(): ApiKeyOrganizationAddFunction =
+        client.function<ApiKeyOrganizationAddKeyCommand, ApiKeyOrganizationAddedEvent>(this::apiKeyCreate.name)
+    override fun apiKeyRemove(): ApikeyRemoveFunction =
+        client.function<ApikeyRemoveCommand, ApikeyRemoveEvent>(this::apiKeyRemove.name)
 }

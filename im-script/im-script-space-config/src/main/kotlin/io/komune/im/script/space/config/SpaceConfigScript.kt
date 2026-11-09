@@ -130,10 +130,10 @@ class SpaceConfigScript(
     private suspend fun initRoles(
         roles: List<RoleData>?
     ): List<RoleIdentifier> = roles.initNotEmpty("Roles") { items ->
-        val roles = privilegeFinderService.listRoles()
+        val definedRoles = privilegeFinderService.listRoles()
         val permissions = privilegeFinderService.listPermissions()
         val features = privilegeFinderService.listFeatures()
-        val existingRoles = (roles + permissions + features).map(PrivilegeDTO::identifier).toMutableSet()
+        val existingRoles = (definedRoles + permissions + features).map(PrivilegeDTO::identifier).toMutableSet()
 
         val remainingRoles = items.filter { it.name !in existingRoles }.toMutableSet()
         var anyRoleInitialized = true
@@ -147,11 +147,9 @@ class SpaceConfigScript(
                 }
         }
 
-        if (remainingRoles.isNotEmpty()) {
-            throw IllegalArgumentException(
-                "Could not initialize roles [${remainingRoles.joinToString { it.name }}] " +
-                    "because some of their permissions do not exist"
-            )
+        require(remainingRoles.isEmpty()) {
+            "Could not initialize roles [${remainingRoles.joinToString { it.name }}] " +
+                "because some of their permissions do not exist"
         }
 
         items.map { role ->
@@ -218,7 +216,7 @@ class SpaceConfigScript(
     private suspend fun <T, R> List<T>?.initNotEmpty(
         objectType: String, organization: OrganizationData? = null, exec: suspend (items: List<T>) -> List<R>
     ): List<R> {
-        val suffix = organization?.let { " of Organization [${it.name}]" } ?: ""
+        val suffix = organization?.let { " of Organization [${it.name}]" }.orEmpty()
         logger.info("Initializing $objectType$suffix...")
         if (this.isNullOrEmpty()) {
             logger.info("No $objectType to initialize")
@@ -265,6 +263,6 @@ class SpaceConfigScript(
                     organizationId = organizationId, name = key.name, secret = key.secret, roles = key.roles.orEmpty()
                 ).let { apiKeyAggregateService.create(it).id }
             })
-        } ?: emptyList()
+        }.orEmpty()
     }
 }

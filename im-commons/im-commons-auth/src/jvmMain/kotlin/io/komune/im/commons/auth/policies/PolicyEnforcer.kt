@@ -29,7 +29,7 @@ open class PolicyEnforcer {
 
     protected suspend fun <R> enforceAuthed(block: suspend (AuthedUserDTO) -> R): R = enforce { authedUser ->
         checkAuthed("")
-        block(authedUser!!)
+        block(checkNotNull(authedUser))
     }
 }
 

@@ -11,15 +11,13 @@ import io.komune.im.bdd.core.apikey.data.apiKey
 import io.komune.im.bdd.core.apikey.data.client
 import io.komune.im.bdd.core.user.data.user
 import org.assertj.core.api.Assertions
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extractList
 
-class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var apikeyEndpoint: ApiKeyEndpoint
+class ApiKeyCreateSteps(
+    private val apikeyEndpoint: ApiKeyEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private lateinit var command: ApiKeyOrganizationAddKeyCommand
 
@@ -92,10 +90,9 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
         val client = keycloakClientProvider.getClient()
         val assertionApiKey = AssertionBdd.apiKey(client)
         val apiKeyId = context.apikeyIds.safeGet(params.identifier)
-        val apiKey = assertionApiKey.findById(apiKeyId)
+        val apiKey = checkNotNull(assertionApiKey.findById(apiKeyId)) { "API key [$apiKeyId] not found" }
 
-        Assertions.assertThat(apiKey).isNotNull
-        assertionApiKey.assertThat(apiKey!!).hasFields(
+        assertionApiKey.assertThat(apiKey).hasFields(
             identifier = params.keyIdentifier ?: apiKey.identifier,
             name = params.name ?: apiKey.name,
             roles = params.roles ?: apiKey.roles,

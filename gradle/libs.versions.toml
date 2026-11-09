@@ -3,6 +3,7 @@ fixers = "0.47.0-SNAPSHOT"
 connect = "0.28.0-SNAPSHOT"
 keycloak = "26.1.4"
 keycloakAdmin = "26.0.4"
+freemarker = "2.3.32"
 shadowJar = "9.6.1"
 
 [libraries]
@@ -27,6 +28,7 @@ keycloak-saml-core-public = { module = "org.keycloak:keycloak-saml-core-public",
 keycloak-server-spi = { module = "org.keycloak:keycloak-server-spi", version.ref = "keycloak" }
 keycloak-server-spi-private = { module = "org.keycloak:keycloak-server-spi-private", version.ref = "keycloak" }
 keycloak-services = { module = "org.keycloak:keycloak-services", version.ref = "keycloak" }
+freemarker = { module = "org.freemarker:freemarker", version.ref = "freemarker" }
 
 # Kotlinx
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime" }

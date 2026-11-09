@@ -48,8 +48,9 @@ class OrganizationCoreAggregateService: CoreService(CacheName.Organization) {
                 .filterValues { it.filterNotNull().isNotEmpty() }
         }
 
-        val groupId = if (command.parentOrganizationId != null) {
-            client.group(command.parentOrganizationId!!)
+        val parentOrganizationId = command.parentOrganizationId
+        val groupId = if (parentOrganizationId != null) {
+            client.group(parentOrganizationId)
                 .subGroup(group)
                 .handleResponseError("Organization")
         } else if (existingGroup == null) {

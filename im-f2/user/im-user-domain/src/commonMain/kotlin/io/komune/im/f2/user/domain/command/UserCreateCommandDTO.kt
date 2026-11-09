@@ -4,6 +4,7 @@ import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import io.komune.im.commons.model.Address
+import io.komune.im.commons.model.AddressDTO
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.model.UserId
@@ -52,7 +53,7 @@ interface UserCreateCommandDTO: Command {
      * @ref [io.komune.im.f2.user.domain.model.UserDTO.address]
      * @default null
      */
-    val address: Address?
+    val address: AddressDTO?
 
     /**
      * @ref [io.komune.im.f2.user.domain.model.UserDTO.phone]

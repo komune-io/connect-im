@@ -12,15 +12,13 @@ import io.komune.im.f2.organization.domain.model.OrganizationStatus
 import io.komune.im.f2.organization.domain.query.OrganizationGetQuery
 import io.komune.im.f2.privilege.domain.role.model.Role
 import kotlinx.coroutines.runBlocking
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extract
 
-class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var organizationEndpoint: OrganizationEndpoint
+class OrganizationUpdateSteps(
+    private val organizationEndpoint: OrganizationEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private lateinit var command: OrganizationUpdateCommand
 
@@ -63,7 +61,8 @@ class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
                 val organizationId = context.organizationIds.lastUsed
                 val organization = organizationEndpoint.organizationGet()
                     .invoke(OrganizationGetQuery(organizationId))
-                    .item!!
+                    .item
+                    .let { checkNotNull(it) { "Organization [$organizationId] not found" } }
 
                 val client = keycloakClientProvider.getClient()
                 AssertionBdd.organization(client).assertThatId(organizationId).hasFields(
@@ -99,16 +98,18 @@ class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
         val identifier = entry?.get("identifier") ?: context.organizationIds.lastUsedKey
         val organization = organizationEndpoint.organizationGet()
             .invoke(OrganizationGetQuery(context.organizationIds.safeGet(identifier)))
-            .item!!
+            .item
+            .let { checkNotNull(it) { "Organization [$identifier] not found" } }
+        val address = checkNotNull(organization.address) { "Organization [$identifier] has no address" }
 
         OrganizationUpdateParams(
             identifier = identifier,
             name = entry?.get("name") ?: organization.name,
             description = entry?.get("description"),
             address = Address(
-                street = entry?.get("street") ?: organization.address!!.street,
-                city = entry?.get("city") ?: organization.address!!.city,
-                postalCode = entry?.get("postalCode") ?: organization.address!!.postalCode,
+                street = entry?.get("street") ?: address.street,
+                city = entry?.get("city") ?: address.city,
+                postalCode = entry?.get("postalCode") ?: address.postalCode,
             ),
             website = entry?.get("website"),
             roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),

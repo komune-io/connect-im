@@ -66,8 +66,8 @@ class OrganizationFinderSteps: En, ImCucumberStepsDefinition() {
 
     private suspend fun assertOrganizationsFetched(identifiers: List<TestContextKey>) {
         val fetchedIds = context.fetched.organizations.map(Organization::id)
-        val expectedIds = identifiers.map(context.organizationIds::safeGet).toTypedArray()
-        Assertions.assertThat(fetchedIds).containsExactlyInAnyOrder(*expectedIds)
+        val expectedIds = identifiers.map(context.organizationIds::safeGet)
+        Assertions.assertThat(fetchedIds).containsExactlyInAnyOrderElementsOf(expectedIds)
 
         val client = keycloakClientProvider.getClient()
         val organizationAsserter = AssertionBdd.organization(client)
@@ -79,8 +79,8 @@ class OrganizationFinderSteps: En, ImCucumberStepsDefinition() {
     private suspend fun assertOrganizationRefsFetched(identifiers: List<TestContextKey>) {
         val fetchedIds = context.fetched.organizationRefs.map(OrganizationRef::id)
 
-        val expectedIds = identifiers.map(context.organizationIds::safeGet).toTypedArray()
-        Assertions.assertThat(fetchedIds).containsExactlyInAnyOrder(*expectedIds)
+        val expectedIds = identifiers.map(context.organizationIds::safeGet)
+        Assertions.assertThat(fetchedIds).containsExactlyInAnyOrderElementsOf(expectedIds)
 
         val client = keycloakClientProvider.getClient()
         val organizationAsserter = AssertionBdd.organizationRef(client)

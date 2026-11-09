@@ -9,13 +9,11 @@ import io.komune.im.commons.model.PermissionIdentifier
 import io.komune.im.f2.privilege.api.PermissionEndpoint
 import io.komune.im.f2.privilege.domain.permission.command.PermissionDefineCommand
 import java.util.UUID
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 
-class PermissionDefineSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var permissionEndpoint: PermissionEndpoint
+class PermissionDefineSteps(
+    private val permissionEndpoint: PermissionEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private lateinit var command: PermissionDefineCommand
 

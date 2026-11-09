@@ -6,13 +6,11 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.f2.privilege.api.RoleEndpoint
 import io.komune.im.f2.privilege.domain.role.query.RoleListQuery
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.data.parser.extract
 
-class RoleListSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var roleEndpoint: RoleEndpoint
+class RoleListSteps(
+    private val roleEndpoint: RoleEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         DataTableType(::roleListParams)

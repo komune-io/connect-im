@@ -6,13 +6,11 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.query.OrganizationGetQuery
 import io.komune.im.f2.organization.domain.query.OrganizationRefGetQuery
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.data.TestContextKey
 
-class OrganizationGetSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var organizationEndpoint: OrganizationEndpoint
+class OrganizationGetSteps(
+    private val organizationEndpoint: OrganizationEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         DataTableType(::organizationGetParams)

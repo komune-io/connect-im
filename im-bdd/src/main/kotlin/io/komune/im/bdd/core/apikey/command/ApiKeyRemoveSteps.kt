@@ -9,15 +9,13 @@ import io.komune.im.apikey.domain.model.ApiKeyId
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.apikey.data.apiKey
 import io.komune.im.bdd.core.apikey.data.client
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.safeExtract
 
-class ApiKeyRemoveSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var apikeyEndpoint: ApiKeyEndpoint
+class ApiKeyRemoveSteps(
+    private val apikeyEndpoint: ApiKeyEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private lateinit var command: ApikeyRemoveCommand
 

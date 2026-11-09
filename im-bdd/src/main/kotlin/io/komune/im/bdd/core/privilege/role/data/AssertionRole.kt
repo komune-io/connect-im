@@ -39,8 +39,8 @@ class AssertionRole(
 
         private val roleLocale: Map<String, String> = role.attributes?.get(Role::locale.name)
             ?.firstOrNull()
-            ?.parseJson()
-            ?: emptyMap()
+            ?.parseJson<Map<String, String>>()
+            .orEmpty()
 
         private val rolePermissions: List<PermissionIdentifier> = role.attributes?.get(Role::permissions.name)
             .orEmpty()
@@ -79,8 +79,8 @@ class AssertionRole(
                 permissions = role.permissions
             )
 
-            role.bindings.values.flatten().map { role ->
-                async { assertThatId(role.identifier).matches(role) }
+            role.bindings.values.flatten().map { boundRole ->
+                async { assertThatId(boundRole.identifier).matches(boundRole) }
             }.awaitAll()
         }
 

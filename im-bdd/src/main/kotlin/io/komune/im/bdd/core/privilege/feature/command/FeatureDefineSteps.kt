@@ -9,13 +9,11 @@ import io.komune.im.commons.model.FeatureIdentifier
 import io.komune.im.f2.privilege.api.FeatureEndpoint
 import io.komune.im.f2.privilege.domain.feature.command.FeatureDefineCommand
 import java.util.UUID
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 
-class FeatureDefineSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var featureEndpoint: FeatureEndpoint
+class FeatureDefineSteps(
+    private val featureEndpoint: FeatureEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     private lateinit var command: FeatureDefineCommand
 
