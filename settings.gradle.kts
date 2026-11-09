@@ -29,6 +29,8 @@ dependencyResolutionManagement {
     }
 }
 
+rootProject.name = "connect-im"
+
 include(
     "im-api:api-config",
     "im-api:api-gateway"
