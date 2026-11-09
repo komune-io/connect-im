@@ -8,6 +8,7 @@ import io.komune.im.f2.space.api.SpaceEndpoint
 import io.komune.im.f2.space.domain.command.SpaceDefineCommand
 import s2.bdd.assertion.AssertionBdd
 
+/** Cucumber steps: space update. */
 class SpaceUpdateSteps(
     private val spaceEndpoint: SpaceEndpoint,
 ): En, ImCucumberStepsDefinition() {

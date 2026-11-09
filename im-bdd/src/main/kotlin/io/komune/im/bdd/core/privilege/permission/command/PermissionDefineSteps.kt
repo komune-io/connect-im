@@ -11,6 +11,7 @@ import io.komune.im.f2.privilege.domain.permission.command.PermissionDefineComma
 import java.util.UUID
 import s2.bdd.assertion.AssertionBdd
 
+/** Cucumber steps: permission define. */
 class PermissionDefineSteps(
     private val permissionEndpoint: PermissionEndpoint,
 ): En, ImCucumberStepsDefinition() {

@@ -7,6 +7,7 @@ import io.komune.im.commons.model.OrganizationId
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.query.UserPageQuery
 
+/** Cucumber steps: user page. */
 class UserPageSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {

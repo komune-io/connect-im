@@ -217,7 +217,6 @@ class UserAggregateService(
     }
 }
 
-/** Keycloak required actions an execute-actions mail asks for. */
 private const val VERIFY_EMAIL = "VERIFY_EMAIL"
 private const val UPDATE_PASSWORD = "UPDATE_PASSWORD"
 

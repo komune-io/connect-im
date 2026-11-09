@@ -8,6 +8,7 @@ import io.komune.im.f2.space.domain.model.Space
 import io.komune.im.f2.space.domain.query.SpaceGetQuery
 import org.assertj.core.api.Assertions
 
+/** Cucumber steps: space get. */
 class SpaceGetSteps(
     private val spaceEndpoint: SpaceEndpoint,
 ): En, ImCucumberStepsDefinition() {

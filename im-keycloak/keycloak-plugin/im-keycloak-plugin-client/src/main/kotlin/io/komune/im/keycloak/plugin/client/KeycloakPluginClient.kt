@@ -28,6 +28,7 @@ class KeycloakPluginClient(
         }
     }
 
+    /** Asks the plugin for an action token, authenticated by [bearerToken]; null unless Keycloak answers OK. */
     suspend fun generateActionToken(request: ActionTokenRequest, bearerToken: String): String? {
         val response = httpClient.get(actionTokenUrl(keycloakBaseUrl, request)) {
             header("Content-Type", ContentType.Application.Json)

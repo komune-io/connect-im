@@ -8,6 +8,7 @@ import io.komune.im.f2.privilege.api.RoleEndpoint
 import io.komune.im.f2.privilege.domain.role.query.RoleListQuery
 import s2.bdd.data.parser.extract
 
+/** Cucumber steps: role list. */
 class RoleListSteps(
     private val roleEndpoint: RoleEndpoint,
 ): En, ImCucumberStepsDefinition() {

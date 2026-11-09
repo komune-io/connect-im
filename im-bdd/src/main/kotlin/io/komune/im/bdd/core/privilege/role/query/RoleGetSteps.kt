@@ -7,6 +7,7 @@ import io.komune.im.f2.privilege.api.RoleEndpoint
 import io.komune.im.f2.privilege.domain.role.query.RoleGetQuery
 import s2.bdd.data.TestContextKey
 
+/** Cucumber steps: role get. */
 class RoleGetSteps(
     private val roleEndpoint: RoleEndpoint,
 ): En, ImCucumberStepsDefinition() {

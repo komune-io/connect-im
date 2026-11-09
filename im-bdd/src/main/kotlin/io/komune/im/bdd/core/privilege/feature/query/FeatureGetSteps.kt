@@ -7,6 +7,7 @@ import io.komune.im.f2.privilege.api.FeatureEndpoint
 import io.komune.im.f2.privilege.domain.feature.query.FeatureGetQuery
 import s2.bdd.data.TestContextKey
 
+/** Cucumber steps: feature get. */
 class FeatureGetSteps(
     private val featureEndpoint: FeatureEndpoint,
 ): En, ImCucumberStepsDefinition() {

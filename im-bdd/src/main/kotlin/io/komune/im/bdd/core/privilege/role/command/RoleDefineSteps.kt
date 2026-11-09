@@ -15,6 +15,7 @@ import java.util.UUID
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.parser.extractList
 
+/** Cucumber steps: role define. */
 class RoleDefineSteps(
     private val roleEndpoint: RoleEndpoint,
 ): En, ImCucumberStepsDefinition() {

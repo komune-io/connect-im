@@ -6,6 +6,7 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.query.UserGetByEmailQuery
 
+/** Cucumber steps: user get by email. */
 class UserGetByEmailSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {

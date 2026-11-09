@@ -13,6 +13,7 @@ import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.safeExtract
 
+/** Cucumber steps: api key remove. */
 class ApiKeyRemoveSteps(
     private val apikeyEndpoint: ApiKeyEndpoint,
 ): En, ImCucumberStepsDefinition() {

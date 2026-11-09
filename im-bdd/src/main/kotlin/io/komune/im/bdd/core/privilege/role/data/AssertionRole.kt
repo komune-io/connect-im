@@ -56,6 +56,7 @@ class AssertionRole(
             permissions = rolePermissions,
         )
 
+        /** Asserts the entity holds [expected], its own fields by default. */
         fun hasFields(expected: RoleFields = actual()) = also {
             Assertions.assertThat(
                 role.attributes?.get(Role::type.name)?.firstOrNull()

@@ -79,6 +79,7 @@ class AssertionUser(
             isApiKey = userIsApiKey,
         )
 
+        /** Asserts the entity holds [expected], its own fields by default. */
         fun hasFields(expected: UserFields = actual()) = also {
             Assertions.assertThat(userMemberOf).isEqualTo(expected.memberOf)
             Assertions.assertThat(user.email.orEmpty()).isEqualTo(expected.email)
@@ -105,6 +106,7 @@ class AssertionUser(
             Assertions.assertThat(userPhone).isEqualTo("")
         }
 
+        /** Asserts the entity holds the fields of the given model. */
         fun matches(other: User) = hasFields { fields -> fields.copy(
             memberOf = other.memberOf?.id,
             email = other.email,

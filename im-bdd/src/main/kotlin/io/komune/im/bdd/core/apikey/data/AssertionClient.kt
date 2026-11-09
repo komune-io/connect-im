@@ -55,6 +55,7 @@ class AssertionClient(
             isStandardFlowEnabled = client.isStandardFlowEnabled,
         )
 
+        /** Asserts the entity holds [expected], its own fields by default. */
         fun hasFields(expected: ClientFields = actual()) = also {
             Assertions.assertThat(client.id).isEqualTo(expected.id)
             Assertions.assertThat(client.clientId).isEqualTo(expected.identifier)
@@ -67,6 +68,7 @@ class AssertionClient(
         /** Compares the entity with its own fields as [change] rewrites them. */
         inline fun hasFields(change: (ClientFields) -> ClientFields) = hasFields(change(actual()))
 
+        /** Asserts the entity holds the fields of the given model. */
         fun matches(client: ClientModel) = hasFields { fields -> fields.copy(
             id = client.id,
             identifier = client.identifier,

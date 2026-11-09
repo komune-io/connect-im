@@ -13,6 +13,7 @@ import org.assertj.core.api.Assertions
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
+/** Cucumber steps: organization disable. */
 class OrganizationDisableSteps(
     private val organizationEndpoint: OrganizationEndpoint,
 ): En, ImCucumberStepsDefinition() {

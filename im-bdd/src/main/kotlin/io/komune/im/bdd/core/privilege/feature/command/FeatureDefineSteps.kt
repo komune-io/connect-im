@@ -11,6 +11,7 @@ import io.komune.im.f2.privilege.domain.feature.command.FeatureDefineCommand
 import java.util.UUID
 import s2.bdd.assertion.AssertionBdd
 
+/** Cucumber steps: feature define. */
 class FeatureDefineSteps(
     private val featureEndpoint: FeatureEndpoint,
 ): En, ImCucumberStepsDefinition() {

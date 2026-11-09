@@ -8,6 +8,7 @@ import io.komune.im.f2.organization.domain.query.OrganizationGetQuery
 import io.komune.im.f2.organization.domain.query.OrganizationRefGetQuery
 import s2.bdd.data.TestContextKey
 
+/** Cucumber steps: organization get. */
 class OrganizationGetSteps(
     private val organizationEndpoint: OrganizationEndpoint,
 ): En, ImCucumberStepsDefinition() {

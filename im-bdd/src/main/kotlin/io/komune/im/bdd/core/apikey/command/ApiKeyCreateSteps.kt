@@ -14,6 +14,7 @@ import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extractList
 
+/** Cucumber steps: api key create. */
 class ApiKeyCreateSteps(
     private val apikeyEndpoint: ApiKeyEndpoint,
 ): En, ImCucumberStepsDefinition() {

@@ -7,6 +7,7 @@ import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.query.UserGetQuery
 import s2.bdd.data.TestContextKey
 
+/** Cucumber steps: user get. */
 class UserGetSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {

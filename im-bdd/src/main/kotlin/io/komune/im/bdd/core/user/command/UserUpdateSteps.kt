@@ -13,6 +13,7 @@ import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extractList
 
+/** Cucumber steps: user update. */
 class UserUpdateSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {

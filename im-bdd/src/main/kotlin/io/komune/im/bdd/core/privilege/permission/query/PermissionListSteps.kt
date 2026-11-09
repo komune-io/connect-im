@@ -6,6 +6,7 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.privilege.api.PermissionEndpoint
 import io.komune.im.f2.privilege.domain.permission.query.PermissionListQuery
 
+/** Cucumber steps: permission list. */
 class PermissionListSteps(
     private val permissionEndpoint: PermissionEndpoint,
 ): En, ImCucumberStepsDefinition() {

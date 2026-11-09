@@ -8,6 +8,7 @@ import io.komune.im.f2.organization.domain.model.Organization
 import io.komune.im.f2.organization.domain.query.OrganizationGetFromInseeQuery
 import org.assertj.core.api.Assertions
 
+/** Cucumber steps: organization get from insee. */
 class OrganizationGetFromInseeSteps(
     private val organizationEndpoint: OrganizationEndpoint,
 ): En, ImCucumberStepsDefinition() {

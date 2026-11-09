@@ -38,6 +38,7 @@ class UserPoliciesEnforcer(
         UserPolicies.canCreate(authedUser, organizationId)
     }
 
+    /** Checks the authed user may update [cmd]'s user, its organization and its roles. */
     suspend fun enforceUpdate(cmd: UserUpdateCommand) = enforceAuthed { _ ->
         checkUpdate(cmd.id)
         enforceMemberOf(cmd)

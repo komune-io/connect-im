@@ -3,6 +3,7 @@ package io.komune.im.keycloak.plugin.client
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
+/** The URL `generateActionToken` calls. */
 class ActionTokenUrlTest {
 
     private val request = ActionTokenRequest(
@@ -12,6 +13,7 @@ class ActionTokenUrlTest {
         userId = "u-1",
     )
 
+    /** Reserved characters in a parameter do not leak into the query string. */
     @Test
     fun `every parameter is URL-encoded`() {
         val url = actionTokenUrl(
@@ -26,6 +28,7 @@ class ActionTokenUrlTest {
         )
     }
 
+    /** A request without redirect URI sends no empty parameter. */
     @Test
     fun `no redirect_uri when there is none`() {
         assertThat(actionTokenUrl("https://auth.example.org", request)).doesNotContain("redirect_uri")

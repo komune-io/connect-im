@@ -30,12 +30,16 @@ data class AuthedUser(
 fun AuthedUserDTO.hasAcr(acrValue: String) = acr == acrValue
 fun AuthedUserDTO.hasRole(role: String) = role in roles.orEmpty()
 fun AuthedUserDTO.hasRole(role: ImPermission) = hasRole(role.identifier)
+/** Whether the user holds every one of [roles]. */
 fun AuthedUserDTO.hasRoles(vararg roles: String): Boolean = roles.all(this.roles.orEmpty()::contains)
 
+/** Whether the user holds every one of [roles]. */
 fun AuthedUserDTO.hasRoles(vararg roles: ImPermission): Boolean =
     roles.map(ImPermission::identifier).all(this.roles.orEmpty()::contains)
 
+/** Whether the user holds at least one of [roles]. */
 fun AuthedUserDTO.hasOneOfRoles(vararg roles: String): Boolean = roles.any(this.roles.orEmpty()::contains)
 
+/** Whether the user holds at least one of [roles]. */
 fun AuthedUserDTO.hasOneOfRoles(vararg roles: ImPermission): Boolean =
     roles.map(ImPermission::identifier).any(this.roles.orEmpty()::contains)

@@ -6,6 +6,7 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.privilege.api.FeatureEndpoint
 import io.komune.im.f2.privilege.domain.feature.query.FeatureListQuery
 
+/** Cucumber steps: feature list. */
 class FeatureListSteps(
     private val featureEndpoint: FeatureEndpoint,
 ): En, ImCucumberStepsDefinition() {

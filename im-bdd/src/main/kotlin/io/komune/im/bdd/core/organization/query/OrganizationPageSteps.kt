@@ -6,6 +6,7 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.query.OrganizationPageQuery
 
+/** Cucumber steps: organization page. */
 class OrganizationPageSteps(
     private val organizationEndpoint: OrganizationEndpoint,
 ): En, ImCucumberStepsDefinition() {

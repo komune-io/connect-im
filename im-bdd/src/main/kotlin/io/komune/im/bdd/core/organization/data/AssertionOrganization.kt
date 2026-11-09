@@ -60,6 +60,7 @@ class AssertionOrganization(
             status = groupStatus,
         )
 
+        /** Asserts the entity holds [expected], its own fields by default. */
         fun hasFields(expected: OrganizationFields = actual()) = also {
             Assertions.assertThat(group.id).isEqualTo(expected.id)
             Assertions.assertThat(groupSiret).isEqualTo(expected.siret)
@@ -77,6 +78,7 @@ class AssertionOrganization(
         /** Compares the entity with its own fields as [change] rewrites them. */
         inline fun hasFields(change: (OrganizationFields) -> OrganizationFields) = hasFields(change(actual()))
 
+        /** Asserts the entity holds the fields of the given model. */
         fun matches(organization: Organization) = hasFields { fields -> fields.copy(
             id = organization.id,
             siret = organization.siret,

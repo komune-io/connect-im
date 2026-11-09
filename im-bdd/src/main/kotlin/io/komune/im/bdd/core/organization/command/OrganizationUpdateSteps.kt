@@ -16,6 +16,7 @@ import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extract
 
+/** Cucumber steps: organization update. */
 class OrganizationUpdateSteps(
     private val organizationEndpoint: OrganizationEndpoint,
 ): En, ImCucumberStepsDefinition() {

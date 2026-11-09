@@ -7,6 +7,7 @@ import io.komune.im.f2.privilege.api.PermissionEndpoint
 import io.komune.im.f2.privilege.domain.permission.query.PermissionGetQuery
 import s2.bdd.data.TestContextKey
 
+/** Cucumber steps: permission get. */
 class PermissionGetSteps(
     private val permissionEndpoint: PermissionEndpoint,
 ): En, ImCucumberStepsDefinition() {

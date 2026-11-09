@@ -7,6 +7,7 @@ import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserResetPasswordCommand
 import s2.bdd.data.TestContextKey
 
+/** Cucumber steps: user reset password. */
 class UserResetPasswordSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {

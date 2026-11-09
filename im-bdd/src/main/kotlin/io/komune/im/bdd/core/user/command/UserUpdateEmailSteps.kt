@@ -9,6 +9,7 @@ import io.komune.im.f2.user.domain.command.UserUpdateEmailCommand
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
+/** Cucumber steps: user update email. */
 class UserUpdateEmailSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {

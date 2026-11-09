@@ -11,6 +11,7 @@ import io.komune.im.f2.organization.domain.command.OrganizationDeleteCommand
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
+/** Cucumber steps: organization delete. */
 class OrganizationDeleteSteps(
     private val organizationEndpoint: OrganizationEndpoint,
 ): En, ImCucumberStepsDefinition() {

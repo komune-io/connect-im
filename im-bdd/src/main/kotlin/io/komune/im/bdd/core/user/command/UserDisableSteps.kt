@@ -11,6 +11,7 @@ import io.komune.im.f2.user.domain.command.UserDisableCommand
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
+/** Cucumber steps: user disable. */
 class UserDisableSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {
