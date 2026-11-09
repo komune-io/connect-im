@@ -39,3 +39,17 @@ fixers {
 plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
     the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().resolution("**/ajv", "8.20.0")
 }
+
+// Every Spring Boot image: a builder pinned by digest, and Paketo's health checker.
+subprojects {
+    plugins.withId("org.springframework.boot") {
+        tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage>().configureEach {
+            builder = "docker.io/paketobuildpacks/builder-noble-java-tiny:" +
+                "${libs.versions.paketoBuilder.get()}@${libs.versions.paketoBuilderDigest.get()}"
+            buildpacks = listOf(
+                "urn:cnb:builder:paketo-buildpacks/java",
+                "docker.io/paketobuildpacks/health-checker:${libs.versions.paketoHealthChecker.get()}",
+            )
+        }
+    }
+}
