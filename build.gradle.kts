@@ -44,6 +44,7 @@ plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
 // consumer that bundles several IM modules gets all of them in one `.d.mts`. The compiler lets two
 // exported declarations share a name; TypeScript then merges them, or fails on `interface X extends X`.
 // A class or an interface may share its name with one namespace: that pair is a Kotlin companion.
+// A bundle also carries its dependencies' declarations: those are the dependency's, not a second one.
 class JsBundle(val module: String, val file: String, val text: String, val dependencies: Set<String>)
 
 class JsExported(val kind: String, val name: String, val text: String, val bundle: JsBundle)
@@ -53,7 +54,7 @@ val jsExported = Regex(
     RegexOption.MULTILINE,
 )
 
-fun isJsDeclarationFile(name: String) = name.endsWith(".d.mts")
+fun isJsDeclarationFile(name: String) = name.endsWith(".d.mts") || name.endsWith(".d.ts")
 
 fun JsBundle.exported(): List<JsExported> {
     val found = jsExported.findAll(text).toList()
@@ -64,43 +65,65 @@ fun JsBundle.exported(): List<JsExported> {
 }
 
 /** The names exported more than once, each with the message that explains where. */
-fun jsExportNameClashes(bundles: List<JsBundle>): Map<String, String> =
-    bundles.flatMap { it.exported() }.groupBy { it.name }.filter { (_, all) ->
-        val (namespaces, others) = all.partition { it.kind == "namespace" }
-        val oncePerFile = all.groupBy { it.bundle }.values.all { inFile ->
-            inFile.count { it.kind == "namespace" } <= 1 && inFile.count { it.kind != "namespace" } <= 1
+fun jsExportNameClashes(bundles: List<JsBundle>): Map<String, String> {
+    val exported = bundles.associateWith { it.exported() }
+    val byModule = bundles.groupBy { it.module }
+    fun dependenciesOf(module: String, seen: MutableSet<String> = mutableSetOf()): Set<String> {
+        byModule[module].orEmpty().flatMap { it.dependencies }.filter { seen.add(it) }.forEach { dependenciesOf(it, seen) }
+        return seen
+    }
+    val own = bundles.flatMap { bundle ->
+        val inherited = dependenciesOf(bundle.module).flatMap { byModule[it].orEmpty() }
+            .flatMap { exported.getValue(it) }.map { Triple(it.kind, it.name, it.text) }.toSet()
+        exported.getValue(bundle).filter { Triple(it.kind, it.name, it.text) !in inherited }
+    }.groupBy { it.name }
+
+    return exported.values.flatten().groupBy { it.name }.filter { (name, all) ->
+        val companionInEachFile = all.groupBy { it.bundle }.values.all { inFile ->
+            val (namespaces, others) = inFile.partition { it.kind == "namespace" }
+            namespaces.size <= 1 && others.size <= 1 &&
+                (namespaces.isEmpty() || others.isEmpty() || others.single().kind in setOf("class", "interface"))
         }
-        val oneDeclaration = others.map { it.text }.distinct().size <= 1 &&
-            namespaces.map { it.text }.distinct().size <= 1
-        val companion = namespaces.isEmpty() || (others.isNotEmpty() && others.all { it.kind in setOf("class", "interface") })
-        !(oncePerFile && oneDeclaration && companion)
+        val oneModule = own[name].orEmpty().map { it.bundle.module }.distinct().size <= 1
+        all.size >= 2 && !(companionInEachFile && oneModule)
     }.toSortedMap().mapValues { (name, all) ->
         "$name: " + all.groupBy { it.kind to it.text }.values.joinToString(", ") { found ->
             "${found.first().kind} in ${found.first().bundle.file}" + if (found.size > 1) " (+${found.size - 1})" else ""
         }
     }
+}
+
+val jsModules = mutableMapOf<String, Pair<FileTree, Provider<Set<String>>>>()
+subprojects {
+    plugins.withId("org.jetbrains.kotlin.multiplatform") {
+        val link = tasks.matching { it.name == "compileProductionLibraryKotlinJs" }
+        val dependencies = provider {
+            configurations.filter { it.name in setOf("commonMainApi", "commonMainImplementation", "jsMainApi", "jsMainImplementation") }
+                .flatMap { it.dependencies.withType<ProjectDependency>() }
+                .map { it.path }
+                .toSet()
+        }
+        jsModules[path] = files(link).asFileTree.matching { include("**/*.d.mts", "**/*.d.ts") } to dependencies
+    }
+}
 
 val jsExportNameClashCheck = tasks.register("jsExportNameClashCheck") {
     group = "verification"
     description = "Fails when two declarations exported to JavaScript share a name."
-    val declarationFiles = files()
-    subprojects {
-        plugins.withId("org.jetbrains.kotlin.multiplatform") {
-            declarationFiles.from(tasks.matching { it.name == "compileProductionLibraryKotlinJs" })
-        }
-    }
-    val declarations = declarationFiles.asFileTree.matching { include("**/*.d.mts") }
     val root = rootDir
     val marker = layout.buildDirectory.file("jsExportNameClashCheck/checked")
-    inputs.files(declarations)
+    inputs.files(jsModules.values.map { it.first })
     outputs.file(marker)
 
     doLast {
-        val files = declarations.files.sortedBy { it.path }
-        if (files.isEmpty()) {
+        val bundles = jsModules.toSortedMap().flatMap { (module, declarations) ->
+            declarations.first.files.sortedBy { it.path }
+                .map { JsBundle(module, it.relativeTo(root).path, it.readText(), declarations.second.get()) }
+        }
+        if (bundles.isEmpty()) {
             throw GradleException("No `.d.mts` found: the Kotlin/JS production libraries were not linked.")
         }
-        val clashes = jsExportNameClashes(files.map { JsBundle(it.path, it.relativeTo(root).path, it.readText(), emptySet()) })
+        val clashes = jsExportNameClashes(bundles)
         if (clashes.isNotEmpty()) {
             throw GradleException(
                 "Declarations exported to JavaScript share a name; a consumer's `.d.mts` declares each of them twice:" +
@@ -108,7 +131,13 @@ val jsExportNameClashCheck = tasks.register("jsExportNameClashCheck") {
                     "\nRename one of them, or give it a distinct @JsName."
             )
         }
-        marker.get().asFile.apply { parentFile.mkdirs() }.writeText(files.joinToString("\n") { it.relativeTo(root).path })
+        marker.get().asFile.apply { parentFile.mkdirs() }.writeText(bundles.joinToString("\n") { it.file })
+    }
+}
+
+gradle.taskGraph.whenReady {
+    if (hasTask(":${jsExportNameClashCheck.name}") && allTasks.none { it.name == "compileProductionLibraryKotlinJs" }) {
+        throw GradleException("jsExportNameClashCheck has no Kotlin/JS production library to read.")
     }
 }
 
@@ -147,8 +176,3 @@ val jsExportNameClashSelfTest = tasks.register("jsExportNameClashSelfTest") {
 }
 
 tasks.matching { it.name == "check" }.configureEach { dependsOn(jsExportNameClashSelfTest, jsExportNameClashCheck) }
-subprojects {
-    plugins.withId("org.jetbrains.kotlin.multiplatform") {
-        tasks.matching { it.name == "check" }.configureEach { dependsOn(jsExportNameClashCheck) }
-    }
-}
