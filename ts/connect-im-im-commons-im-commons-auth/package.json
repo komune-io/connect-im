@@ -1,6 +1,6 @@
 {
   "name": "connect-im-im-commons-im-commons-auth",
-  "version": "0.28.0-SNAPSHOT",
+  "version": "0.0.0",
   "main": "kotlin/connect-im-im-commons-im-commons-auth.mjs",
   "types": "kotlin/connect-im-im-commons-im-commons-auth.d.mts",
   "devDependencies": {},

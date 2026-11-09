@@ -1,6 +1,6 @@
 {
   "name": "connect-im-im-commons-im-commons-domain",
-  "version": "0.28.0-SNAPSHOT",
+  "version": "0.0.0",
   "main": "kotlin/connect-im-im-commons-im-commons-domain.mjs",
   "types": "kotlin/connect-im-im-commons-im-commons-domain.d.mts",
   "devDependencies": {},
