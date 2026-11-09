@@ -83,7 +83,7 @@ class ApiKeyFinderService(
                 roles = filter.role?.let(::setOf),
                 attributes = filter.attributes.orEmpty()
                     .mapValues { (_, expected) -> ({ attribute: String? -> attribute == expected }) },
-                withDisabled = filter.withDisabled ?: false,
+                withDisabled = filter.withDisabled,
             )
         ).items
 
@@ -110,5 +110,5 @@ data class ApiKeyFilter(
     val organizationId: OrganizationId? = null,
     val role: String? = null,
     val attributes: Map<String, String>? = null,
-    val withDisabled: Boolean? = false,
+    val withDisabled: Boolean = false,
 )

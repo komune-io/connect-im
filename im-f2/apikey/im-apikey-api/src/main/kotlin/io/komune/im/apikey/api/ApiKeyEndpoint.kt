@@ -55,7 +55,7 @@ class ApiKeyEndpoint(
                 organizationId = enforcedQuery.organizationId,
                 role = enforcedQuery.role,
                 attributes = enforcedQuery.attributes,
-                withDisabled = enforcedQuery.withDisabled,
+                withDisabled = enforcedQuery.withDisabled ?: false,
             ),
             offset = OffsetPagination(
                 offset = enforcedQuery.offset ?: 0,

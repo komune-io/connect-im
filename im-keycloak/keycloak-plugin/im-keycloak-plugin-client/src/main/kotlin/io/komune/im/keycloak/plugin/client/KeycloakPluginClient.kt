@@ -12,6 +12,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.URLBuilder
 import io.ktor.http.parametersOf
 import io.ktor.serialization.jackson.jackson
 import org.keycloak.representations.AccessTokenResponse
@@ -28,13 +29,7 @@ class KeycloakPluginClient(
     }
 
     suspend fun generateActionToken(request: ActionTokenRequest, bearerToken: String): String? {
-        val response = httpClient.get(
-            "${buildUrl(request.realm)}/${KeycloakPluginIds.ACTION_TOKEN}" +
-                "?client_id=${request.clientId}" +
-                "&action=${request.action}" +
-                "&user_id=${request.userId}" +
-                request.redirectUri?.let { "&redirect_uri=$it" }.orEmpty()
-        ) {
+        val response = httpClient.get(actionTokenUrl(keycloakBaseUrl, request)) {
             header("Content-Type", ContentType.Application.Json)
             header("Authorization", "Bearer $bearerToken")
         }
@@ -57,6 +52,15 @@ class KeycloakPluginClient(
 
     private fun buildUrl(realm: String) = "${keycloakBaseUrl.removeSuffix("/")}/realms/$realm"
 }
+
+/** Where the action token of [request] is asked for, every parameter URL-encoded. */
+internal fun actionTokenUrl(keycloakBaseUrl: String, request: ActionTokenRequest): String =
+    URLBuilder("${keycloakBaseUrl.removeSuffix("/")}/realms/${request.realm}/${KeycloakPluginIds.ACTION_TOKEN}").apply {
+        parameters.append("client_id", request.clientId)
+        parameters.append("action", request.action)
+        parameters.append("user_id", request.userId)
+        request.redirectUri?.let { parameters.append("redirect_uri", it) }
+    }.buildString()
 
 /** The action token to ask for: who, in which realm, for which client and action. */
 data class ActionTokenRequest(

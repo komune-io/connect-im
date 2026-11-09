@@ -68,7 +68,7 @@ class AssertionOrganization(
             Assertions.assertThat(groupAddress).isEqualTo(expected.address)
             Assertions.assertThat(groupWebsite).isEqualTo(expected.website)
             Assertions.assertThat(singleAttributes).containsAllEntriesOf(expected.attributes)
-            Assertions.assertThat(expected.roles).isEqualTo(expected.roles)
+            Assertions.assertThat(group.realmRoles).isEqualTo(expected.roles)
             Assertions.assertThat(groupEnabled).isEqualTo(expected.enabled)
             Assertions.assertThat(groupCreationDate).isEqualTo(expected.creationDate)
             Assertions.assertThat(groupStatus).isNotNull().isEqualTo(expected.status)

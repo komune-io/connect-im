@@ -100,17 +100,22 @@ class OrganizationUpdateSteps(
             .invoke(OrganizationGetQuery(context.organizationIds.safeGet(identifier)))
             .item
             .let { checkNotNull(it) { "Organization [$identifier] not found" } }
-        val address by lazy { checkNotNull(organization.address) { "Organization [$identifier] has no address" } }
+        val addressKeys = listOf("street", "city", "postalCode")
 
         OrganizationUpdateParams(
             identifier = identifier,
             name = entry?.get("name") ?: organization.name,
             description = entry?.get("description"),
-            address = Address(
-                street = entry?.get("street") ?: address.street,
-                city = entry?.get("city") ?: address.city,
-                postalCode = entry?.get("postalCode") ?: address.postalCode,
-            ),
+            address = if (addressKeys.none { entry?.get(it) != null }) {
+                organization.address
+            } else {
+                val current = organization.address
+                Address(
+                    street = entry?.get("street") ?: current?.street.orEmpty(),
+                    city = entry?.get("city") ?: current?.city.orEmpty(),
+                    postalCode = entry?.get("postalCode") ?: current?.postalCode.orEmpty(),
+                )
+            },
             website = entry?.get("website"),
             roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
             attributes = organizationAttributesParams(entry),

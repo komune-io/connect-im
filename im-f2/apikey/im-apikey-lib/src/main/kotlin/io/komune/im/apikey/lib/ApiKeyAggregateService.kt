@@ -14,8 +14,6 @@ import io.komune.im.commons.utils.mapAsync
 import io.komune.im.commons.utils.toJson
 import io.komune.im.core.client.api.ClientCoreAggregateService
 import io.komune.im.core.client.domain.command.ClientCreateCommand
-import io.komune.im.core.organization.api.OrganizationCoreAggregateService
-import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.organization.domain.command.OrganizationCoreSetSomeAttributesCommand
 import io.komune.im.core.organization.domain.model.OrganizationModel
 import io.komune.im.core.privilege.api.PrivilegeCoreFinderService
@@ -145,10 +143,3 @@ class ApiKeyAggregateService(
         }
     }
 }
-
-/** The organization core services API keys are stored with. */
-@Service
-class OrganizationCoreServices(
-    val aggregate: OrganizationCoreAggregateService,
-    val finder: OrganizationCoreFinderService,
-)
