@@ -1,5 +1,7 @@
 package io.komune.im.core.user.domain.command
 
+import f2.dsl.cqrs.Command
+import f2.dsl.cqrs.Event
 import io.komune.im.commons.model.UserId
 import kotlin.js.JsExport
 import kotlinx.serialization.Serializable
@@ -8,7 +10,7 @@ import kotlinx.serialization.Serializable
  * @d2 command
  */
 @JsExport
-interface UserCoreDeleteCommandDTO {
+interface UserCoreDeleteCommandDTO: Command {
     /**
      * Id of the user to delete.
      */
@@ -27,7 +29,7 @@ data class UserCoreDeleteCommand(
  * @d2 event
  */
 @JsExport
-interface UserCoreDeletedEventDTO {
+interface UserCoreDeletedEventDTO: Event {
     /**
      * Id of the deleted user.
      */

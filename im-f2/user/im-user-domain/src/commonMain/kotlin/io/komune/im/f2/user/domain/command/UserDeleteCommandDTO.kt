@@ -1,7 +1,5 @@
 package io.komune.im.f2.user.domain.command
 
-import f2.dsl.cqrs.Command
-import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import io.komune.im.core.user.domain.command.UserCoreDeleteCommand
 import io.komune.im.core.user.domain.command.UserCoreDeletedEvent
@@ -20,11 +18,11 @@ import kotlin.js.JsExport
 typealias UserDeleteFunction = F2Function<UserDeleteCommand, UserDeletedEvent>
 
 @JsExport
-interface UserDeleteCommandDTO: UserCoreDeleteCommandDTO, Command
+interface UserDeleteCommandDTO: UserCoreDeleteCommandDTO
 
 typealias UserDeleteCommand = UserCoreDeleteCommand
 
 @JsExport
-interface UserDeletedEventDTO: UserCoreDeletedEventDTO, Event
+interface UserDeletedEventDTO: UserCoreDeletedEventDTO
 
 typealias UserDeletedEvent = UserCoreDeletedEvent
