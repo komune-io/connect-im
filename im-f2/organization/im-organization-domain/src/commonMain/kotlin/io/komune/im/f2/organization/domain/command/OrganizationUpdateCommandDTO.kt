@@ -71,6 +71,7 @@ interface OrganizationUpdateCommandDTO: Command {
     val status: String?
 }
 
+@JsExport
 @Serializable
 data class OrganizationUpdateCommand(
     override val id: OrganizationId,
@@ -96,6 +97,7 @@ interface OrganizationUpdatedResultDTO: Event {
     val id: OrganizationId
 }
 
+@JsExport
 @Serializable
 data class OrganizationUpdatedResult(
     override val id: OrganizationId

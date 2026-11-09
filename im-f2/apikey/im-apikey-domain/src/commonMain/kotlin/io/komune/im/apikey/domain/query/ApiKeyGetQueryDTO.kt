@@ -34,6 +34,7 @@ interface ApiKeyGetQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class ApiKeyGetQuery(
     override val id: ApiKeyId
@@ -55,6 +56,7 @@ interface ApiKeyGetResultDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class ApiKeyGetResult(
     override val item: ApiKey?

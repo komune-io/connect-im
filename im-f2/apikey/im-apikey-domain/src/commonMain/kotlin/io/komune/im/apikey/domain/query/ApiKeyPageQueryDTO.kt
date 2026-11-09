@@ -67,6 +67,7 @@ interface ApiKeyPageQueryDTO : Query {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class ApiKeyPageQuery(
     override val search: String? = null,
@@ -101,6 +102,7 @@ interface ApiKeyPageResultDTO : PageDTO<ApiKeyDTO> {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class ApiKeyPageResult(
     override val items: List<ApiKey>,

@@ -21,6 +21,7 @@ interface ApiKeyDTO {
     val creationDate: Long
 }
 
+@JsExport
 @Serializable
 data class ApiKey(
     override val id: ApiKeyId,

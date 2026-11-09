@@ -32,6 +32,7 @@ interface UserDisableMfaCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserDisableMfaCommand(
     override val id: UserId,
@@ -53,6 +54,7 @@ interface UserDisabledMfaventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserDisabledMfavent(
     override val id: UserId

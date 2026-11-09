@@ -32,6 +32,7 @@ interface RoleListQueryDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class RoleListQuery(
     override val target: String?
@@ -53,6 +54,7 @@ interface RoleListResultDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class RoleListResult(
     override val items: List<Role>

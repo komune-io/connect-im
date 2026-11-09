@@ -44,6 +44,7 @@ interface FeatureDTO: PrivilegeDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class Feature(
     override val id: FeatureId,

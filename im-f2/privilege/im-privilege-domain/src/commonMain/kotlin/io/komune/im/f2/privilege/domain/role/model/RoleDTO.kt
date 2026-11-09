@@ -106,6 +106,7 @@ interface RoleDTO: PrivilegeDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class Role(
     override val id: RoleId,

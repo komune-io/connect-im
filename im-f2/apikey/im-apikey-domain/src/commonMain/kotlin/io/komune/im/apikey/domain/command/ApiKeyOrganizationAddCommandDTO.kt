@@ -49,6 +49,7 @@ interface ApiKeyOrganizationAddCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class ApiKeyOrganizationAddKeyCommand(
     override val organizationId: OrganizationId,
@@ -87,6 +88,7 @@ interface ApiKeyAddedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class ApiKeyOrganizationAddedEvent(
     override val id: ApiKeyId,

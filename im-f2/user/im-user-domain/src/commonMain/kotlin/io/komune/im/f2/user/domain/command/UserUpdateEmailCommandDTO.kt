@@ -41,6 +41,7 @@ interface UserUpdateEmailCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserUpdateEmailCommand(
     override val id: UserId,
@@ -63,6 +64,7 @@ interface UserUpdatedEmailEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserUpdatedEmailEvent(
     override val id: UserId

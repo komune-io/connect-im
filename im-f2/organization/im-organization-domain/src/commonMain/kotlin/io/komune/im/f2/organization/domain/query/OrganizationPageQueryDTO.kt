@@ -58,6 +58,7 @@ interface OrganizationPageQueryDTO: Query {
  * @d2 result
  * @parent [OrganizationPageFunction]
  */
+@JsExport
 @Serializable
 data class OrganizationPageQuery(
 	override val name: String? = null,
@@ -92,6 +93,7 @@ interface OrganizationPageResultDTO: PageDTO<OrganizationDTO> {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class OrganizationPageResult(
     override val items: List<Organization>,

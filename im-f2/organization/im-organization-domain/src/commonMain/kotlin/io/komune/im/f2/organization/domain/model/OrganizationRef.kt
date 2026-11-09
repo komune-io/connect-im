@@ -29,6 +29,7 @@ interface OrganizationRefDTO {
     val roles: List<String>
 }
 
+@JsExport
 @Serializable
 data class OrganizationRef(
     override val id: OrganizationId,

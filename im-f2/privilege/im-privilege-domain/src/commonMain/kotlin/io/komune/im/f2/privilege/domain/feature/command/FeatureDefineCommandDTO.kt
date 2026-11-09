@@ -34,6 +34,7 @@ interface FeatureDefineCommandDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class FeatureDefineCommand(
     override val identifier: FeatureIdentifier,
@@ -55,6 +56,7 @@ interface FeatureDefinedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class FeatureDefinedEvent(
     override val identifier: FeatureIdentifier

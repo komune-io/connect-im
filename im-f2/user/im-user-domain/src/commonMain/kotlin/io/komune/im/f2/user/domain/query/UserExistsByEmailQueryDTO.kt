@@ -30,6 +30,7 @@ interface UserExistsByEmailQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserExistsByEmailQuery(
     override val email: String
@@ -51,6 +52,7 @@ interface UserExistsByEmailResultDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserExistsByEmailResult(
     override val item: Boolean

@@ -30,6 +30,7 @@ interface PermissionGetQueryDTO {
     val identifier: PermissionIdentifier
 }
 
+@JsExport
 @Serializable
 data class PermissionGetQuery(
     override val identifier: PermissionIdentifier
@@ -51,6 +52,7 @@ interface PermissionGetResultDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class PermissionGetResult(
     override val item: Permission?

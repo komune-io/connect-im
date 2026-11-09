@@ -57,6 +57,7 @@ interface OrganizationDisableCommandDTO: Command {
  * @d2 command
  * @parent [OrganizationDisableFunction]
  */
+@JsExport
 @Serializable
 data class OrganizationDisableCommand(
     override val id: OrganizationId,
@@ -77,6 +78,7 @@ interface OrganizationDisabledEventDTO: Event {
  * @d2 event
  * @parent [OrganizationDisableFunction]
  */
+@JsExport
 @Serializable
 data class OrganizationDisabledEvent(
     /**

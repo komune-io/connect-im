@@ -20,6 +20,7 @@ interface UserCoreDeleteCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserCoreDeleteCommand(
     override val id: UserId
@@ -36,6 +37,7 @@ interface UserCoreDeletedEventDTO: Event {
     val id: UserId
 }
 
+@JsExport
 @Serializable
 data class UserCoreDeletedEvent(
     override val id: UserId

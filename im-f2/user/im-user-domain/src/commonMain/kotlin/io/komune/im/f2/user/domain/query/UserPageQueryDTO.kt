@@ -84,6 +84,7 @@ interface UserPageQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserPageQuery(
     override val organizationId: OrganizationId? = null,
@@ -119,6 +120,7 @@ interface UserPageResultDTO: PageDTO<UserDTO> {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserPageResult(
     override val items: List<User>,

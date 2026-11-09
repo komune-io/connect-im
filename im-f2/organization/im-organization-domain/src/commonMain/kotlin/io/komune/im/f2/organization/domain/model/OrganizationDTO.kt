@@ -102,6 +102,7 @@ interface OrganizationDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class Organization(
     override val id: OrganizationId,

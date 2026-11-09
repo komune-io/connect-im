@@ -111,6 +111,7 @@ interface UserDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class User(
     override val id: UserId,

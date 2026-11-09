@@ -28,6 +28,7 @@ interface SpaceGetQueryDTO: Query {
  * @d2 query
  * @parent [SpaceGetFunction]
  */
+@JsExport
 @Serializable
 data class SpaceGetQuery(
     /**
@@ -46,6 +47,7 @@ interface SpaceGetResultDTO: Event {
  * @d2 result
  * @parent [SpaceGetFunction]
  */
+@JsExport
 @Serializable
 data class SpaceGetResult(
     /**

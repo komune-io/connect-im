@@ -55,6 +55,7 @@ interface RoleDefineCommandDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class RoleDefineCommand(
     override val identifier: RoleIdentifier,
@@ -80,6 +81,7 @@ interface RoleDefinedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class RoleDefinedEvent(
     override val identifier: RoleIdentifier

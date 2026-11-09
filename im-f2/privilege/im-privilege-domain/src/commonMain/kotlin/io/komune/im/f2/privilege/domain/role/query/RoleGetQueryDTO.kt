@@ -33,6 +33,7 @@ interface RoleGetQueryDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class RoleGetQuery(
     override val identifier: RoleIdentifier
@@ -54,6 +55,7 @@ interface RoleGetResultDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class RoleGetResult(
     override val item: Role?

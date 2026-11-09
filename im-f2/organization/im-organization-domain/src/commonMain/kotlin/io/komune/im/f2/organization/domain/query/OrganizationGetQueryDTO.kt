@@ -32,6 +32,7 @@ interface OrganizationGetQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class OrganizationGetQuery(
     override val id: OrganizationId
@@ -52,6 +53,7 @@ interface OrganizationGetResultDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class OrganizationGetResult(
     override val item: Organization?

@@ -33,6 +33,7 @@ interface SpacePageQueryDTO: Query {
  * @d2 query
  * @parent [SpacePageFunction]
  */
+@JsExport
 @Serializable
 data class SpacePageQuery(
 	/**
@@ -60,6 +61,7 @@ interface SpacePageResultDTO: PageDTO<SpaceDTO>
  * @d2 result
  * @parent [SpacePageFunction]
  */
+@JsExport
 @Serializable
 data class SpacePageResult(
     /**

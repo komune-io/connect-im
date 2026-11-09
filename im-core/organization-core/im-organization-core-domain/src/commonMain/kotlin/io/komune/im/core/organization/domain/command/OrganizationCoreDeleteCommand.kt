@@ -20,6 +20,7 @@ interface OrganizationCoreDeleteCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class OrganizationCoreDeleteCommand(
     override val id: OrganizationId
@@ -39,6 +40,7 @@ interface OrganizationCoreDeletedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class OrganizationCoreDeletedEvent(
     override val id: OrganizationId

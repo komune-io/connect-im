@@ -30,6 +30,7 @@ interface FeatureGetQueryDTO {
     val identifier: FeatureIdentifier
 }
 
+@JsExport
 @Serializable
 data class FeatureGetQuery(
     override val identifier: FeatureIdentifier
@@ -51,6 +52,7 @@ interface FeatureGetResultDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class FeatureGetResult(
     override val item: Feature?

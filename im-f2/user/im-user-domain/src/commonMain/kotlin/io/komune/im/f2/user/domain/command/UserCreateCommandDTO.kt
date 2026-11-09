@@ -110,6 +110,7 @@ interface UserCreateCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserCreateCommand(
     override val email: String,
@@ -142,6 +143,7 @@ interface UserCreatedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserCreatedEvent(
     override val id: UserId

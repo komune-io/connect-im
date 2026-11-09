@@ -26,6 +26,7 @@ interface UserEnableCommandDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserEnableCommand(
     override val id: UserId
@@ -47,6 +48,7 @@ interface UserEnabledEventDTO : Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserEnabledEvent(
     override val id: UserId

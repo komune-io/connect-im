@@ -52,6 +52,7 @@ interface PermissionDTO: PrivilegeDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class Permission(
     override val id: PermissionId,

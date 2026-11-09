@@ -27,6 +27,7 @@ interface OrganizationRefListQueryDTO: Query {
  * @d2 query
  * @parent [OrganizationRefListFunction]
  */
+@JsExport
 @Serializable
 data class OrganizationRefListQuery(
 	/**
@@ -46,6 +47,7 @@ interface OrganizationRefListResultDTO: Event {
  * @d2 result
  * @parent [OrganizationRefListFunction]
  */
+@JsExport
 @Serializable
 data class OrganizationRefListResult(
 	/**
