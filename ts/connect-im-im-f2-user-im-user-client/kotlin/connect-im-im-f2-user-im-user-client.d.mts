@@ -1,0 +1,2083 @@
+declare function KtSingleton<T>(): T & (abstract new() => any);
+export declare interface Command extends Message {
+}
+export declare interface Event extends Message {
+}
+export declare interface Message {
+}
+export declare interface Problem extends Message {
+}
+export declare interface Query extends Message {
+}
+export declare interface EnvelopeDTO<T> extends WithEnvelopeId, WithEnvelopeData<T>, Message {
+    readonly id: string;
+    readonly data: T;
+    readonly type: string;
+    readonly datacontenttype?: string | null;
+    readonly specversion?: string | null;
+    readonly source?: string | null;
+    readonly time?: string | null;
+}
+export declare class Envelope<T> implements EnvelopeDTO<T> {
+    constructor(id: string, data: T, type: string, datacontenttype?: string | null, specversion?: string | null, source?: string | null, time?: string | null);
+    get id(): string;
+    get data(): T;
+    get type(): string;
+    get datacontenttype(): string | null;
+    get specversion(): string | null;
+    get source(): string | null;
+    get time(): string | null;
+}
+export declare namespace Envelope {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new <T>() => Envelope<T>;
+    }
+}
+export declare interface WithEnvelopeData<T> {
+    readonly data: T;
+}
+export declare interface WithEnvelopeId {
+    readonly id: string;
+}
+export declare interface F2ErrorDTO extends Problem {
+    readonly id?: string | null;
+    readonly timestamp: string;
+    readonly code: number;
+    readonly requestId?: string | null;
+    readonly message: string;
+}
+export declare class F2Error implements F2ErrorDTO {
+    constructor(message: string, id?: string | null, timestamp?: string, code?: number, requestId?: string | null);
+    get message(): string;
+    get id(): string | null;
+    get timestamp(): string;
+    get code(): number;
+    get requestId(): string | null;
+    toString(): string;
+}
+export declare namespace F2Error {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => F2Error;
+    }
+}
+export declare class F2Exception extends /* RuntimeException */ Error {
+    constructor(error: F2ErrorDTO, cause?: Error | null);
+    get error(): F2ErrorDTO;
+}
+export declare namespace F2Exception {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => F2Exception;
+    }
+    abstract class Companion extends KtSingleton<Companion.$metadata$.constructor>() {
+        private constructor();
+    }
+    namespace Companion {
+        /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+        namespace $metadata$ {
+            abstract class constructor {
+                invoke(message: string, id?: string, requestId?: string, code?: number, cause?: Error | null): F2Exception;
+                private constructor();
+            }
+        }
+    }
+}
+export declare interface Match<T> {
+    readonly negative: boolean;
+    map<R>(transform: (value: T) => R): Match<R>;
+    not(): Match<T>;
+    and(match: Match<T>): Match<T>;
+    or(match: Match<T>): Match<T>;
+}
+export declare interface SortDTO {
+    readonly property: string;
+    readonly ascending: boolean;
+    readonly nullsFirst?: boolean | null;
+}
+export declare interface PageDTO<out OBJECT> {
+    readonly total: number;
+    readonly items: OBJECT[];
+}
+export declare class Page<out OBJECT> implements PageDTO<OBJECT> {
+    constructor(total: number, items: OBJECT[]);
+    get total(): number;
+    get items(): OBJECT[];
+}
+export declare namespace Page {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new <OBJECT>() => Page<OBJECT>;
+    }
+}
+export declare interface PageQueryDTO extends Query {
+    readonly pagination?: OffsetPaginationDTO | null;
+}
+export declare interface PageQueryResultDTO<out OBJECT> extends Event, PageDTO<OBJECT> {
+    readonly total: number;
+    readonly items: OBJECT[];
+    readonly pagination?: OffsetPaginationDTO | null;
+}
+export declare class PageQuery implements PageQueryDTO {
+    constructor(pagination?: OffsetPaginationDTO | null);
+    get pagination(): OffsetPaginationDTO | null;
+}
+export declare namespace PageQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => PageQuery;
+    }
+}
+export declare class PageQueryResult<out OBJECT> implements PageQueryResultDTO<OBJECT> {
+    constructor(pagination: OffsetPagination | null, total: number, items: OBJECT[]);
+    get pagination(): OffsetPagination | null;
+    get total(): number;
+    get items(): OBJECT[];
+}
+export declare namespace PageQueryResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new <OBJECT>() => PageQueryResult<OBJECT>;
+    }
+}
+export declare interface Pagination {
+}
+export declare interface OffsetPaginationDTO extends Pagination {
+    readonly offset: number;
+    readonly limit: number;
+}
+export declare interface PagePaginationDTO extends Pagination {
+    readonly page?: number | null;
+    readonly size?: number | null;
+}
+export declare class OffsetPagination implements OffsetPaginationDTO {
+    constructor(offset: number, limit: number);
+    get offset(): number;
+    get limit(): number;
+}
+export declare namespace OffsetPagination {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OffsetPagination;
+    }
+}
+export declare class PagePagination implements PagePaginationDTO {
+    constructor(page?: number | null, size?: number | null);
+    get page(): number | null;
+    get size(): number | null;
+}
+export declare namespace PagePagination {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => PagePagination;
+    }
+}
+export declare interface AuthedUserDTO {
+    readonly id: string;
+    readonly identifier?: string | null;
+    readonly memberOf?: string | null;
+    readonly roles?: Array<string> | null;
+    readonly acr?: string | null;
+}
+export declare abstract class ImPermission {
+    private constructor();
+    static get IM_FORCE_MFA_OTP(): ImPermission & {
+        get name(): "IM_FORCE_MFA_OTP";
+        get ordinal(): 0;
+    };
+    static get IM_USER_READ(): ImPermission & {
+        get name(): "IM_USER_READ";
+        get ordinal(): 1;
+    };
+    static get IM_USER_ROLE_WRITE(): ImPermission & {
+        get name(): "IM_USER_ROLE_WRITE";
+        get ordinal(): 2;
+    };
+    static get IM_USER_WRITE(): ImPermission & {
+        get name(): "IM_USER_WRITE";
+        get ordinal(): 3;
+    };
+    static get IM_MY_USER(): ImPermission & {
+        get name(): "IM_MY_USER";
+        get ordinal(): 4;
+    };
+    static get IM_ORGANIZATION_READ(): ImPermission & {
+        get name(): "IM_ORGANIZATION_READ";
+        get ordinal(): 5;
+    };
+    static get IM_ORGANIZATION_WRITE(): ImPermission & {
+        get name(): "IM_ORGANIZATION_WRITE";
+        get ordinal(): 6;
+    };
+    static get IM_MY_ORGANIZATION_WRITE(): ImPermission & {
+        get name(): "IM_MY_ORGANIZATION_WRITE";
+        get ordinal(): 7;
+    };
+    static get IM_MY_ORGANIZATION_READ(): ImPermission & {
+        get name(): "IM_MY_ORGANIZATION_READ";
+        get ordinal(): 8;
+    };
+    static get IM_ORGANIZATION_API_KEY_READ(): ImPermission & {
+        get name(): "IM_ORGANIZATION_API_KEY_READ";
+        get ordinal(): 9;
+    };
+    static get IM_ORGANIZATION_STATUS_WRITE(): ImPermission & {
+        get name(): "IM_ORGANIZATION_STATUS_WRITE";
+        get ordinal(): 10;
+    };
+    static get IM_APIKEY_READ(): ImPermission & {
+        get name(): "IM_APIKEY_READ";
+        get ordinal(): 11;
+    };
+    static get IM_APIKEY_WRITE(): ImPermission & {
+        get name(): "IM_APIKEY_WRITE";
+        get ordinal(): 12;
+    };
+    static get IM_SPACE_READ(): ImPermission & {
+        get name(): "IM_SPACE_READ";
+        get ordinal(): 13;
+    };
+    static get IM_SPACE_WRITE(): ImPermission & {
+        get name(): "IM_SPACE_WRITE";
+        get ordinal(): 14;
+    };
+    static get IM_ROLE_READ(): ImPermission & {
+        get name(): "IM_ROLE_READ";
+        get ordinal(): 15;
+    };
+    static get IM_ROLE_WRITE(): ImPermission & {
+        get name(): "IM_ROLE_WRITE";
+        get ordinal(): 16;
+    };
+    static values(): [typeof ImPermission.IM_FORCE_MFA_OTP, typeof ImPermission.IM_USER_READ, typeof ImPermission.IM_USER_ROLE_WRITE, typeof ImPermission.IM_USER_WRITE, typeof ImPermission.IM_MY_USER, typeof ImPermission.IM_ORGANIZATION_READ, typeof ImPermission.IM_ORGANIZATION_WRITE, typeof ImPermission.IM_MY_ORGANIZATION_WRITE, typeof ImPermission.IM_MY_ORGANIZATION_READ, typeof ImPermission.IM_ORGANIZATION_API_KEY_READ, typeof ImPermission.IM_ORGANIZATION_STATUS_WRITE, typeof ImPermission.IM_APIKEY_READ, typeof ImPermission.IM_APIKEY_WRITE, typeof ImPermission.IM_SPACE_READ, typeof ImPermission.IM_SPACE_WRITE, typeof ImPermission.IM_ROLE_READ, typeof ImPermission.IM_ROLE_WRITE];
+    static valueOf(value: string): ImPermission;
+    get name(): "IM_FORCE_MFA_OTP" | "IM_USER_READ" | "IM_USER_ROLE_WRITE" | "IM_USER_WRITE" | "IM_MY_USER" | "IM_ORGANIZATION_READ" | "IM_ORGANIZATION_WRITE" | "IM_MY_ORGANIZATION_WRITE" | "IM_MY_ORGANIZATION_READ" | "IM_ORGANIZATION_API_KEY_READ" | "IM_ORGANIZATION_STATUS_WRITE" | "IM_APIKEY_READ" | "IM_APIKEY_WRITE" | "IM_SPACE_READ" | "IM_SPACE_WRITE" | "IM_ROLE_READ" | "IM_ROLE_WRITE";
+    get ordinal(): 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16;
+    get identifier(): string;
+}
+export declare namespace ImPermission {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => ImPermission;
+    }
+}
+export declare abstract class ExceptionCodes {
+    static readonly getInstance: () => typeof ExceptionCodes.$metadata$.type;
+    private constructor();
+}
+export declare namespace ExceptionCodes {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        abstract class type extends KtSingleton<constructor>() {
+            private constructor();
+        }
+        abstract class constructor {
+            privilegeWrongTarget(): number;
+            private constructor();
+        }
+    }
+}
+export declare interface AddressDTO {
+    readonly street: string;
+    readonly postalCode: string;
+    readonly city: string;
+}
+export declare class Address implements AddressDTO {
+    constructor(street: string, postalCode: string, city: string);
+    get street(): string;
+    get postalCode(): string;
+    get city(): string;
+    copy(street?: string, postalCode?: string, city?: string): Address;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace Address {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => Address;
+    }
+}
+export declare interface UserCoreDeleteCommandDTO extends Command {
+    readonly id: string;
+}
+export declare class UserCoreDeleteCommand implements UserCoreDeleteCommandDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserCoreDeleteCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserCoreDeleteCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserCoreDeleteCommand;
+    }
+}
+export declare interface UserCoreDeletedEventDTO extends Event {
+    readonly id: string;
+}
+export declare class UserCoreDeletedEvent implements UserCoreDeletedEventDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserCoreDeletedEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserCoreDeletedEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserCoreDeletedEvent;
+    }
+}
+export declare interface OrganizationCoreDeleteCommandDTO extends Command {
+    readonly id: string;
+}
+export declare class OrganizationCoreDeleteCommand implements OrganizationCoreDeleteCommandDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): OrganizationCoreDeleteCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationCoreDeleteCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationCoreDeleteCommand;
+    }
+}
+export declare interface OrganizationCoreDeletedEventDTO extends Event {
+    readonly id: string;
+}
+export declare class OrganizationCoreDeletedEvent implements OrganizationCoreDeletedEventDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): OrganizationCoreDeletedEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationCoreDeletedEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationCoreDeletedEvent;
+    }
+}
+export declare abstract class PrivilegePolicies {
+    static readonly getInstance: () => typeof PrivilegePolicies.$metadata$.type;
+    private constructor();
+}
+export declare namespace PrivilegePolicies {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        abstract class type extends KtSingleton<constructor>() {
+            private constructor();
+        }
+        abstract class constructor {
+            canGet(authedUser: AuthedUserDTO): boolean;
+            canList(authedUser: AuthedUserDTO): boolean;
+            canDefine(authedUser: AuthedUserDTO): boolean;
+            private constructor();
+        }
+    }
+}
+export declare interface FeatureDefineCommandDTO {
+    readonly identifier: string;
+    readonly description: string;
+}
+export declare class FeatureDefineCommand implements FeatureDefineCommandDTO {
+    constructor(identifier: string, description: string);
+    get identifier(): string;
+    get description(): string;
+    copy(identifier?: string, description?: string): FeatureDefineCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace FeatureDefineCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => FeatureDefineCommand;
+    }
+}
+export declare interface FeatureDefinedEventDTO extends Event {
+    readonly identifier: string;
+}
+export declare class FeatureDefinedEvent implements FeatureDefinedEventDTO {
+    constructor(identifier: string);
+    get identifier(): string;
+    copy(identifier?: string): FeatureDefinedEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace FeatureDefinedEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => FeatureDefinedEvent;
+    }
+}
+export declare interface FeatureDTO extends PrivilegeDTO {
+    readonly id: string;
+    readonly type: string;
+    readonly identifier: string;
+    readonly description: string;
+}
+export declare class Feature implements FeatureDTO {
+    constructor(id: string, identifier: string, description: string, type?: string);
+    get id(): string;
+    get identifier(): string;
+    get description(): string;
+    get type(): string;
+    copy(id?: string, identifier?: string, description?: string, type?: string): Feature;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace Feature {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => Feature;
+    }
+}
+export declare interface FeatureGetQueryDTO {
+    readonly identifier: string;
+}
+export declare class FeatureGetQuery implements FeatureGetQueryDTO {
+    constructor(identifier: string);
+    get identifier(): string;
+    copy(identifier?: string): FeatureGetQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace FeatureGetQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => FeatureGetQuery;
+    }
+}
+export declare interface FeatureGetResultDTO {
+    readonly item?: FeatureDTO | null;
+}
+export declare class FeatureGetResult implements FeatureGetResultDTO {
+    constructor(item?: Feature | null);
+    get item(): Feature | null;
+    copy(item?: Feature | null): FeatureGetResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace FeatureGetResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => FeatureGetResult;
+    }
+}
+export declare interface FeatureListQueryDTO {
+}
+export declare class FeatureListQuery implements FeatureListQueryDTO {
+    constructor();
+}
+export declare namespace FeatureListQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => FeatureListQuery;
+    }
+}
+export declare interface FeatureListResultDTO {
+    readonly items: FeatureDTO[];
+}
+export declare class FeatureListResult implements FeatureListResultDTO {
+    constructor(items: Feature[]);
+    get items(): Feature[];
+    copy(items?: Feature[]): FeatureListResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace FeatureListResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => FeatureListResult;
+    }
+}
+export declare interface PrivilegeDTO {
+    readonly id: string;
+    readonly identifier: string;
+    readonly description: string;
+    readonly type: string;
+}
+export declare interface PermissionDefineCommandDTO {
+    readonly identifier: string;
+    readonly description: string;
+    readonly features?: string[][] | null;
+}
+export declare class PermissionDefineCommand implements PermissionDefineCommandDTO {
+    constructor(identifier: string, description: string, features?: string[][] | null);
+    get identifier(): string;
+    get description(): string;
+    get features(): string[][] | null;
+    copy(identifier?: string, description?: string, features?: string[][] | null): PermissionDefineCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace PermissionDefineCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => PermissionDefineCommand;
+    }
+}
+export declare interface PermissionDefinedEventDTO extends Event {
+    readonly identifier: string;
+}
+export declare class PermissionDefinedEvent implements PermissionDefinedEventDTO {
+    constructor(identifier: string);
+    get identifier(): string;
+    copy(identifier?: string): PermissionDefinedEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace PermissionDefinedEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => PermissionDefinedEvent;
+    }
+}
+export declare interface PermissionDTO extends PrivilegeDTO {
+    readonly id: string;
+    readonly type: string;
+    readonly identifier: string;
+    readonly description: string;
+    readonly features?: string[][] | null;
+}
+export declare class Permission implements PermissionDTO {
+    constructor(id: string, identifier: string, description: string, features?: string[][] | null, type?: string);
+    get id(): string;
+    get identifier(): string;
+    get description(): string;
+    get features(): string[][] | null;
+    get type(): string;
+    copy(id?: string, identifier?: string, description?: string, features?: string[][] | null, type?: string): Permission;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace Permission {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => Permission;
+    }
+}
+export declare interface PermissionGetQueryDTO {
+    readonly identifier: string;
+}
+export declare class PermissionGetQuery implements PermissionGetQueryDTO {
+    constructor(identifier: string);
+    get identifier(): string;
+    copy(identifier?: string): PermissionGetQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace PermissionGetQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => PermissionGetQuery;
+    }
+}
+export declare interface PermissionGetResultDTO {
+    readonly item?: PermissionDTO | null;
+}
+export declare class PermissionGetResult implements PermissionGetResultDTO {
+    constructor(item?: Permission | null);
+    get item(): Permission | null;
+    copy(item?: Permission | null): PermissionGetResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace PermissionGetResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => PermissionGetResult;
+    }
+}
+export declare interface PermissionListQueryDTO {
+}
+export declare class PermissionListQuery implements PermissionListQueryDTO {
+    constructor();
+}
+export declare namespace PermissionListQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => PermissionListQuery;
+    }
+}
+export declare interface PermissionListResultDTO {
+    readonly items: PermissionDTO[];
+}
+export declare class PermissionListResult implements PermissionListResultDTO {
+    constructor(items: Permission[]);
+    get items(): Permission[];
+    copy(items?: Permission[]): PermissionListResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace PermissionListResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => PermissionListResult;
+    }
+}
+export declare interface RoleDefineCommandDTO {
+    readonly identifier: string;
+    readonly description: string;
+    readonly targets: string[];
+    readonly locale: Record<string, string>;
+    readonly bindings?: Record<string, string[]> | null;
+    readonly permissions?: string[] | null;
+}
+export declare class RoleDefineCommand implements RoleDefineCommandDTO {
+    constructor(identifier: string, description: string, targets: string[], locale: Record<string, string>, bindings?: Record<string, string[]> | null, permissions?: string[] | null);
+    get identifier(): string;
+    get description(): string;
+    get targets(): string[];
+    get locale(): Record<string, string>;
+    get bindings(): Record<string, string[]> | null;
+    get permissions(): string[] | null;
+    copy(identifier?: string, description?: string, targets?: string[], locale?: Record<string, string>, bindings?: Record<string, string[]> | null, permissions?: string[] | null): RoleDefineCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace RoleDefineCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => RoleDefineCommand;
+    }
+}
+export declare interface RoleDefinedEventDTO extends Event {
+    readonly identifier: string;
+}
+export declare class RoleDefinedEvent implements RoleDefinedEventDTO {
+    constructor(identifier: string);
+    get identifier(): string;
+    copy(identifier?: string): RoleDefinedEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace RoleDefinedEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => RoleDefinedEvent;
+    }
+}
+export declare interface RoleDTO extends PrivilegeDTO {
+    readonly id: string;
+    readonly type: string;
+    readonly identifier: string;
+    readonly description: string;
+    readonly targets: string[];
+    readonly locale: Record<string, string>;
+    readonly bindings: Record<string, RoleDTO[]>;
+    readonly permissions: string[];
+}
+export declare class Role implements RoleDTO {
+    constructor(id: string, identifier: string, description: string, targets: string[], locale: Record<string, string>, bindings: Record<string, Role[]>, permissions: string[], type?: string);
+    get id(): string;
+    get identifier(): string;
+    get description(): string;
+    get targets(): string[];
+    get locale(): Record<string, string>;
+    get bindings(): Record<string, Role[]>;
+    get permissions(): string[];
+    get type(): string;
+    copy(id?: string, identifier?: string, description?: string, targets?: string[], locale?: Record<string, string>, bindings?: Record<string, Role[]>, permissions?: string[], type?: string): Role;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace Role {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => Role;
+    }
+}
+export declare abstract class RoleTargetValues {
+    static readonly getInstance: () => typeof RoleTargetValues.$metadata$.type;
+    private constructor();
+}
+export declare namespace RoleTargetValues {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        abstract class type extends KtSingleton<constructor>() {
+            private constructor();
+        }
+        abstract class constructor {
+            get ORGANIZATION(): string;
+            get USER(): string;
+            get API_KEY(): string;
+            private constructor();
+        }
+    }
+}
+export declare interface RoleGetQueryDTO {
+    readonly identifier: string;
+}
+export declare class RoleGetQuery implements RoleGetQueryDTO {
+    constructor(identifier: string);
+    get identifier(): string;
+    copy(identifier?: string): RoleGetQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace RoleGetQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => RoleGetQuery;
+    }
+}
+export declare interface RoleGetResultDTO {
+    readonly item?: RoleDTO | null;
+}
+export declare class RoleGetResult implements RoleGetResultDTO {
+    constructor(item?: Role | null);
+    get item(): Role | null;
+    copy(item?: Role | null): RoleGetResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace RoleGetResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => RoleGetResult;
+    }
+}
+export declare interface RoleListQueryDTO {
+    readonly target?: string | null;
+}
+export declare class RoleListQuery implements RoleListQueryDTO {
+    constructor(target?: string | null);
+    get target(): string | null;
+    copy(target?: string | null): RoleListQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace RoleListQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => RoleListQuery;
+    }
+}
+export declare interface RoleListResultDTO {
+    readonly items: RoleDTO[];
+}
+export declare class RoleListResult implements RoleListResultDTO {
+    constructor(items: Role[]);
+    get items(): Role[];
+    copy(items?: Role[]): RoleListResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace RoleListResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => RoleListResult;
+    }
+}
+export declare interface OrganizationCreateCommandDTO extends Command {
+    readonly siret?: string | null;
+    readonly name: string;
+    readonly description?: string | null;
+    readonly address?: AddressDTO | null;
+    readonly website?: string | null;
+    readonly roles?: string[] | null;
+    readonly parentOrganizationId?: string | null;
+    readonly attributes?: Record<string, string> | null;
+    readonly status?: string | null;
+}
+export declare class OrganizationCreateCommand implements OrganizationCreateCommandDTO {
+    constructor(siret: string | null | undefined, name: string, description?: string | null, address?: Address | null, website?: string | null, roles?: string[] | null, parentOrganizationId?: string | null, attributes?: Record<string, string> | null, status?: string);
+    get siret(): string | null;
+    get name(): string;
+    get description(): string | null;
+    get address(): Address | null;
+    get website(): string | null;
+    get roles(): string[] | null;
+    get parentOrganizationId(): string | null;
+    get attributes(): Record<string, string> | null;
+    get status(): string;
+    copy(siret?: string | null, name?: string, description?: string | null, address?: Address | null, website?: string | null, roles?: string[] | null, parentOrganizationId?: string | null, attributes?: Record<string, string> | null, status?: string): OrganizationCreateCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationCreateCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationCreateCommand;
+    }
+}
+export declare interface OrganizationCreatedEventDTO extends Event {
+    readonly id: string;
+    readonly parentOrganization?: string | null;
+}
+export declare class OrganizationCreatedEvent implements OrganizationCreatedEventDTO {
+    constructor(id: string, parentOrganization?: string | null);
+    get id(): string;
+    get parentOrganization(): string | null;
+    copy(id?: string, parentOrganization?: string | null): OrganizationCreatedEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationCreatedEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationCreatedEvent;
+    }
+}
+export declare interface OrganizationDeleteCommandDTO extends OrganizationCoreDeleteCommandDTO {
+}
+export declare interface OrganizationDeletedEventDTO extends OrganizationCoreDeletedEventDTO {
+}
+export declare interface OrganizationDisableCommandDTO extends Command {
+    readonly id: string;
+    readonly disabledBy?: string | null;
+    readonly anonymize: boolean;
+    readonly attributes?: Record<string, string> | null;
+    readonly userAttributes?: Record<string, string> | null;
+}
+export declare class OrganizationDisableCommand implements OrganizationDisableCommandDTO {
+    constructor(id: string, disabledBy: string | null, anonymize: boolean, attributes?: Record<string, string> | null, userAttributes?: Record<string, string> | null);
+    get id(): string;
+    get disabledBy(): string | null;
+    get anonymize(): boolean;
+    get attributes(): Record<string, string> | null;
+    get userAttributes(): Record<string, string> | null;
+    copy(id?: string, disabledBy?: string | null, anonymize?: boolean, attributes?: Record<string, string> | null, userAttributes?: Record<string, string> | null): OrganizationDisableCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationDisableCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationDisableCommand;
+    }
+}
+export declare interface OrganizationDisabledEventDTO extends Event {
+    readonly id: string;
+    readonly userIds: string[];
+}
+export declare class OrganizationDisabledEvent implements OrganizationDisabledEventDTO {
+    constructor(id: string, userIds: string[]);
+    get id(): string;
+    get userIds(): string[];
+    copy(id?: string, userIds?: string[]): OrganizationDisabledEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationDisabledEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationDisabledEvent;
+    }
+}
+export declare interface OrganizationUpdateCommandDTO extends Command {
+    readonly id: string;
+    readonly name: string;
+    readonly description?: string | null;
+    readonly address?: AddressDTO | null;
+    readonly website?: string | null;
+    readonly roles?: string[] | null;
+    readonly attributes?: Record<string, string> | null;
+    readonly status?: string | null;
+}
+export declare class OrganizationUpdateCommand implements OrganizationUpdateCommandDTO {
+    constructor(id: string, name: string, description: string | null, address: Address | null, website?: string | null, roles?: string[] | null, attributes?: Record<string, string> | null, status?: string | null);
+    get id(): string;
+    get name(): string;
+    get description(): string | null;
+    get address(): Address | null;
+    get website(): string | null;
+    get roles(): string[] | null;
+    get attributes(): Record<string, string> | null;
+    get status(): string | null;
+    copy(id?: string, name?: string, description?: string | null, address?: Address | null, website?: string | null, roles?: string[] | null, attributes?: Record<string, string> | null, status?: string | null): OrganizationUpdateCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationUpdateCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationUpdateCommand;
+    }
+}
+export declare interface OrganizationUpdatedResultDTO extends Event {
+    readonly id: string;
+}
+export declare class OrganizationUpdatedResult implements OrganizationUpdatedResultDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): OrganizationUpdatedResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationUpdatedResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationUpdatedResult;
+    }
+}
+export declare interface OrganizationUploadLogoCommandDTO extends Command {
+    readonly id: string;
+}
+export declare interface OrganizationUploadedLogoEventDTO extends Event {
+    readonly id: string;
+    readonly url: string;
+}
+export declare interface OrganizationDTO {
+    readonly id: string;
+    readonly siret?: string | null;
+    readonly name: string;
+    readonly description?: string | null;
+    readonly address?: AddressDTO | null;
+    readonly website?: string | null;
+    readonly attributes: Record<string, string>;
+    readonly roles: RoleDTO[];
+    readonly logo?: string | null;
+    readonly enabled: boolean;
+    readonly status: string;
+    readonly disabledBy?: string | null;
+    readonly creationDate: number;
+    readonly disabledDate?: number | null;
+}
+export declare class Organization implements OrganizationDTO {
+    constructor(id: string, siret: string | null, name: string, description: string | null, address: Address | null, website: string | null, attributes: Record<string, string>, roles: Role[], logo: string | null, status: string, enabled: boolean, disabledBy: string | null, creationDate: number, disabledDate?: number | null);
+    get id(): string;
+    get siret(): string | null;
+    get name(): string;
+    get description(): string | null;
+    get address(): Address | null;
+    get website(): string | null;
+    get attributes(): Record<string, string>;
+    get roles(): Role[];
+    get logo(): string | null;
+    get status(): string;
+    get enabled(): boolean;
+    get disabledBy(): string | null;
+    get creationDate(): number;
+    get disabledDate(): number | null;
+    copy(id?: string, siret?: string | null, name?: string, description?: string | null, address?: Address | null, website?: string | null, attributes?: Record<string, string>, roles?: Role[], logo?: string | null, status?: string, enabled?: boolean, disabledBy?: string | null, creationDate?: number, disabledDate?: number | null): Organization;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace Organization {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => Organization;
+    }
+}
+export declare interface OrganizationRefDTO {
+    readonly id: string;
+    readonly name: string;
+    readonly roles: string[];
+}
+export declare class OrganizationRef implements OrganizationRefDTO {
+    constructor(id: string, name: string, roles: string[]);
+    get id(): string;
+    get name(): string;
+    get roles(): string[];
+    copy(id?: string, name?: string, roles?: string[]): OrganizationRef;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationRef {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationRef;
+    }
+}
+export declare abstract class OrganizationStatusValues {
+    static readonly getInstance: () => typeof OrganizationStatusValues.$metadata$.type;
+    private constructor();
+}
+export declare namespace OrganizationStatusValues {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        abstract class type extends KtSingleton<constructor>() {
+            private constructor();
+        }
+        abstract class constructor {
+            pending(): string;
+            validated(): string;
+            rejected(): string;
+            private constructor();
+        }
+    }
+}
+export declare abstract class OrganizationPolicies {
+    static readonly getInstance: () => typeof OrganizationPolicies.$metadata$.type;
+    private constructor();
+}
+export declare namespace OrganizationPolicies {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        abstract class type extends KtSingleton<constructor>() {
+            private constructor();
+        }
+        abstract class constructor {
+            canGet(authedUser: AuthedUserDTO, organizationId: string): boolean;
+            canList(authedUser: AuthedUserDTO): boolean;
+            checkRefList(authedUser?: AuthedUserDTO | null): boolean;
+            canCreate(authedUser: AuthedUserDTO): boolean;
+            canUpdate(authedUser: AuthedUserDTO, organizationId: string): boolean;
+            canUpdateStatus(authedUser: AuthedUserDTO): boolean;
+            canDisable(authedUser: AuthedUserDTO): boolean;
+            canDelete(authedUser: AuthedUserDTO): boolean;
+            private constructor();
+        }
+    }
+}
+export declare interface OrganizationGetFromInseeQueryDTO extends Query {
+    readonly siret: string;
+}
+export declare class OrganizationGetFromInseeQuery implements OrganizationGetFromInseeQueryDTO {
+    constructor(siret: string);
+    get siret(): string;
+    copy(siret?: string): OrganizationGetFromInseeQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationGetFromInseeQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationGetFromInseeQuery;
+    }
+}
+export declare interface OrganizationGetFromInseeResultDTO extends Event {
+    readonly item?: OrganizationDTO | null;
+}
+export declare class OrganizationGetFromInseeResult implements OrganizationGetFromInseeResultDTO {
+    constructor(item?: Organization | null);
+    get item(): Organization | null;
+    copy(item?: Organization | null): OrganizationGetFromInseeResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationGetFromInseeResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationGetFromInseeResult;
+    }
+}
+export declare interface OrganizationGetQueryDTO extends Query {
+    readonly id: string;
+}
+export declare class OrganizationGetQuery implements OrganizationGetQueryDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): OrganizationGetQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationGetQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationGetQuery;
+    }
+}
+export declare interface OrganizationGetResultDTO extends Event {
+    readonly item?: OrganizationDTO | null;
+}
+export declare class OrganizationGetResult implements OrganizationGetResultDTO {
+    constructor(item?: Organization | null);
+    get item(): Organization | null;
+    copy(item?: Organization | null): OrganizationGetResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationGetResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationGetResult;
+    }
+}
+export declare interface OrganizationPageQueryDTO extends Query {
+    readonly name?: string | null;
+    readonly role?: string | null;
+    readonly roles?: string[] | null;
+    readonly attributes?: Record<string, string> | null;
+    readonly status?: string[] | null;
+    readonly withDisabled?: boolean | null;
+    readonly offset?: number | null;
+    readonly limit?: number | null;
+}
+export declare class OrganizationPageQuery implements OrganizationPageQueryDTO {
+    constructor(name: string | null | undefined, role: string | null | undefined, attributes: Record<string, string> | null | undefined, status: string[] | null | undefined, withDisabled: boolean | null | undefined, offset?: number | null, limit?: number | null, roles?: string[] | null);
+    get name(): string | null;
+    get role(): string | null;
+    get attributes(): Record<string, string> | null;
+    get status(): string[] | null;
+    get withDisabled(): boolean | null;
+    get offset(): number | null;
+    get limit(): number | null;
+    get roles(): string[] | null;
+    copy(name?: string | null, role?: string | null, attributes?: Record<string, string> | null, status?: string[] | null, withDisabled?: boolean | null, offset?: number | null, limit?: number | null, roles?: string[] | null): OrganizationPageQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationPageQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationPageQuery;
+    }
+}
+export declare interface OrganizationPageResultDTO extends PageDTO<OrganizationDTO> {
+    readonly items: OrganizationDTO[];
+    readonly total: number;
+}
+export declare class OrganizationPageResult implements OrganizationPageResultDTO {
+    constructor(items: Organization[], total: number);
+    get items(): Organization[];
+    get total(): number;
+    copy(items?: Organization[], total?: number): OrganizationPageResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationPageResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationPageResult;
+    }
+}
+export declare interface OrganizationRefGetQueryDTO extends Query {
+    readonly id: string;
+}
+export declare class OrganizationRefGetQuery implements OrganizationRefGetQueryDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): OrganizationRefGetQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationRefGetQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationRefGetQuery;
+    }
+}
+export declare interface OrganizationRefGetResultDTO extends Event {
+    readonly item?: OrganizationRefDTO | null;
+}
+export declare class OrganizationRefGetResult implements OrganizationRefGetResultDTO {
+    constructor(item?: OrganizationRef | null);
+    get item(): OrganizationRef | null;
+    copy(item?: OrganizationRef | null): OrganizationRefGetResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationRefGetResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationRefGetResult;
+    }
+}
+export declare interface OrganizationRefListQueryDTO extends Query {
+    readonly withDisabled: boolean;
+}
+export declare class OrganizationRefListQuery implements OrganizationRefListQueryDTO {
+    constructor(withDisabled?: boolean);
+    get withDisabled(): boolean;
+    copy(withDisabled?: boolean): OrganizationRefListQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationRefListQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationRefListQuery;
+    }
+}
+export declare interface OrganizationRefListResultDTO extends Event {
+    readonly items: OrganizationRefDTO[];
+}
+export declare class OrganizationRefListResult implements OrganizationRefListResultDTO {
+    constructor(items: OrganizationRef[]);
+    get items(): OrganizationRef[];
+    copy(items?: OrganizationRef[]): OrganizationRefListResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace OrganizationRefListResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => OrganizationRefListResult;
+    }
+}
+export declare abstract class ImMfaPasswordOtpFlowAcr {
+    private constructor();
+    static get PASSWORD_ONLY(): ImMfaPasswordOtpFlowAcr & {
+        get name(): "PASSWORD_ONLY";
+        get ordinal(): 0;
+    };
+    static get PASSWORD_OTP(): ImMfaPasswordOtpFlowAcr & {
+        get name(): "PASSWORD_OTP";
+        get ordinal(): 1;
+    };
+    static values(): [typeof ImMfaPasswordOtpFlowAcr.PASSWORD_ONLY, typeof ImMfaPasswordOtpFlowAcr.PASSWORD_OTP];
+    static valueOf(value: string): ImMfaPasswordOtpFlowAcr;
+    get name(): "PASSWORD_ONLY" | "PASSWORD_OTP";
+    get ordinal(): 0 | 1;
+    get key(): string;
+    get level(): number;
+}
+export declare namespace ImMfaPasswordOtpFlowAcr {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => ImMfaPasswordOtpFlowAcr;
+    }
+    abstract class Companion extends KtSingleton<Companion.$metadata$.constructor>() {
+        private constructor();
+    }
+    namespace Companion {
+        /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+        namespace $metadata$ {
+            abstract class constructor {
+                asKeycloakMap(): Record<string, string>;
+                private constructor();
+            }
+        }
+    }
+}
+export declare interface F2Consumer<T> {
+}
+export declare interface F2Function<in T, out R> {
+}
+export declare interface F2Supplier<R> {
+}
+export declare interface F2SupplierSingle<R> {
+}
+export declare class Batch {
+    constructor(size?: number, concurrency?: number);
+    get size(): number;
+    get concurrency(): number;
+    copy(size?: number, concurrency?: number): Batch;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace Batch {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => Batch;
+    }
+}
+export declare function invokeF2Function<T, R>(fnc: F2Function<T, R>, msgs: Array<T>): Promise<Array<R>>;
+export declare function invokeF2Consumer<T>(fnc: F2Consumer<T>, msgs: Array<T>): Promise<void>;
+export declare function invokeF2Supplier<R>(fnc: F2Supplier<R>): Promise<Array<R>>;
+export declare function invokeF2SupplierSingle<R>(fnc: F2SupplierSingle<R>): Promise<R>;
+export declare interface UserCreateCommandDTO extends Command {
+    readonly email: string;
+    readonly password?: string | null;
+    readonly givenName: string;
+    readonly familyName: string;
+    readonly address?: AddressDTO | null;
+    readonly phone?: string | null;
+    readonly roles: string[];
+    readonly memberOf?: string | null;
+    readonly attributes?: Record<string, string> | null;
+    readonly isEmailVerified: boolean;
+    readonly isPasswordTemporary: boolean;
+    readonly sendResetPassword: boolean;
+    readonly sendVerifyEmail: boolean;
+}
+export declare class UserCreateCommand implements UserCreateCommandDTO {
+    constructor(email: string, password: string | null | undefined, givenName: string, familyName: string, address: Address | null | undefined, phone: string | null | undefined, roles: string[], memberOf?: string | null, attributes?: Record<string, string> | null, isEmailVerified?: boolean, isPasswordTemporary?: boolean, sendResetPassword?: boolean, sendVerifyEmail?: boolean);
+    get email(): string;
+    get password(): string | null;
+    get givenName(): string;
+    get familyName(): string;
+    get address(): Address | null;
+    get phone(): string | null;
+    get roles(): string[];
+    get memberOf(): string | null;
+    get attributes(): Record<string, string> | null;
+    get isEmailVerified(): boolean;
+    get isPasswordTemporary(): boolean;
+    get sendResetPassword(): boolean;
+    get sendVerifyEmail(): boolean;
+    copy(email?: string, password?: string | null, givenName?: string, familyName?: string, address?: Address | null, phone?: string | null, roles?: string[], memberOf?: string | null, attributes?: Record<string, string> | null, isEmailVerified?: boolean, isPasswordTemporary?: boolean, sendResetPassword?: boolean, sendVerifyEmail?: boolean): UserCreateCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserCreateCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserCreateCommand;
+    }
+}
+export declare interface UserCreatedEventDTO extends Event {
+    readonly id: string;
+}
+export declare class UserCreatedEvent implements UserCreatedEventDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserCreatedEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserCreatedEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserCreatedEvent;
+    }
+}
+export declare interface UserDeleteCommandDTO extends UserCoreDeleteCommandDTO {
+}
+export declare interface UserDeletedEventDTO extends UserCoreDeletedEventDTO {
+}
+export declare interface UserDisableCommandDTO extends Command {
+    readonly id: string;
+    readonly disabledBy?: string | null;
+    readonly anonymize: boolean;
+    readonly attributes?: Record<string, string> | null;
+}
+export declare class UserDisableCommand implements UserDisableCommandDTO {
+    constructor(id: string, disabledBy: string | null, anonymize: boolean, attributes?: Record<string, string> | null);
+    get id(): string;
+    get disabledBy(): string | null;
+    get anonymize(): boolean;
+    get attributes(): Record<string, string> | null;
+    copy(id?: string, disabledBy?: string | null, anonymize?: boolean, attributes?: Record<string, string> | null): UserDisableCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserDisableCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserDisableCommand;
+    }
+}
+export declare interface UserDisabledEventDTO extends Event {
+    readonly id: string;
+}
+export declare class UserDisabledEvent implements UserDisabledEventDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserDisabledEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserDisabledEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserDisabledEvent;
+    }
+}
+export declare interface UserDisableMfaCommandDTO extends Command {
+    readonly id: string;
+}
+export declare class UserDisableMfaCommand implements UserDisableMfaCommandDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserDisableMfaCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserDisableMfaCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserDisableMfaCommand;
+    }
+}
+export declare interface UserDisabledMfaEventDTO extends Event {
+    readonly id: string;
+}
+export declare class UserDisabledMfavent implements UserDisabledMfaEventDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserDisabledMfavent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserDisabledMfavent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserDisabledMfavent;
+    }
+}
+export declare interface UserEnableCommandDTO {
+    readonly id: string;
+}
+export declare class UserEnableCommand implements UserEnableCommandDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserEnableCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserEnableCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserEnableCommand;
+    }
+}
+export declare interface UserEnabledEventDTO extends Event {
+    readonly id: string;
+}
+export declare class UserEnabledEvent implements UserEnabledEventDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserEnabledEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserEnabledEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserEnabledEvent;
+    }
+}
+export declare interface UserResetPasswordCommandDTO extends Command {
+    readonly id: string;
+}
+export declare class UserResetPasswordCommand implements UserResetPasswordCommandDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserResetPasswordCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserResetPasswordCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserResetPasswordCommand;
+    }
+}
+export declare interface UserResetPasswordEventDTO extends Event {
+    readonly id: string;
+}
+export declare class UserResetPasswordEvent implements UserResetPasswordEventDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserResetPasswordEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserResetPasswordEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserResetPasswordEvent;
+    }
+}
+export declare interface UserUpdateCommandDTO extends Command {
+    readonly id: string;
+    readonly givenName: string;
+    readonly familyName: string;
+    readonly address?: AddressDTO | null;
+    readonly phone?: string | null;
+    readonly roles: string[];
+    readonly memberOf?: string | null;
+    readonly attributes?: Record<string, string> | null;
+}
+export declare class UserUpdateCommand implements UserUpdateCommandDTO {
+    constructor(id: string, givenName: string, familyName: string, address: Address | null, phone: string | null, roles: string[], memberOf?: string | null, attributes?: Record<string, string> | null);
+    get id(): string;
+    get givenName(): string;
+    get familyName(): string;
+    get address(): Address | null;
+    get phone(): string | null;
+    get roles(): string[];
+    get memberOf(): string | null;
+    get attributes(): Record<string, string> | null;
+    copy(id?: string, givenName?: string, familyName?: string, address?: Address | null, phone?: string | null, roles?: string[], memberOf?: string | null, attributes?: Record<string, string> | null): UserUpdateCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserUpdateCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserUpdateCommand;
+    }
+}
+export declare interface UserUpdatedEventDTO extends Event {
+    readonly id: string;
+}
+export declare class UserUpdatedEvent implements UserUpdatedEventDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserUpdatedEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserUpdatedEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserUpdatedEvent;
+    }
+}
+export declare interface UserUpdateEmailCommandDTO extends Command {
+    readonly id: string;
+    readonly email: string;
+    readonly sendVerificationEmail: boolean;
+}
+export declare class UserUpdateEmailCommand implements UserUpdateEmailCommandDTO {
+    constructor(id: string, email: string, sendVerificationEmail?: boolean);
+    get id(): string;
+    get email(): string;
+    get sendVerificationEmail(): boolean;
+    copy(id?: string, email?: string, sendVerificationEmail?: boolean): UserUpdateEmailCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserUpdateEmailCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserUpdateEmailCommand;
+    }
+}
+export declare interface UserUpdatedEmailEventDTO extends Event {
+    readonly id: string;
+}
+export declare class UserUpdatedEmailEvent implements UserUpdatedEmailEventDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserUpdatedEmailEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserUpdatedEmailEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserUpdatedEmailEvent;
+    }
+}
+export declare interface UserUpdatePasswordCommandDTO extends Command {
+    readonly id: string;
+    readonly password: string;
+}
+export declare class UserUpdatePasswordCommand implements UserUpdatePasswordCommandDTO {
+    constructor(id: string, password: string);
+    get id(): string;
+    get password(): string;
+    copy(id?: string, password?: string): UserUpdatePasswordCommand;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserUpdatePasswordCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserUpdatePasswordCommand;
+    }
+}
+export declare interface UserUpdatedPasswordEventDTO extends Event {
+    readonly id: string;
+}
+export declare class UserUpdatedPasswordEvent implements UserUpdatedPasswordEventDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserUpdatedPasswordEvent;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserUpdatedPasswordEvent {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserUpdatedPasswordEvent;
+    }
+}
+export declare interface UserDTO {
+    readonly id: string;
+    readonly memberOf?: OrganizationRefDTO | null;
+    readonly email: string;
+    readonly givenName: string;
+    readonly familyName: string;
+    readonly address?: AddressDTO | null;
+    readonly phone?: string | null;
+    readonly roles: RoleDTO[];
+    readonly mfa?: string[] | null;
+    readonly attributes: Record<string, string>;
+    readonly enabled: boolean;
+    readonly disabledBy?: string | null;
+    readonly creationDate: number;
+    readonly disabledDate?: number | null;
+}
+export declare class User implements UserDTO {
+    constructor(id: string, memberOf: OrganizationRef | null, email: string, givenName: string, familyName: string, address: Address | null, phone: string | null, roles: Role[], attributes: Record<string, string>, enabled: boolean, disabledBy: string | null, mfa: string[] | null, creationDate: number, disabledDate?: number | null);
+    get id(): string;
+    get memberOf(): OrganizationRef | null;
+    get email(): string;
+    get givenName(): string;
+    get familyName(): string;
+    get address(): Address | null;
+    get phone(): string | null;
+    get roles(): Role[];
+    get attributes(): Record<string, string>;
+    get enabled(): boolean;
+    get disabledBy(): string | null;
+    get mfa(): string[] | null;
+    get creationDate(): number;
+    get disabledDate(): number | null;
+    copy(id?: string, memberOf?: OrganizationRef | null, email?: string, givenName?: string, familyName?: string, address?: Address | null, phone?: string | null, roles?: Role[], attributes?: Record<string, string>, enabled?: boolean, disabledBy?: string | null, mfa?: string[] | null, creationDate?: number, disabledDate?: number | null): User;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace User {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => User;
+    }
+}
+export declare abstract class UserPolicies {
+    static readonly getInstance: () => typeof UserPolicies.$metadata$.type;
+    private constructor();
+}
+export declare namespace UserPolicies {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        abstract class type extends KtSingleton<constructor>() {
+            private constructor();
+        }
+        abstract class constructor {
+            canGet(authedUser: AuthedUserDTO, user?: UserDTO | null): boolean;
+            canPage(authedUser: AuthedUserDTO): boolean;
+            checkRefList(authedUser: AuthedUserDTO): boolean;
+            canCreate(authedUser: AuthedUserDTO, organizationId?: string | null): boolean;
+            canUpdate(authedUser: AuthedUserDTO, user: UserDTO): boolean;
+            canUpdateMemberOf(authedUser: AuthedUserDTO): boolean;
+            canUpdateRole(authedUser: AuthedUserDTO): boolean;
+            canDisable(authedUser: AuthedUserDTO, user: UserDTO): boolean;
+            canEnable(authedUser: AuthedUserDTO, user: UserDTO): boolean;
+            canDelete(authedUser: AuthedUserDTO, user: UserDTO): boolean;
+            private constructor();
+        }
+    }
+}
+export declare abstract class UserMfaPolicies {
+    static readonly getInstance: () => typeof UserMfaPolicies.$metadata$.type;
+    private constructor();
+}
+export declare namespace UserMfaPolicies {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        abstract class type extends KtSingleton<constructor>() {
+            private constructor();
+        }
+        abstract class constructor {
+            canConfigureMfa(authedUser: AuthedUserDTO, user: UserDTO): boolean;
+            canDisableMfa(authedUser: AuthedUserDTO, user: UserDTO): boolean;
+            canDisableMfaAcr(authedUser: AuthedUserDTO): boolean;
+            private constructor();
+        }
+    }
+}
+export declare interface UserExistsByEmailQueryDTO extends Query {
+    readonly email: string;
+}
+export declare class UserExistsByEmailQuery implements UserExistsByEmailQueryDTO {
+    constructor(email: string);
+    get email(): string;
+    copy(email?: string): UserExistsByEmailQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserExistsByEmailQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserExistsByEmailQuery;
+    }
+}
+export declare interface UserExistsByEmailResultDTO extends Event {
+    readonly item: boolean;
+}
+export declare class UserExistsByEmailResult implements UserExistsByEmailResultDTO {
+    constructor(item: boolean);
+    get item(): boolean;
+    copy(item?: boolean): UserExistsByEmailResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserExistsByEmailResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserExistsByEmailResult;
+    }
+}
+export declare interface UserGetByEmailQueryDTO extends Query {
+    readonly email: string;
+}
+export declare class UserGetByEmailQuery implements UserGetByEmailQueryDTO {
+    constructor(email: string);
+    get email(): string;
+    copy(email?: string): UserGetByEmailQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserGetByEmailQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserGetByEmailQuery;
+    }
+}
+export declare interface UserGetByEmailResultDTO extends Event {
+    readonly item?: UserDTO | null;
+}
+export declare class UserGetByEmailResult implements UserGetByEmailResultDTO {
+    constructor(item?: User | null);
+    get item(): User | null;
+    copy(item?: User | null): UserGetByEmailResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserGetByEmailResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserGetByEmailResult;
+    }
+}
+export declare interface UserGetQueryDTO extends Query {
+    readonly id: string;
+}
+export declare class UserGetQuery implements UserGetQueryDTO {
+    constructor(id: string);
+    get id(): string;
+    copy(id?: string): UserGetQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserGetQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserGetQuery;
+    }
+}
+export declare interface UserGetResultDTO extends Event {
+    readonly item?: UserDTO | null;
+}
+export declare class UserGetResult implements UserGetResultDTO {
+    constructor(item?: User | null);
+    get item(): User | null;
+    copy(item?: User | null): UserGetResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserGetResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserGetResult;
+    }
+}
+export declare interface UserPageQueryDTO extends Query {
+    readonly organizationId?: string | null;
+    readonly organizationName?: string | null;
+    readonly name?: string | null;
+    readonly email?: string | null;
+    readonly role?: string | null;
+    readonly roles?: string[] | null;
+    readonly attributes?: Record<string, string> | null;
+    readonly withDisabled: boolean;
+    readonly offset?: number | null;
+    readonly limit?: number | null;
+}
+export declare class UserPageQuery implements UserPageQueryDTO {
+    constructor(organizationId?: string | null, organizationName?: string | null, name?: string | null, email?: string | null, role?: string | null, attributes?: Record<string, string> | null, withDisabled?: boolean, roles?: string[] | null, offset?: number | null, limit?: number | null);
+    get organizationId(): string | null;
+    get organizationName(): string | null;
+    get name(): string | null;
+    get email(): string | null;
+    get role(): string | null;
+    get attributes(): Record<string, string> | null;
+    get withDisabled(): boolean;
+    get roles(): string[] | null;
+    get offset(): number | null;
+    get limit(): number | null;
+    copy(organizationId?: string | null, organizationName?: string | null, name?: string | null, email?: string | null, role?: string | null, attributes?: Record<string, string> | null, withDisabled?: boolean, roles?: string[] | null, offset?: number | null, limit?: number | null): UserPageQuery;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserPageQuery {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserPageQuery;
+    }
+}
+export declare interface UserPageResultDTO extends PageDTO<UserDTO> {
+    readonly items: UserDTO[];
+    readonly total: number;
+}
+export declare class UserPageResult implements UserPageResultDTO {
+    constructor(items: User[], total: number);
+    get items(): User[];
+    get total(): number;
+    copy(items?: User[], total?: number): UserPageResult;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace UserPageResult {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserPageResult;
+    }
+}
+export type F2ClientType = "HTTP";
+export declare namespace F2ClientType {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => F2ClientType;
+    }
+}
+export declare interface F2Client {
+    readonly type: F2ClientType;
+}
+/** @deprecated  */
+export declare const initHook: {
+    get(): any;
+};
+export declare abstract class AuthRealm {
+    private constructor();
+    get serverUrl(): string;
+    get realmId(): string;
+    get clientId(): string;
+    get redirectUrl(): string | null;
+}
+export declare namespace AuthRealm {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => AuthRealm;
+    }
+}
+export declare class AuthRealmPassword extends AuthRealm.$metadata$.constructor {
+    constructor(serverUrl: string, realmId: string, redirectUrl: string, clientId: string, username: string, password: string);
+    get serverUrl(): string;
+    get realmId(): string;
+    get redirectUrl(): string;
+    get clientId(): string;
+    get username(): string;
+    get password(): string;
+    copy(serverUrl?: string, realmId?: string, redirectUrl?: string, clientId?: string, username?: string, password?: string): AuthRealmPassword;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace AuthRealmPassword {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => AuthRealmPassword;
+    }
+}
+export declare class AuthRealmClientSecret extends AuthRealm.$metadata$.constructor {
+    constructor(serverUrl: string, realmId: string, clientId: string, redirectUrl: string | null | undefined, clientSecret: string, isPublic?: boolean);
+    get serverUrl(): string;
+    get realmId(): string;
+    get clientId(): string;
+    get redirectUrl(): string | null;
+    get clientSecret(): string;
+    get isPublic(): boolean;
+    copy(serverUrl?: string, realmId?: string, clientId?: string, redirectUrl?: string | null, clientSecret?: string, isPublic?: boolean): AuthRealmClientSecret;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace AuthRealmClientSecret {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => AuthRealmClientSecret;
+    }
+}
+export declare class TokenInfo {
+    constructor(accessToken: string, expiresIn: number, refreshExpiresIn: number | null | undefined, tokenType: string, scope?: string | null, idToken?: string | null, refreshToken?: string | null);
+    get accessToken(): string;
+    get expiresIn(): number;
+    get refreshExpiresIn(): number | null;
+    get tokenType(): string;
+    get scope(): string | null;
+    get idToken(): string | null;
+    get refreshToken(): string | null;
+    copy(accessToken?: string, expiresIn?: number, refreshExpiresIn?: number | null, tokenType?: string, scope?: string | null, idToken?: string | null, refreshToken?: string | null): TokenInfo;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace TokenInfo {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => TokenInfo;
+    }
+}
+export declare class HttpF2Client implements F2Client {
+    private constructor();
+    get urlBase(): string;
+    get type(): F2ClientType;
+}
+export declare namespace HttpF2Client {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => HttpF2Client;
+    }
+}
+export declare interface F2UploadCommand<COMMAND> {
+    readonly command: COMMAND;
+    readonly fileMap: Record<string, F2FilePart[]>;
+}
+export declare class F2UploadSingleCommand<COMMAND> implements F2UploadCommand<COMMAND> {
+    constructor(command: COMMAND, file: F2FilePart);
+    get command(): COMMAND;
+    get file(): F2FilePart;
+    get fileMap(): Record<string, F2FilePart[]>;
+    copy(command?: COMMAND, file?: F2FilePart): F2UploadSingleCommand<COMMAND>;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace F2UploadSingleCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new <COMMAND>() => F2UploadSingleCommand<COMMAND>;
+    }
+}
+export declare class F2UploadMultipleCommand<COMMAND> implements F2UploadCommand<COMMAND> {
+    constructor(command: COMMAND, files: F2FilePart[]);
+    get command(): COMMAND;
+    get files(): F2FilePart[];
+    get fileMap(): Record<string, F2FilePart[]>;
+    copy(command?: COMMAND, files?: F2FilePart[]): F2UploadMultipleCommand<COMMAND>;
+    toString(): string;
+    hashCode(): number;
+    equals(other?: any): boolean;
+}
+export declare namespace F2UploadMultipleCommand {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new <COMMAND>() => F2UploadMultipleCommand<COMMAND>;
+    }
+}
+export declare class F2FilePart {
+    private constructor();
+    get name(): string;
+    get contentType(): string | null;
+    static fromBytes(name: string, bytes: Int8Array, contentType?: string | null): F2FilePart;
+}
+export declare namespace F2FilePart {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => F2FilePart;
+    }
+}
+export declare class HttpClientBuilder {
+    private constructor();
+    build(urlBase: string): HttpF2Client;
+}
+export declare namespace HttpClientBuilder {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => HttpClientBuilder;
+    }
+}
+export declare function httpClientBuilderDefault(): HttpClientBuilder;
+export declare abstract class F2ClientBuilder {
+    static readonly getInstance: () => typeof F2ClientBuilder.$metadata$.type;
+    private constructor();
+}
+export declare namespace F2ClientBuilder {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        abstract class type extends KtSingleton<constructor>() {
+            private constructor();
+        }
+        abstract class constructor {
+            getHttp(url: string): F2Client;
+            private constructor();
+        }
+    }
+}
+export declare class InvalidUrlException extends /* Exception */ Error {
+    constructor(url: string);
+}
+export declare namespace InvalidUrlException {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => InvalidUrlException;
+    }
+}
+export declare class UserQueryClient /* implements UserQueryApi */ {
+    constructor(client: F2Client);
+}
+export declare namespace UserQueryClient {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserQueryClient;
+    }
+}
+export declare class UserCommandClient /* implements UserCommandApi */ {
+    constructor(client: F2Client);
+}
+export declare namespace UserCommandClient {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserCommandClient;
+    }
+}
+export declare class UserClient /* implements UserApi, UserQueryApi, UserCommandApi */ {
+    constructor(client: F2Client);
+}
+export declare namespace UserClient {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => UserClient;
+    }
+}

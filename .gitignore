@@ -36,3 +36,5 @@ storybook-static
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+### kt2Ts contract: source maps are not part of it ###
+ts/**/*.map

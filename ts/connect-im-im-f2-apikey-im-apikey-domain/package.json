@@ -1,0 +1,13 @@
+{
+  "name": "connect-im-im-f2-apikey-im-apikey-domain",
+  "version": "0.28.0-SNAPSHOT",
+  "main": "kotlin/connect-im-im-f2-apikey-im-apikey-domain.mjs",
+  "types": "kotlin/connect-im-im-f2-apikey-im-apikey-domain.d.mts",
+  "devDependencies": {},
+  "dependencies": {
+    "@js-joda/core": "3.2.0"
+  },
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "bundledDependencies": []
+}
