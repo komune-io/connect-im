@@ -21,3 +21,11 @@ dependencies {
     testImplementation(libs.bundles.junit)
     testImplementation(libs.spring.boot.starter.test)
 }
+
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootBuildImage> {
+    builder = "docker.io/paketobuildpacks/builder-noble-java-tiny:${libs.versions.paketoBuilder.get()}"
+    buildpacks = listOf(
+        "urn:cnb:builder:paketo-buildpacks/java",
+        "docker.io/paketobuildpacks/health-checker:${libs.versions.paketoHealthChecker.get()}",
+    )
+}
