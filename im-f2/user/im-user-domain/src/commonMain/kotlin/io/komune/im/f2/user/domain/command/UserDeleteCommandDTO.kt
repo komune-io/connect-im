@@ -17,11 +17,17 @@ import kotlin.js.JsExport
  */
 typealias UserDeleteFunction = F2Function<UserDeleteCommand, UserDeletedEvent>
 
+/**
+ * Command to delete a user.
+ */
 @JsExport
 interface UserDeleteCommandDTO: UserCoreDeleteCommandDTO
 
 typealias UserDeleteCommand = UserCoreDeleteCommand
 
+/**
+ * Event sent when a user has been deleted.
+ */
 @JsExport
 interface UserDeletedEventDTO: UserCoreDeletedEventDTO
 

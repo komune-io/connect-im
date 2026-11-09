@@ -17,11 +17,17 @@ import kotlin.js.JsExport
  */
 typealias OrganizationDeleteFunction = F2Function<OrganizationDeleteCommand, OrganizationDeletedEvent>
 
+/**
+ * Command to delete an organization.
+ */
 @JsExport
 interface OrganizationDeleteCommandDTO: OrganizationCoreDeleteCommandDTO
 
 typealias OrganizationDeleteCommand = OrganizationCoreDeleteCommand
 
+/**
+ * Event sent when an organization has been deleted.
+ */
 @JsExport
 interface OrganizationDeletedEventDTO: OrganizationCoreDeletedEventDTO
 

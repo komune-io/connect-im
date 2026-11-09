@@ -1,2 +1,3 @@
+/** A declaration of this case. */
 @JsExport
-fun probe() {}
+fun probe() = Unit

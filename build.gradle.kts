@@ -46,6 +46,7 @@ plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
 // A class or an interface may share its name with one namespace: that pair is a Kotlin companion.
 // Every bundle repeats its dependencies' declarations, IM's and those of external libraries alike;
 // the `@JsExport` of each module's sources tells IM's own apart.
+/** One Kotlin/JS module: its IM dependencies, its Kotlin sources and its declaration files, by path. */
 class JsModule(
     val name: String,
     val dependencies: Set<String>,
@@ -53,6 +54,7 @@ class JsModule(
     val declarationFiles: Map<String, String>,
 )
 
+/** One declaration of a declaration file. */
 class JsExported(val kind: String, val name: String, val text: String, val module: String, val file: String)
 
 val jsExported = Regex(
@@ -66,6 +68,7 @@ val kotlinJsExport = Regex(
 )
 val kotlinJsName = Regex("""@JsName\("([^"]+)"\)""")
 
+/** Whether a file is a TypeScript declaration file Kotlin/JS writes. */
 fun isJsDeclarationFile(name: String) = name.endsWith(".d.mts") || name.endsWith(".d.ts")
 
 /** The names exported more than once, each with the message that explains where. */
