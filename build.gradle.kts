@@ -44,6 +44,42 @@ plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
 // consumer that bundles several IM modules gets all of them in one `.d.mts`. The compiler lets two
 // exported declarations share a name; TypeScript then merges them, or fails on `interface X extends X`.
 // A class or an interface may share its name with one namespace: that pair is a Kotlin companion.
+class JsBundle(val module: String, val file: String, val text: String, val dependencies: Set<String>)
+
+class JsExported(val kind: String, val name: String, val text: String, val bundle: JsBundle)
+
+val jsExported = Regex(
+    """^export (?:declare )?(?:abstract )?(class|interface|namespace|function|const|let|var|enum|type) ([A-Za-z0-9_$]+)""",
+    RegexOption.MULTILINE,
+)
+
+fun isJsDeclarationFile(name: String) = name.endsWith(".d.mts")
+
+fun JsBundle.exported(): List<JsExported> {
+    val found = jsExported.findAll(text).toList()
+    return found.mapIndexed { index, match ->
+        val end = found.getOrNull(index + 1)?.range?.first ?: text.length
+        JsExported(match.groupValues[1], match.groupValues[2], text.substring(match.range.first, end).trimEnd(), this)
+    }
+}
+
+/** The names exported more than once, each with the message that explains where. */
+fun jsExportNameClashes(bundles: List<JsBundle>): Map<String, String> =
+    bundles.flatMap { it.exported() }.groupBy { it.name }.filter { (_, all) ->
+        val (namespaces, others) = all.partition { it.kind == "namespace" }
+        val oncePerFile = all.groupBy { it.bundle }.values.all { inFile ->
+            inFile.count { it.kind == "namespace" } <= 1 && inFile.count { it.kind != "namespace" } <= 1
+        }
+        val oneDeclaration = others.map { it.text }.distinct().size <= 1 &&
+            namespaces.map { it.text }.distinct().size <= 1
+        val companion = namespaces.isEmpty() || (others.isNotEmpty() && others.all { it.kind in setOf("class", "interface") })
+        !(oncePerFile && oneDeclaration && companion)
+    }.toSortedMap().mapValues { (name, all) ->
+        "$name: " + all.groupBy { it.kind to it.text }.values.joinToString(", ") { found ->
+            "${found.first().kind} in ${found.first().bundle.file}" + if (found.size > 1) " (+${found.size - 1})" else ""
+        }
+    }
+
 val jsExportNameClashCheck = tasks.register("jsExportNameClashCheck") {
     group = "verification"
     description = "Fails when two declarations exported to JavaScript share a name."
@@ -60,47 +96,15 @@ val jsExportNameClashCheck = tasks.register("jsExportNameClashCheck") {
     outputs.file(marker)
 
     doLast {
-        val exported = Regex(
-            """^export (?:declare )?(?:abstract )?(class|interface|namespace|function|const|let|var|enum|type) ([A-Za-z0-9_$]+)""",
-            RegexOption.MULTILINE,
-        )
         val files = declarations.files.sortedBy { it.path }
         if (files.isEmpty()) {
             throw GradleException("No `.d.mts` found: the Kotlin/JS production libraries were not linked.")
         }
-        // name to (kind, declaration text, file)
-        val byName = files.flatMap { file ->
-            val text = file.readText()
-            val found = exported.findAll(text).toList()
-            found.mapIndexed { index, match ->
-                val end = found.getOrNull(index + 1)?.range?.first ?: text.length
-                match.groupValues[2] to Triple(
-                    match.groupValues[1],
-                    text.substring(match.range.first, end).trimEnd(),
-                    file.relativeTo(root).path,
-                )
-            }
-        }.groupBy({ it.first }, { it.second })
-
-        val clashes = byName.filter { (_, all) ->
-            val (namespaces, others) = all.partition { it.first == "namespace" }
-            val oncePerFile = all.groupBy { it.third }.values.all { inFile ->
-                inFile.count { it.first == "namespace" } <= 1 && inFile.count { it.first != "namespace" } <= 1
-            }
-            val oneDeclaration = others.map { it.second }.distinct().size <= 1 &&
-                namespaces.map { it.second }.distinct().size <= 1
-            val companion = namespaces.isEmpty() || (others.isNotEmpty() && others.all { it.first in setOf("class", "interface") })
-            !(oncePerFile && oneDeclaration && companion)
-        }
-
+        val clashes = jsExportNameClashes(files.map { JsBundle(it.path, it.relativeTo(root).path, it.readText(), emptySet()) })
         if (clashes.isNotEmpty()) {
             throw GradleException(
                 "Declarations exported to JavaScript share a name; a consumer's `.d.mts` declares each of them twice:" +
-                    clashes.entries.sortedBy { it.key }.joinToString("") { (name, all) ->
-                        "\n  $name: " + all.groupBy { it.first to it.second }.entries.joinToString(", ") { (declaration, found) ->
-                            "${declaration.first} in ${found.first().third}" + if (found.size > 1) " (+${found.size - 1})" else ""
-                        }
-                    } +
+                    clashes.values.joinToString("") { "\n  $it" } +
                     "\nRename one of them, or give it a distinct @JsName."
             )
         }
@@ -108,7 +112,41 @@ val jsExportNameClashCheck = tasks.register("jsExportNameClashCheck") {
     }
 }
 
-tasks.matching { it.name == "check" }.configureEach { dependsOn(jsExportNameClashCheck) }
+// Each case is a directory of declaration files, one per module; `dependencies` lists `module: dependency`
+// lines, `expected` the names that must be reported.
+val jsExportNameClashSelfTest = tasks.register("jsExportNameClashSelfTest") {
+    group = "verification"
+    description = "Runs jsExportNameClashCheck's rule on the cases under gradle/js-export-name-clash."
+    val cases = layout.projectDirectory.dir("gradle/js-export-name-clash")
+    val marker = layout.buildDirectory.file("jsExportNameClashSelfTest/passed")
+    inputs.dir(cases)
+    outputs.file(marker)
+
+    doLast {
+        val failures = cases.asFile.listFiles().orEmpty().filter { it.isDirectory }.sortedBy { it.name }.mapNotNull { case ->
+            val dependencies = case.resolve("dependencies").takeIf { it.isFile }?.readLines().orEmpty()
+                .filter { it.isNotBlank() }
+                .map { it.split(":").map(String::trim) }
+                .groupBy({ it[0] }, { it[1] })
+            val bundles = case.listFiles().orEmpty().filter { isJsDeclarationFile(it.name) }.sortedBy { it.name }.map {
+                val module = it.name.substringBefore(".")
+                JsBundle(module, "${case.name}/${it.name}", it.readText(), dependencies[module].orEmpty().toSet())
+            }
+            val expected = case.resolve("expected").readLines().filter { it.isNotBlank() }.toSet()
+            val actual = jsExportNameClashes(bundles).keys
+            if (actual == expected) null else "${case.name}: expected $expected, reported $actual"
+        }
+        if (failures.isEmpty() && cases.asFile.listFiles().orEmpty().none { it.isDirectory }) {
+            throw GradleException("No case found under gradle/js-export-name-clash.")
+        }
+        if (failures.isNotEmpty()) {
+            throw GradleException("jsExportNameClashCheck's rule failed on:" + failures.joinToString("") { "\n  $it" })
+        }
+        marker.get().asFile.apply { parentFile.mkdirs() }.writeText("ok")
+    }
+}
+
+tasks.matching { it.name == "check" }.configureEach { dependsOn(jsExportNameClashSelfTest, jsExportNameClashCheck) }
 subprojects {
     plugins.withId("org.jetbrains.kotlin.multiplatform") {
         tasks.matching { it.name == "check" }.configureEach { dependsOn(jsExportNameClashCheck) }
