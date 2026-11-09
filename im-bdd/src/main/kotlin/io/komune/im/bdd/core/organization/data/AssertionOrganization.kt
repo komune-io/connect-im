@@ -45,33 +45,39 @@ class AssertionOrganization(
         private val groupCreationDate: Long = singleAttributes[Organization::creationDate.name]?.toLong() ?: 0
         private val groupStatus: String? = singleAttributes[Organization::status.name]
 
-        fun hasFields(
-            id: OrganizationId = group.id,
-            siret: String? = groupSiret,
-            name: String = group.name,
-            description: String? = groupDescription,
-            address: Address? = groupAddress,
-            website: String? = groupWebsite,
-            attributes: Map<String, String> = singleAttributes,
-            roles: List<String>? = group.realmRoles,
-            enabled: Boolean = groupEnabled,
-            creationDate: Long = groupCreationDate,
-            status: String? = groupStatus,
-        ) = also {
-            Assertions.assertThat(group.id).isEqualTo(id)
-            Assertions.assertThat(groupSiret).isEqualTo(siret)
-            Assertions.assertThat(group.name).isEqualTo(name)
-            Assertions.assertThat(groupDescription).isEqualTo(description)
-            Assertions.assertThat(groupAddress).isEqualTo(address)
-            Assertions.assertThat(groupWebsite).isEqualTo(website)
-            Assertions.assertThat(singleAttributes).containsAllEntriesOf(attributes)
-            Assertions.assertThat(roles).isEqualTo(roles)
-            Assertions.assertThat(groupEnabled).isEqualTo(enabled)
-            Assertions.assertThat(groupCreationDate).isEqualTo(creationDate)
-            Assertions.assertThat(groupStatus).isNotNull().isEqualTo(status)
+        /** What the asserted entity holds, as fields to compare. */
+        fun actual() = OrganizationFields(
+            id = group.id,
+            siret = groupSiret,
+            name = group.name,
+            description = groupDescription,
+            address = groupAddress,
+            website = groupWebsite,
+            attributes = singleAttributes,
+            roles = group.realmRoles,
+            enabled = groupEnabled,
+            creationDate = groupCreationDate,
+            status = groupStatus,
+        )
+
+        fun hasFields(expected: OrganizationFields = actual()) = also {
+            Assertions.assertThat(group.id).isEqualTo(expected.id)
+            Assertions.assertThat(groupSiret).isEqualTo(expected.siret)
+            Assertions.assertThat(group.name).isEqualTo(expected.name)
+            Assertions.assertThat(groupDescription).isEqualTo(expected.description)
+            Assertions.assertThat(groupAddress).isEqualTo(expected.address)
+            Assertions.assertThat(groupWebsite).isEqualTo(expected.website)
+            Assertions.assertThat(singleAttributes).containsAllEntriesOf(expected.attributes)
+            Assertions.assertThat(expected.roles).isEqualTo(expected.roles)
+            Assertions.assertThat(groupEnabled).isEqualTo(expected.enabled)
+            Assertions.assertThat(groupCreationDate).isEqualTo(expected.creationDate)
+            Assertions.assertThat(groupStatus).isNotNull().isEqualTo(expected.status)
         }
 
-        fun matches(organization: Organization) = hasFields(
+        /** Compares the entity with its own fields as [change] rewrites them. */
+        inline fun hasFields(change: (OrganizationFields) -> OrganizationFields) = hasFields(change(actual()))
+
+        fun matches(organization: Organization) = hasFields { fields -> fields.copy(
             id = organization.id,
             siret = organization.siret,
             name = organization.name,
@@ -83,7 +89,7 @@ class AssertionOrganization(
             enabled = organization.enabled,
             creationDate = organization.creationDate,
             status = organization.status
-        )
+        ) }
 
         fun isAnonym() = also {
             Assertions.assertThat(group.name).isEqualTo("anonymous")
@@ -93,3 +99,18 @@ class AssertionOrganization(
         }
     }
 }
+
+/** The fields an organization assertion compares. */
+data class OrganizationFields(
+    val id: OrganizationId,
+    val siret: String?,
+    val name: String,
+    val description: String?,
+    val address: Address?,
+    val website: String?,
+    val attributes: Map<String, String>,
+    val roles: List<String>?,
+    val enabled: Boolean,
+    val creationDate: Long,
+    val status: String?,
+)

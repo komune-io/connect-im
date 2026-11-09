@@ -1,3 +1,4 @@
 io.komune.im.apikey.lib.service.ApiKeyToDTOTransformer
 io.komune.im.apikey.lib.ApiKeyAggregateService
 io.komune.im.apikey.lib.ApiKeyFinderService
+io.komune.im.apikey.lib.OrganizationCoreServices

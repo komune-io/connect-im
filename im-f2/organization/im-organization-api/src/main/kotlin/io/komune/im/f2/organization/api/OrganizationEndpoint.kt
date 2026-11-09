@@ -22,6 +22,7 @@ import io.komune.im.f2.organization.domain.query.OrganizationRefGetResult
 import io.komune.im.f2.organization.domain.query.OrganizationRefListFunction
 import io.komune.im.f2.organization.domain.query.OrganizationRefListResult
 import io.komune.im.f2.organization.lib.OrganizationAggregateService
+import io.komune.im.f2.organization.lib.OrganizationFilter
 import io.komune.im.f2.organization.lib.OrganizationFinderService
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -88,11 +89,13 @@ class OrganizationEndpoint(
         }.ifEmpty { null }
 
         organizationFinderService.page(
-            name = query.name,
-            roles = roles,
-            attributes = query.attributes,
-            status = query.status?.map(OrganizationStatus::valueOf),
-            withDisabled = query.withDisabled ?: false,
+            OrganizationFilter(
+                name = query.name,
+                roles = roles,
+                attributes = query.attributes,
+                status = query.status?.map(OrganizationStatus::valueOf),
+                withDisabled = query.withDisabled ?: false,
+            ),
             offset = OffsetPagination(
                 offset = query.offset ?: 0,
                 limit = query.limit ?: Int.MAX_VALUE

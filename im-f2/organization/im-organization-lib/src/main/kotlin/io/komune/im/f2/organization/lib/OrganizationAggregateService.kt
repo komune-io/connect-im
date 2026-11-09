@@ -33,6 +33,7 @@ import io.komune.im.f2.user.domain.command.UserDisableCommand
 import io.komune.im.f2.user.domain.command.UserDisabledEvent
 import io.komune.im.f2.user.domain.command.UserUpdateCommand
 import io.komune.im.f2.user.lib.UserAggregateService
+import io.komune.im.f2.user.lib.UserFilter
 import io.komune.im.f2.user.lib.UserFinderService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -138,8 +139,10 @@ class OrganizationAggregateService(
         }
 
         val userEvents = userFinderService.page(
-            organizationIds = listOf(command.id),
-            withDisabled = false,
+            UserFilter(
+                organizationIds = listOf(command.id),
+                withDisabled = false,
+            ),
         ).items.map { user ->
             UserDisableCommand(
                 id = user.id,
@@ -172,7 +175,7 @@ class OrganizationAggregateService(
      * their role filters to match the organization's new roles.
      * */
     private suspend fun refreshUsersOf(id: OrganizationId) {
-        val users = userFinderService.page(organizationIds = listOf(id))
+        val users = userFinderService.page(UserFilter(organizationIds = listOf(id)))
         users.items.forEach { user ->
             userAggregateService.update(
                 UserUpdateCommand(

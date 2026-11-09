@@ -60,7 +60,7 @@ class OrganizationDisableSteps(
                 val client = keycloakClientProvider.getClient()
                 val assertThat = AssertionBdd.organization(client).assertThatId(organizationId)
 
-                assertThat.hasFields(enabled = false)
+                assertThat.hasFields { fields -> fields.copy(enabled = false) }
                 if (command.anonymize) {
                    assertThat.isAnonym()
                 }
@@ -82,7 +82,7 @@ class OrganizationDisableSteps(
                 dataTable.asMaps().forEach { row ->
                     AssertionBdd.user(client)
                         .assertThatId(context.userIds.safeGet(requireNotNull(row["identifier"])))
-                        .hasFields(enabled = false, disabledBy = row["disabledBy"])
+                        .hasFields { fields -> fields.copy(enabled = false, disabledBy = row["disabledBy"]) }
                 }
             }
         }

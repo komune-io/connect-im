@@ -4,6 +4,7 @@ import io.komune.im.apikey.lib.ApiKeyAggregateService
 import io.komune.im.bdd.spring.SpringTestConfiguration
 import io.komune.im.commons.auth.AuthContext
 import io.komune.im.commons.model.SpaceIdentifier
+import io.komune.im.f2.organization.lib.OrganizationFilter
 import io.komune.im.f2.organization.lib.OrganizationFinderService
 import io.komune.im.script.core.config.properties.ImAuthProperties
 import io.komune.im.script.core.config.properties.ImScriptSpaceProperties
@@ -60,7 +61,7 @@ class SpaceConfigScriptTest: SpringTestConfiguration() {
         spaceConfigScript.config(auth, data)
 
         withContext(AuthContext(auth)) {
-            val organizations = organizationFinderService.page(name = organizationName).items
+            val organizations = organizationFinderService.page(OrganizationFilter(name = organizationName)).items
             val organization = organizations.firstOrNull()
             val apiKey = organization?.id?.let { id ->
                 apiKeyAggregateService.findByName(apiKeyName, id)
@@ -101,7 +102,7 @@ class SpaceConfigScriptTest: SpringTestConfiguration() {
 
         // Then the organization and apiKey must be created
         withContext(AuthContext(auth)) {
-            val organizations = organizationFinderService.page(name = organizationName).items
+            val organizations = organizationFinderService.page(OrganizationFilter(name = organizationName)).items
             val organization = organizations.firstOrNull()
             val apiKey = organization?.id?.let { id ->
                 apiKeyAggregateService.findByName(apiKeyName, id)

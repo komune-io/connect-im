@@ -11,6 +11,7 @@ import io.komune.im.apikey.lib.service.ApiKeyToDTOTransformer
 import io.komune.im.apikey.lib.service.apiKeys
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.utils.page
+import io.komune.im.core.organization.api.OrganizationCoreFilter
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.user.api.service.UserRepresentationTransformer
 import io.komune.im.core.user.domain.model.UserModel
@@ -73,23 +74,21 @@ class ApiKeyFinderService(
     }
 
     suspend fun page(
-        search: String? = null,
-        organizationId: OrganizationId? = null,
-        role: String? = null,
-        attributes: Map<String, String>? = null,
-        withDisabled: Boolean? = false,
+        filter: ApiKeyFilter = ApiKeyFilter(),
         offset: OffsetPagination? = null
     ): ApiKeyPageResult {
         val organizations = organizationCoreFinderService.page(
-            ids = organizationId?.let(::setOf),
-            roles = role?.let(::setOf),
-            attributes = attributes.orEmpty()
-                .mapValues { (_, filter) -> ({ attribute: String? -> attribute == filter }) },
-            withDisabled = withDisabled ?: false
+            OrganizationCoreFilter(
+                ids = filter.organizationId?.let(::setOf),
+                roles = filter.role?.let(::setOf),
+                attributes = filter.attributes.orEmpty()
+                    .mapValues { (_, expected) -> ({ attribute: String? -> attribute == expected }) },
+                withDisabled = filter.withDisabled ?: false,
+            )
         ).items
 
         val page = organizations.flatMap { it.apiKeys() }
-            .filteredByName(search)
+            .filteredByName(filter.search)
             .sortedByDescending { it.creationDate }
             .let { apiKeyToDTOTransformer.transform(it) }
             .page(offset)
@@ -104,3 +103,12 @@ class ApiKeyFinderService(
         return search?.let { this.filter { apiKey -> apiKey.name.contains(search, true) } } ?: this
     }
 }
+
+/** What [ApiKeyFinderService.page] keeps; a null criterion keeps everything. */
+data class ApiKeyFilter(
+    val search: String? = null,
+    val organizationId: OrganizationId? = null,
+    val role: String? = null,
+    val attributes: Map<String, String>? = null,
+    val withDisabled: Boolean? = false,
+)

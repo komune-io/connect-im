@@ -10,7 +10,6 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.apikey.data.apiKey
 import io.komune.im.bdd.core.apikey.data.client
 import io.komune.im.bdd.core.user.data.user
-import org.assertj.core.api.Assertions
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extractList
@@ -98,23 +97,23 @@ class ApiKeyCreateSteps(
             roles = params.roles ?: apiKey.roles,
         )
 
-        AssertionBdd.client(client).assertThatId(apiKeyId).hasFields(
+        AssertionBdd.client(client).assertThatId(apiKeyId).hasFields { fields -> fields.copy(
             identifier = apiKey.identifier,
             isPublicClient = false,
             isDirectAccessGrantsEnabled = false,
             isServiceAccountsEnabled = true,
             isStandardFlowEnabled = false
-        )
+        ) }
 
         val user = client.client(apiKeyId).serviceAccountUser
         val memberOf = params.organization?.let(context.organizationIds::safeGet)
             ?: user.attributes?.get("memberOf")?.firstOrNull()
-        AssertionBdd.user(client).assertThat(user).hasFields(
+        AssertionBdd.user(client).assertThat(user).hasFields { fields -> fields.copy(
             memberOf = memberOf,
             roles = params.roles ?: apiKey.roles,
             enabled = true,
             isApiKey = true
-        )
+        ) }
     }
 
     private fun apiKeyCreateParams(entry: Map<String, String>?): ApiKeyCreateParams {

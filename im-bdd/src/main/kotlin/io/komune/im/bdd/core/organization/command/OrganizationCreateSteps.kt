@@ -59,7 +59,7 @@ class OrganizationCreateSteps(
             step {
                 val organizationId = context.organizationIds.lastUsed
                 val client = keycloakClientProvider.getClient()
-                AssertionBdd.organization(client).assertThatId(organizationId).hasFields(
+                AssertionBdd.organization(client).assertThatId(organizationId).hasFields { fields -> fields.copy(
                     siret = command.siret,
                     name = command.name,
                     description = command.description,
@@ -68,7 +68,7 @@ class OrganizationCreateSteps(
                     roles = command.roles,
                     attributes = command.attributes.orEmpty(),
                     status = command.status
-                )
+                ) }
             }
         }
     }

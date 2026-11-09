@@ -122,27 +122,30 @@ internal class UserPoliciesTest {
 
     @Test
     fun mfaIsConfiguredOnOneselfOnlyWithTheSelfPermission() {
-        assertTrue(UserPolicies.canConfigureMfa(authed("u1", "o1", ImPermission.IM_MY_USER), me))
-        assertFalse(UserPolicies.canConfigureMfa(authed("u1", "o1"), me))
-        assertFalse(UserPolicies.canConfigureMfa(authed("u1", "o1", ImPermission.IM_MY_USER), colleague))
+        assertTrue(UserMfaPolicies.canConfigureMfa(authed("u1", "o1", ImPermission.IM_MY_USER), me))
+        assertFalse(UserMfaPolicies.canConfigureMfa(authed("u1", "o1"), me))
+        assertFalse(UserMfaPolicies.canConfigureMfa(authed("u1", "o1", ImPermission.IM_MY_USER), colleague))
     }
 
     @Test
     fun mfaIsDisabledOnOneselfOnlyWithTheSelfPermissionAndWhenNotForced() {
-        assertTrue(UserPolicies.canDisableMfa(authed("u1", "o1", ImPermission.IM_MY_USER), me))
-        assertFalse(UserPolicies.canDisableMfa(authed("u1", "o1"), me))
+        assertTrue(UserMfaPolicies.canDisableMfa(authed("u1", "o1", ImPermission.IM_MY_USER), me))
+        assertFalse(UserMfaPolicies.canDisableMfa(authed("u1", "o1"), me))
         assertFalse(
-            UserPolicies.canDisableMfa(authed("u1", "o1", ImPermission.IM_MY_USER, ImPermission.IM_FORCE_MFA_OTP), me)
+            UserMfaPolicies.canDisableMfa(
+                authed("u1", "o1", ImPermission.IM_MY_USER, ImPermission.IM_FORCE_MFA_OTP),
+                me,
+            )
         )
-        assertFalse(UserPolicies.canDisableMfa(authed("u1", "o1", ImPermission.IM_MY_USER), colleague))
+        assertFalse(UserMfaPolicies.canDisableMfa(authed("u1", "o1", ImPermission.IM_MY_USER), colleague))
     }
 
     @Test
     fun disablingMfaStillNeedsAnOtpLogin() {
         val token = authed("u1", "o1", ImPermission.IM_MY_USER)
 
-        assertFalse(UserPolicies.canDisableMfaAcr(token))
-        assertTrue(UserPolicies.canDisableMfaAcr(token.copy(acr = ImMfaPasswordOtpFlowAcr.PASSWORD_OTP.key)))
+        assertFalse(UserMfaPolicies.canDisableMfaAcr(token))
+        assertTrue(UserMfaPolicies.canDisableMfaAcr(token.copy(acr = ImMfaPasswordOtpFlowAcr.PASSWORD_OTP.key)))
     }
 
     @Test

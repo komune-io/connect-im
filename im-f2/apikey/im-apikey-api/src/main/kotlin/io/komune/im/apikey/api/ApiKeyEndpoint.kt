@@ -7,6 +7,7 @@ import io.komune.im.apikey.domain.query.ApiKeyGetFunction
 import io.komune.im.apikey.domain.query.ApiKeyGetResult
 import io.komune.im.apikey.domain.query.ApiKeyPageFunction
 import io.komune.im.apikey.lib.ApiKeyAggregateService
+import io.komune.im.apikey.lib.ApiKeyFilter
 import io.komune.im.apikey.lib.ApiKeyFinderService
 import io.komune.im.commons.auth.policies.f2Function
 import org.slf4j.LoggerFactory
@@ -49,15 +50,17 @@ class ApiKeyEndpoint(
 
         val enforcedQuery = apikeyPoliciesEnforcer.enforcePage(query)
         apiKeyFinderService.page(
-            search = enforcedQuery.search,
-            organizationId = enforcedQuery.organizationId,
-            role = enforcedQuery.role,
-            attributes = enforcedQuery.attributes,
-            withDisabled = enforcedQuery.withDisabled,
+            ApiKeyFilter(
+                search = enforcedQuery.search,
+                organizationId = enforcedQuery.organizationId,
+                role = enforcedQuery.role,
+                attributes = enforcedQuery.attributes,
+                withDisabled = enforcedQuery.withDisabled,
+            ),
             offset = OffsetPagination(
                 offset = enforcedQuery.offset ?: 0,
                 limit = enforcedQuery.limit ?: Int.MAX_VALUE
-            )
+            ),
         )
     }
 

@@ -3,7 +3,6 @@ package io.komune.im.script.space.config
 import f2.spring.exception.ConflictException
 import io.komune.im.apikey.domain.command.ApiKeyOrganizationAddKeyCommand
 import io.komune.im.apikey.domain.model.ApiKeyId
-import io.komune.im.apikey.lib.ApiKeyAggregateService
 import io.komune.im.commons.auth.AuthContext
 import io.komune.im.commons.model.AuthSubRealm
 import io.komune.im.commons.model.OrganizationId
@@ -12,18 +11,11 @@ import io.komune.im.commons.utils.ParserUtils
 import io.komune.im.commons.utils.mapAsync
 import io.komune.im.f2.organization.domain.command.OrganizationCreateCommand
 import io.komune.im.f2.organization.domain.model.OrganizationStatus
-import io.komune.im.f2.organization.lib.OrganizationAggregateService
-import io.komune.im.f2.organization.lib.OrganizationFinderService
+import io.komune.im.f2.organization.lib.OrganizationFilter
 import io.komune.im.f2.privilege.domain.model.PrivilegeDTO
-import io.komune.im.f2.privilege.lib.PrivilegeAggregateService
-import io.komune.im.f2.privilege.lib.PrivilegeFinderService
 import io.komune.im.f2.space.domain.command.SpaceDefineCommand
 import io.komune.im.f2.space.domain.command.SpaceSettings
-import io.komune.im.f2.space.lib.SpaceAggregateService
-import io.komune.im.f2.space.lib.SpaceFinderService
 import io.komune.im.f2.user.domain.command.UserCreateCommand
-import io.komune.im.f2.user.lib.UserAggregateService
-import io.komune.im.f2.user.lib.UserFinderService
 import io.komune.im.script.core.config.properties.ImScriptSpaceProperties
 import io.komune.im.script.core.config.properties.toAuthRealm
 import io.komune.im.script.core.init
@@ -33,6 +25,9 @@ import io.komune.im.script.core.model.PermissionData
 import io.komune.im.script.core.model.RoleData
 import io.komune.im.script.core.model.WebClient
 import io.komune.im.script.core.service.ClientInitService
+import io.komune.im.script.core.service.PrivilegeServices
+import io.komune.im.script.core.service.SpaceServices
+import io.komune.im.script.core.service.UserServices
 import io.komune.im.script.space.config.config.ApiKeyData
 import io.komune.im.script.space.config.config.OrganizationData
 import io.komune.im.script.space.config.config.SpaceConfigProperties
@@ -44,17 +39,12 @@ import org.springframework.stereotype.Service
 @Service
 @Suppress("TooManyFunctions")
 class SpaceConfigScript(
-    private val apiKeyAggregateService: ApiKeyAggregateService,
     private val clientInitService: ClientInitService,
     private val imScriptSpaceProperties: ImScriptSpaceProperties,
-    private val organizationAggregateService: OrganizationAggregateService,
-    private val organizationFinderService: OrganizationFinderService,
-    private val privilegeAggregateService: PrivilegeAggregateService,
-    private val privilegeFinderService: PrivilegeFinderService,
-    private val spaceFinderService: SpaceFinderService,
-    private val spaceAggregateService: SpaceAggregateService,
-    private val userAggregateService: UserAggregateService,
-    private val userFinderService: UserFinderService,
+    private val organizationServices: OrganizationServices,
+    private val privilegeServices: PrivilegeServices,
+    private val spaceServices: SpaceServices,
+    private val userServices: UserServices,
 ) {
 
     private val logger = LoggerFactory.getLogger(SpaceConfigScript::class.java)
@@ -95,9 +85,9 @@ class SpaceConfigScript(
     ) = features.initNotEmpty("Features") { items ->
         items.mapAsync { feature ->
             init("Feature[${feature.name}]", logger, {
-                privilegeFinderService.getPrivilegeOrNull(feature.name)
+                privilegeServices.finder.getPrivilegeOrNull(feature.name)
             }, {
-                privilegeAggregateService.define(feature.toCommand())
+                privilegeServices.aggregate.define(feature.toCommand())
             })
         }
     }
@@ -107,9 +97,9 @@ class SpaceConfigScript(
     ) = permissions.initNotEmpty("Permissions") { items ->
         items.mapAsync { permission ->
             init("Permission[${permission.name}]", logger, {
-                privilegeFinderService.getPrivilegeOrNull(permission.name)
+                privilegeServices.finder.getPrivilegeOrNull(permission.name)
             }, {
-                privilegeAggregateService.define(permission.toCommand())
+                privilegeServices.aggregate.define(permission.toCommand())
             })
         }
     }
@@ -130,9 +120,9 @@ class SpaceConfigScript(
     private suspend fun initRoles(
         roles: List<RoleData>?
     ): List<RoleIdentifier> = roles.initNotEmpty("Roles") { items ->
-        val definedRoles = privilegeFinderService.listRoles()
-        val permissions = privilegeFinderService.listPermissions()
-        val features = privilegeFinderService.listFeatures()
+        val definedRoles = privilegeServices.finder.listRoles()
+        val permissions = privilegeServices.finder.listPermissions()
+        val features = privilegeServices.finder.listFeatures()
         val existingRoles = (definedRoles + permissions + features).map(PrivilegeDTO::identifier).toMutableSet()
 
         val remainingRoles = items.filter { it.name !in existingRoles }.toMutableSet()
@@ -141,7 +131,7 @@ class SpaceConfigScript(
         while (remainingRoles.isNotEmpty() && anyRoleInitialized) {
             remainingRoles.filter { role -> role.permissions.orEmpty().all { it in existingRoles } }
                 .also { anyRoleInitialized = it.isNotEmpty() }
-                .mapAsync { role -> privilegeAggregateService.define(role.toCommand()) }.forEach { role ->
+                .mapAsync { role -> privilegeServices.aggregate.define(role.toCommand()) }.forEach { role ->
                     remainingRoles.removeIf { it.name == role.identifier }
                     existingRoles.add(role.identifier)
                 }
@@ -154,15 +144,15 @@ class SpaceConfigScript(
 
         items.map { role ->
             init("Role[${role.name}]", logger, {
-                privilegeFinderService.getPrivilegeOrNull(role.name)?.identifier
+                privilegeServices.finder.getPrivilegeOrNull(role.name)?.identifier
             }, {
-                privilegeAggregateService.define(role.toCommand()).identifier
+                privilegeServices.aggregate.define(role.toCommand()).identifier
             })
         }
     }
 
     private suspend fun SpaceConfigProperties.verifyAndUpdateSpace() {
-        val space = spaceFinderService.get(spaceIdentifier)
+        val space = spaceServices.finder.get(spaceIdentifier)
         if (theme != null || locales != null) {
             SpaceDefineCommand(
                 identifier = space.identifier,
@@ -179,7 +169,7 @@ class SpaceConfigScript(
                         registrationEmailAsUsername = settings.login.registrationEmailAsUsername
                     )
                 }
-            ).let { spaceAggregateService.define(it) }
+            ).let { spaceServices.aggregate.define(it) }
         }
     }
 
@@ -198,10 +188,12 @@ class SpaceConfigScript(
                     parentOrganizationId = null,
                     attributes = organization.attributes,
                     status = OrganizationStatus.VALIDATED.name
-                ).let { organizationAggregateService.create(it).id }
+                ).let { organizationServices.aggregate.create(it).id }
             } catch (e: ConflictException) {
                 logger.debug("Organization[${organization.name}] already exists", e)
-                val organizationsCreated = organizationFinderService.page(name = organization.name).items
+                val organizationsCreated = organizationServices.finder
+                    .page(OrganizationFilter(name = organization.name))
+                    .items
                 if (organizationsCreated.isEmpty() || organizationsCreated.size > 1) {
                     return@mapAsync
                 }
@@ -232,7 +224,7 @@ class SpaceConfigScript(
     ) = users.initNotEmpty("Users", organization) { items ->
         items.mapAsync { user ->
             init("User[email: ${user.email}]", logger, {
-                userFinderService.getByEmailOrNull(user.email)
+                userServices.finder.getByEmailOrNull(user.email)
             }, {
                 UserCreateCommand(
                     email = user.email,
@@ -246,7 +238,7 @@ class SpaceConfigScript(
                     isEmailVerified = true,
                     isPasswordTemporary = false,
                     sendResetPassword = false
-                ).let { userAggregateService.create(it) }
+                ).let { userServices.aggregate.create(it) }
             })
         }
     }
@@ -257,11 +249,11 @@ class SpaceConfigScript(
         // do not make async, as it saves the keys in organization attributes
         keys?.map { key ->
             init("Key[Name: ${key.name}, OrganizationId $organizationId]", logger, {
-                apiKeyAggregateService.findByName(key.name, organizationId)?.id
+                organizationServices.apiKeys.findByName(key.name, organizationId)?.id
             }, {
                 ApiKeyOrganizationAddKeyCommand(
                     organizationId = organizationId, name = key.name, secret = key.secret, roles = key.roles.orEmpty()
-                ).let { apiKeyAggregateService.create(it).id }
+                ).let { organizationServices.apiKeys.create(it).id }
             })
         }.orEmpty()
     }

@@ -58,14 +58,14 @@ class UserUpdateSteps(
                 val userId = context.userIds.lastUsed
 
                 val client = keycloakClientProvider.getClient()
-                AssertionBdd.user(client).assertThatId(userId).hasFields(
+                AssertionBdd.user(client).assertThatId(userId).hasFields { fields -> fields.copy(
                     givenName = command.givenName,
                     familyName = command.familyName,
                     address = command.address,
                     phone = command.phone,
                     roles = command.roles,
                     attributes = command.attributes.orEmpty(),
-                )
+                ) }
             }
         }
 
@@ -75,14 +75,14 @@ class UserUpdateSteps(
                 val client = keycloakClientProvider.getClient()
                 dataTable.asList(UserUpdateParams::class.java).filterNotNull()
                     .forEach {
-                        AssertionBdd.user(client).assertThatId(userId).hasFields(
+                        AssertionBdd.user(client).assertThatId(userId).hasFields { fields -> fields.copy(
                             givenName = it.givenName,
                             familyName = it.familyName,
                             address = it.address,
                             phone = it.phone,
                             roles = it.roles,
                             attributes = it.attributes,
-                        )
+                        ) }
                     }
             }
         }
@@ -92,9 +92,9 @@ class UserUpdateSteps(
                 val userId = context.userIds.lastUsed
                 val client = keycloakClientProvider.getClient()
 
-                AssertionBdd.user(client).assertThatId(userId).hasFields(
+                AssertionBdd.user(client).assertThatId(userId).hasFields { fields -> fields.copy(
                     roles = params.roles,
-                )
+                ) }
             }
         }
     }

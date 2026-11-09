@@ -69,7 +69,8 @@ class KeycloakClient(
 	) {
 		log("sendWelcomeEmail[id=$userId]")
 		keycloak.proxy(WelcomeEmailResource::class.java, URI.create(auth.serverUrl))
-			.send(realmId, userId, clientId, redirectUri, lifespanSeconds, actions)
+			.user(realmId, userId)
+			.send(clientId, redirectUri, lifespanSeconds, actions)
 	}
 
 	fun userProfile(): UserProfileResource {

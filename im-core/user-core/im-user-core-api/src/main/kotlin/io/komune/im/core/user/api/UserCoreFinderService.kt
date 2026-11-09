@@ -48,15 +48,9 @@ class UserCoreFinderService(
         }
 
     suspend fun page(
-        ids: Collection<UserId>? = null,
-        organizationIds: Collection<OrganizationId>? = null,
-        name: String? = null,
-        email: String? = null,
-        roles: Collection<RoleIdentifier>? = null,
-        attributes: Map<String, String>? = null,
-        withDisabled: Boolean = false,
+        filter: UserCoreFilter = UserCoreFilter(),
         offset: OffsetPagination? = null
-    ): PageDTO<UserModel> {
+    ): PageDTO<UserModel> = with(filter) {
         val client = keycloakClientProvider.getClient()
 
         val compositeRoles = client.roles().list().mapAsync { role ->
@@ -68,7 +62,7 @@ class UserCoreFinderService(
             organizationIds = organizationIds
         )
 
-        return users.filter { user ->
+        users.filter { user ->
             user.id.matches(ids)
                 && user.memberOf.matches(organizationIds)
                 && (withDisabled || user.enabled)
@@ -106,3 +100,14 @@ class UserCoreFinderService(
         }.filter { !it.isApiKey }
     }
 }
+
+/** What [UserCoreFinderService.page] keeps; a null criterion keeps everything. */
+data class UserCoreFilter(
+    val ids: Collection<UserId>? = null,
+    val organizationIds: Collection<OrganizationId>? = null,
+    val name: String? = null,
+    val email: String? = null,
+    val roles: Collection<RoleIdentifier>? = null,
+    val attributes: Map<String, String>? = null,
+    val withDisabled: Boolean = false,
+)

@@ -27,20 +27,13 @@ class KeycloakPluginClient(
         }
     }
 
-    suspend fun generateActionToken(
-        realm: String,
-        clientId: String,
-        action: String,
-        userId: String,
-        redirectUri: String? = null,
-        bearerToken: String
-    ): String? {
+    suspend fun generateActionToken(request: ActionTokenRequest, bearerToken: String): String? {
         val response = httpClient.get(
-            "${buildUrl(realm)}/${KeycloakPluginIds.ACTION_TOKEN}" +
-                "?client_id=${clientId}" +
-                "&action=${action}" +
-                "&user_id=${userId}" +
-                redirectUri?.let { "&redirect_uri=$it" }.orEmpty()
+            "${buildUrl(request.realm)}/${KeycloakPluginIds.ACTION_TOKEN}" +
+                "?client_id=${request.clientId}" +
+                "&action=${request.action}" +
+                "&user_id=${request.userId}" +
+                request.redirectUri?.let { "&redirect_uri=$it" }.orEmpty()
         ) {
             header("Content-Type", ContentType.Application.Json)
             header("Authorization", "Bearer $bearerToken")
@@ -64,3 +57,12 @@ class KeycloakPluginClient(
 
     private fun buildUrl(realm: String) = "${keycloakBaseUrl.removeSuffix("/")}/realms/$realm"
 }
+
+/** The action token to ask for: who, in which realm, for which client and action. */
+data class ActionTokenRequest(
+    val realm: String,
+    val clientId: String,
+    val action: String,
+    val userId: String,
+    val redirectUri: String? = null,
+)

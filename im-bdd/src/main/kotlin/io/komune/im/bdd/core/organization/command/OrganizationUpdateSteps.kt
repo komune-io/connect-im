@@ -65,7 +65,7 @@ class OrganizationUpdateSteps(
                     .let { checkNotNull(it) { "Organization [$organizationId] not found" } }
 
                 val client = keycloakClientProvider.getClient()
-                AssertionBdd.organization(client).assertThatId(organizationId).hasFields(
+                AssertionBdd.organization(client).assertThatId(organizationId).hasFields { fields -> fields.copy(
                     name = command.name,
                     description = command.description ?: organization.description,
                     address = command.address ?: organization.address,
@@ -73,7 +73,7 @@ class OrganizationUpdateSteps(
                     roles = command.roles ?: organization.roles.map(Role::identifier),
                     attributes = command.attributes ?: organization.attributes,
                     status = command.status
-                )
+                ) }
             }
         }
     }
@@ -100,7 +100,7 @@ class OrganizationUpdateSteps(
             .invoke(OrganizationGetQuery(context.organizationIds.safeGet(identifier)))
             .item
             .let { checkNotNull(it) { "Organization [$identifier] not found" } }
-        val address = checkNotNull(organization.address) { "Organization [$identifier] has no address" }
+        val address by lazy { checkNotNull(organization.address) { "Organization [$identifier] has no address" } }
 
         OrganizationUpdateParams(
             identifier = identifier,

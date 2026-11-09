@@ -21,6 +21,7 @@ import io.komune.im.f2.user.domain.query.UserGetResult
 import io.komune.im.f2.user.domain.query.UserPageFunction
 import io.komune.im.f2.user.domain.query.UserPageResult
 import io.komune.im.f2.user.lib.UserAggregateService
+import io.komune.im.f2.user.lib.UserFilter
 import io.komune.im.f2.user.lib.UserFinderService
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -75,13 +76,15 @@ class UserEndpoint(
         }.ifEmpty { null }
 
         userFinderService.page(
-            organizationIds = enforcedQuery.organizationId?.let(::listOf),
-            organizationName = enforcedQuery.organizationName,
-            roles = roles,
-            name = enforcedQuery.name,
-            email = enforcedQuery.email,
-            attributes = enforcedQuery.attributes,
-            withDisabled = enforcedQuery.withDisabled,
+            UserFilter(
+                organizationIds = enforcedQuery.organizationId?.let(::listOf),
+                organizationName = enforcedQuery.organizationName,
+                roles = roles,
+                name = enforcedQuery.name,
+                email = enforcedQuery.email,
+                attributes = enforcedQuery.attributes,
+                withDisabled = enforcedQuery.withDisabled,
+            ),
             offset = OffsetPagination(
                 offset = enforcedQuery.offset ?: 0,
                 limit = enforcedQuery.limit ?: Int.MAX_VALUE

@@ -62,35 +62,41 @@ class AssertionUser(
             .map { it.name }
             .minus(client.defaultRealmRole)
 
-        fun hasFields(
-            memberOf: OrganizationId? = userMemberOf,
-            email: String = user.email.orEmpty(),
-            givenName: String = user.firstName.orEmpty(),
-            familyName: String = user.lastName.orEmpty(),
-            address: Address? = userAddress,
-            phone: String? = userPhone,
-            roles: List<RoleIdentifier> = userRoles,
-            attributes: Map<String, String> = singleAttributes,
-            enabled: Boolean = user.isEnabled,
-            disabledBy: UserId? = userDisabledBy,
-            creationDate: Long = user.createdTimestamp,
-            disabledDate: Long? = userDisabledDate,
-            isApiKey: Boolean = userIsApiKey
-        ) = also {
-            Assertions.assertThat(userMemberOf).isEqualTo(memberOf)
-            Assertions.assertThat(user.email.orEmpty()).isEqualTo(email)
-            Assertions.assertThat(user.firstName.orEmpty()).isEqualTo(givenName)
-            Assertions.assertThat(user.lastName.orEmpty()).isEqualTo(familyName)
-            Assertions.assertThat(userAddress).isEqualTo(address)
-            Assertions.assertThat(userPhone).isEqualTo(phone)
-            Assertions.assertThat(userRoles).containsExactlyInAnyOrderElementsOf(roles)
-            Assertions.assertThat(singleAttributes).containsAllEntriesOf(attributes)
-            Assertions.assertThat(user.isEnabled).isEqualTo(enabled)
-            Assertions.assertThat(user.createdTimestamp).isEqualTo(creationDate)
-            Assertions.assertThat(userDisabledBy).isEqualTo(disabledBy)
-            Assertions.assertThat(userDisabledDate).isEqualTo(disabledDate)
-            Assertions.assertThat(userIsApiKey).isEqualTo(isApiKey)
+        /** What the asserted entity holds, as fields to compare. */
+        fun actual() = UserFields(
+            memberOf = userMemberOf,
+            email = user.email.orEmpty(),
+            givenName = user.firstName.orEmpty(),
+            familyName = user.lastName.orEmpty(),
+            address = userAddress,
+            phone = userPhone,
+            roles = userRoles,
+            attributes = singleAttributes,
+            enabled = user.isEnabled,
+            disabledBy = userDisabledBy,
+            creationDate = user.createdTimestamp,
+            disabledDate = userDisabledDate,
+            isApiKey = userIsApiKey,
+        )
+
+        fun hasFields(expected: UserFields = actual()) = also {
+            Assertions.assertThat(userMemberOf).isEqualTo(expected.memberOf)
+            Assertions.assertThat(user.email.orEmpty()).isEqualTo(expected.email)
+            Assertions.assertThat(user.firstName.orEmpty()).isEqualTo(expected.givenName)
+            Assertions.assertThat(user.lastName.orEmpty()).isEqualTo(expected.familyName)
+            Assertions.assertThat(userAddress).isEqualTo(expected.address)
+            Assertions.assertThat(userPhone).isEqualTo(expected.phone)
+            Assertions.assertThat(userRoles).containsExactlyInAnyOrderElementsOf(expected.roles)
+            Assertions.assertThat(singleAttributes).containsAllEntriesOf(expected.attributes)
+            Assertions.assertThat(user.isEnabled).isEqualTo(expected.enabled)
+            Assertions.assertThat(user.createdTimestamp).isEqualTo(expected.creationDate)
+            Assertions.assertThat(userDisabledBy).isEqualTo(expected.disabledBy)
+            Assertions.assertThat(userDisabledDate).isEqualTo(expected.disabledDate)
+            Assertions.assertThat(userIsApiKey).isEqualTo(expected.isApiKey)
         }
+
+        /** Compares the entity with its own fields as [change] rewrites them. */
+        inline fun hasFields(change: (UserFields) -> UserFields) = hasFields(change(actual()))
 
         fun isAnonymized() = also {
             Assertions.assertThat(user.email).endsWith("@anonymous.com")
@@ -99,7 +105,7 @@ class AssertionUser(
             Assertions.assertThat(userPhone).isEqualTo("")
         }
 
-        fun matches(other: User) = hasFields(
+        fun matches(other: User) = hasFields { fields -> fields.copy(
             memberOf = other.memberOf?.id,
             email = other.email,
             givenName = other.givenName,
@@ -112,6 +118,23 @@ class AssertionUser(
             creationDate = other.creationDate,
             disabledDate = other.disabledDate,
             disabledBy = other.disabledBy
-        )
+        ) }
     }
 }
+
+/** The fields a user assertion compares. */
+data class UserFields(
+    val memberOf: OrganizationId?,
+    val email: String,
+    val givenName: String,
+    val familyName: String,
+    val address: Address?,
+    val phone: String?,
+    val roles: List<RoleIdentifier>,
+    val attributes: Map<String, String>,
+    val enabled: Boolean,
+    val disabledBy: UserId?,
+    val creationDate: Long,
+    val disabledDate: Long?,
+    val isApiKey: Boolean,
+)

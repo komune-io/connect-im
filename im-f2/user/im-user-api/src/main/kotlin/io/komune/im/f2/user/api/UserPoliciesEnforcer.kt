@@ -7,6 +7,7 @@ import io.komune.im.commons.model.UserId
 import io.komune.im.f2.organization.domain.policies.OrganizationPolicies
 import io.komune.im.f2.user.domain.command.UserUpdateCommand
 import io.komune.im.f2.user.domain.model.UserDTO
+import io.komune.im.f2.user.domain.policies.UserMfaPolicies
 import io.komune.im.f2.user.domain.policies.UserPolicies
 import io.komune.im.f2.user.domain.query.UserPageQuery
 import io.komune.im.f2.user.lib.UserFinderService
@@ -44,12 +45,12 @@ class UserPoliciesEnforcer(
     }
     suspend fun checkConfigureMfa(userId: UserId) = checkAuthed("configure mfa") { authedUser ->
         val user = userFinderService.get(userId)
-        UserPolicies.canConfigureMfa(authedUser, user)
+        UserMfaPolicies.canConfigureMfa(authedUser, user)
     }
 
     suspend fun checkDisableMfa(userId: UserId) = checkAuthed("disable mfa") { authedUser ->
         val user = userFinderService.get(userId)
-        UserPolicies.canDisableMfa(authedUser, user) && UserPolicies.canDisableMfaAcr(authedUser)
+        UserMfaPolicies.canDisableMfa(authedUser, user) && UserMfaPolicies.canDisableMfaAcr(authedUser)
     }
 
     suspend fun checkUpdate(userId: UserId) = checkAuthed("update an user") { authedUser ->

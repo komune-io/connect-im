@@ -59,7 +59,7 @@ class UserCreateSteps(
                 val userId = context.userIds.lastUsed
 
                 val client = keycloakClientProvider.getClient()
-                AssertionBdd.user(client).assertThatId(userId).hasFields(
+                AssertionBdd.user(client).assertThatId(userId).hasFields { fields -> fields.copy(
                     email = command.email,
                     givenName = command.givenName,
                     familyName = command.familyName,
@@ -69,7 +69,7 @@ class UserCreateSteps(
                     memberOf = command.memberOf,
                     attributes = buildAttributesMap(command.attributes, command.memberOf).orEmpty(),
                     isApiKey = false
-                )
+                ) }
             }
         }
 

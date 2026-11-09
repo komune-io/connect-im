@@ -47,9 +47,9 @@ class UserUpdateEmailSteps(
                 val userId = context.userIds.lastUsed
 
                 val client = keycloakClientProvider.getClient()
-                AssertionBdd.user(client).assertThatId(userId).hasFields(
+                AssertionBdd.user(client).assertThatId(userId).hasFields { fields -> fields.copy(
                     email = command.email
-                )
+                ) }
             }
         }
     }

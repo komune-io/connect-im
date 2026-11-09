@@ -57,14 +57,15 @@ class RoleDefineSteps(
 
         Then("The role should be defined") {
             step {
-                AssertionBdd.role(keycloakClientProvider.getClient()).assertThatId(command.identifier).hasFields(
+                AssertionBdd.role(keycloakClientProvider.getClient()).assertThatId(command.identifier)
+                    .hasFields { fields -> fields.copy(
                     identifier = command.identifier,
                     description = command.description,
                     targets = command.targets.map { RoleTarget.valueOf(it) },
                     locale = command.locale,
                     bindings = command.bindings.orEmpty().mapKeys { (target) -> RoleTarget.valueOf(target) },
                     permissions = command.permissions.orEmpty()
-                )
+                ) }
             }
         }
     }

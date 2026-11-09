@@ -55,10 +55,10 @@ class UserDisableSteps(
             step {
                 val client = keycloakClientProvider.getClient()
                 val assertThat = AssertionBdd.user(client).assertThatId(command.id)
-                assertThat.hasFields(
+                assertThat.hasFields { fields -> fields.copy(
                     enabled = false,
                     disabledBy = command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id,
-                )
+                ) }
 
                 if (command.anonymize) {
                     assertThat.isAnonymized()

@@ -8,6 +8,8 @@ import f2.client.ktor.http.plugin.F2Auth
 import f2.dsl.fnc.F2SupplierSingle
 import f2.dsl.fnc.f2SupplierSingle
 import io.komune.im.f2.user.domain.UserApi
+import io.komune.im.f2.user.domain.UserCommandApi
+import io.komune.im.f2.user.domain.UserQueryApi
 import io.komune.im.f2.user.domain.command.UserCreateCommand
 import io.komune.im.f2.user.domain.command.UserCreateFunction
 import io.komune.im.f2.user.domain.command.UserCreatedEvent
@@ -16,9 +18,9 @@ import io.komune.im.f2.user.domain.command.UserDeleteFunction
 import io.komune.im.f2.user.domain.command.UserDeletedEvent
 import io.komune.im.f2.user.domain.command.UserDisableCommand
 import io.komune.im.f2.user.domain.command.UserDisableFunction
-import io.komune.im.f2.user.domain.command.UserDisabledEvent
 import io.komune.im.f2.user.domain.command.UserDisableMfaCommand
 import io.komune.im.f2.user.domain.command.UserDisableMfaFunction
+import io.komune.im.f2.user.domain.command.UserDisabledEvent
 import io.komune.im.f2.user.domain.command.UserDisabledMfavent
 import io.komune.im.f2.user.domain.command.UserEnableCommand
 import io.komune.im.f2.user.domain.command.UserEnableFunction
@@ -71,15 +73,20 @@ fun userClient(
     )
 }
 
+/** The user queries over F2. */
 @JsExport
-open class UserClient(private val client: F2Client): UserApi {
+open class UserQueryClient(private val client: F2Client): UserQueryApi {
     override fun userGet(): UserGetFunction = client.function<UserGetQuery, UserGetResult>(this::userGet.name)
     override fun userGetByEmail(): UserGetByEmailFunction =
         client.function<UserGetByEmailQuery, UserGetByEmailResult>(this::userGetByEmail.name)
     override fun userExistsByEmail(): UserExistsByEmailFunction =
         client.function<UserExistsByEmailQuery, UserExistsByEmailResult>(this::userExistsByEmail.name)
     override fun userPage(): UserPageFunction = client.function<UserPageQuery, UserPageResult>(this::userPage.name)
+}
 
+/** The user commands over F2. */
+@JsExport
+open class UserCommandClient(private val client: F2Client): UserCommandApi {
     override fun userCreate(): UserCreateFunction =
         client.function<UserCreateCommand, UserCreatedEvent>(this::userCreate.name)
     override fun userUpdate(): UserUpdateFunction =
@@ -92,12 +99,16 @@ open class UserClient(private val client: F2Client): UserApi {
         client.function<UserUpdatePasswordCommand, UserUpdatedPasswordEvent>(this::userUpdatePassword.name)
     override fun userDisableMfa(): UserDisableMfaFunction =
         client.function<UserDisableMfaCommand, UserDisabledMfavent>(this::userDisableMfa.name)
-
     override fun userDisable(): UserDisableFunction =
         client.function<UserDisableCommand, UserDisabledEvent>(this::userDisable.name)
     override fun userEnable(): UserEnableFunction =
         client.function<UserEnableCommand, UserEnabledEvent>(this::userEnable.name)
-
     override fun userDelete(): UserDeleteFunction =
         client.function<UserDeleteCommand, UserDeletedEvent>(this::userDelete.name)
 }
+
+/** Every user function over F2: the queries of [UserQueryClient] and the commands of [UserCommandClient]. */
+@JsExport
+open class UserClient(client: F2Client): UserApi,
+    UserQueryApi by UserQueryClient(client),
+    UserCommandApi by UserCommandClient(client)

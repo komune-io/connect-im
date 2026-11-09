@@ -45,29 +45,35 @@ class AssertionRole(
         private val rolePermissions: List<PermissionIdentifier> = role.attributes?.get(Role::permissions.name)
             .orEmpty()
 
-        fun hasFields(
-            id: RoleId = role.id,
-            identifier: RoleIdentifier = role.name,
-            description: String = role.description,
-            targets: List<RoleTarget> = roleTargets,
-            locale: Map<String, String> = roleLocale,
-            bindings: Map<RoleTarget, List<RoleIdentifier>> = roleBindings,
-            permissions: List<PermissionIdentifier> = rolePermissions
-        ) = also {
+        /** What the asserted entity holds, as fields to compare. */
+        fun actual() = RoleFields(
+            id = role.id,
+            identifier = role.name,
+            description = role.description,
+            targets = roleTargets,
+            locale = roleLocale,
+            bindings = roleBindings,
+            permissions = rolePermissions,
+        )
+
+        fun hasFields(expected: RoleFields = actual()) = also {
             Assertions.assertThat(
                 role.attributes?.get(Role::type.name)?.firstOrNull()
             ).isEqualTo(PrivilegeType.ROLE.name)
-            Assertions.assertThat(role.id).isEqualTo(id)
-            Assertions.assertThat(role.name).isEqualTo(identifier)
-            Assertions.assertThat(role.description).isEqualTo(description)
-            Assertions.assertThat(roleTargets).containsExactlyInAnyOrderElementsOf(targets)
-            hasExactlyBindings(bindings)
-            Assertions.assertThat(roleLocale).containsExactlyInAnyOrderEntriesOf(locale)
-            hasExactlyPermissions(permissions.toSet())
+            Assertions.assertThat(role.id).isEqualTo(expected.id)
+            Assertions.assertThat(role.name).isEqualTo(expected.identifier)
+            Assertions.assertThat(role.description).isEqualTo(expected.description)
+            Assertions.assertThat(roleTargets).containsExactlyInAnyOrderElementsOf(expected.targets)
+            hasExactlyBindings(expected.bindings)
+            Assertions.assertThat(roleLocale).containsExactlyInAnyOrderEntriesOf(expected.locale)
+            hasExactlyPermissions(expected.permissions.toSet())
         }
 
+        /** Compares the entity with its own fields as [change] rewrites them. */
+        inline fun hasFields(change: (RoleFields) -> RoleFields) = hasFields(change(actual()))
+
         suspend fun matches(role: Role): Unit = coroutineScope {
-            hasFields(
+            hasFields { fields -> fields.copy(
                 id = role.id,
                 identifier = role.identifier,
                 description = role.description,
@@ -77,7 +83,7 @@ class AssertionRole(
                     .mapKeys { (target) -> RoleTarget.valueOf(target) }
                     .mapValues { (_, roles) -> roles.map(Role::identifier) },
                 permissions = role.permissions
-            )
+            ) }
 
             role.bindings.values.flatten().map { boundRole ->
                 async { assertThatId(boundRole.identifier).matches(boundRole) }
@@ -101,3 +107,14 @@ class AssertionRole(
         }
     }
 }
+
+/** The fields a role assertion compares. */
+data class RoleFields(
+    val id: RoleId,
+    val identifier: RoleIdentifier,
+    val description: String,
+    val targets: List<RoleTarget>,
+    val locale: Map<String, String>,
+    val bindings: Map<RoleTarget, List<RoleIdentifier>>,
+    val permissions: List<PermissionIdentifier>,
+)
