@@ -1,0 +1,2 @@
+@JsExport
+fun probe() {}

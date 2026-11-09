@@ -1,0 +1,2 @@
+@JsExport
+internal class Hidden

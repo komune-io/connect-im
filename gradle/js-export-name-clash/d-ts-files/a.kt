@@ -1,0 +1,2 @@
+@JsExport
+interface ProbeDTO
