@@ -2,9 +2,10 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        maven { url = uri("https://central.sonatype.com/repository/maven-snapshots") }
-        if(System.getenv("FIXERS_REPOSITORIES_MAVEN_LOCAL") == "true") {
-            mavenLocal()
+        maven {
+            url = uri("https://central.sonatype.com/repository/maven-snapshots")
+            content { includeGroupByRegex("io\\.komune(\\..*)?") }
+            mavenContent { snapshotsOnly() }
         }
     }
 }
@@ -12,9 +13,10 @@ pluginManagement {
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
-        maven { url = uri("https://central.sonatype.com/repository/maven-snapshots") }
-        if(System.getenv("FIXERS_REPOSITORIES_MAVEN_LOCAL") == "true") {
-            mavenLocal()
+        maven {
+            url = uri("https://central.sonatype.com/repository/maven-snapshots")
+            content { includeGroupByRegex("io\\.komune(\\..*)?") }
+            mavenContent { snapshotsOnly() }
         }
     }
     versionCatalogs {

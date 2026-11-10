@@ -32,13 +32,17 @@ fixers {
         organization = "komune-io"
         projectKey = "komune-io_connect-im"
     }
+    // The repositories are those of settings.gradle.kts, the snapshots filtered to Komune's artifacts.
     repositories {
-        sonatypeSnapshots = true
+        mavenLocal = false
+        mavenCentral = false
+        sonatypeSnapshots = false
     }
 }
 
 plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
     the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().resolution("**/ajv", "8.20.0")
+    the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().resolution("**/ws", "8.21.3")
 }
 
 // Every Spring Boot image: a builder pinned by digest, and Paketo's health checker.
