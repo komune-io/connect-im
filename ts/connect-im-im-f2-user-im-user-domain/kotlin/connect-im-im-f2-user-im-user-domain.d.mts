@@ -46,20 +46,104 @@ export declare interface F2ErrorDTO extends Problem {
     readonly code: number;
     readonly requestId?: string | null;
     readonly message: string;
+    readonly refusal?: string | null;
+    readonly parameters: Record<string, string>;
+    readonly citers: string[];
 }
 export declare class F2Error implements F2ErrorDTO {
-    constructor(message: string, id?: string | null, timestamp?: string, code?: number, requestId?: string | null);
+    constructor(message: string, id?: string | null, timestamp?: string, code?: number, requestId?: string | null, refusal?: string | null, parameters?: Record<string, string>, citers?: string[]);
     get message(): string;
     get id(): string | null;
     get timestamp(): string;
     get code(): number;
     get requestId(): string | null;
+    get refusal(): string | null;
+    get parameters(): Record<string, string>;
+    get citers(): string[];
     toString(): string;
 }
 export declare namespace F2Error {
     /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
     namespace $metadata$ {
         const constructor: abstract new () => F2Error;
+    }
+}
+export declare function isRefusal(error: F2ErrorDTO): boolean;
+export declare function refusalCode(error: F2ErrorDTO): string;
+export declare abstract class HttpRefusal {
+    private constructor();
+    static get INVALID_PAYLOAD(): HttpRefusal & {
+        get name(): "INVALID_PAYLOAD";
+        get ordinal(): 0;
+    };
+    static get UNAUTHENTICATED(): HttpRefusal & {
+        get name(): "UNAUTHENTICATED";
+        get ordinal(): 1;
+    };
+    static get FORBIDDEN(): HttpRefusal & {
+        get name(): "FORBIDDEN";
+        get ordinal(): 2;
+    };
+    static get NOT_FOUND(): HttpRefusal & {
+        get name(): "NOT_FOUND";
+        get ordinal(): 3;
+    };
+    static get METHOD_NOT_ALLOWED(): HttpRefusal & {
+        get name(): "METHOD_NOT_ALLOWED";
+        get ordinal(): 4;
+    };
+    static get CONFLICT(): HttpRefusal & {
+        get name(): "CONFLICT";
+        get ordinal(): 5;
+    };
+    static get PAYLOAD_TOO_LARGE(): HttpRefusal & {
+        get name(): "PAYLOAD_TOO_LARGE";
+        get ordinal(): 6;
+    };
+    static get UNSUPPORTED_MEDIA_TYPE(): HttpRefusal & {
+        get name(): "UNSUPPORTED_MEDIA_TYPE";
+        get ordinal(): 7;
+    };
+    static get UNPROCESSABLE(): HttpRefusal & {
+        get name(): "UNPROCESSABLE";
+        get ordinal(): 8;
+    };
+    static get TOO_MANY_REQUESTS(): HttpRefusal & {
+        get name(): "TOO_MANY_REQUESTS";
+        get ordinal(): 9;
+    };
+    static get UNEXPECTED(): HttpRefusal & {
+        get name(): "UNEXPECTED";
+        get ordinal(): 10;
+    };
+    static get UNAVAILABLE(): HttpRefusal & {
+        get name(): "UNAVAILABLE";
+        get ordinal(): 11;
+    };
+    static values(): [typeof HttpRefusal.INVALID_PAYLOAD, typeof HttpRefusal.UNAUTHENTICATED, typeof HttpRefusal.FORBIDDEN, typeof HttpRefusal.NOT_FOUND, typeof HttpRefusal.METHOD_NOT_ALLOWED, typeof HttpRefusal.CONFLICT, typeof HttpRefusal.PAYLOAD_TOO_LARGE, typeof HttpRefusal.UNSUPPORTED_MEDIA_TYPE, typeof HttpRefusal.UNPROCESSABLE, typeof HttpRefusal.TOO_MANY_REQUESTS, typeof HttpRefusal.UNEXPECTED, typeof HttpRefusal.UNAVAILABLE];
+    static valueOf(value: string): HttpRefusal;
+    get name(): "INVALID_PAYLOAD" | "UNAUTHENTICATED" | "FORBIDDEN" | "NOT_FOUND" | "METHOD_NOT_ALLOWED" | "CONFLICT" | "PAYLOAD_TOO_LARGE" | "UNSUPPORTED_MEDIA_TYPE" | "UNPROCESSABLE" | "TOO_MANY_REQUESTS" | "UNEXPECTED" | "UNAVAILABLE";
+    get ordinal(): 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
+    get status(): number;
+    get refusal(): string;
+}
+export declare namespace HttpRefusal {
+    /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+    namespace $metadata$ {
+        const constructor: abstract new () => HttpRefusal;
+    }
+    abstract class Companion extends KtSingleton<Companion.$metadata$.constructor>() {
+        private constructor();
+    }
+    namespace Companion {
+        /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+        namespace $metadata$ {
+            abstract class constructor {
+                get DOMAIN(): string;
+                of(status: number): HttpRefusal;
+                private constructor();
+            }
+        }
     }
 }
 export declare class F2Exception extends /* RuntimeException */ Error {

@@ -76,30 +76,38 @@ class F2ErrorStatusTest(
             .exchange()
 
     @Test
-    fun `a refused policy answers 403`() {
+    fun `a refused policy answers 403 without its message`() {
         call("forbiddenFunction").expectStatus().isForbidden
-            .expectBody().jsonPath("$.message").isEqualTo("User [u] is not authorized to get users")
+            .expectBody()
+            .jsonPath("$.refusal").isEqualTo("http.FORBIDDEN")
+            .jsonPath("$.message").doesNotExist()
     }
 
     @Test
     fun `a missing entity answers 404`() {
         call("notFoundFunction").expectStatus().isNotFound
+            .expectBody().jsonPath("$.refusal").isEqualTo("http.NOT_FOUND")
     }
 
     @Test
     fun `a conflict answers 409`() {
         call("conflictFunction").expectStatus().isEqualTo(409)
+            .expectBody().jsonPath("$.refusal").isEqualTo("http.CONFLICT")
     }
 
     @Test
-    fun `a missing required field answers 400`() {
+    fun `a missing required field answers 400 naming it`() {
         call("queryFunction", "[{}]").expectStatus().isBadRequest
-            .expectBody().jsonPath("$.message").isEqualTo("Missing parameter `id`")
+            .expectBody()
+            .jsonPath("$.refusal").isEqualTo("http.INVALID_PAYLOAD")
+            .jsonPath("$.parameters.parameter").isEqualTo("id")
     }
 
     @Test
     fun `an unexpected error still answers 500 without its message`() {
         call("failingFunction").expectStatus().isEqualTo(500)
-            .expectBody().jsonPath("$.message").doesNotExist()
+            .expectBody()
+            .jsonPath("$.refusal").isEqualTo("http.UNEXPECTED")
+            .jsonPath("$.message").doesNotExist()
     }
 }
