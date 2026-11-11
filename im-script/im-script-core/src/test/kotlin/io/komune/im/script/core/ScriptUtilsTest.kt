@@ -1,5 +1,7 @@
 package io.komune.im.script.core
 
+import io.komune.im.commons.utils.ConfigurationException
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -56,5 +58,25 @@ class ScriptUtilsTest {
 
         assertThat(isSuccess).isFalse()
         assertThat(attempts).isEqualTo(5)
+    }
+
+    @Test
+    fun `a configuration error is thrown at once, without a retry`() = runTest {
+        var attempts = 0
+
+        val thrown = try {
+            val isSuccess = retryOnThrow(actionName = "action", retryDelayMillis = 0, logger = logger) {
+                attempts++
+                throw ConfigurationException("missing")
+            }
+            error("returned $isSuccess")
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: ConfigurationException) {
+            e
+        }
+
+        assertThat(thrown).hasMessage("missing")
+        assertThat(attempts).isEqualTo(1)
     }
 }

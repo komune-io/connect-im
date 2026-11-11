@@ -22,11 +22,11 @@ object ParserUtils {
         try {
             logger.info("Loading configuration from json file [$configPath]...")
             return readFile(filename = configPath, classLoader = classLoader) { stream -> stream.parseTo(clazz) }
-                ?: error("Configuration file [$configPath] not found")
+                ?: throw ConfigurationException("Configuration file [$configPath] not found")
         } catch (e: IOException) {
             val message = "Error configuration from json file [${configPath}]"
             logger.error(message, e)
-            throw IllegalStateException(message, e)
+            throw ConfigurationException(message, e)
         }
     }
 
@@ -38,11 +38,11 @@ object ParserUtils {
         try {
             logger.info("Loading configuration from json file [$configPath]...")
             return readFile(filename = configPath, classLoader = classLoader) { stream -> stream.parseJsonTo(clazz) }
-                ?: error("Configuration file [$configPath] not found")
+                ?: throw ConfigurationException("Configuration file [$configPath] not found")
         } catch (e: IOException) {
             val message = "Error configuration from json file [${configPath}]"
             logger.error(message, e)
-            throw IllegalStateException(message, e)
+            throw ConfigurationException(message, e)
         }
     }
 
@@ -79,3 +79,6 @@ object ParserUtils {
         return jarFile.getInputStream(jarEntry).use(read)
     }
 }
+
+/** A configuration file that is missing or cannot be read: retrying cannot fix it. */
+class ConfigurationException(message: String, cause: Throwable? = null) : IllegalStateException(message, cause)

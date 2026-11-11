@@ -12,7 +12,10 @@ data class ImAuthProperties(
     val clientSecret: String? = null,
     val username: String? = null,
     val password: String? = null,
-)
+) {
+    override fun toString() = "ImAuthProperties(serverUrl=$serverUrl, realmId=$realmId, clientId=$clientId, " +
+        "clientSecret=${clientSecret.masked()}, username=${username.orEmpty()}, password=${password.masked()})"
+}
 
 @Suppress("UseCheckOrError")
 fun ImAuthProperties.toAuthRealm(space: RealmId? = null): AuthSubRealm {
@@ -44,3 +47,5 @@ fun ImAuthProperties.toAuthRealm(space: RealmId? = null): AuthSubRealm {
             throw IllegalStateException("Either clientSecret or username and password must be provided")
         }
 }
+
+private fun String?.masked() = if (this == null) "none" else "***"

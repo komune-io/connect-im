@@ -110,7 +110,7 @@ class SpaceCreateScript(
         if (spaceServices.finder.getOrNull(properties.spaceIdentifier) != null) {
             logger.info("Space[${properties.spaceIdentifier}] already created")
         } else {
-            logger.info("Space create: $${properties}")
+            logger.info("Creating Space[${properties.spaceIdentifier}]")
             val login = properties.settings?.login
             val _ = spaceServices.aggregate.define(
                 SpaceDefineCommand(

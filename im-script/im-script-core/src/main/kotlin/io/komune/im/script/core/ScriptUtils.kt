@@ -1,5 +1,6 @@
 package io.komune.im.script.core
 
+import io.komune.im.commons.utils.ConfigurationException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import org.slf4j.Logger
@@ -23,6 +24,8 @@ suspend fun retryOnThrow(
             action()
             isSuccess = true
         } catch (ex: CancellationException) {
+            throw ex
+        } catch (ex: ConfigurationException) {
             throw ex
         } catch (ex: Exception) {
             logger.error("$actionName Failed to execute (attempt $attempts of $maxRetries). Retrying...", ex)

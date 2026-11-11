@@ -163,7 +163,7 @@ class SpaceAggregateService(
             logger.info("Setting sslRequired to {}", requestedSslRequired)
             sslRequired = requestedSslRequired
         }
-        logger.info("Setting smtpServer to {}", command.smtp)
+        logger.info("Setting smtpServer, keys {}", command.smtp?.keys)
         smtpServer = command.smtp
         logger.info("Setting loginTheme to {}", command.theme)
         loginTheme = command.theme

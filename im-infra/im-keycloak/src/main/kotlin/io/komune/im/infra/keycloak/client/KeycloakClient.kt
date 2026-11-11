@@ -36,7 +36,7 @@ class KeycloakClient(
     }
 
     private fun log(invokeLog: String) {
-        logger.debug("Invoke ${invokeLog} on realm[${realmId}] with auth[$auth]")
+        logger.debug("Invoke ${invokeLog} on realm[${realmId}] with client[${auth.clientId}] of realm[${auth.realmId}]")
     }
 
     fun client(id: String): ClientResource {

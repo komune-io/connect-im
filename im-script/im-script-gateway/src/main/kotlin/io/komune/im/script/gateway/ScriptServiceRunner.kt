@@ -5,8 +5,8 @@ import io.komune.im.script.core.retryOnThrow
 import io.komune.im.script.init.ImInitScript
 import io.komune.im.script.space.config.SpaceConfigScript
 import io.komune.im.script.space.create.SpaceCreateScript
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.runBlocking
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.ConfigurableApplicationContext
@@ -24,33 +24,38 @@ class ScriptServiceRunner(
     private val logger = LoggerFactory.getLogger(ScriptServiceRunner::class.java)
 
     override fun run(vararg args: String) {
-        runBlocking {
-            try {
-                runScript("Init", imInitScript::run)
-                runScript("Realm-Create", spaceCreateScript::run)
-                runScript("Realm-Config", spaceConfigService::run)
-            } catch (e: CancellationException) {
-                throw e
-            } catch (_: RuntimeException) {
-            } finally {
-                context.close()
+        try {
+            runBlocking {
+                runScripts(
+                    scripts = listOf(
+                        "Init" to imInitScript::run,
+                        "Realm-Create" to spaceCreateScript::run,
+                        "Realm-Config" to spaceConfigService::run,
+                    ),
+                    retry = imRetryProperties,
+                    logger = logger,
+                )
             }
+        } finally {
+            context.close()
         }
     }
+}
 
-    @Suppress("TooGenericExceptionThrown")
-    suspend fun runScript(script: String, block: suspend () -> Unit) {
+/** Runs [scripts] in order, each retried as [retry] says; the first one that fails stops the run with its error. */
+internal suspend fun runScripts(
+    scripts: List<Pair<String, suspend () -> Unit>>,
+    retry: ImRetryProperties,
+    logger: Logger,
+) {
+    scripts.forEach { (script, block) ->
         val isSuccess = retryOnThrow(
             actionName = script,
-            maxRetries = imRetryProperties.max,
-            retryDelayMillis = imRetryProperties.delayMillis,
-            logger = logger
-        ) {
-            block()
-        }
-
-        if (!isSuccess) {
-            throw RuntimeException("Failed to run script $script")
-        }
+            maxRetries = retry.max,
+            retryDelayMillis = retry.delayMillis,
+            logger = logger,
+            action = block,
+        )
+        check(isSuccess) { "Failed to run script $script" }
     }
 }

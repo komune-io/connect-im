@@ -43,7 +43,7 @@ interface UserCommandApi {
     fun userUpdateEmail(): UserUpdateEmailFunction
     /** Set the given password for a given user ID. */
     fun userUpdatePassword(): UserUpdatePasswordFunction
-    /** Disable multifactor authentication *.*/
+    /** Disable multifactor authentication. */
     fun userDisableMfa(): UserDisableMfaFunction
     /** Disable a user. */
     fun userDisable(): UserDisableFunction
