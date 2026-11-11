@@ -4,6 +4,7 @@ import io.komune.im.apikey.lib.ApiKeyAggregateService
 import io.komune.im.bdd.spring.SpringTestConfiguration
 import io.komune.im.commons.auth.AuthContext
 import io.komune.im.commons.model.SpaceIdentifier
+import io.komune.im.f2.organization.lib.OrganizationFilter
 import io.komune.im.f2.organization.lib.OrganizationFinderService
 import io.komune.im.script.core.config.properties.ImAuthProperties
 import io.komune.im.script.core.config.properties.ImScriptSpaceProperties
@@ -54,16 +55,16 @@ class SpaceConfigScriptTest: SpringTestConfiguration() {
     )
 
     @Test
-    fun apiKeyOfOrganizationMustBeCreated(): Unit = runTest {
+    fun apiKeyOfOrganizationMustBeCreated() = runTest {
         val data = spaceConfig("im-test")
         val auth = imScriptSpaceProperties.auth.toAuthRealm(data.spaceIdentifier)
         spaceConfigScript.config(auth, data)
 
         withContext(AuthContext(auth)) {
-            val organizations = organizationFinderService.page(name = organizationName).items
+            val organizations = organizationFinderService.page(OrganizationFilter(name = organizationName)).items
             val organization = organizations.firstOrNull()
-            val apiKey = organization?.id?.let { id ->
-                apiKeyAggregateService.findByName(apiKeyName, id)
+            val apiKey = organization?.let { found ->
+                apiKeyAggregateService.findByName(name = apiKeyName, organizationId = found.id)
             }
             Assertions.assertThat(organization).isNotNull
             Assertions.assertThat(apiKey).isNotNull
@@ -71,7 +72,7 @@ class SpaceConfigScriptTest: SpringTestConfiguration() {
     }
 
     @Test
-    fun mustBeConfigurableFromSpaceRootClientId(): Unit = runTest {
+    fun mustBeConfigurableFromSpaceRootClientId() = runTest {
         val spaceIdentifier = "im-test-${UUID.randomUUID().toString().hashCode().absoluteValue}"
 
         val clientId = defaultSpaceRootClientId(spaceIdentifier)
@@ -101,10 +102,10 @@ class SpaceConfigScriptTest: SpringTestConfiguration() {
 
         // Then the organization and apiKey must be created
         withContext(AuthContext(auth)) {
-            val organizations = organizationFinderService.page(name = organizationName).items
+            val organizations = organizationFinderService.page(OrganizationFilter(name = organizationName)).items
             val organization = organizations.firstOrNull()
-            val apiKey = organization?.id?.let { id ->
-                apiKeyAggregateService.findByName(apiKeyName, id)
+            val apiKey = organization?.let { found ->
+                apiKeyAggregateService.findByName(name = apiKeyName, organizationId = found.id)
             }
             Assertions.assertThat(organization).isNotNull
             Assertions.assertThat(apiKey).isNotNull

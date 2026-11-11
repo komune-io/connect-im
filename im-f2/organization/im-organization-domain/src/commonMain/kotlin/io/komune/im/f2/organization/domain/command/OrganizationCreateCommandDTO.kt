@@ -78,6 +78,7 @@ interface OrganizationCreateCommandDTO: Command {
     val status: String?
 }
 
+@JsExport
 @Serializable
 data class OrganizationCreateCommand(
     override val siret: String? = null,
@@ -102,6 +103,7 @@ interface OrganizationCreatedEventDTO: Event {
  * @d2 event
  * @parent [OrganizationCreateFunction]
  */
+@JsExport
 @Serializable
 data class OrganizationCreatedEvent(
     /**

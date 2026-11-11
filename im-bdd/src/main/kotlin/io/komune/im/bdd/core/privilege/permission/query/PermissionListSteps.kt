@@ -5,12 +5,11 @@ import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.privilege.api.PermissionEndpoint
 import io.komune.im.f2.privilege.domain.permission.query.PermissionListQuery
-import org.springframework.beans.factory.annotation.Autowired
 
-class PermissionListSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var permissionEndpoint: PermissionEndpoint
+/** Cucumber steps: permission list. */
+class PermissionListSteps(
+    private val permissionEndpoint: PermissionEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         When ("I list the permissions") {

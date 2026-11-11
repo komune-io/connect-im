@@ -11,21 +11,29 @@ import org.springframework.stereotype.Service
 @Service
 class ApiKeyPoliciesEnforcer: PolicyEnforcer() {
 
-    suspend fun checkGet(apikeyId: ApiKeyId) = checkAuthed("get apikey") { authedUser ->
-        ApiKeyPolicies.canGet(authedUser, apikeyId)
+    suspend fun checkGet(apikeyId: ApiKeyId) {
+        checkAuthed("get apikey") { authedUser ->
+            ApiKeyPolicies.canGet(authedUser, apikeyId)
+        }
     }
 
-    suspend fun checkPage() = checkAuthed("page apikeys") { authedUser ->
-        ApiKeyPolicies.canPage(authedUser)
+    suspend fun checkPage() {
+        checkAuthed("page apikeys") { authedUser ->
+            ApiKeyPolicies.canPage(authedUser)
+        }
     }
 
-    suspend fun checkCreate() = checkAuthed("create an apikey") { authedUser ->
-        ApiKeyPolicies.canCreate(authedUser)
+    suspend fun checkCreate() {
+        checkAuthed("create an apikey") { authedUser ->
+            ApiKeyPolicies.canCreate(authedUser)
+        }
     }
 
     @Suppress("UnusedParameter")
-    suspend fun checkRemove(apikeyId: ApiKeyId) = checkAuthed("delete an apikey") { authedUser ->
-        ApiKeyPolicies.canDelete(authedUser)
+    suspend fun checkRemove(apikeyId: ApiKeyId) {
+        checkAuthed("delete an apikey") { authedUser ->
+            ApiKeyPolicies.canDelete(authedUser)
+        }
     }
 
     suspend fun enforcePage(query: ApiKeyPageQuery): ApiKeyPageQuery = enforceAuthed { authedUser ->

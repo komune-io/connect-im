@@ -5,12 +5,11 @@ import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.query.OrganizationPageQuery
-import org.springframework.beans.factory.annotation.Autowired
 
-class OrganizationPageSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var organizationEndpoint: OrganizationEndpoint
+/** Cucumber steps: organization page. */
+class OrganizationPageSteps(
+    private val organizationEndpoint: OrganizationEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         DataTableType(::organizationPageParams)
@@ -32,7 +31,7 @@ class OrganizationPageSteps: En, ImCucumberStepsDefinition() {
         context.fetched.organizations = OrganizationPageQuery(
             name = params.name,
             role = params.role,
-            withDisabled = params.withDisable,
+            withDisabled = params.isWithDisabled,
             offset = params.offset ?: 0,
             limit = params.limit ?: Int.MAX_VALUE,
             attributes = null
@@ -42,7 +41,7 @@ class OrganizationPageSteps: En, ImCucumberStepsDefinition() {
     private fun organizationPageParams(entry: Map<String, String>?) = OrganizationPageParams(
         name = entry?.get("name"),
         role = entry?.get("role"),
-        withDisable = entry?.get("withDisabled").toBoolean(),
+        isWithDisabled = entry?.get("withDisabled").toBoolean(),
         offset = entry?.get("offset")?.toInt(),
         limit = entry?.get("limit")?.toInt(),
     )
@@ -50,7 +49,7 @@ class OrganizationPageSteps: En, ImCucumberStepsDefinition() {
     private data class OrganizationPageParams(
         val name: String?,
         val role: String?,
-        val withDisable: Boolean,
+        val isWithDisabled: Boolean,
         val offset: Int?,
         val limit: Int?
     )

@@ -23,27 +23,18 @@ class ClientInitService(
     private val clientCoreAggregateService: ClientCoreAggregateService,
     private val clientCoreFinderService: ClientCoreFinderService,
 ) {
-    companion object {
-        val DEFAULT_REALM_MANAGEMENT_ROLES = listOf(
-            "create-client",
-            "manage-clients",
-            "manage-users",
-            "manage-realm",
-            "view-clients",
-            "view-users"
-        )
-    }
-
     private val logger = LoggerFactory.getLogger(ClientInitService::class.java)
 
-    suspend fun getAppClientId(clientIdentifier: ClientIdentifier): ClientModel? {
-        return clientCoreFinderService.getByIdentifierOrNull(clientIdentifier)
-    }
-    suspend fun initAppClient(appClient: AppClient): ClientId {
+    suspend fun getAppClientId(clientIdentifier: ClientIdentifier): ClientModel? =
+        clientCoreFinderService.getByIdentifierOrNull(clientIdentifier)
 
-        return init("AppClient[clientId: ${appClient.clientId}]", logger, {
+    suspend fun initAppClient(appClient: AppClient): ClientId = init(
+        logPrefix = "AppClient[clientId: ${appClient.clientId}]",
+        logger = logger,
+        find = {
             clientCoreFinderService.getByIdentifierOrNull(appClient.clientId)?.id
-        }, {
+        },
+        create = {
             val secret = appClient.clientSecret ?: UUID.randomUUID().toString()
             val clientId = appClient.createClient(secret)
 
@@ -53,16 +44,13 @@ class ClientInitService(
             val secretLogging = if(logger.isTraceEnabled) secret else "******"
             logger.info("Client [${appClient.clientId}] secret: $secretLogging")
             clientId
-        })
-
-
-    }
+        }
+    )
 
     private suspend fun AppClient.createClient(
         secret: String
-    ): ClientId {
-        val redirectUrls = this.buildRedirectUrl()
-        val clientId = ClientCreateCommand(
+    ): ClientId = clientCoreAggregateService.create(
+        ClientCreateCommand(
             identifier = this.clientId,
             secret = secret,
             isPublicClient = false,
@@ -71,21 +59,22 @@ class ClientInitService(
             authorizationServicesEnabled = false,
             isStandardFlowEnabled = false,
             baseUrl = this.homeUrl,
-            redirectUris = redirectUrls,
-        ).let { clientCoreAggregateService.create(it).id }
-        return clientId
-    }
+            redirectUris = this.buildRedirectUrl(),
+        )
+    ).id
 
     private suspend fun AppClient.grantClientRoles(
         clientId: ClientId
     ) {
         if (this.realmManagementRoles == null || this.realmManagementRoles.isNotEmpty()) {
             val realmManagementId = clientCoreFinderService.getByIdentifier("realm-management").id
-            ClientGrantClientRolesCommand(
-                id = clientId,
-                providerClientId = realmManagementId,
-                roles = this.realmManagementRoles ?: DEFAULT_REALM_MANAGEMENT_ROLES
-            ).let { clientCoreAggregateService.grantClientRoles(it) }
+            val _ = clientCoreAggregateService.grantClientRoles(
+                ClientGrantClientRolesCommand(
+                    id = clientId,
+                    providerClientId = realmManagementId,
+                    roles = this.realmManagementRoles ?: DEFAULT_REALM_MANAGEMENT_ROLES
+                )
+            )
         }
     }
 
@@ -93,41 +82,54 @@ class ClientInitService(
         clientId: ClientId
     ) {
         roles?.let { roles ->
-            ClientGrantRealmRolesCommand(
-                id = clientId,
-                roles = roles
-            ).let { clientCoreAggregateService.grantRealmRoles(it) }
+            clientCoreAggregateService.grantRealmRoles(
+                ClientGrantRealmRolesCommand(
+                    id = clientId,
+                    roles = roles
+                )
+            )
         }
     }
 
-    private fun AppClient.buildRedirectUrl(): List<String> {
-        val redirectUrls = this.homeUrl?.addWildcard()
-            ?.let { redirectUrl -> listOf(redirectUrl) }
-            ?: emptyList()
-        return redirectUrls
-    }
+    private fun AppClient.buildRedirectUrl(): List<String> = listOfNotNull(this.homeUrl?.addWildcard())
 
-    suspend fun initWebClient(webClient: WebClient): ClientId {
-        return init("WebClient[clientId: ${webClient.clientId}]", logger, {
+    suspend fun initWebClient(webClient: WebClient): ClientId = init(
+        logPrefix = "WebClient[clientId: ${webClient.clientId}]",
+        logger = logger,
+        find = {
             clientCoreFinderService.getByIdentifierOrNull(webClient.clientId)?.id
-        }, {
+        },
+        create = {
             val urls = webClient.webUrl.split(",").map { it.trim() }
             val baseUrl = urls.firstOrNull()
-            ClientCreateCommand(
-                identifier = webClient.clientId,
-                secret = webClient.secret,
-                isPublicClient = webClient.secret == null,
-                isDirectAccessGrantsEnabled = true,
-                isServiceAccountsEnabled = false,
-                authorizationServicesEnabled = false,
-                isStandardFlowEnabled = true,
-                rootUrl = baseUrl,
-                redirectUris = urls.map { it.addWildcard() },
-                baseUrl = baseUrl,
-                adminUrl = baseUrl,
-                webOrigins = urls,
-                additionalAccessTokenClaim = listOf(ORGANIZATION_ID_CLAIM_NAME)
-            ).let { clientCoreAggregateService.create(it).id }
-        })
+            clientCoreAggregateService.create(
+                ClientCreateCommand(
+                    identifier = webClient.clientId,
+                    secret = webClient.secret,
+                    isPublicClient = webClient.secret == null,
+                    isDirectAccessGrantsEnabled = true,
+                    isServiceAccountsEnabled = false,
+                    authorizationServicesEnabled = false,
+                    isStandardFlowEnabled = true,
+                    rootUrl = baseUrl,
+                    redirectUris = urls.map { it.addWildcard() },
+                    baseUrl = baseUrl,
+                    adminUrl = baseUrl,
+                    webOrigins = urls,
+                    additionalAccessTokenClaim = listOf(ORGANIZATION_ID_CLAIM_NAME)
+                )
+            ).id
+        }
+    )
+
+    companion object {
+        val DEFAULT_REALM_MANAGEMENT_ROLES = listOf(
+            "create-client",
+            "manage-clients",
+            "manage-users",
+            "manage-realm",
+            "view-clients",
+            "view-users"
+        )
     }
 }

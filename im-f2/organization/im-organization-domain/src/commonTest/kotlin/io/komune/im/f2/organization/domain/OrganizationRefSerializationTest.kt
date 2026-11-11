@@ -19,7 +19,7 @@ class OrganizationRefSerializationTest {
     fun roundTripsWithoutLoss() {
         val encoded = json.encodeToString(OrganizationRef.serializer(), ref)
 
-        assertEquals(ref, json.decodeFromString(OrganizationRef.serializer(), encoded))
+        assertEquals(expected = ref, actual = json.decodeFromString(OrganizationRef.serializer(), encoded))
     }
 
     @Test
@@ -40,7 +40,7 @@ class OrganizationRefSerializationTest {
             json.encodeToString(OrganizationRef.serializer(), bare)
         )
 
-        assertEquals(emptyList<String>(), decoded.roles)
+        assertEquals(expected = emptyList<String>(), actual = decoded.roles)
     }
 
     @Test
@@ -50,6 +50,6 @@ class OrganizationRefSerializationTest {
             """{"id":"org-1","name":"Komune","roles":[],"somethingNew":true}"""
         )
 
-        assertEquals("org-1", decoded.id)
+        assertEquals(expected = "org-1", actual = decoded.id)
     }
 }

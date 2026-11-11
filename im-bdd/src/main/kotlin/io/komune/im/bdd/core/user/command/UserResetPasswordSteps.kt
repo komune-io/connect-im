@@ -5,14 +5,19 @@ import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserResetPasswordCommand
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.data.TestContextKey
 
-class UserResetPasswordSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+/** Cucumber steps: user reset password. */
+class UserResetPasswordSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: UserResetPasswordCommand
+    private var commandOrNull: UserResetPasswordCommand? = null
+    private var command: UserResetPasswordCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::userResetPasswordParams)
@@ -46,7 +51,7 @@ class UserResetPasswordSteps: En, ImCucumberStepsDefinition() {
         command = UserResetPasswordCommand(
             id = context.userIds.safeGet(params.identifier)
         )
-        userEndpoint.userResetPassword().invoke(command).id
+        val _ = userEndpoint.userResetPassword().invoke(command)
     }
 
     private fun userResetPasswordParams(entry: Map<String, String>?): UserResetPasswordParams {

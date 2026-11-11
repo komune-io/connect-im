@@ -63,6 +63,7 @@ interface SpaceDefineCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class SpaceDefineCommand(
     override val identifier: String,
@@ -79,6 +80,7 @@ data class SpaceDefineCommand(
  * @d2 inherit
  */
 @JsExport
+@Suppress("BooleanPropertyNaming") // wire names: the JSON fields clients read
 interface SpaceSettingsDTO {
     val registrationAllowed: Boolean?
     val rememberMe: Boolean?
@@ -89,6 +91,7 @@ interface SpaceSettingsDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class SpaceSettings(
     override val registrationAllowed: Boolean?,
@@ -112,6 +115,7 @@ interface SpaceDefinedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class SpaceDefinedEvent(
     override val identifier: SpaceIdentifier,

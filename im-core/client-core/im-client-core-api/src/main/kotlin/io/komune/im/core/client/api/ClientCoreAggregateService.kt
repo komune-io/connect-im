@@ -64,7 +64,7 @@ class ClientCoreAggregateService(
             .add(newRoles)
 
         val result = ClientGrantedClientRolesEvent(command.id).also {
-            val roles = newRoles.joinToString(",") { it.name }
+            val roles = newRoles.joinToString(",") { role -> role.name }
             logger.info("Granted client roles[$roles] for client ID: ${command.id}")
         }
         return result
@@ -83,7 +83,7 @@ class ClientCoreAggregateService(
             .add(newRoles)
 
         val result = ClientGrantedRealmRolesEvent(command.id).also {
-            val roles = newRoles.joinToString(",") { it.name }
+            val roles = newRoles.joinToString(",") { role -> role.name }
             logger.info("Granted realm roles[$roles] for client ID: ${command.id}")
         }
         return result

@@ -9,7 +9,11 @@ import org.junit.jupiter.api.Test
  */
 class JsonUtilsTest {
 
-    data class Feature(val id: String = "", val enabled: Boolean = false)
+    data class Feature(
+        val id: String = "",
+        @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
+        val enabled: Boolean = false,
+    )
 
     @Test
     fun `parses a json array to a list`() {

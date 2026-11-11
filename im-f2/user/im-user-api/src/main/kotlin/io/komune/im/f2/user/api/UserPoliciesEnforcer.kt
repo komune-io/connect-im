@@ -7,6 +7,7 @@ import io.komune.im.commons.model.UserId
 import io.komune.im.f2.organization.domain.policies.OrganizationPolicies
 import io.komune.im.f2.user.domain.command.UserUpdateCommand
 import io.komune.im.f2.user.domain.model.UserDTO
+import io.komune.im.f2.user.domain.policies.UserMfaPolicies
 import io.komune.im.f2.user.domain.policies.UserPolicies
 import io.komune.im.f2.user.domain.query.UserPageQuery
 import io.komune.im.f2.user.lib.UserFinderService
@@ -21,53 +22,73 @@ class UserPoliciesEnforcer(
 
     private val logger = LoggerFactory.getLogger(UserPoliciesEnforcer::class.java)
 
-    suspend fun checkGet(user: UserDTO? = null) = checkAuthed("get user") { authedUser ->
-        UserPolicies.canGet(authedUser, user)
+    suspend fun checkGet(user: UserDTO? = null) {
+        checkAuthed("get user") { authedUser ->
+            UserPolicies.canGet(authedUser, user)
+        }
     }
 
-    suspend fun checkPage() = checkAuthed("page users") { authedUser ->
-        UserPolicies.canPage(authedUser)
+    suspend fun checkPage() {
+        checkAuthed("page users") { authedUser ->
+            UserPolicies.canPage(authedUser)
+        }
     }
 
-    suspend fun checkRefList() = checkAuthed("list user refs") { authedUser ->
-        UserPolicies.checkRefList(authedUser)
+    suspend fun checkRefList() {
+        checkAuthed("list user refs") { authedUser ->
+            UserPolicies.checkRefList(authedUser)
+        }
     }
 
-    suspend fun checkCreate(organizationId: OrganizationId?) = checkAuthed("create an user") { authedUser ->
-        UserPolicies.canCreate(authedUser, organizationId)
+    suspend fun checkCreate(organizationId: OrganizationId?) {
+        checkAuthed("create an user") { authedUser ->
+            UserPolicies.canCreate(authedUser, organizationId)
+        }
     }
 
-    suspend fun enforceUpdate(cmd: UserUpdateCommand) = enforceAuthed { authedUser ->
+    /** Checks the authed user may update [cmd]'s user, its organization and its roles. */
+    suspend fun enforceUpdate(cmd: UserUpdateCommand) = enforceAuthed { _ ->
         checkUpdate(cmd.id)
-        enforceMemberOf(cmd)
+        val _ = enforceMemberOf(cmd)
         enforceRoles(cmd)
     }
-    suspend fun checkConfigureMfa(userId: UserId) = checkAuthed("configure mfa") { authedUser ->
-        val user = userFinderService.get(userId)
-        UserPolicies.canConfigureMfa(authedUser, user)
+    suspend fun checkConfigureMfa(userId: UserId) {
+        checkAuthed("configure mfa") { authedUser ->
+            val user = userFinderService.get(userId)
+            UserMfaPolicies.canConfigureMfa(authedUser, user)
+        }
     }
 
-    suspend fun checkDisableMfa(userId: UserId) = checkAuthed("disable mfa") { authedUser ->
-        val user = userFinderService.get(userId)
-        UserPolicies.canDisableMfa(authedUser, user) && UserPolicies.canDisableMfaAcr(authedUser, user)
+    suspend fun checkDisableMfa(userId: UserId) {
+        checkAuthed("disable mfa") { authedUser ->
+            val user = userFinderService.get(userId)
+            UserMfaPolicies.canDisableMfa(authedUser, user) && UserMfaPolicies.canDisableMfaAcr(authedUser)
+        }
     }
 
-    suspend fun checkUpdate(userId: UserId) = checkAuthed("update an user") { authedUser ->
-        val user = userFinderService.get(userId)
-        UserPolicies.canUpdate(authedUser, user)
+    suspend fun checkUpdate(userId: UserId) {
+        checkAuthed("update an user") { authedUser ->
+            val user = userFinderService.get(userId)
+            UserPolicies.canUpdate(authedUser, user)
+        }
     }
     suspend fun enforceMemberOf(
         cmd: UserUpdateCommand
     ) = enforceAuthed { authedUser ->
         val user = userFinderService.get(cmd.id)
-        logger.debug("Checking if memberOf can be updated for user with roles[${user.roles}] " +
-            "and memberOf[${user.memberOf?.id}].")
+        logger.debug(
+            "Checking if memberOf can be updated for user with roles[{}] and memberOf[{}].",
+            user.roles,
+            user.memberOf?.id,
+        )
 
         if(UserPolicies.canUpdateMemberOf(authedUser) || user.memberOf?.id == cmd.memberOf) {
             cmd
         } else {
-            logger.warn("memberOf can't be updated, " +
-                "memberOf will be set to the current user's organization[${user.memberOf?.id}].")
+            logger.warn(
+                "memberOf can't be updated, memberOf will be set to the current user's organization[{}].",
+                user.memberOf?.id,
+            )
             cmd.copy(
                 memberOf = user.memberOf?.id
             )
@@ -77,8 +98,11 @@ class UserPoliciesEnforcer(
         cmd: UserUpdateCommand
     ) = enforceAuthed { authedUser ->
         val user = userFinderService.get(cmd.id)
-        logger.debug("Checking if roles can be updated for user with roles[${user.roles}] " +
-            "and memberOf[${user.memberOf?.id}].")
+        logger.debug(
+            "Checking if roles can be updated for user with roles[{}] and memberOf[{}].",
+            user.roles,
+            user.memberOf?.id,
+        )
         val currentRoleIdentifier = user.roles.map { it.identifier }
         if(UserPolicies.canUpdateRole(authedUser) || currentRoleIdentifier == cmd.roles) {
             cmd
@@ -91,19 +115,25 @@ class UserPoliciesEnforcer(
         }
     }
 
-    suspend fun checkDisable(userId: UserId) = checkAuthed("disable an user") { authedUser ->
-        val user = userFinderService.get(userId)
-        UserPolicies.canDisable(authedUser, user)
+    suspend fun checkDisable(userId: UserId) {
+        checkAuthed("disable an user") { authedUser ->
+            val user = userFinderService.get(userId)
+            UserPolicies.canDisable(authedUser, user)
+        }
     }
 
-    suspend fun checkEnable(userId: UserId) = checkAuthed("enable an user") { authedUser ->
-        val user = userFinderService.get(userId)
-        UserPolicies.canEnable(authedUser, user)
+    suspend fun checkEnable(userId: UserId) {
+        checkAuthed("enable an user") { authedUser ->
+            val user = userFinderService.get(userId)
+            UserPolicies.canEnable(authedUser, user)
+        }
     }
 
-    suspend fun checkDelete(userId: UserId) = checkAuthed("delete an user") { authedUser ->
-        val user = userFinderService.get(userId)
-        UserPolicies.canDelete(authedUser, user)
+    suspend fun checkDelete(userId: UserId) {
+        checkAuthed("delete an user") { authedUser ->
+            val user = userFinderService.get(userId)
+            UserPolicies.canDelete(authedUser, user)
+        }
     }
 
     suspend fun enforcePageQuery(query: UserPageQuery): UserPageQuery = enforceAuthed { authedUser ->

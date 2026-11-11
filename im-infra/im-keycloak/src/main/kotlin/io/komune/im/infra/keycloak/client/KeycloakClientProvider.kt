@@ -6,7 +6,7 @@ import io.komune.im.commons.auth.currentAuth
 import org.springframework.stereotype.Service
 
 @Service
-open class KeycloakClientProvider(
+class KeycloakClientProvider(
     private val authenticationResolver: ImAuthenticationProvider
 ) {
 

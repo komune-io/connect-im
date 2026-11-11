@@ -8,15 +8,20 @@ import io.komune.im.bdd.core.user.data.user
 import io.komune.im.commons.auth.AuthenticationProvider
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserDisableCommand
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
-class UserDisableSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+/** Cucumber steps: user disable. */
+class UserDisableSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: UserDisableCommand
+    private var commandOrNull: UserDisableCommand? = null
+    private var command: UserDisableCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::userDisableParams)
@@ -56,10 +61,10 @@ class UserDisableSteps: En, ImCucumberStepsDefinition() {
             step {
                 val client = keycloakClientProvider.getClient()
                 val assertThat = AssertionBdd.user(client).assertThatId(command.id)
-                assertThat.hasFields(
-                    enabled = false,
+                assertThat.hasFields { fields -> fields.copy(
+                    isEnabled = false,
                     disabledBy = command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id,
-                )
+                ) }
 
                 if (command.anonymize) {
                     assertThat.isAnonymized()
@@ -72,23 +77,23 @@ class UserDisableSteps: En, ImCucumberStepsDefinition() {
         command = UserDisableCommand(
             id = context.userIds.safeGet(params.identifier),
             disabledBy = params.disabledBy,
-            anonymize = params.anonymize,
+            anonymize = params.isAnonymized,
             attributes = null
         )
-        userEndpoint.userDisable().invoke(command).id
+        val _ = userEndpoint.userDisable().invoke(command)
     }
 
     private fun userDisableParams(entry: Map<String, String>?): UserDisableParams {
         return UserDisableParams(
             identifier = entry?.get("identifier") ?: context.userIds.lastUsedKey,
             disabledBy = entry?.get("disabledBy"),
-            anonymize = entry?.get("anonymize").toBoolean()
+            isAnonymized = entry?.get("anonymize").toBoolean()
         )
     }
 
     private data class UserDisableParams(
         val identifier: TestContextKey,
         val disabledBy: String?,
-        val anonymize: Boolean
+        val isAnonymized: Boolean
     )
 }

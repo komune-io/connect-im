@@ -10,6 +10,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.serialization.jackson.jackson
+import java.util.Locale
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -26,12 +27,12 @@ object WebhookClient {
         val payload = objectMapper.writeValueAsString(event)
 
         httpClient.post(url) {
-            header("Content-Type", ContentType.Application.Json)
+            header(key = "Content-Type", value = ContentType.Application.Json)
 
             // Add HMAC signature if secret is provided
-            secret?.let {
-                val signature = generateHmacSignature(payload, it)
-                header("X-Webhook-Signature", "sha256=$signature")
+            secret?.let { key ->
+                val signature = generateHmacSignature(payload = payload, secret = key)
+                header(key = "X-Webhook-Signature", value = "sha256=$signature")
             }
 
             // Use the same serialized payload for both signature and body
@@ -44,6 +45,6 @@ object WebhookClient {
         val secretKey = SecretKeySpec(secret.toByteArray(), "HmacSHA256")
         mac.init(secretKey)
         val hash = mac.doFinal(payload.toByteArray())
-        return hash.joinToString("") { "%02x".format(it) }
+        return hash.joinToString("") { "%02x".format(Locale.ROOT, it) }
     }
 }

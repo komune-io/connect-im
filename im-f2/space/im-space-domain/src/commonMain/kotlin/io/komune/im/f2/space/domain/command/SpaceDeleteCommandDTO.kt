@@ -26,6 +26,7 @@ interface SpaceDeleteCommandDTO: Command {
  * @d2 command
  * @parent [SpaceDeleteFunction]
  */
+@JsExport
 @Serializable
 data class SpaceDeleteCommand(
     /**
@@ -44,6 +45,7 @@ interface SpaceDeletedEventDTO: Event {
  * @d2 event
  * @parent [SpaceDeleteFunction]
  */
+@JsExport
 @Serializable
 data class SpaceDeletedEvent(
     /**

@@ -16,13 +16,24 @@ import kotlin.test.assertTrue
  */
 internal class UserPoliciesTest {
 
-    private fun authed(id: String, memberOf: String?, vararg permissions: ImPermission) = AuthedUser(
+    private val me = user(id = "u1", memberOf = "o1")
+    private val colleague = user(id = "u2", memberOf = "o1")
+    private val stranger = user(id = "u3", memberOf = "o2")
+    private val orphan = user(id = "u4", memberOf = null)
+
+    private fun authed(id: String, memberOf: String?, permissions: List<ImPermission>) = AuthedUser(
         id = id,
         identifier = "$id@komune.io",
         memberOf = memberOf,
         roles = permissions.map(ImPermission::identifier).toTypedArray(),
         acr = null
     )
+
+    private fun tokenOfMe(vararg permissions: ImPermission) =
+        authed(id = "u1", memberOf = "o1", permissions = permissions.toList())
+
+    private fun tokenOfOrphan(vararg permissions: ImPermission) =
+        authed(id = "u4", memberOf = null, permissions = permissions.toList())
 
     private fun user(id: String, memberOf: String?) = User(
         id = id,
@@ -41,37 +52,32 @@ internal class UserPoliciesTest {
         disabledDate = null
     )
 
-    private val me = user("u1", "o1")
-    private val colleague = user("u2", "o1")
-    private val stranger = user("u3", "o2")
-    private val orphan = user("u4", null)
-
     @Test
     fun aUserReadsItselfOnlyWithTheSelfPermission() {
-        assertTrue(UserPolicies.canGet(authed("u1", "o1", ImPermission.IM_MY_USER), me))
-        assertFalse(UserPolicies.canGet(authed("u1", "o1"), me))
-        assertFalse(UserPolicies.canGet(authed("u1", "o1", ImPermission.IM_MY_ORGANIZATION_READ), me))
+        assertTrue(UserPolicies.canGet(tokenOfMe(ImPermission.IM_MY_USER), me))
+        assertFalse(UserPolicies.canGet(tokenOfMe(), me))
+        assertFalse(UserPolicies.canGet(tokenOfMe(ImPermission.IM_MY_ORGANIZATION_READ), me))
     }
 
     @Test
     fun aUserReadsItsColleaguesOnlyWithTheOwnOrganizationPermission() {
-        assertTrue(UserPolicies.canGet(authed("u1", "o1", ImPermission.IM_MY_ORGANIZATION_READ), colleague))
-        assertFalse(UserPolicies.canGet(authed("u1", "o1"), colleague))
-        assertFalse(UserPolicies.canGet(authed("u1", "o1", ImPermission.IM_MY_ORGANIZATION_READ), stranger))
+        assertTrue(UserPolicies.canGet(tokenOfMe(ImPermission.IM_MY_ORGANIZATION_READ), colleague))
+        assertFalse(UserPolicies.canGet(tokenOfMe(), colleague))
+        assertFalse(UserPolicies.canGet(tokenOfMe(ImPermission.IM_MY_ORGANIZATION_READ), stranger))
     }
 
     @Test
     fun usersWithoutOrganizationAreNotColleagues() {
-        val orphanToken = authed("u4", null, ImPermission.IM_MY_ORGANIZATION_READ)
+        val orphanToken = tokenOfOrphan(ImPermission.IM_MY_ORGANIZATION_READ)
 
-        assertFalse(UserPolicies.canGet(orphanToken, user("u5", null)))
+        assertFalse(UserPolicies.canGet(orphanToken, user(id = "u5", memberOf = null)))
         assertFalse(UserPolicies.canGet(orphanToken, null))
-        assertFalse(UserPolicies.canGet(authed("u4", null), null))
+        assertFalse(UserPolicies.canGet(tokenOfOrphan(), null))
     }
 
     @Test
     fun aUserReaderReadsAnyone() {
-        val reader = authed("admin", null, ImPermission.IM_USER_READ)
+        val reader = authed(id = "admin", memberOf = null, permissions = listOf(ImPermission.IM_USER_READ))
 
         assertTrue(UserPolicies.canGet(reader, stranger))
         assertTrue(UserPolicies.canGet(reader, null))
@@ -79,29 +85,33 @@ internal class UserPoliciesTest {
 
     @Test
     fun aUserUpdatesItselfOnlyWithTheSelfPermission() {
-        assertTrue(UserPolicies.canUpdate(authed("u1", "o1", ImPermission.IM_MY_USER), me))
-        assertFalse(UserPolicies.canUpdate(authed("u1", "o1"), me))
-        assertFalse(UserPolicies.canUpdate(authed("u1", "o1", ImPermission.IM_MY_ORGANIZATION_READ), me))
+        assertTrue(UserPolicies.canUpdate(tokenOfMe(ImPermission.IM_MY_USER), me))
+        assertFalse(UserPolicies.canUpdate(tokenOfMe(), me))
+        assertFalse(UserPolicies.canUpdate(tokenOfMe(ImPermission.IM_MY_ORGANIZATION_READ), me))
     }
 
     @Test
     fun aUserWithoutOrganizationUpdatesItselfOnlyWithTheSelfPermission() {
-        assertTrue(UserPolicies.canUpdate(authed("u4", null, ImPermission.IM_MY_USER), orphan))
-        assertFalse(UserPolicies.canUpdate(authed("u4", null), orphan))
+        assertTrue(UserPolicies.canUpdate(tokenOfOrphan(ImPermission.IM_MY_USER), orphan))
+        assertFalse(UserPolicies.canUpdate(tokenOfOrphan(), orphan))
     }
 
     @Test
     fun theSelfPermissionDoesNotReachOthers() {
-        val token = authed("u1", "o1", ImPermission.IM_MY_USER, ImPermission.IM_MY_ORGANIZATION_READ)
+        val token = tokenOfMe(ImPermission.IM_MY_USER, ImPermission.IM_MY_ORGANIZATION_READ)
 
         assertFalse(UserPolicies.canUpdate(token, colleague))
-        assertFalse(UserPolicies.canUpdate(authed("u4", null, ImPermission.IM_MY_USER), user("u5", null)))
+        assertFalse(UserPolicies.canUpdate(tokenOfOrphan(ImPermission.IM_MY_USER), user(id = "u5", memberOf = null)))
     }
 
     @Test
     fun writersKeepTheirAccess() {
-        val orgWriter = authed("w", "o1", ImPermission.IM_USER_WRITE)
-        val admin = authed("admin", null, ImPermission.IM_USER_WRITE, ImPermission.IM_ORGANIZATION_WRITE)
+        val orgWriter = authed(id = "w", memberOf = "o1", permissions = listOf(ImPermission.IM_USER_WRITE))
+        val admin = authed(
+            id = "admin",
+            memberOf = null,
+            permissions = listOf(ImPermission.IM_USER_WRITE, ImPermission.IM_ORGANIZATION_WRITE),
+        )
 
         assertTrue(UserPolicies.canUpdate(orgWriter, colleague))
         assertFalse(UserPolicies.canUpdate(orgWriter, stranger))
@@ -113,7 +123,7 @@ internal class UserPoliciesTest {
 
     @Test
     fun nobodyDisablesEnablesOrDeletesItself() {
-        val token = authed("u1", "o1", ImPermission.IM_MY_USER, ImPermission.IM_USER_WRITE)
+        val token = tokenOfMe(ImPermission.IM_MY_USER, ImPermission.IM_USER_WRITE)
 
         assertFalse(UserPolicies.canDisable(token, me))
         assertFalse(UserPolicies.canEnable(token, me))
@@ -122,33 +132,36 @@ internal class UserPoliciesTest {
 
     @Test
     fun mfaIsConfiguredOnOneselfOnlyWithTheSelfPermission() {
-        assertTrue(UserPolicies.canConfigureMfa(authed("u1", "o1", ImPermission.IM_MY_USER), me))
-        assertFalse(UserPolicies.canConfigureMfa(authed("u1", "o1"), me))
-        assertFalse(UserPolicies.canConfigureMfa(authed("u1", "o1", ImPermission.IM_MY_USER), colleague))
+        assertTrue(UserMfaPolicies.canConfigureMfa(tokenOfMe(ImPermission.IM_MY_USER), me))
+        assertFalse(UserMfaPolicies.canConfigureMfa(tokenOfMe(), me))
+        assertFalse(UserMfaPolicies.canConfigureMfa(tokenOfMe(ImPermission.IM_MY_USER), colleague))
     }
 
     @Test
     fun mfaIsDisabledOnOneselfOnlyWithTheSelfPermissionAndWhenNotForced() {
-        assertTrue(UserPolicies.canDisableMfa(authed("u1", "o1", ImPermission.IM_MY_USER), me))
-        assertFalse(UserPolicies.canDisableMfa(authed("u1", "o1"), me))
+        assertTrue(UserMfaPolicies.canDisableMfa(tokenOfMe(ImPermission.IM_MY_USER), me))
+        assertFalse(UserMfaPolicies.canDisableMfa(tokenOfMe(), me))
         assertFalse(
-            UserPolicies.canDisableMfa(authed("u1", "o1", ImPermission.IM_MY_USER, ImPermission.IM_FORCE_MFA_OTP), me)
+            UserMfaPolicies.canDisableMfa(
+                tokenOfMe(ImPermission.IM_MY_USER, ImPermission.IM_FORCE_MFA_OTP),
+                me,
+            )
         )
-        assertFalse(UserPolicies.canDisableMfa(authed("u1", "o1", ImPermission.IM_MY_USER), colleague))
+        assertFalse(UserMfaPolicies.canDisableMfa(tokenOfMe(ImPermission.IM_MY_USER), colleague))
     }
 
     @Test
     fun disablingMfaStillNeedsAnOtpLogin() {
-        val token = authed("u1", "o1", ImPermission.IM_MY_USER)
+        val token = tokenOfMe(ImPermission.IM_MY_USER)
 
-        assertFalse(UserPolicies.canDisableMfaAcr(token, me))
-        assertTrue(UserPolicies.canDisableMfaAcr(token.copy(acr = ImMfaPasswordOtpFlowAcr.PASSWORD_OTP.key), me))
+        assertFalse(UserMfaPolicies.canDisableMfaAcr(token))
+        assertTrue(UserMfaPolicies.canDisableMfaAcr(token.copy(acr = ImMfaPasswordOtpFlowAcr.PASSWORD_OTP.key)))
     }
 
     @Test
     fun userRefsNeedAReadPermission() {
-        assertTrue(UserPolicies.checkRefList(authed("u1", "o1", ImPermission.IM_USER_READ)))
-        assertTrue(UserPolicies.checkRefList(authed("u1", "o1", ImPermission.IM_MY_ORGANIZATION_READ)))
-        assertFalse(UserPolicies.checkRefList(authed("u1", "o1")))
+        assertTrue(UserPolicies.checkRefList(tokenOfMe(ImPermission.IM_USER_READ)))
+        assertTrue(UserPolicies.checkRefList(tokenOfMe(ImPermission.IM_MY_ORGANIZATION_READ)))
+        assertFalse(UserPolicies.checkRefList(tokenOfMe()))
     }
 }

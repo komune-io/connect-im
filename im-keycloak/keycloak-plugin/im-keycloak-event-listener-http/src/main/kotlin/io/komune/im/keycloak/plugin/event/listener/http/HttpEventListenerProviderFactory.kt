@@ -8,9 +8,7 @@ import org.keycloak.models.KeycloakSession
 import org.keycloak.models.KeycloakSessionFactory
 
 open class HttpEventListenerProviderFactory: EventListenerProviderFactory {
-    override fun create(session: KeycloakSession): EventListenerProvider {
-        return HttpEventListenerProvider(session)
-    }
+    override fun create(session: KeycloakSession): EventListenerProvider = HttpEventListenerProvider(session)
     override fun init(config: Config.Scope) { /* No-op */ }
     override fun postInit(factory: KeycloakSessionFactory) { /* No-op */ }
     override fun getId(): String = KeycloakPluginIds.EVENT_WEBHOOK

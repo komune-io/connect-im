@@ -26,12 +26,12 @@ interface OrganizationPageQueryDTO: Query {
      * Search string filtering on the name of the organization.
      * @example "Komune"
      */
-	val name: String?
+    val name: String?
 
     /**
-	 * Role filter.
-	 */
-	val role: String?
+     * Role filter.
+     */
+    val role: String?
 
     val roles: List<String>?
 
@@ -49,7 +49,8 @@ interface OrganizationPageQueryDTO: Query {
      * If false, filter out the disabled organizations. (default: false)
      * @example false
      */
-	val withDisabled: Boolean?
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
+    val withDisabled: Boolean?
     val offset: Int?
     val limit: Int?
 }
@@ -58,16 +59,17 @@ interface OrganizationPageQueryDTO: Query {
  * @d2 result
  * @parent [OrganizationPageFunction]
  */
+@JsExport
 @Serializable
 data class OrganizationPageQuery(
-	override val name: String? = null,
-	override val role: String? = null,
-	override val attributes: Map<String, String>? = null,
-	override val status: List<String>? = null,
-	override val withDisabled: Boolean? = false,
+    override val name: String? = null,
+    override val role: String? = null,
+    override val attributes: Map<String, String>? = null,
+    override val status: List<String>? = null,
+    override val withDisabled: Boolean? = false,
     override val offset: Int?,
     override val limit: Int?,
-	override val roles: List<String>? = null
+    override val roles: List<String>? = null
 ): OrganizationPageQueryDTO
 
 /**
@@ -92,6 +94,7 @@ interface OrganizationPageResultDTO: PageDTO<OrganizationDTO> {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class OrganizationPageResult(
     override val items: List<Organization>,

@@ -9,17 +9,21 @@ import io.komune.im.apikey.domain.model.ApiKeyId
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.apikey.data.apiKey
 import io.komune.im.bdd.core.apikey.data.client
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.safeExtract
 
-class ApiKeyRemoveSteps: En, ImCucumberStepsDefinition() {
+/** Cucumber steps: api key remove. */
+class ApiKeyRemoveSteps(
+    private val apikeyEndpoint: ApiKeyEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    @Autowired
-    private lateinit var apikeyEndpoint: ApiKeyEndpoint
-
-    private lateinit var command: ApikeyRemoveCommand
+    private var commandOrNull: ApikeyRemoveCommand? = null
+    private var command: ApikeyRemoveCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::apiKeyRemoveParams)
@@ -74,7 +78,7 @@ class ApiKeyRemoveSteps: En, ImCucumberStepsDefinition() {
             id = context.apikeyIds[params.identifier] ?: params.identifier
         )
         context.apikeyIds[params.identifier] = null
-        apikeyEndpoint.apiKeyRemove().invoke(command)
+        val _ = apikeyEndpoint.apiKeyRemove().invoke(command)
     }
 
     private suspend fun assertApiKey(id: ApiKeyId) {

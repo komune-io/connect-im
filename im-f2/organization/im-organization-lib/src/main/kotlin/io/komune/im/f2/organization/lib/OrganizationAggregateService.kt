@@ -6,6 +6,7 @@ import io.komune.im.commons.auth.AuthenticationProvider
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.PrivilegeIdentifier
 import io.komune.im.commons.utils.EmptyAddress
+import io.komune.im.commons.utils.forEachAsync
 import io.komune.im.core.organization.api.OrganizationCoreAggregateService
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.organization.domain.command.OrganizationCoreDefineCommand
@@ -33,11 +34,9 @@ import io.komune.im.f2.user.domain.command.UserDisableCommand
 import io.komune.im.f2.user.domain.command.UserDisabledEvent
 import io.komune.im.f2.user.domain.command.UserUpdateCommand
 import io.komune.im.f2.user.lib.UserAggregateService
+import io.komune.im.f2.user.lib.UserFilter
 import io.komune.im.f2.user.lib.UserFinderService
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
@@ -47,14 +46,13 @@ class OrganizationAggregateService(
     private val privilegeCoreFinderService: PrivilegeCoreFinderService,
     private val userAggregateService: UserAggregateService,
     private val userFinderService: UserFinderService,
+    private val fileClient: FileClient?,
 ) {
-    @Autowired(required = false)
-    private lateinit var fileClient: FileClient
 
     suspend fun create(command: OrganizationCreateCommand): OrganizationCreatedEvent = coroutineScope {
         checkRoles(command.roles.orEmpty())
 
-        val organizationId = OrganizationCoreDefineCommand(
+        val organizationId = organizationCoreAggregateService.define(OrganizationCoreDefineCommand(
             id = null,
             identifier = command.name,
             displayName = command.name,
@@ -67,7 +65,7 @@ class OrganizationAggregateService(
                 command.website?.let { OrganizationDTO::website.name to it },
                 OrganizationDTO::status.name to OrganizationStatus.valueOf(command.status).name
             ).toMap().filterValues { it.isNotBlank() },
-        ).let { organizationCoreAggregateService.define(it).id }
+        )).id
 
         OrganizationCreatedEvent(
             id = organizationId, parentOrganization = command.parentOrganizationId
@@ -77,7 +75,7 @@ class OrganizationAggregateService(
     suspend fun update(command: OrganizationUpdateCommand): OrganizationUpdatedResult {
         checkRoles(command.roles.orEmpty())
 
-        OrganizationCoreDefineCommand(
+        val _ = organizationCoreAggregateService.define(OrganizationCoreDefineCommand(
             id = command.id,
             identifier = command.name,
             displayName = command.name,
@@ -88,28 +86,24 @@ class OrganizationAggregateService(
                 + listOfNotNull(command.website?.let { OrganizationDTO::website.name to it },
                 command.status?.let { OrganizationDTO::status.name to OrganizationStatus.valueOf(it).name }).toMap()
                 .filterValues { it.isNotBlank() },
-        ).let { organizationCoreAggregateService.define(it).id }
-        // WCO2-251 - synchronize user roles with the organization's new ones
-        refreshUsersOf(command.id)
+        ))
+        syncUserRolesWithOrganization(command.id)
 
         return OrganizationUpdatedResult(command.id)
     }
 
-    @Suppress("UseCheckOrError")
     suspend fun uploadLogo(command: OrganizationUploadLogoCommand, file: ByteArray): OrganizationUploadedLogoEvent {
-        if (!::fileClient.isInitialized) {
-            throw IllegalStateException("FileClient not initialized.")
-        }
+        val client = checkNotNull(fileClient) { "FileClient not initialized." }
 
-        val event = fileClient.fileUpload(
+        val event = client.fileUpload(
             command = FileUploadCommand(
                 path = OrganizationFsConfig.pathForOrganization(command.id),
             ), file = file
         )
 
-        OrganizationCoreSetSomeAttributesCommand(
+        val _ = organizationCoreAggregateService.setSomeAttributes(OrganizationCoreSetSomeAttributesCommand(
             id = command.id, attributes = mapOf(OrganizationDTO::logo.name to event.url)
-        ).let { organizationCoreAggregateService.setSomeAttributes(it) }
+        ))
 
         return OrganizationUploadedLogoEvent(
             id = command.id, url = event.url
@@ -126,7 +120,7 @@ class OrganizationAggregateService(
 
         if (command.anonymize) {
             val organization = organizationCoreFinderService.get(command.id)
-            OrganizationCoreDefineCommand(
+            val _ = organizationCoreAggregateService.define(OrganizationCoreDefineCommand(
                 id = command.id,
                 identifier = "anonymous-${command.id}",
                 description = "",
@@ -135,23 +129,25 @@ class OrganizationAggregateService(
                 attributes = newAttributes + mapOf(
                     OrganizationDTO::website.name to ""
                 )
-            ).let { organizationCoreAggregateService.define(it) }
+            ))
         } else {
-            OrganizationCoreSetSomeAttributesCommand(
+            val _ = organizationCoreAggregateService.setSomeAttributes(OrganizationCoreSetSomeAttributesCommand(
                 id = command.id, attributes = newAttributes
-            ).let { organizationCoreAggregateService.setSomeAttributes(it) }
+            ))
         }
 
         val userEvents = userFinderService.page(
-            organizationIds = listOf(command.id),
-            withDisabled = false,
+            UserFilter(
+                organizationIds = listOf(command.id),
+                isDisabledIncluded = false,
+            ),
         ).items.map { user ->
-            UserDisableCommand(
+            userAggregateService.disable(UserDisableCommand(
                 id = user.id,
                 disabledBy = command.disabledBy,
                 anonymize = command.anonymize,
                 attributes = command.userAttributes
-            ).let { userAggregateService.disable(it) }
+            ))
         }
 
         return OrganizationDisabledEvent(
@@ -159,27 +155,18 @@ class OrganizationAggregateService(
         )
     }
 
-    suspend fun delete(command: OrganizationDeleteCommand): OrganizationDeletedEvent {
-        return organizationCoreAggregateService.delete(command)
+    suspend fun delete(command: OrganizationDeleteCommand): OrganizationDeletedEvent =
+        organizationCoreAggregateService.delete(command)
+
+    private suspend fun checkRoles(roles: List<PrivilegeIdentifier>) = roles.forEachAsync { role ->
+        val privilege = privilegeCoreFinderService.getPrivilege(role)
+        privilege.checkTarget(RoleTarget.ORGANIZATION)
     }
 
-    private suspend fun checkRoles(roles: List<PrivilegeIdentifier>) = coroutineScope {
-        roles.map {
-            async {
-                val privilege = privilegeCoreFinderService.getPrivilege(it)
-                privilege.checkTarget(RoleTarget.ORGANIZATION)
-            }
-        }.awaitAll()
-    }
-
-    /**
-     * Update each user of the given organization without any modification to trigger
-     * their role filters to match the organization's new roles.
-     * */
-    private suspend fun refreshUsersOf(id: OrganizationId) {
-        val users = userFinderService.page(organizationIds = listOf(id))
+    private suspend fun syncUserRolesWithOrganization(id: OrganizationId) {
+        val users = userFinderService.page(UserFilter(organizationIds = listOf(id)))
         users.items.forEach { user ->
-            userAggregateService.update(
+            val _ = userAggregateService.update(
                 UserUpdateCommand(
                     id = user.id,
                     givenName = user.givenName,

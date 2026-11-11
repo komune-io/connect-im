@@ -9,7 +9,5 @@ class InseeHttpClient(
     baseUrl = inseeProperties.sireneApi,
     generateBearerToken = { inseeProperties.token }
 ) {
-    suspend fun getOrganizationBySiret(siret: String): InseeResponse {
-        return get("siret/$siret")
-    }
+    suspend fun getOrganizationBySiret(siret: String): InseeResponse = get("siret/$siret")
 }

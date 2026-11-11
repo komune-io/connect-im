@@ -6,7 +6,7 @@ import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.PrivilegeIdentifier
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.utils.EmptyAddress
-import io.komune.im.commons.utils.mapAsync
+import io.komune.im.commons.utils.forEachAsync
 import io.komune.im.commons.utils.toJson
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.privilege.api.PrivilegeCoreFinderService
@@ -42,7 +42,6 @@ import io.komune.im.f2.user.domain.command.UserUpdatedEmailEvent
 import io.komune.im.f2.user.domain.command.UserUpdatedEvent
 import io.komune.im.f2.user.domain.command.UserUpdatedPasswordEvent
 import io.komune.im.f2.user.domain.model.UserDTO
-import org.keycloak.events.EventType
 import org.springframework.stereotype.Service
 
 @Service
@@ -55,10 +54,10 @@ class UserAggregateService(
     private val properties: IMProperties
 ) {
     suspend fun create(command: UserCreateCommand): UserCreatedEvent {
-        checkOrganizationExist(command.memberOf)
+        command.memberOf?.let { memberOf -> checkOrganizationExist(memberOf) }
         checkRoles(command.roles)
 
-        val userId = UserCoreDefineCommand(
+        val userId = userCoreAggregateService.define(UserCoreDefineCommand(
             id = null,
             email = command.email,
             givenName = command.givenName,
@@ -72,45 +71,45 @@ class UserAggregateService(
                 command.address?.let { UserDTO::address.name to it.toJson() },
                 command.phone?.let { UserDTO::phone.name to it },
             )).toMap(),
-        ).let { userCoreAggregateService.define(it).id }
+        )).id
 
         val actions = listOfNotNull(
-            EventType.VERIFY_EMAIL.takeIf { command.sendVerifyEmail },
-            EventType.UPDATE_PASSWORD.takeIf { command.sendResetPassword },
-        ).map(EventType::name)
+            VERIFY_EMAIL.takeIf { command.sendVerifyEmail },
+            UPDATE_PASSWORD.takeIf { command.sendResetPassword },
+        )
 
         if (actions.isNotEmpty()) {
-            UserCoreSendEmailCommand(
+            val _ = userCoreAggregateService.sendEmail(UserCoreSendEmailCommand(
                 id = userId,
                 actions = actions,
                 reason = creationEmailReason(actions)
-            ).let { userCoreAggregateService.sendEmail(it) }
+            ))
         }
 
         return UserCreatedEvent(userId)
     }
 
     suspend fun resetPassword(command: UserResetPasswordCommand): UserResetPasswordEvent {
-        UserCoreSendEmailCommand(
+        val _ = userCoreAggregateService.sendEmail(UserCoreSendEmailCommand(
             id = command.id,
-            actions = listOf(EventType.UPDATE_PASSWORD.name),
+            actions = listOf(UPDATE_PASSWORD),
             reason = resetEmailReason(userCoreFinderService.hasCredentials(command.id))
-        ).let { userCoreAggregateService.sendEmail(it) }
+        ))
         return UserResetPasswordEvent(command.id)
     }
 
     suspend fun updatePassword(command: UserUpdatePasswordCommand): UserUpdatedPasswordEvent {
-        UserCoreDefineCommand(
+        val _ = userCoreAggregateService.define(UserCoreDefineCommand(
             id = command.id,
             password = command.password,
             isPasswordTemporary = false
-        ).let { userCoreAggregateService.define(it) }
+        ))
         return UserUpdatedPasswordEvent(command.id)
     }
 
     suspend fun update(command: UserUpdateCommand): UserUpdatedEvent {
         checkRoles(command.roles)
-        val event = UserCoreDefineCommand(
+        val event = userCoreAggregateService.define(UserCoreDefineCommand(
             id = command.id,
             givenName = command.givenName,
             familyName = command.familyName,
@@ -120,36 +119,36 @@ class UserAggregateService(
                 command.address?.let { UserDTO::address.name to it.toJson() },
                 command.phone?.let { UserDTO::phone.name to it },
             )).toMap(),
-        ).let { userCoreAggregateService.define(it) }
+        ))
 
         return UserUpdatedEvent(event.id)
     }
 
     suspend fun updateEmail(command: UserUpdateEmailCommand): UserUpdatedEmailEvent {
-        UserCoreDefineCommand(
+        val _ = userCoreAggregateService.define(UserCoreDefineCommand(
             id = command.id,
             email = command.email,
             isEmailVerified = false
-        ).let { userCoreAggregateService.define(it) }
+        ))
 
         if (command.sendVerificationEmail) {
-            UserCoreSendEmailCommand(
+            val _ = userCoreAggregateService.sendEmail(UserCoreSendEmailCommand(
                 id = command.id,
-                actions = listOf(EventType.VERIFY_EMAIL.name)
-            ).let { userCoreAggregateService.sendEmail(it) }
+                actions = listOf(VERIFY_EMAIL)
+            ))
         }
 
         return UserUpdatedEmailEvent(command.id)
     }
 
     suspend fun disable(command: UserDisableCommand): UserDisabledEvent {
-        UserCoreDisableCommand(
+        val _ = userCoreAggregateService.disable(UserCoreDisableCommand(
             id = command.id,
-            disabledBy = command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id ?: ""
-        ).let { userCoreAggregateService.disable(it) }
+            disabledBy = command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id.orEmpty()
+        ))
 
         if (command.anonymize) {
-            UserCoreDefineCommand(
+            val _ = userCoreAggregateService.define(UserCoreDefineCommand(
                 id = command.id,
                 email = "${command.id}@anonymous.com",
                 givenName = "anonymous",
@@ -159,37 +158,37 @@ class UserAggregateService(
                     UserDTO::phone.name to "",
                 )),
                 isEmailVerified = false
-            ).let { userCoreAggregateService.define(it) }
+            ))
         }
 
         return UserDisabledEvent(command.id)
     }
 
     suspend fun enable(command: UserEnableCommand): UserEnabledEvent {
-        UserCoreEnableCommand(
+        val _ = userCoreAggregateService.enable(UserCoreEnableCommand(
             id = command.id
-        ).let { userCoreAggregateService.enable(it) }
+        ))
 
         return UserEnabledEvent(command.id)
     }
 
-    suspend fun delete(command: UserDeleteCommand): UserDeletedEvent {
-        return userCoreAggregateService.delete(command)
+    suspend fun delete(command: UserDeleteCommand): UserDeletedEvent = userCoreAggregateService.delete(command)
+
+
+    suspend fun disableMfa(command: UserDisableMfaCommand): UserDisabledMfavent {
+        val event = userCoreAggregateService.removeCredentials(
+            UserCoreRemoveCredentialsCommand(command.id, CredentialType.OTP)
+        )
+        return UserDisabledMfavent(event.id)
     }
 
-
-    suspend fun disableMultiFactorAuthentication(command: UserDisableMfaCommand): UserDisabledMfavent {
-        userCoreAggregateService.removeCredentials(UserCoreRemoveCredentialsCommand(command.id, CredentialType.OTP))
-        return UserDisabledMfavent(command.id)
-    }
-
-    private suspend fun checkOrganizationExist(organizationId: OrganizationId?) {
-        organizationId?.let { organizationCoreFinderService.get(it) }
+    private suspend fun checkOrganizationExist(organizationId: OrganizationId) {
+        val _ = organizationCoreFinderService.get(organizationId)
     }
 
     private suspend fun checkRoles(roles: List<PrivilegeIdentifier>) {
-        roles.mapAsync {
-            val privilege = privilegeCoreFinderService.getPrivilege(it)
+        roles.forEachAsync { role ->
+            val privilege = privilegeCoreFinderService.getPrivilege(role)
             privilege.checkTarget(RoleTarget.USER)
         }
     }
@@ -198,29 +197,35 @@ class UserAggregateService(
         organizationId: OrganizationId?,
         roles: List<RoleIdentifier>
     ): List<RoleIdentifier> {
-        return organizationId?.let {
-            val organizationRoles = organizationCoreFinderService.get(organizationId).roles.flatMap { roleIdentifier ->
-                val privilege = privilegeCoreFinderService.getPrivilege(roleIdentifier)
-                if (PrivilegeType.ROLE == privilege.type){
-                    (privilege as RoleModel).bindings[RoleTarget.USER].orEmpty()
-                } else listOf()
+        if (organizationId == null) {
+            return roles
+        }
+        val organizationRoles = organizationCoreFinderService.get(organizationId).roles.flatMap { roleIdentifier ->
+            val privilege = privilegeCoreFinderService.getPrivilege(roleIdentifier)
+            if (PrivilegeType.ROLE == privilege.type) {
+                (privilege as RoleModel).bindings[RoleTarget.USER].orEmpty()
+            } else {
+                emptyList()
             }
-            roles.filter { role ->
-                organizationRoles.contains(role)
-            }.ifEmpty {
-                properties.user?.defaultRoleIdentifiers
-                    ?.split(",")
-                    ?.map(String::trim)
-                    ?.filter(String::isNotBlank)
-                    ?: emptyList()
-            }
-        } ?: roles
+        }
+        return roles.filter { role ->
+            organizationRoles.contains(role)
+        }.ifEmpty {
+            properties.user?.run {
+                defaultRoleIdentifiers.split(",").mapNotNull { identifier ->
+                    identifier.trim().takeIf(String::isNotBlank)
+                }
+            }.orEmpty()
+        }
     }
 }
 
+private const val VERIFY_EMAIL = "VERIFY_EMAIL"
+private const val UPDATE_PASSWORD = "UPDATE_PASSWORD"
+
 /** A mail asking only to verify an address does not hand over an account: it is no welcome. */
 internal fun creationEmailReason(actions: List<String>): UserCoreEmailReason =
-    if (EventType.UPDATE_PASSWORD.name in actions) UserCoreEmailReason.WELCOME else UserCoreEmailReason.ACCOUNT_ACTION
+    if (UPDATE_PASSWORD in actions) UserCoreEmailReason.WELCOME else UserCoreEmailReason.ACCOUNT_ACTION
 
 /** Nobody has chosen anything on an account without credentials: this link is still its invitation. */
 internal fun resetEmailReason(hasCredentials: Boolean): UserCoreEmailReason =

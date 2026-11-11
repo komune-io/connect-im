@@ -16,9 +16,10 @@ class AssertionSpace(
     override suspend fun findById(id: SpaceIdentifier): RealmRepresentation? = client.realm(id).toRepresentation()
     override suspend fun assertThat(entity: RealmRepresentation) = SpaceAssert(entity)
 
-    inner class SpaceAssert(
+    class SpaceAssert(
         private val space: RealmRepresentation
     ) {
+        @IgnorableReturnValue
         fun hasFields(
             identifier: SpaceIdentifier = space.id,
             sslRequired: String? = space.sslRequired,
@@ -27,16 +28,19 @@ class AssertionSpace(
             Assertions.assertThat(space.sslRequired).isEqualTo(sslRequired)
         }
 
+        @IgnorableReturnValue
         fun hasSslRequired(expected: String) = also {
             Assertions.assertThat(space.sslRequired).isEqualToIgnoringCase(expected)
         }
 
+        @IgnorableReturnValue
         fun hasLocales(defaultLocale: String, supportedLocales: List<String>) = also {
             Assertions.assertThat(space.isInternationalizationEnabled).isTrue()
             Assertions.assertThat(space.defaultLocale).isEqualTo(defaultLocale)
             Assertions.assertThat(space.supportedLocales).containsExactlyInAnyOrderElementsOf(supportedLocales)
         }
 
+        @IgnorableReturnValue
         fun matches(space: Space) = hasFields(
             identifier = space.identifier
         )

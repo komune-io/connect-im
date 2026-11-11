@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service
 @Service
 class OrganizationCoreAggregateService: CoreService(CacheName.Organization) {
 
-    suspend fun define(command: OrganizationCoreDefineCommand) = mutate(command.id.orEmpty(),
-        "Error while defining organization (id: [${command.id}], identifier: [${command.identifier}])"
+    suspend fun define(command: OrganizationCoreDefineCommand) = mutate(
+        id = command.id.orEmpty(),
+        errorMessage = "Error while defining organization " +
+            "(id: [${command.id.orEmpty()}], identifier: [${command.identifier}])"
     ) {
         val client = keycloakClientProvider.getClient()
 
@@ -48,8 +50,9 @@ class OrganizationCoreAggregateService: CoreService(CacheName.Organization) {
                 .filterValues { it.filterNotNull().isNotEmpty() }
         }
 
-        val groupId = if (command.parentOrganizationId != null) {
-            client.group(command.parentOrganizationId!!)
+        val parentOrganizationId = command.parentOrganizationId
+        val groupId = if (parentOrganizationId != null) {
+            client.group(parentOrganizationId)
                 .subGroup(group)
                 .handleResponseError("Organization")
         } else if (existingGroup == null) {
@@ -70,8 +73,9 @@ class OrganizationCoreAggregateService: CoreService(CacheName.Organization) {
         OrganizationCoreDefinedEvent(groupId)
     }
 
-    suspend fun setSomeAttributes(command: OrganizationCoreSetSomeAttributesCommand) = mutate(command.id,
-        "Error while setting some attributes of organization [${command.id}]"
+    suspend fun setSomeAttributes(command: OrganizationCoreSetSomeAttributesCommand) = mutate(
+        id = command.id,
+        errorMessage = "Error while setting some attributes of organization [${command.id}]"
     ) {
         val client = keycloakClientProvider.getClient()
         val group = client.group(command.id).toRepresentation()
@@ -86,8 +90,9 @@ class OrganizationCoreAggregateService: CoreService(CacheName.Organization) {
         )
     }
 
-    suspend fun delete(command: OrganizationCoreDeleteCommand): OrganizationCoreDeletedEvent = mutate(command.id,
-        "Error while deleting organization [${command.id}]"
+    suspend fun delete(command: OrganizationCoreDeleteCommand): OrganizationCoreDeletedEvent = mutate(
+        id = command.id,
+        errorMessage = "Error while deleting organization [${command.id}]"
     ) {
         val client = keycloakClientProvider.getClient()
         client.group(command.id).remove()

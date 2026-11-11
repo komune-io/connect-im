@@ -2,6 +2,7 @@ package io.komune.im.core.commons
 
 import io.komune.im.infra.redis.CacheName
 import io.komune.im.infra.redis.CachedService
+import java.lang.reflect.Modifier
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -20,7 +21,7 @@ class CoreServiceTest {
 
     @Test
     fun `is open, since every core service subclasses it`() {
-        assertThat(CoreService::class.java.modifiers and java.lang.reflect.Modifier.FINAL).isZero()
+        assertThat(CoreService::class.java.modifiers and Modifier.FINAL).isZero()
     }
 
     @Test

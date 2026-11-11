@@ -33,6 +33,7 @@ interface RoleGetQueryDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class RoleGetQuery(
     override val identifier: RoleIdentifier
@@ -46,7 +47,7 @@ data class RoleGetQuery(
 @JsName("RoleGetResultDTO")
 interface RoleGetResultDTO {
     /**
-     * Role matching the given identifier, or null if not found
+     * Role matching the given identifier, or null if not found.
      */
     val item: RoleDTO?
 }
@@ -54,6 +55,7 @@ interface RoleGetResultDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class RoleGetResult(
     override val item: Role?

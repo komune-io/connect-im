@@ -27,6 +27,7 @@ interface ApikeyRemoveCommandDTO: Command {
  * @d2 command
  * @parent [ApikeyRemoveFunction]
  */
+@JsExport
 @Serializable
 data class ApikeyRemoveCommand(
     /**
@@ -46,6 +47,7 @@ interface ApikeyRemoveEventDTO: Event {
  * @d2 event
  * @parent [ApikeyRemoveFunction]
  */
+@JsExport
 @Serializable
 data class ApikeyRemoveEvent(
     /**

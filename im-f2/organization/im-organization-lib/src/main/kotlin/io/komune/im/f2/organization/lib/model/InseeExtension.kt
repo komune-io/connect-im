@@ -32,9 +32,8 @@ fun InseeAddress.toAddress() = Address(
     city = libelleCommuneEtablissement.orEmpty()
 )
 
-fun InseeAddress.street() = StringBuilder().apply {
-    numeroVoieEtablissement?.let { append("$it ") }
-    indiceRepetitionEtablissement?.let { append("$it ") }
-    typeVoieEtablissement?.let { append("$it ") }
-    libelleVoieEtablissement?.let { append(it) }
-}.toString()
+fun InseeAddress.street() = buildString {
+    listOfNotNull(numeroVoieEtablissement, indiceRepetitionEtablissement, typeVoieEtablissement)
+        .forEach { part -> append("$part ") }
+    append(libelleVoieEtablissement.orEmpty())
+}

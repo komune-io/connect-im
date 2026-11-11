@@ -34,7 +34,7 @@ class ClientModelTest {
     @Test
     fun equalityIsStructural() {
         assertEquals(model(), model())
-        assertNotEquals(model(), model(id = "client-2"))
+        assertNotEquals(illegal = model(), actual = model(id = "client-2"))
     }
 
     @Test
@@ -42,8 +42,8 @@ class ClientModelTest {
         // `id` is Keycloak's internal uuid; `identifier` is the configured clientId.
         val client = model()
 
-        assertEquals("client-1", client.id)
-        assertEquals("im-root", client.identifier)
+        assertEquals(expected = "client-1", actual = client.id)
+        assertEquals(expected = "im-root", actual = client.identifier)
     }
 
     @Test
@@ -56,12 +56,12 @@ class ClientModelTest {
 
     @Test
     fun rootUrlIsOptionalWhileBaseUrlIsNot() {
-        assertEquals(null, model().rootUrl)
-        assertEquals("https://app.example.com", model().baseUrl)
+        assertEquals(expected = null, actual = model().rootUrl)
+        assertEquals(expected = "https://app.example.com", actual = model().baseUrl)
     }
 
     @Test
     fun redirectUrisKeepTheirWildcardForm() {
-        assertEquals(listOf("https://app.example.com/*"), model().redirectUris)
+        assertEquals(expected = listOf("https://app.example.com/*"), actual = model().redirectUris)
     }
 }

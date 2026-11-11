@@ -1,0 +1,12 @@
+{
+  "name": "connect-im-im-f2-space-im-space-domain",
+  "version": "0.0.0",
+  "types": "kotlin/connect-im-im-f2-space-im-space-domain.d.mts",
+  "devDependencies": {},
+  "dependencies": {
+    "@js-joda/core": "3.2.0"
+  },
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "bundledDependencies": []
+}

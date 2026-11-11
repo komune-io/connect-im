@@ -7,17 +7,17 @@ package io.komune.im.core.privilege.domain.model
  */
 enum class PrivilegeType {
     /**
-     * See [RoleDTO][io.komune.im.f2.privilege.domain.role.model.RoleDTO]
+     * See [RoleDTO][io.komune.im.f2.privilege.domain.role.model.RoleDTO].
      */
     ROLE,
 
     /**
-     * See [PermissionDTO][io.komune.im.f2.privilege.domain.permission.model.PermissionDTO]
+     * See [PermissionDTO][io.komune.im.f2.privilege.domain.permission.model.PermissionDTO].
      */
     PERMISSION,
 
     /**
-     * See [FeatureDTO][io.komune.im.f2.privilege.domain.feature.model.FeatureDTO]
+     * See [FeatureDTO][io.komune.im.f2.privilege.domain.feature.model.FeatureDTO].
      */
     FEATURE
 }

@@ -5,12 +5,11 @@ import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.query.UserGetByEmailQuery
-import org.springframework.beans.factory.annotation.Autowired
 
-class UserGetByEmailSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+/** Cucumber steps: user get by email. */
+class UserGetByEmailSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         DataTableType(::userGetByEmailParams)

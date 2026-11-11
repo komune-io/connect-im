@@ -18,7 +18,7 @@ fun <E, F> Collection<E>.match(matcher: Match<F>?, getField: (E) -> F): Collecti
         return this
     }
 
-    return filter { entity -> match(getField(entity), matcher) }
+    return filter { entity -> matches(field = getField(entity), matcher = matcher) }
 }
 
 @JvmName("matchCollection")
@@ -28,41 +28,34 @@ fun <E, F> Collection<E>.match(matcher: Match<F>?, getField: (E) -> Collection<F
     }
 
     return filter { entity ->
-        getField(entity).any { match(it, matcher) }
+        getField(entity).any { field -> matches(field = field, matcher = matcher) }
     }
 }
 
-private fun <F> match(field: F, matcher: Match<F>): Boolean {
-    return when {
-        matcher.negative -> !match(field, matcher.not())
-        else -> when (matcher) {
-            is CollectionMatch -> match(field, matcher)
-            is ExactMatch -> match(field, matcher)
-            is StringMatch -> match(field as String?, matcher)
-            is ComparableMatch -> match(field, matcher)
-            is AndMatch -> match(field, matcher)
-            is OrMatch -> match(field, matcher)
-        }
+private fun <F> matches(field: F, matcher: Match<F>): Boolean = if (matcher.isNegative) {
+    !matches(field = field, matcher = matcher.not())
+} else {
+    when (matcher) {
+        is CollectionMatch -> matchesCollection(field = field, matcher = matcher)
+        is ExactMatch -> matchesExact(field = field, matcher = matcher)
+        is StringMatch -> matchesString(field = field?.let { value -> value as String }, matcher = matcher)
+        is ComparableMatch -> matchesComparable(field = field, matcher = matcher)
+        is AndMatch -> matchesAnd(field = field, matcher = matcher)
+        is OrMatch -> matchesOr(field = field, matcher = matcher)
     }
 }
 
-private fun <F> match(field: F, matcher: AndMatch<F>): Boolean {
-    return matcher.matches.all { match(field, it) }
-}
+private fun <F> matchesAnd(field: F, matcher: AndMatch<F>): Boolean =
+    matcher.matches.all { subMatcher -> matches(field = field, matcher = subMatcher) }
 
-private fun <F> match(field: F, matcher: OrMatch<F>): Boolean {
-    return matcher.matches.any { match(field, it) }
-}
+private fun <F> matchesOr(field: F, matcher: OrMatch<F>): Boolean =
+    matcher.matches.any { subMatcher -> matches(field = field, matcher = subMatcher) }
 
-private fun <F> match(field: F, matcher: CollectionMatch<F>): Boolean {
-    return field in matcher.values
-}
+private fun <F> matchesCollection(field: F, matcher: CollectionMatch<F>): Boolean = field in matcher.values
 
-private fun <F> match(field: F, matcher: ExactMatch<F>): Boolean {
-    return field == matcher.value
-}
+private fun <F> matchesExact(field: F, matcher: ExactMatch<F>): Boolean = field == matcher.value
 
-private fun match(field: String?, matcher: StringMatch): Boolean {
+private fun matchesString(field: String?, matcher: StringMatch): Boolean {
     val regexOptions = setOf(RegexOption.DOT_MATCHES_ALL)
     val regex = when (matcher.condition) {
         StringMatchCondition.EXACT -> Regex(matcher.value, regexOptions)
@@ -73,10 +66,8 @@ private fun match(field: String?, matcher: StringMatch): Boolean {
     return field != null && regex.matches(field)
 }
 
-private fun <F> match(field: F, matcher: ComparableMatch<F>): Boolean {
-    if (field !is Comparable<*>) {
-        throw IllegalArgumentException("Field with value [${field}] cannot be compared")
-    }
+private fun <F> matchesComparable(field: F, matcher: ComparableMatch<F>): Boolean {
+    require(field is Comparable<*>) { "Field with value [${field?.toString() ?: "null"}] cannot be compared" }
     @Suppress("UNCHECKED_CAST")
     field as Comparable<F>
 

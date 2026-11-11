@@ -9,16 +9,21 @@ import io.komune.im.commons.model.Address
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserUpdateCommand
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extractList
 
-class UserUpdateSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+/** Cucumber steps: user update. */
+class UserUpdateSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: UserUpdateCommand
+    private var commandOrNull: UserUpdateCommand? = null
+    private var command: UserUpdateCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::userUpdateParams)
@@ -59,14 +64,14 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
                 val userId = context.userIds.lastUsed
 
                 val client = keycloakClientProvider.getClient()
-                AssertionBdd.user(client).assertThatId(userId).hasFields(
+                AssertionBdd.user(client).assertThatId(userId).hasFields { fields -> fields.copy(
                     givenName = command.givenName,
                     familyName = command.familyName,
                     address = command.address,
                     phone = command.phone,
                     roles = command.roles,
                     attributes = command.attributes.orEmpty(),
-                )
+                ) }
             }
         }
 
@@ -75,15 +80,15 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
                 val userId = context.userIds.lastUsed
                 val client = keycloakClientProvider.getClient()
                 dataTable.asList(UserUpdateParams::class.java).filterNotNull()
-                    .forEach {
-                        AssertionBdd.user(client).assertThatId(userId).hasFields(
-                            givenName = it.givenName,
-                            familyName = it.familyName,
-                            address = it.address,
-                            phone = it.phone,
-                            roles = it.roles,
-                            attributes = it.attributes,
-                        )
+                    .forEach { params ->
+                        AssertionBdd.user(client).assertThatId(userId).hasFields { fields -> fields.copy(
+                            givenName = params.givenName,
+                            familyName = params.familyName,
+                            address = params.address,
+                            phone = params.phone,
+                            roles = params.roles,
+                            attributes = params.attributes,
+                        ) }
                     }
             }
         }
@@ -93,9 +98,9 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
                 val userId = context.userIds.lastUsed
                 val client = keycloakClientProvider.getClient()
 
-                AssertionBdd.user(client).assertThatId(userId).hasFields(
+                AssertionBdd.user(client).assertThatId(userId).hasFields { fields -> fields.copy(
                     roles = params.roles,
-                )
+                ) }
             }
         }
     }
@@ -112,7 +117,7 @@ class UserUpdateSteps: En, ImCucumberStepsDefinition() {
             attributes = params.attributes,
         )
 
-        userEndpoint.userUpdate().invoke(command).id
+        val _ = userEndpoint.userUpdate().invoke(command)
     }
 
     private fun userUpdateParams(entry: Map<String, String>?): UserUpdateParams {

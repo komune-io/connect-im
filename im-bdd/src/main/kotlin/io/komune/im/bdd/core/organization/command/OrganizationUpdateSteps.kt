@@ -12,17 +12,21 @@ import io.komune.im.f2.organization.domain.model.OrganizationStatus
 import io.komune.im.f2.organization.domain.query.OrganizationGetQuery
 import io.komune.im.f2.privilege.domain.role.model.Role
 import kotlinx.coroutines.runBlocking
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extract
 
-class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
+/** Cucumber steps: organization update. */
+class OrganizationUpdateSteps(
+    private val organizationEndpoint: OrganizationEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    @Autowired
-    private lateinit var organizationEndpoint: OrganizationEndpoint
-
-    private lateinit var command: OrganizationUpdateCommand
+    private var commandOrNull: OrganizationUpdateCommand? = null
+    private var command: OrganizationUpdateCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::organizationUpdateParams)
@@ -63,10 +67,11 @@ class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
                 val organizationId = context.organizationIds.lastUsed
                 val organization = organizationEndpoint.organizationGet()
                     .invoke(OrganizationGetQuery(organizationId))
-                    .item!!
+                    .item
+                    .let { checkNotNull(it) { "Organization [$organizationId] not found" } }
 
                 val client = keycloakClientProvider.getClient()
-                AssertionBdd.organization(client).assertThatId(organizationId).hasFields(
+                AssertionBdd.organization(client).assertThatId(organizationId).hasFields { fields -> fields.copy(
                     name = command.name,
                     description = command.description ?: organization.description,
                     address = command.address ?: organization.address,
@@ -74,7 +79,7 @@ class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
                     roles = command.roles ?: organization.roles.map(Role::identifier),
                     attributes = command.attributes ?: organization.attributes,
                     status = command.status
-                )
+                ) }
             }
         }
     }
@@ -90,7 +95,7 @@ class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
             attributes = params.attributes,
             status = params.status.name
         )
-        organizationEndpoint.organizationUpdate().invoke(command).id
+        val _ = organizationEndpoint.organizationUpdate().invoke(command)
     }
 
     private fun organizationUpdateParams(
@@ -99,17 +104,24 @@ class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
         val identifier = entry?.get("identifier") ?: context.organizationIds.lastUsedKey
         val organization = organizationEndpoint.organizationGet()
             .invoke(OrganizationGetQuery(context.organizationIds.safeGet(identifier)))
-            .item!!
+            .item
+            .let { checkNotNull(it) { "Organization [$identifier] not found" } }
+        val addressKeys = listOf("street", "city", "postalCode")
 
         OrganizationUpdateParams(
             identifier = identifier,
             name = entry?.get("name") ?: organization.name,
             description = entry?.get("description"),
-            address = Address(
-                street = entry?.get("street") ?: organization.address!!.street,
-                city = entry?.get("city") ?: organization.address!!.city,
-                postalCode = entry?.get("postalCode") ?: organization.address!!.postalCode,
-            ),
+            address = if (addressKeys.all { entry?.get(it) == null }) {
+                organization.address
+            } else {
+                val current = organization.address
+                Address(
+                    street = entry?.get("street") ?: current?.street.orEmpty(),
+                    city = entry?.get("city") ?: current?.city.orEmpty(),
+                    postalCode = entry?.get("postalCode") ?: current?.postalCode.orEmpty(),
+                )
+            },
             website = entry?.get("website"),
             roles = listOfNotNull(context.roleIdentifiers.lastUsedOrNull),
             attributes = organizationAttributesParams(entry),
@@ -130,11 +142,6 @@ class OrganizationUpdateSteps : En, ImCucumberStepsDefinition() {
 
     private fun organizationAttributesParams(entry: Map<String, String>?): Map<String, String>? {
         if (entry == null) return null
-        val job = entry["job"]
-        return if (job != null) {
-             mapOf(
-                "job" to job
-            )
-        } else null
+        return entry["job"]?.let { job -> mapOf("job" to job) }
     }
 }

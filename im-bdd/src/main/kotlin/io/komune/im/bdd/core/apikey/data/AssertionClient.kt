@@ -38,38 +38,48 @@ class AssertionClient(
     override suspend fun assertThat(entity: ClientRepresentation) = ClientAssert(entity)
 
     suspend fun assertThatIdentifier(identifier: ClientIdentifier): ClientAssert {
-        val entity = findByIdentifier(identifier)
-        Assertions.assertThat(entity).isNotNull
-        return assertThat(entity!!)
+        val entity = checkNotNull(findByIdentifier(identifier)) { "Client [$identifier] not found" }
+        return assertThat(entity)
     }
 
     inner class ClientAssert(
         private val client: ClientRepresentation
     ) {
-        fun hasFields(
-            id: ClientId = client.id,
-            identifier: ClientIdentifier = client.clientId,
-            isPublicClient: Boolean = client.isPublicClient,
-            isDirectAccessGrantsEnabled: Boolean = client.isDirectAccessGrantsEnabled,
-            isServiceAccountsEnabled: Boolean = client.isServiceAccountsEnabled,
-            isStandardFlowEnabled: Boolean = client.isStandardFlowEnabled
-        ) = also {
-            Assertions.assertThat(client.id).isEqualTo(id)
-            Assertions.assertThat(client.clientId).isEqualTo(identifier)
-            Assertions.assertThat(client.isPublicClient).isEqualTo(isPublicClient)
-            Assertions.assertThat(client.isDirectAccessGrantsEnabled).isEqualTo(isDirectAccessGrantsEnabled)
-            Assertions.assertThat(client.isServiceAccountsEnabled).isEqualTo(isServiceAccountsEnabled)
-            Assertions.assertThat(client.isStandardFlowEnabled).isEqualTo(isStandardFlowEnabled)
+        /** What the asserted entity holds, as fields to compare. */
+        fun actual() = ClientFields(
+            id = client.id,
+            identifier = client.clientId,
+            isPublicClient = client.isPublicClient,
+            isDirectAccessGrantsEnabled = client.isDirectAccessGrantsEnabled,
+            isServiceAccountsEnabled = client.isServiceAccountsEnabled,
+            isStandardFlowEnabled = client.isStandardFlowEnabled,
+        )
+
+        /** Asserts the entity holds [expected], its own fields by default. */
+        @IgnorableReturnValue
+        fun hasFields(expected: ClientFields = actual()) = also {
+            Assertions.assertThat(client.id).isEqualTo(expected.id)
+            Assertions.assertThat(client.clientId).isEqualTo(expected.identifier)
+            Assertions.assertThat(client.isPublicClient).isEqualTo(expected.isPublicClient)
+            Assertions.assertThat(client.isDirectAccessGrantsEnabled).isEqualTo(expected.isDirectAccessGrantsEnabled)
+            Assertions.assertThat(client.isServiceAccountsEnabled).isEqualTo(expected.isServiceAccountsEnabled)
+            Assertions.assertThat(client.isStandardFlowEnabled).isEqualTo(expected.isStandardFlowEnabled)
         }
 
-        fun matches(client: ClientModel) = hasFields(
+        /** Compares the entity with its own fields as [change] rewrites them. */
+        @IgnorableReturnValue
+        inline fun hasFields(change: (ClientFields) -> ClientFields) = hasFields(change(actual()))
+
+        /** Asserts the entity holds the fields of the given model. */
+        @IgnorableReturnValue
+        fun matches(client: ClientModel) = hasFields { fields -> fields.copy(
             id = client.id,
             identifier = client.identifier,
             isPublicClient = client.isPublicClient,
             isDirectAccessGrantsEnabled = client.isDirectAccessGrantsEnabled,
             isServiceAccountsEnabled = client.isServiceAccountsEnabled,
             isStandardFlowEnabled = client.isStandardFlowEnabled
-        )
+        ) }
 
         fun hasClientRoles(clientId: ClientId, roles: Collection<PrivilegeIdentifier>) {
             Assertions.assertThat(client.isServiceAccountsEnabled).isTrue
@@ -84,3 +94,13 @@ class AssertionClient(
         }
     }
 }
+
+/** The fields a client assertion compares. */
+data class ClientFields(
+    val id: ClientId,
+    val identifier: ClientIdentifier,
+    val isPublicClient: Boolean,
+    val isDirectAccessGrantsEnabled: Boolean,
+    val isServiceAccountsEnabled: Boolean,
+    val isStandardFlowEnabled: Boolean,
+)

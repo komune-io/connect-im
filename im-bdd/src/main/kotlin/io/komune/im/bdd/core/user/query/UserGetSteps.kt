@@ -5,13 +5,12 @@ import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.query.UserGetQuery
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.data.TestContextKey
 
-class UserGetSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+/** Cucumber steps: user get. */
+class UserGetSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         DataTableType(::userGetParams)

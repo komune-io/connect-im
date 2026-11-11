@@ -7,6 +7,7 @@ import io.komune.im.commons.exception.asException
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.infra.redis.CacheName
 import io.komune.im.infra.redis.CachedService
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -14,8 +15,14 @@ open class CoreService(
     cacheName: CacheName
 ): CachedService(cacheName) {
 
-    @Autowired
-    protected lateinit var keycloakClientProvider: KeycloakClientProvider
+    private var injectedKeycloakClientProvider: KeycloakClientProvider? = null
+
+    protected var keycloakClientProvider: KeycloakClientProvider
+        get() = checkNotNull(injectedKeycloakClientProvider) { "keycloakClientProvider has not been injected" }
+        @Autowired
+        set(value) {
+            injectedKeycloakClientProvider = value
+        }
 
     protected suspend inline fun <reified R> query(
         id: String,
@@ -40,6 +47,8 @@ open class CoreService(
         } catch (e: IMException) {
             throw e
         } catch (e: F2Exception) {
+            throw e
+        } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             val client = keycloakClientProvider.getClient()

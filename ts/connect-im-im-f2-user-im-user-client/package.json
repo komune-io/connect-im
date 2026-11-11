@@ -1,0 +1,13 @@
+{
+  "name": "connect-im-im-f2-user-im-user-client",
+  "version": "0.0.0",
+  "types": "kotlin/connect-im-im-f2-user-im-user-client.d.mts",
+  "devDependencies": {},
+  "dependencies": {
+    "ws": "8.20.1",
+    "@js-joda/core": "3.2.0"
+  },
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "bundledDependencies": []
+}

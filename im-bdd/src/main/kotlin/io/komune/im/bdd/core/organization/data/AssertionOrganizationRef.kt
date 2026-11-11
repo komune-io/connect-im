@@ -26,9 +26,10 @@ class AssertionOrganizationRef(
     }
     override suspend fun assertThat(entity: GroupRepresentation) = OrganizationRefAssert(entity)
 
-    inner class OrganizationRefAssert(
+    class OrganizationRefAssert(
         private val group: GroupRepresentation
     ) {
+        @IgnorableReturnValue
         fun hasFields(
             id: OrganizationId = group.id,
             name: String = group.name,
@@ -39,12 +40,14 @@ class AssertionOrganizationRef(
             Assertions.assertThat(roles).isEqualTo(roles)
         }
 
+        @IgnorableReturnValue
         fun matches(organization: OrganizationRef) = hasFields(
             id = organization.id,
             name = organization.name,
             roles = organization.roles,
         )
 
+        @IgnorableReturnValue
         fun isAnonym() = also {
             Assertions.assertThat(group.name).isEqualTo("anonymous")
         }

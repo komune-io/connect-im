@@ -23,6 +23,7 @@ data class SpaceCreateProperties(
 ) {
     private val logger = LoggerFactory.getLogger(SpaceCreateProperties::class.java)
     val spaceIdentifier: SpaceIdentifier
+        @Suppress("DEPRECATION")
         get() {
             if(identifier != null) {
                 return identifier
@@ -31,7 +32,7 @@ data class SpaceCreateProperties(
                 logger.warn("The 'space' property is deprecated. Use 'identifier' instead.")
                 return space
             }
-            throw IllegalStateException("Identifier is required")
+            error("Identifier is required")
         }
 }
 

@@ -6,15 +6,20 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.user.data.user
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserUpdateEmailCommand
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
-class UserUpdateEmailSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+/** Cucumber steps: user update email. */
+class UserUpdateEmailSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: UserUpdateEmailCommand
+    private var commandOrNull: UserUpdateEmailCommand? = null
+    private var command: UserUpdateEmailCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::userUpdateEmailParams)
@@ -48,9 +53,9 @@ class UserUpdateEmailSteps: En, ImCucumberStepsDefinition() {
                 val userId = context.userIds.lastUsed
 
                 val client = keycloakClientProvider.getClient()
-                AssertionBdd.user(client).assertThatId(userId).hasFields(
+                AssertionBdd.user(client).assertThatId(userId).hasFields { fields -> fields.copy(
                     email = command.email
-                )
+                ) }
             }
         }
     }
@@ -61,7 +66,7 @@ class UserUpdateEmailSteps: En, ImCucumberStepsDefinition() {
             email = params.email
         )
 
-        userEndpoint.userUpdateEmail().invoke(command).id
+        val _ = userEndpoint.userUpdateEmail().invoke(command)
     }
 
     private fun userUpdateEmailParams(entry: Map<String, String>?): UserUpdateEmailParams {

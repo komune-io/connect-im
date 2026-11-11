@@ -6,12 +6,11 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.query.UserPageQuery
-import org.springframework.beans.factory.annotation.Autowired
 
-class UserPageSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+/** Cucumber steps: user page. */
+class UserPageSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         DataTableType(::userPageParams)
@@ -35,7 +34,7 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
             name = params.name,
             email = params.email,
             role = params.role,
-            withDisabled = params.withDisable,
+            withDisabled = params.isWithDisabled,
             offset = params.offset,
             limit = params.limit,
             attributes = null
@@ -47,7 +46,7 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
         name = entry?.get("name"),
         email = entry?.get("email"),
         role = entry?.get("role"),
-        withDisable = entry?.get("withDisabled").toBoolean(),
+        isWithDisabled = entry?.get("withDisabled").toBoolean(),
         offset = entry?.get("offset")?.toInt(),
         limit = entry?.get("limit")?.toInt(),
     )
@@ -57,7 +56,7 @@ class UserPageSteps: En, ImCucumberStepsDefinition() {
         val name: String?,
         val email: String?,
         val role: String?,
-        val withDisable: Boolean,
+        val isWithDisabled: Boolean,
         val offset: Int?,
         val limit: Int?
     )

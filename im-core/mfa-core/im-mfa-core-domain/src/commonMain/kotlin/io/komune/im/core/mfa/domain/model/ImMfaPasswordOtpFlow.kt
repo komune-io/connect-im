@@ -3,7 +3,6 @@ package io.komune.im.core.mfa.domain.model
 import io.komune.im.commons.auth.ImPermission
 import kotlin.js.JsExport
 
-
 @JsExport
 enum class ImMfaPasswordOtpFlowAcr(val key: String, val level: Int) {
     PASSWORD_ONLY(key = "password-only", level = 1),

@@ -28,16 +28,16 @@ class RoleSerializationTest {
     fun roundTripsWithoutLoss() {
         val encoded = json.encodeToString(Role.serializer(), role)
 
-        assertEquals(role, json.decodeFromString(Role.serializer(), encoded))
+        assertEquals(expected = role, actual = json.decodeFromString(Role.serializer(), encoded))
     }
 
     @Test
     fun typeIsSerializedSoConsumersCanDiscriminatePrivileges() {
-        assertEquals(PrivilegeType.ROLE.name, role.type)
+        assertEquals(expected = PrivilegeType.ROLE.name, actual = role.type)
 
         val encoded = json.encodeToString(Role.serializer(), role)
 
-        assertTrue(encoded.contains("\"type\":\"ROLE\""), encoded)
+        assertTrue(encoded.contains(""""type":"ROLE""""), encoded)
     }
 
     @Test
@@ -51,11 +51,12 @@ class RoleSerializationTest {
 
     @Test
     fun olderPayloadsWithoutTypeStillDecode() {
-        val withoutType = """{"id":"role-1","identifier":"r","description":"d","targets":[],"locale":{},"bindings":{},"permissions":[]}"""
+        val withoutType = """{"id":"role-1","identifier":"r","description":"d",""" +
+            """"targets":[],"locale":{},"bindings":{},"permissions":[]}"""
 
         val decoded = json.decodeFromString(Role.serializer(), withoutType)
 
-        assertEquals(PrivilegeType.ROLE.name, decoded.type)
+        assertEquals(expected = PrivilegeType.ROLE.name, actual = decoded.type)
     }
 
     @Test
@@ -75,8 +76,11 @@ class RoleSerializationTest {
             json.encodeToString(Role.serializer(), withBindings)
         )
 
-        assertEquals(1, decoded.bindings["ORGANIZATION"]?.size)
-        assertEquals("tr_orchestrator_admin", decoded.bindings["ORGANIZATION"]?.first()?.identifier)
+        assertEquals(expected = 1, actual = decoded.bindings["ORGANIZATION"]?.size)
+        assertEquals(
+            expected = "tr_orchestrator_admin",
+            actual = decoded.bindings["ORGANIZATION"]?.run { first().identifier }
+        )
     }
 
     @Test
@@ -86,6 +90,6 @@ class RoleSerializationTest {
             json.encodeToString(Role.serializer(), role.copy(permissions = emptyList()))
         )
 
-        assertEquals(emptyList<String>(), decoded.permissions)
+        assertEquals(expected = emptyList<String>(), actual = decoded.permissions)
     }
 }

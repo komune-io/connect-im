@@ -12,31 +12,17 @@ val mapper: JsonMapper = jacksonMapperBuilder()
     .build()
 
 
-fun <T> String.parseJsonTo(targetClass: Class<T>): T {
-    return this.parseTo(targetClass)
-}
+fun <T> String.parseJsonTo(targetClass: Class<T>): T = this.parseTo(targetClass)
 
-inline fun <reified T> String.parseJson(): T {
-    return mapper.readValue(this, T::class.java)
-}
+inline fun <reified T> String.parseJson(): T = mapper.readValue(this, T::class.java)
 
-fun <T> String.parseJsonTo(targetClass: Class<Array<T>>): List<T> {
-    return parseTo(targetClass).toList()
-}
+fun <T> String.parseJsonTo(targetClass: Class<Array<T>>): List<T> = parseTo(targetClass).toList()
 
-private fun <T> String.parseTo(targetClass: Class<T>): T {
-    return mapper.readValue(this, targetClass)
-}
+private fun <T> String.parseTo(targetClass: Class<T>): T = mapper.readValue(this, targetClass)
 
 
-fun <T> InputStream.parseJsonTo(targetClass: Class<Array<T>>): List<T> {
-    return parseTo(targetClass).toList()
-}
+fun <T> InputStream.parseJsonTo(targetClass: Class<Array<T>>): List<T> = parseTo(targetClass).toList()
 
-fun <T> InputStream.parseTo(targetClass: Class<T>): T {
-    return mapper.readValue(this, targetClass)
-}
+fun <T> InputStream.parseTo(targetClass: Class<T>): T = mapper.readValue(this, targetClass)
 
-fun <T> T.toJson(): String {
-    return mapper.writeValueAsString(this)
-}
+fun <T> T.toJson(): String = mapper.writeValueAsString(this)

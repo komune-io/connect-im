@@ -47,6 +47,7 @@ interface ApiKeyPageQueryDTO : Query {
      * @example false
      * @default false
      */
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val withDisabled: Boolean?
 
     /**
@@ -67,6 +68,7 @@ interface ApiKeyPageQueryDTO : Query {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class ApiKeyPageQuery(
     override val search: String? = null,
@@ -101,6 +103,7 @@ interface ApiKeyPageResultDTO : PageDTO<ApiKeyDTO> {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class ApiKeyPageResult(
     override val items: List<ApiKey>,

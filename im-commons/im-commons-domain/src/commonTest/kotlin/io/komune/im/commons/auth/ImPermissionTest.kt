@@ -12,16 +12,16 @@ class ImPermissionTest {
 
     @Test
     fun identifiersAreStable() {
-        assertEquals("im_user_read", ImPermission.IM_USER_READ.identifier)
-        assertEquals("im_user_write", ImPermission.IM_USER_WRITE.identifier)
-        assertEquals("im_organization_read", ImPermission.IM_ORGANIZATION_READ.identifier)
-        assertEquals("im_organization_write_own", ImPermission.IM_MY_ORGANIZATION_WRITE.identifier)
-        assertEquals("im_user_self", ImPermission.IM_MY_USER.identifier)
-        assertEquals("im_organization_read_own", ImPermission.IM_MY_ORGANIZATION_READ.identifier)
-        assertEquals("im_apikey_write", ImPermission.IM_APIKEY_WRITE.identifier)
-        assertEquals("im_space_write", ImPermission.IM_SPACE_WRITE.identifier)
-        assertEquals("im_role_write", ImPermission.IM_ROLE_WRITE.identifier)
-        assertEquals("im_mfa_force_otp", ImPermission.IM_FORCE_MFA_OTP.identifier)
+        assertEquals(expected = "im_user_read", actual = ImPermission.IM_USER_READ.identifier)
+        assertEquals(expected = "im_user_write", actual = ImPermission.IM_USER_WRITE.identifier)
+        assertEquals(expected = "im_organization_read", actual = ImPermission.IM_ORGANIZATION_READ.identifier)
+        assertEquals(expected = "im_organization_write_own", actual = ImPermission.IM_MY_ORGANIZATION_WRITE.identifier)
+        assertEquals(expected = "im_user_self", actual = ImPermission.IM_MY_USER.identifier)
+        assertEquals(expected = "im_organization_read_own", actual = ImPermission.IM_MY_ORGANIZATION_READ.identifier)
+        assertEquals(expected = "im_apikey_write", actual = ImPermission.IM_APIKEY_WRITE.identifier)
+        assertEquals(expected = "im_space_write", actual = ImPermission.IM_SPACE_WRITE.identifier)
+        assertEquals(expected = "im_role_write", actual = ImPermission.IM_ROLE_WRITE.identifier)
+        assertEquals(expected = "im_mfa_force_otp", actual = ImPermission.IM_FORCE_MFA_OTP.identifier)
     }
 
     @Test
@@ -44,7 +44,7 @@ class ImPermissionTest {
     fun roleAssignmentIsGuardedByASingleWritePermission() {
         // There is no `im_user_role_read` in imPermissions.json — assigning roles is the
         // only guarded operation, and `canUpdateRole` is the sole caller.
-        assertEquals("im_user_role_write", ImPermission.IM_USER_ROLE_WRITE.identifier)
+        assertEquals(expected = "im_user_role_write", actual = ImPermission.IM_USER_ROLE_WRITE.identifier)
         assertTrue(ImPermission.entries.none { it.identifier == "im_user_role_read" })
     }
 }

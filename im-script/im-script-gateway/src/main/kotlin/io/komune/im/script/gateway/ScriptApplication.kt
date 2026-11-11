@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Configuration
 @SpringBootApplication(scanBasePackages = ["io.komune.im.script"])
 class ScriptApplication
 
-fun main(args: Array<String>) {
-	SpringApplication(ScriptApplication::class.java).run {
-		run(*args)
-	}
+fun main(vararg args: String) {
+    SpringApplication(ScriptApplication::class.java).run(*args).use { }
 }

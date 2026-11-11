@@ -28,10 +28,10 @@ private fun List<FlowObject>.create(parentAlias: String, authFlowsClient: Authen
         when (subObject) {
             is SubFlow -> deploySubFlow(authFlowsClient, parentAlias, subObject)
             is Execution -> authFlowsClient.addExecution(
-                parentAlias,
-                subObject.provider,
-                subObject.requirement,
-                subObject.config
+                parent = parentAlias,
+                provider = subObject.provider,
+                requirement = subObject.requirement,
+                config = subObject.config
             )
         }
     }
@@ -57,7 +57,7 @@ private fun AuthenticationManagementResource.addExecution(
 
     val executions = getExecutions(parent)
     val executionToUpdate = executions.find { it.providerId == provider.id }
-        ?: throw IllegalStateException("Execution not found for $provider")
+        ?: error("Execution not found for $provider")
 
     executionToUpdate.requirement = requirement.name
     updateExecutions(parent, executionToUpdate)
@@ -87,7 +87,7 @@ private fun AuthenticationManagementResource.addExecutionFlowLocal(
     val executions = getExecutions(parentName)
 
     val executionToUpdate = executions.find { it.displayName == subFlow.alias }
-        ?: throw IllegalStateException("Execution not found for ${subFlow.alias}")
+        ?: error("Execution not found for ${subFlow.alias}")
 
     executionToUpdate.requirement = subFlow.requirement.name
     this.updateExecutions(parentName, executionToUpdate)

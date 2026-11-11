@@ -20,7 +20,7 @@ import java.net.URI
 
 @Suppress("TooManyFunctions")
 class KeycloakClient(
-	val keycloak: Keycloak,
+    val keycloak: Keycloak,
     val auth: AuthRealm,
     val realmId: RealmId
 ) {
@@ -29,14 +29,14 @@ class KeycloakClient(
 
     val defaultRealmRole = "default-roles-$realmId"
 
-	/* Client */
-	fun clients(): ClientsResource {
+    /* Client */
+    fun clients(): ClientsResource {
         log("clients")
-		return realm(realmId).clients()
-	}
+        return realm(realmId).clients()
+    }
 
     private fun log(invokeLog: String) {
-        logger.debug("Invoke ${invokeLog} on realm[${realmId}] with auth[$auth]")
+        logger.debug("Invoke ${invokeLog} on realm[${realmId}] with client[${auth.clientId}] of realm[${auth.realmId}]")
     }
 
     fun client(id: String): ClientResource {
@@ -44,71 +44,72 @@ class KeycloakClient(
         return realm(realmId).clients().get(id)!!
     }
 
-	fun getClientByIdentifier(identifier: String): ClientRepresentation? {
+    fun getClientByIdentifier(identifier: String): ClientRepresentation? {
         log("getClientByIdentifier[identifier=${identifier}]")
-		return realm(realmId).clients().findByClientId(identifier)?.firstOrNull()
-	}
+        return realm(realmId).clients().findByClientId(identifier)?.firstOrNull()
+    }
 
-	/* User */
-	fun users(): UsersResource {
+    /* User */
+    fun users(): UsersResource {
         log("users")
-		return realm(realmId).users()
-	}
+        return realm(realmId).users()
+    }
 
-	fun user(id: String): UserResource {
+    fun user(id: String): UserResource {
         log("user[id=$id]")
-		return  realm(realmId).users().get(id)
-	}
+        return  realm(realmId).users().get(id)
+    }
 
-	fun sendWelcomeEmail(
-		userId: String,
-		clientId: String?,
-		redirectUri: String?,
-		lifespanSeconds: Int,
-		actions: List<String>
-	) {
-		log("sendWelcomeEmail[id=$userId]")
-		keycloak.proxy(WelcomeEmailResource::class.java, URI.create(auth.serverUrl))
-			.send(realmId, userId, clientId, redirectUri, lifespanSeconds, actions)
-	}
+    fun sendWelcomeEmail(
+        userId: String,
+        clientId: String?,
+        redirectUri: String?,
+        lifespanSeconds: Int,
+        actions: List<String>
+    ) {
+        log("sendWelcomeEmail[id=$userId]")
+        keycloak.proxy(WelcomeEmailResource::class.java, URI.create(auth.serverUrl))
+            .user(realm = realmId, id = userId)
+            .send(clientId = clientId, redirectUri = redirectUri, lifespan = lifespanSeconds, actions = actions)
+    }
 
-	fun userProfile(): UserProfileResource {
+    fun userProfile(): UserProfileResource {
         log("userProfile")
-		return  realm(realmId).users().userProfile()
-	}
+        return  realm(realmId).users().userProfile()
+    }
 
-	/* Role */
-	fun roles(): RolesResource {
+    /* Role */
+    fun roles(): RolesResource {
         log("roles")
-		return  realm(realmId).roles()
-	}
+        return  realm(realmId).roles()
+    }
 
-	fun role(identifier: String): RoleResource {
+    fun role(identifier: String): RoleResource {
         log("roles[id=$identifier]")
-		return  realm(realmId).roles().get(identifier)
-	}
+        return  realm(realmId).roles().get(identifier)
+    }
 
-	/* Group */
-	fun groups(): GroupsResource {
+    /* Group */
+    fun groups(): GroupsResource {
         log("groups")
-		return realm(realmId).groups()
-	}
+        return realm(realmId).groups()
+    }
 
-	fun group(id: String): GroupResource {
+    fun group(id: String): GroupResource {
         log("group[id=$id]")
-		return realm(realmId).groups().group(id)
-	}
+        return realm(realmId).groups().group(id)
+    }
 
-	/* Realm */
-	fun realm(): RealmResource {
+    /* Realm */
+    fun realm(): RealmResource {
         log("realm")
-		return keycloak.realm(realmId)
-	}
+        return keycloak.realm(realmId)
+    }
 
-	fun realm(id: String): RealmResource {
+    fun realm(id: String): RealmResource {
         log("realm[id=$id]")
-		return keycloak.realm(id)
-	}
+        return keycloak.realm(id)
+    }
 
     fun realms(): RealmsResource {
         log("realms")

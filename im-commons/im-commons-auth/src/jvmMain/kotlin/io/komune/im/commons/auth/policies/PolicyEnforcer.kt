@@ -8,28 +8,29 @@ import kotlinx.coroutines.flow.map
 
 open class PolicyEnforcer {
 
-    protected suspend fun check(action: String, hasAccess: suspend (AuthedUserDTO?) -> Boolean) =
+    protected suspend fun check(action: String, hasAccess: suspend (AuthedUserDTO?) -> Boolean) {
         enforce { authedUser ->
             if (!hasAccess(authedUser)) {
                 val userIdentity = authedUser
-                    ?.let { "User [${it.id}] [${it.identifier}]" }
+                    ?.let { user -> "User [${user.id}] [${user.identifier ?: "null"}]" }
                     ?: "Unauthenticated user"
                 throw ForbiddenAccessException("$userIdentity is not authorized to $action")
             }
         }
+    }
 
-    protected suspend fun checkAuthed(action: String, hasAccess: suspend (AuthedUserDTO) -> Boolean = { true }) =
+    protected suspend fun checkAuthed(action: String, hasAccess: suspend (AuthedUserDTO) -> Boolean = { true }) {
         check(action) { authedUser ->
             authedUser != null && hasAccess(authedUser)
         }
-
-    protected suspend fun <R> enforce(block: suspend (AuthedUserDTO?) -> R): R {
-        return block(AuthenticationProvider.getAuthedUser())
     }
+
+    protected suspend fun <R> enforce(block: suspend (AuthedUserDTO?) -> R): R =
+        block(AuthenticationProvider.getAuthedUser())
 
     protected suspend fun <R> enforceAuthed(block: suspend (AuthedUserDTO) -> R): R = enforce { authedUser ->
         checkAuthed("")
-        block(authedUser!!)
+        block(checkNotNull(authedUser))
     }
 }
 
@@ -44,9 +45,9 @@ fun <T, R> enforce(fnc: F2Function<T, R>, enforce: suspend (t: T) -> T): F2Funct
 fun <T, R> verifyAfter(fnc: F2Function<T, R>, enforce: suspend (t: R) -> Unit): F2Function<T, R> = F2Function { msg ->
     msg.let {
         fnc.invoke(it)
-    }.map {
-        enforce(it)
-        it
+    }.map { result ->
+        enforce(result)
+        result
     }
 }
 

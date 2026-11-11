@@ -31,9 +31,7 @@ class UserCoreFinderService(
         }
     }
 
-    suspend fun get(id: UserId): UserModel {
-        return getOrNull(id) ?: throw NotFoundException("User", id)
-    }
+    suspend fun get(id: UserId): UserModel = getOrNull(id) ?: throw NotFoundException(name = "User", id = id)
 
     suspend fun hasCredentials(id: UserId): Boolean = handleErrors("Error while fetching credentials of user [$id]") {
         keycloakClientProvider.getClient().user(id).credentials().isNotEmpty()
@@ -48,15 +46,9 @@ class UserCoreFinderService(
         }
 
     suspend fun page(
-        ids: Collection<UserId>? = null,
-        organizationIds: Collection<OrganizationId>? = null,
-        name: String? = null,
-        email: String? = null,
-        roles: Collection<RoleIdentifier>? = null,
-        attributes: Map<String, String>? = null,
-        withDisabled: Boolean = false,
+        filter: UserCoreFilter = UserCoreFilter(),
         offset: OffsetPagination? = null
-    ): PageDTO<UserModel> {
+    ): PageDTO<UserModel> = with(filter) {
         val client = keycloakClientProvider.getClient()
 
         val compositeRoles = client.roles().list().mapAsync { role ->
@@ -68,14 +60,14 @@ class UserCoreFinderService(
             organizationIds = organizationIds
         )
 
-        return users.filter { user ->
+        users.filter { user ->
             user.id.matches(ids)
                 && user.memberOf.matches(organizationIds)
-                && (withDisabled || user.enabled)
+                && (isDisabledIncluded || user.enabled)
                 && (attributes == null || attributes.all { (key, value) -> user.attributes[key] == value })
                 && (email == null || user.email.contains(email, true))
-                && (name == null || ("${user.givenName} ${user.familyName}").contains(name, true))
-                && (user.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles))
+                && (name == null || "${user.givenName} ${user.familyName}".contains(name, true))
+                && user.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles)
         }.sortedByDescending(UserModel::creationDate)
             .page(offset)
     }
@@ -106,3 +98,14 @@ class UserCoreFinderService(
         }.filter { !it.isApiKey }
     }
 }
+
+/** What [UserCoreFinderService.page] keeps; a null criterion keeps everything. */
+data class UserCoreFilter(
+    val ids: Collection<UserId>? = null,
+    val organizationIds: Collection<OrganizationId>? = null,
+    val name: String? = null,
+    val email: String? = null,
+    val roles: Collection<RoleIdentifier>? = null,
+    val attributes: Map<String, String>? = null,
+    val isDisabledIncluded: Boolean = false,
+)

@@ -39,9 +39,9 @@ suspend fun RoleModel.toDTO(
         targets = targets.map(RoleTarget::name),
         bindings = bindings.mapKeys { (target) -> target.name }
             .mapValues { (_, roles) ->
-                roles.map { async {
-                    if (it != identifier) { // prevents infinite loop on self-bind
-                        getRole(it)
+                roles.map { roleIdentifier -> async {
+                    if (roleIdentifier != identifier) { // prevents infinite loop on self-bind
+                        getRole(roleIdentifier)
                     } else {
                         null
                     }

@@ -17,6 +17,36 @@ class UserToDTOTransformer(
     private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val privilegeFinderService: PrivilegeFinderService,
 ): Transformer<UserModel, User>() {
+    override suspend fun transform(item: UserModel): User {
+        val roles = item.roles.mapNotNullAsync(privilegeFinderService::getRoleOrNull)
+        val attributes = item.attributes.filterKeys { key -> key !in IM_USER_ATTRIBUTES }
+        val organizationRef = item.memberOf?.let { organizationId ->
+            val organization = organizationCoreFinderService.get(organizationId)
+            OrganizationRef(
+                id = organization.id,
+                name = organization.identifier,
+                roles = organization.roles
+            )
+        }
+
+        return User(
+            id = item.id,
+            memberOf = organizationRef,
+            email = item.email,
+            givenName = item.givenName,
+            familyName = item.familyName,
+            address = item.attributes[User::address.name]?.parseJsonTo(Address::class.java) ?: EmptyAddress,
+            phone = item.attributes[User::phone.name],
+            roles = roles,
+            attributes = attributes,
+            enabled = item.enabled,
+            disabledBy = item.attributes[User::disabledBy.name],
+            creationDate = item.creationDate,
+            mfa = item.mfa,
+            disabledDate = item.attributes[User::disabledDate.name]?.toLong()
+        )
+    }
+
     companion object {
         val IM_USER_ATTRIBUTES = listOf(
             User::address.name,
@@ -26,35 +56,4 @@ class UserToDTOTransformer(
             UserModel::isApiKey.name
         )
     }
-
-    override suspend fun transform(item: UserModel): User {
-        val roles = item.roles.mapNotNullAsync(privilegeFinderService::getRoleOrNull)
-        val attributes = item.attributes.filterKeys { key -> key !in IM_USER_ATTRIBUTES }
-        val organizationRef = item.memberOf?.let {
-            organizationCoreFinderService.get(it)
-        }?.let {
-            OrganizationRef(
-                id = it.id,
-                name = it.identifier,
-                roles = it.roles
-            )
-        }
-
-		return User(
-			id = item.id,
-			memberOf = organizationRef,
-			email = item.email,
-			givenName = item.givenName,
-			familyName = item.familyName,
-			address = item.attributes[User::address.name]?.parseJsonTo(Address::class.java) ?: EmptyAddress,
-			phone = item.attributes[User::phone.name],
-			roles = roles,
-			attributes = attributes,
-			enabled = item.enabled,
-			disabledBy = item.attributes[User::disabledBy.name],
-			creationDate = item.creationDate,
-            mfa = item.mfa,
-			disabledDate = item.attributes[User::disabledDate.name]?.toLong()
-		)
-	}
 }

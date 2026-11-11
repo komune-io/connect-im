@@ -5,15 +5,9 @@ import io.komune.im.commons.auth.ImPermission
 import io.komune.im.commons.model.ClientId
 import io.komune.im.commons.utils.ParserUtils
 import io.komune.im.f2.privilege.domain.permission.model.Permission
-import io.komune.im.f2.privilege.lib.PrivilegeAggregateService
-import io.komune.im.f2.privilege.lib.PrivilegeFinderService
 import io.komune.im.f2.space.domain.command.SpaceDefineCommand
 import io.komune.im.f2.space.domain.command.SpaceSettings
-import io.komune.im.f2.space.lib.SpaceAggregateService
-import io.komune.im.f2.space.lib.SpaceFinderService
 import io.komune.im.f2.user.domain.command.UserCreateCommand
-import io.komune.im.f2.user.lib.UserAggregateService
-import io.komune.im.f2.user.lib.UserFinderService
 import io.komune.im.infra.keycloak.client.KeycloakClientProvider
 import io.komune.im.keycloak.plugin.domain.model.KeycloakPluginIds
 import io.komune.im.script.core.config.properties.ImScriptSpaceProperties
@@ -23,6 +17,9 @@ import io.komune.im.script.core.model.FeatureData
 import io.komune.im.script.core.model.PermissionData
 import io.komune.im.script.core.model.defaultSpaceRootClientId
 import io.komune.im.script.core.service.ClientInitService
+import io.komune.im.script.core.service.PrivilegeServices
+import io.komune.im.script.core.service.SpaceServices
+import io.komune.im.script.core.service.UserServices
 import io.komune.im.script.space.create.config.AdminUserData
 import io.komune.im.script.space.create.config.ClientCredentials
 import io.komune.im.script.space.create.config.EventWebhookConfig
@@ -41,21 +38,12 @@ import org.springframework.stereotype.Service
 class SpaceCreateScript(
     private val keycloakClientProvider: KeycloakClientProvider,
     private val imScriptSpaceProperties: ImScriptSpaceProperties,
-    private val spaceAggregateService: SpaceAggregateService,
-    private val spaceFinderService: SpaceFinderService,
-    private val privilegeAggregateService: PrivilegeAggregateService,
-    private val privilegeFinderService: PrivilegeFinderService,
-    private val userAggregateService: UserAggregateService,
-    private val userFinderService: UserFinderService,
+    private val spaceServices: SpaceServices,
+    private val privilegeServices: PrivilegeServices,
+    private val userServices: UserServices,
     private val clientInitService: ClientInitService,
 ) {
     private val logger = LoggerFactory.getLogger(SpaceCreateScript::class.java)
-
-    companion object {
-        val DEFAULT_PERMISSIONS = listOf(ImPermission.IM_MY_USER, ImPermission.IM_MY_ORGANIZATION_READ)
-            .map(ImPermission::identifier)
-    }
-
 
     suspend fun run() {
         val jsonPaths = imScriptSpaceProperties.jsonCreate ?: return
@@ -86,15 +74,15 @@ class SpaceCreateScript(
 
     private suspend fun configureRealm(properties: SpaceCreateProperties) {
         logger.info("Initializing IM features...")
-        initImFeatures()
-        logger.info("Initialized IM features")
+        val features = initImFeatures()
+        logger.info("Initialized IM features: $features")
 
         logger.info("Initializing IM permissions...")
-        initImPermissions()
-        logger.info("Initialized IM permissions")
+        val permissions = initImPermissions()
+        logger.info("Initialized IM permissions: $permissions")
 
         logger.info("Granting default IM permissions to every user...")
-        initDefaultRolePermissions()
+        grantDefaultRolePermissions()
         logger.info("Granted default IM permissions")
 
         logger.info("Initializing Client Scopes...")
@@ -106,8 +94,8 @@ class SpaceCreateScript(
         logger.info("Initialized Event Webhook")
 
         logger.info("Initializing Space Root Client...")
-        properties.rootClient?.initImClient(properties.spaceIdentifier)
-        logger.info("Initialized Space Root Client")
+        val rootClient = properties.rootClient?.initImClient(properties.spaceIdentifier)
+        logger.info("Initialized Space Root Client: ${rootClient ?: "none"}")
 
         properties.adminUsers?.forEach { adminUser ->
             logger.info("Initializing Admin user [${adminUser.email}]...")
@@ -119,11 +107,12 @@ class SpaceCreateScript(
 
     private suspend fun initRealm(properties: SpaceCreateProperties) {
         logger.info("Initializing Space[${properties.spaceIdentifier}]...")
-        if (spaceFinderService.getOrNull(properties.spaceIdentifier) != null) {
+        if (spaceServices.finder.getOrNull(properties.spaceIdentifier) != null) {
             logger.info("Space[${properties.spaceIdentifier}] already created")
         } else {
-            logger.info("Space create: $${properties}")
-            spaceAggregateService.define(
+            logger.info("Creating Space[${properties.spaceIdentifier}]")
+            val login = properties.settings?.login
+            val _ = spaceServices.aggregate.define(
                 SpaceDefineCommand(
                     identifier = properties.spaceIdentifier,
                     displayName = properties.displayName,
@@ -133,10 +122,10 @@ class SpaceCreateScript(
                     mfa = properties.mfa,
                     sslRequired = properties.sslRequired,
                     settings = SpaceSettings(
-                        registrationAllowed = properties.settings?.login?.registrationAllowed,
-                        rememberMe = properties.settings?.login?.rememberMe,
-                        resetPasswordAllowed = properties.settings?.login?.resetPasswordAllowed,
-                        registrationEmailAsUsername = properties.settings?.login?.registrationEmailAsUsername
+                        registrationAllowed = login?.registrationAllowed,
+                        rememberMe = login?.rememberMe,
+                        resetPasswordAllowed = login?.resetPasswordAllowed,
+                        registrationEmailAsUsername = login?.registrationEmailAsUsername
                     )
                 )
             )
@@ -145,9 +134,9 @@ class SpaceCreateScript(
     }
 
     private suspend fun initAdmin(properties: AdminUserData) {
-        val permissions = privilegeFinderService.listPermissions()
+        val permissions = privilegeServices.finder.listPermissions()
 
-        if (userFinderService.getByEmailOrNull(properties.email) != null) {
+        if (userServices.finder.getByEmailOrNull(properties.email) != null) {
             logger.info("User admin already created")
             return
         }
@@ -155,20 +144,24 @@ class SpaceCreateScript(
         val password = properties.password ?: UUID.randomUUID().toString()
         logger.info("Creating user admin with password: $password")
 
-        val userId = UserCreateCommand(
-            email = properties.email,
-            password = password,
-            givenName = properties.firstName.orEmpty(),
-            familyName = properties.lastName.orEmpty(),
-            roles = permissions.map(Permission::identifier),
-            isPasswordTemporary = false,
-            isEmailVerified = true,
-            sendVerifyEmail = false,
-            sendResetPassword = false
-        ).let { userAggregateService.create(it).id }
+        val userId = userServices.aggregate.create(
+            UserCreateCommand(
+                email = properties.email,
+                password = password,
+                givenName = properties.firstName.orEmpty(),
+                familyName = properties.lastName.orEmpty(),
+                roles = permissions.map(Permission::identifier),
+                isPasswordTemporary = false,
+                isEmailVerified = true,
+                sendVerifyEmail = false,
+                sendResetPassword = false
+            )
+        ).id
 
         val client = keycloakClientProvider.getClient()
-        val realmManagementClientId = client.getClientByIdentifier("realm-management")!!.id
+        val realmManagementClientId = checkNotNull(client.getClientByIdentifier("realm-management")) {
+            "Client [realm-management] not found"
+        }.id
         val realmAdminRole = client.role("realm-admin").toRepresentation()
         client.user(userId).roles().clientLevel(realmManagementClientId).add(listOf(realmAdminRole))
     }
@@ -181,8 +174,8 @@ class SpaceCreateScript(
         )
         imFeatures.map { feature ->
             async {
-                privilegeFinderService.getPrivilegeOrNull(feature.name)
-                    ?: privilegeAggregateService.define(feature.toCommand())
+                privilegeServices.finder.getPrivilegeOrNull(feature.name)
+                    ?: privilegeServices.aggregate.define(feature.toCommand())
             }
         }.awaitAll()
     }
@@ -195,17 +188,14 @@ class SpaceCreateScript(
         )
         imPermissions.map { permission ->
             async {
-                privilegeFinderService.getPrivilegeOrNull(permission.name)
-                    ?: privilegeAggregateService.define(permission.toCommand())
+                privilegeServices.finder.getPrivilegeOrNull(permission.name)
+                    ?: privilegeServices.aggregate.define(permission.toCommand())
             }
         }.awaitAll()
     }
 
-    /**
-     * Every user and service account of the realm holds the realm's default role,
-     * so its composites are what every identity is granted without asking.
-     */
-    private suspend fun initDefaultRolePermissions() {
+    private suspend fun grantDefaultRolePermissions() {
+        // every user and service account of the realm holds its default role
         val client = keycloakClientProvider.getClient()
         val defaultRoleName = client.realm().toRepresentation().defaultRole?.name ?: client.defaultRealmRole
         val defaultRole = client.role(defaultRoleName)
@@ -299,11 +289,11 @@ class SpaceCreateScript(
         logger.info("Configured event webhook URL: ${webhookConfig.url}")
     }
 
-    private suspend fun ClientCredentials.initImClient(spaceName: String): ClientId {
-        return AppClient(
+    private suspend fun ClientCredentials.initImClient(spaceName: String): ClientId = clientInitService.initAppClient(
+        AppClient(
             clientId = clientId ?: defaultSpaceRootClientId(spaceName),
             clientSecret = clientSecret,
-            roles = listOf(),
+            roles = emptyList(),
             realmManagementRoles = listOf(
                 "manage-realm",
                 "manage-users",
@@ -311,7 +301,11 @@ class SpaceCreateScript(
                 "manage-events",
                 "manage-identity-providers",
             )
-        ).let { clientInitService.initAppClient(it) }
+        )
+    )
 
+    companion object {
+        val DEFAULT_PERMISSIONS = listOf(ImPermission.IM_MY_USER, ImPermission.IM_MY_ORGANIZATION_READ)
+            .map(ImPermission::identifier)
     }
 }

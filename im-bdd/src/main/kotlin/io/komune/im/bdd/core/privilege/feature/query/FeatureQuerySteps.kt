@@ -4,7 +4,7 @@ import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.privilege.feature.data.feature
-import io.komune.im.commons.utils.mapAsync
+import io.komune.im.commons.utils.forEachAsync
 import io.komune.im.f2.privilege.domain.feature.model.Feature
 import org.assertj.core.api.Assertions
 import s2.bdd.assertion.AssertionBdd
@@ -49,7 +49,7 @@ class FeatureQuerySteps: En, ImCucumberStepsDefinition() {
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 
         val featureAsserter = AssertionBdd.feature(keycloakClientProvider.getClient())
-        fetchedFeatures.mapAsync { feature ->
+        fetchedFeatures.forEachAsync { feature ->
             featureAsserter.assertThatId(feature.identifier).matches(feature)
         }
     }

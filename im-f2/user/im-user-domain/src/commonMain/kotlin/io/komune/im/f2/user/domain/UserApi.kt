@@ -21,34 +21,34 @@ import io.komune.im.f2.user.domain.query.UserPageFunction
 interface UserApi: UserQueryApi, UserCommandApi
 
 interface UserQueryApi {
-    /** Fetch a User by its ID */
+    /** Fetch a User by its ID. */
     fun userGet(): UserGetFunction
-    /** Fetch a User by its email address */
+    /** Fetch a User by its email address. */
     fun userGetByEmail(): UserGetByEmailFunction
-    /** Check if a User exists by its email address */
+    /** Check if a User exists by its email address. */
     fun userExistsByEmail(): UserExistsByEmailFunction
-    /** Fetch a page of users */
+    /** Fetch a page of users. */
     fun userPage(): UserPageFunction
 
 }
 
 interface UserCommandApi {
-    /** Create a User */
+    /** Create a User. */
     fun userCreate(): UserCreateFunction
-    /** Update a User */
+    /** Update a User. */
     fun userUpdate(): UserUpdateFunction
-    /** Send a reset password email to a given user */
+    /** Send a reset password email to a given user. */
     fun userResetPassword(): UserResetPasswordFunction
-    /** Set the given email for a given user */
+    /** Set the given email for a given user. */
     fun userUpdateEmail(): UserUpdateEmailFunction
-    /** Set the given password for a given user ID */
+    /** Set the given password for a given user ID. */
     fun userUpdatePassword(): UserUpdatePasswordFunction
-    /** Disable multifactor authentication **/
+    /** Disable multifactor authentication. */
     fun userDisableMfa(): UserDisableMfaFunction
-    /** Disable a user */
+    /** Disable a user. */
     fun userDisable(): UserDisableFunction
-    /** Enable a user */
+    /** Enable a user. */
     fun userEnable(): UserEnableFunction
-    /** Delete a user */
+    /** Delete a user. */
     fun userDelete(): UserDeleteFunction
 }

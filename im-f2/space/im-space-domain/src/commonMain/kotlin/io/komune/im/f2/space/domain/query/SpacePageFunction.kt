@@ -19,37 +19,38 @@ import kotlinx.serialization.Serializable
 typealias SpacePageFunction = F2Function<SpacePageQuery, SpacePageResult>
 
 /**
- * TODO Use PageQueryDTO and sub filter object
+ * TODO Use PageQueryDTO and sub filter object.
  */
 @JsExport
 @JsName("SpacePageQueryDTO")
 interface SpacePageQueryDTO: Query {
-	val search: String?
-	val page: Int?
-	val size: Int?
+    val search: String?
+    val page: Int?
+    val size: Int?
 }
 
 /**
  * @d2 query
  * @parent [SpacePageFunction]
  */
+@JsExport
 @Serializable
 data class SpacePageQuery(
-	/**
-	 * Search string filtering on the name of the space.
-	 * @example "Komune"
-	 */
-	override val search: String? = null,
     /**
-	 * Number of the page.
-	 * @example 0
-	 */
-	override val page: Int? = null,
-	/**
-	 * Size of the page.
-	 * @example 10
-	 */
-	override val size: Int? = null,
+     * Search string filtering on the name of the space.
+     * @example "Komune"
+     */
+    override val search: String? = null,
+    /**
+     * Number of the page.
+     * @example 0
+     */
+    override val page: Int? = null,
+    /**
+     * Size of the page.
+     * @example 10
+     */
+    override val size: Int? = null,
 ): SpacePageQueryDTO
 
 @JsExport
@@ -60,19 +61,21 @@ interface SpacePageResultDTO: PageDTO<SpaceDTO>
  * @d2 result
  * @parent [SpacePageFunction]
  */
+@JsExport
 @Serializable
 data class SpacePageResult(
     /**
-	 * List of spaces satisfying the requesting filters. The size of the list is lesser or equal than the requested size.
-	 */
-	override val items: List<Space>,
+     * List of spaces satisfying the requesting filters.
+     * The size of the list is lesser or equal than the requested size.
+     */
+    override val items: List<Space>,
     /**
      * Represents pagination information for a page.
      */
     val pagination: PagePagination?,
     /**
-	 * The total amount of users satisfying the requesting filters.
-	 * @example 38
-	 */
-	override val total: Int
+     * The total amount of users satisfying the requesting filters.
+     * @example 38
+     */
+    override val total: Int
 ): SpacePageResultDTO

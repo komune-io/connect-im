@@ -36,6 +36,7 @@ interface OrganizationDisableCommandDTO: Command {
      * To anonymize custom attributes, see `attributes` field.
      * @example true
      */
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val anonymize: Boolean
 
     /**
@@ -57,6 +58,7 @@ interface OrganizationDisableCommandDTO: Command {
  * @d2 command
  * @parent [OrganizationDisableFunction]
  */
+@JsExport
 @Serializable
 data class OrganizationDisableCommand(
     override val id: OrganizationId,
@@ -77,6 +79,7 @@ interface OrganizationDisabledEventDTO: Event {
  * @d2 event
  * @parent [OrganizationDisableFunction]
  */
+@JsExport
 @Serializable
 data class OrganizationDisabledEvent(
     /**

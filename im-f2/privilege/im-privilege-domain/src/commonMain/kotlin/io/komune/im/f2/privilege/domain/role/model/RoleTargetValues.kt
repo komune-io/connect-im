@@ -4,7 +4,7 @@ import kotlin.js.JsExport
 
 @JsExport
 object RoleTargetValues {
-    fun organization() = "ORGANIZATION"
-    fun user() = "USER"
-    fun apiKey() = "API_KEY"
+    const val ORGANIZATION = "ORGANIZATION"
+    const val USER = "USER"
+    const val API_KEY = "API_KEY"
 }

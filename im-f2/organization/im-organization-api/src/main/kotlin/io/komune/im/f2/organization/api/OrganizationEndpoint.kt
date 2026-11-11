@@ -22,6 +22,7 @@ import io.komune.im.f2.organization.domain.query.OrganizationRefGetResult
 import io.komune.im.f2.organization.domain.query.OrganizationRefListFunction
 import io.komune.im.f2.organization.domain.query.OrganizationRefListResult
 import io.komune.im.f2.organization.lib.OrganizationAggregateService
+import io.komune.im.f2.organization.lib.OrganizationFilter
 import io.komune.im.f2.organization.lib.OrganizationFinderService
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -53,14 +54,14 @@ class OrganizationEndpoint(
     override fun organizationGet(): OrganizationGetFunction = f2Function { query ->
         logger.info("organizationGet: $query")
         organizationPoliciesEnforcer.checkGet(query.id)
-        organizationFinderService.getOrNull(query.id).let(::OrganizationGetResult)
+        OrganizationGetResult(organizationFinderService.getOrNull(query.id))
     }
 
     @Bean
     override fun organizationRefGet(): OrganizationRefGetFunction = f2Function { query ->
         logger.info("organizationRefGet: $query")
         organizationPoliciesEnforcer.checkGet(query.id)
-        organizationFinderService.getRefOrNull(query.id).let(::OrganizationRefGetResult)
+        OrganizationRefGetResult(organizationFinderService.getRefOrNull(query.id))
     }
 
     /**
@@ -70,7 +71,7 @@ class OrganizationEndpoint(
     override fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = f2Function { query ->
         logger.info("organizationGetFromInsee: $query")
         organizationPoliciesEnforcer.checkList()
-        organizationFinderService.getFromInsee(query.siret).let(::OrganizationGetFromInseeResult)
+        OrganizationGetFromInseeResult(organizationFinderService.getFromInsee(query.siret))
     }
 
 
@@ -88,19 +89,21 @@ class OrganizationEndpoint(
         }.ifEmpty { null }
 
         organizationFinderService.page(
-            name = query.name,
-            roles = roles,
-            attributes = query.attributes,
-            status = query.status?.map(OrganizationStatus::valueOf),
-            withDisabled = query.withDisabled ?: false,
+            OrganizationFilter(
+                name = query.name,
+                roles = roles,
+                attributes = query.attributes,
+                status = query.status?.map(OrganizationStatus::valueOf),
+                isDisabledIncluded = query.withDisabled == true,
+            ),
             offset = OffsetPagination(
                 offset = query.offset ?: 0,
                 limit = query.limit ?: Int.MAX_VALUE
             ),
-        ).let {
+        ).let { page ->
             OrganizationPageResult(
-                items = it.items,
-                total = it.total
+                items = page.items,
+                total = page.total
             )
         }
     }
@@ -113,7 +116,7 @@ class OrganizationEndpoint(
     override fun organizationRefList(): OrganizationRefListFunction = f2Function { query ->
         logger.info("organizationRefList: $query")
         organizationPoliciesEnforcer.checkRefList()
-        organizationFinderService.listRefs(query.withDisabled).let(::OrganizationRefListResult)
+        OrganizationRefListResult(organizationFinderService.listRefs(query.withDisabled))
     }
 
     /**
@@ -141,7 +144,7 @@ class OrganizationEndpoint(
     }
 
     /**
-     * Upload a logo for a given organization
+     * Upload a logo for a given organization.
      */
     @PostMapping("/organizationUploadLogo")
     suspend fun organizationUploadLogo(

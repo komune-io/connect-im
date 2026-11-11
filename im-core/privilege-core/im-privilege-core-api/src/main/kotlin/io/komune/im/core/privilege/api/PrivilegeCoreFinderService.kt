@@ -32,9 +32,8 @@ class PrivilegeCoreFinderService(
         }
     }
 
-    suspend fun getPrivilege(identifier: PrivilegeIdentifier): Privilege {
-        return getPrivilegeOrNull(identifier) ?: throw NotFoundException("Privilege", identifier)
-    }
+    suspend fun getPrivilege(identifier: PrivilegeIdentifier): Privilege =
+        getPrivilegeOrNull(identifier) ?: throw NotFoundException(name = "Privilege", id = identifier)
 
     suspend fun list(
         types: Collection<PrivilegeType>? = null,
@@ -46,7 +45,7 @@ class PrivilegeCoreFinderService(
             .filter { privilege ->
                 listOf(
                     privilege.type.matches(types),
-                    targets == null || (privilege is RoleModel && privilege.targets.matches(targets))
+                    targets == null || privilege is RoleModel && privilege.targets.matches(targets)
                 ).all { it }
             }
     }

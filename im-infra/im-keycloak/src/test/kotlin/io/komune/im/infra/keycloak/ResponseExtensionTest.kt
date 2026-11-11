@@ -16,7 +16,11 @@ class ResponseExtensionTest {
 
     private fun response(status: Int, location: String? = null, body: String = "") =
         Response.status(status)
-            .apply { location?.let { location(URI.create(it)) } }
+            .apply {
+                if (location != null) {
+                    location(URI.create(location))
+                }
+            }
             .entity(body)
             .build()
 
@@ -77,7 +81,10 @@ class ResponseExtensionTest {
 
     @Test
     fun `handleResponseError throws instead of returning a bogus id on failure`() {
-        assertThatThrownBy { response(409, body = "exists").handleResponseError("user") }
+        assertThatThrownBy {
+            val id = response(409, body = "exists").handleResponseError("user")
+            error("returned $id")
+        }
             .isInstanceOf(ConflictException::class.java)
     }
 }

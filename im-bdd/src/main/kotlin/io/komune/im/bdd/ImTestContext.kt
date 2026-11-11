@@ -40,10 +40,10 @@ class ImTestContext: TestContext() {
         .plus("offline_access")
         .toSet()
 
-    suspend fun permanentRoles(space: String? = realmId) = permanentRoles + "default-roles-${space}"
-
     final var fetched = FetchContext()
         private set
+
+    fun permanentRoles(space: String = realmId) = permanentRoles + "default-roles-$space"
 
     override fun resetEnv() {
         fetched = FetchContext()
@@ -57,12 +57,53 @@ class ImTestContext: TestContext() {
     }
 
     class FetchContext {
-        lateinit var apikeys: List<ApiKey>
-        lateinit var features: List<Feature>
-        lateinit var organizations: List<Organization>
-        lateinit var organizationRefs: List<OrganizationRef>
-        lateinit var permissions: List<Permission>
-        lateinit var roles: List<Role>
-        lateinit var users: List<User>
+        private var fetchedApikeys: List<ApiKey>? = null
+        var apikeys: List<ApiKey>
+            get() = checkNotNull(fetchedApikeys) { "No api keys have been fetched" }
+            set(value) {
+                fetchedApikeys = value
+            }
+
+        private var fetchedFeatures: List<Feature>? = null
+        var features: List<Feature>
+            get() = checkNotNull(fetchedFeatures) { "No features have been fetched" }
+            set(value) {
+                fetchedFeatures = value
+            }
+
+        private var fetchedOrganizations: List<Organization>? = null
+        var organizations: List<Organization>
+            get() = checkNotNull(fetchedOrganizations) { "No organizations have been fetched" }
+            set(value) {
+                fetchedOrganizations = value
+            }
+
+        private var fetchedOrganizationRefs: List<OrganizationRef>? = null
+        var organizationRefs: List<OrganizationRef>
+            get() = checkNotNull(fetchedOrganizationRefs) { "No organization refs have been fetched" }
+            set(value) {
+                fetchedOrganizationRefs = value
+            }
+
+        private var fetchedPermissions: List<Permission>? = null
+        var permissions: List<Permission>
+            get() = checkNotNull(fetchedPermissions) { "No permissions have been fetched" }
+            set(value) {
+                fetchedPermissions = value
+            }
+
+        private var fetchedRoles: List<Role>? = null
+        var roles: List<Role>
+            get() = checkNotNull(fetchedRoles) { "No roles have been fetched" }
+            set(value) {
+                fetchedRoles = value
+            }
+
+        private var fetchedUsers: List<User>? = null
+        var users: List<User>
+            get() = checkNotNull(fetchedUsers) { "No users have been fetched" }
+            set(value) {
+                fetchedUsers = value
+            }
     }
 }

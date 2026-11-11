@@ -3,11 +3,12 @@ package io.komune.im.commons.utils
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
+import java.net.JarURLConnection
 import java.net.MalformedURLException
 import java.net.URL
-import kotlin.system.exitProcess
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
+import tools.jackson.core.JacksonException
 
 const val FILE = "file:"
 
@@ -18,65 +19,72 @@ object ParserUtils {
         configPath: String,
         clazz: Class<T>,
         classLoader: ClassLoader = Thread.currentThread().contextClassLoader
-    ): T {
-        try {
-            logger.info("Loading configuration from json file [$configPath]...")
-            return getFile(configPath, classLoader)?.parseTo(clazz) ?: exitProcess(-1)
-        } catch (e: IOException) {
-            logger.error("Error configuration from json file [${configPath}]", e)
-            exitProcess(-1)
-        }
+    ): T = readConfiguration(configPath) {
+        readFile(filename = configPath, classLoader = classLoader) { stream -> stream.parseTo(clazz) }
     }
 
     fun <T> getConfiguration(
         configPath: String,
         clazz: Class<Array<T>>,
         classLoader: ClassLoader = Thread.currentThread().contextClassLoader
-    ): List<T> {
-        try {
-            logger.info("Loading configuration from json file [$configPath]...")
-            return getFile(configPath, classLoader)?.parseJsonTo(clazz) ?: exitProcess(-1)
-        } catch (e: IOException) {
-            logger.error("Error configuration from json file [${configPath}]", e)
-            exitProcess(-1)
-        }
+    ): List<T> = readConfiguration(configPath) {
+        readFile(filename = configPath, classLoader = classLoader) { stream -> stream.parseJsonTo(clazz) }
     }
+
+    private fun <R> readConfiguration(configPath: String, read: () -> R?): R {
+        logger.info("Loading configuration from json file [$configPath]...")
+        val configuration = try {
+            read()
+        } catch (e: IOException) {
+            unreadable(configPath, e)
+        } catch (e: JacksonException) {
+            unreadable(configPath, e)
+        }
+        return configuration ?: notFound(configPath)
+    }
+
+    private fun unreadable(configPath: String, cause: Exception): Nothing {
+        val message = "Error configuration from json file [${configPath}]"
+        logger.error(message, cause)
+        throw ConfigurationException(message, cause)
+    }
+
+    private fun notFound(configPath: String): Nothing =
+        throw ConfigurationException("Configuration file [$configPath] not found")
 
     @Throws(MalformedURLException::class)
-    private fun getFile(
+    private fun <R> readFile(
         filename: String,
-        classLoader: ClassLoader = Thread.currentThread().contextClassLoader
-    ): InputStream? {
+        classLoader: ClassLoader = Thread.currentThread().contextClassLoader,
+        read: (InputStream) -> R
+    ): R? {
         val url = getUrl(filename, classLoader)
         if (url.toString().startsWith("jar:")) {
-            return fileFromJar(url)
+            return readFileFromJar(file = url, read = read)
         }
-        return File(url.file).inputStream()
+        return File(url.file).inputStream().use(read)
     }
 
-    private fun getUrl(filename: String, classLoader: ClassLoader = Thread.currentThread().contextClassLoader): URL {
-        return if (filename.startsWith(FILE)) {
+    private fun getUrl(filename: String, classLoader: ClassLoader = Thread.currentThread().contextClassLoader): URL =
+        if (filename.startsWith(FILE)) {
             URL(filename)
         } else {
             ClassPathResource(filename, classLoader).url
         }
-    }
 
 
-    private fun fileFromJar(file: URL): InputStream? {
+    private fun <R> readFileFromJar(file: URL, read: (InputStream) -> R): R? {
         val path = file.toString()
         val jsonPath = path.substringAfter("!/")
-        val jarConnection = file.openConnection() as java.net.JarURLConnection
+        val jarConnection = file.openConnection() as JarURLConnection
         val jarFile = jarConnection.jarFile
 
         // Look for the file inside the JAR
-        val jarEntry = jarFile.getJarEntry(jsonPath)
+        val jarEntry = jarFile.getJarEntry(jsonPath) ?: return null
 
-        jarEntry?.let {
-            // Open stream and read contents
-            return jarFile.getInputStream(it)
-        }
-
-        return null
+        return jarFile.getInputStream(jarEntry).use(read)
     }
 }
+
+/** A configuration file that is missing or cannot be read: retrying cannot fix it. */
+class ConfigurationException(message: String, cause: Throwable? = null) : IllegalStateException(message, cause)

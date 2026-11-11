@@ -14,9 +14,7 @@ class AuthenticationProviderStub {
     @Primary
     fun imAuthenticationProvider(imProperties: IMProperties): ImAuthenticationProvider {
         return object: ImAuthenticationProvider {
-            override suspend fun getAuth(): AuthSubRealm {
-                return imProperties.keycloak.toAuthRealm()
-            }
+            override suspend fun getAuth(): AuthSubRealm = imProperties.keycloak.toAuthRealm()
         }
     }
 }

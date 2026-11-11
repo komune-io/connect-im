@@ -6,13 +6,12 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.space.data.space
 import io.komune.im.f2.space.api.SpaceEndpoint
 import io.komune.im.f2.space.domain.command.SpaceDefineCommand
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 
-class SpaceUpdateSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var spaceEndpoint: SpaceEndpoint
+/** Cucumber steps: space update. */
+class SpaceUpdateSteps(
+    private val spaceEndpoint: SpaceEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         Given("The space has internationalization disabled") {
@@ -26,7 +25,7 @@ class SpaceUpdateSteps: En, ImCucumberStepsDefinition() {
 
         When("I update the space with locales {string}") { locales: String ->
             step {
-                SpaceDefineCommand(
+                val _ = SpaceDefineCommand(
                     identifier = context.spaceIdentifiers.lastUsed,
                     displayName = null,
                     smtp = null,

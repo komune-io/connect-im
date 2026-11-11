@@ -27,17 +27,18 @@ class RoleEndpoint(
     override fun roleGet(): RoleGetFunction = f2Function { query ->
         logger.info("roleGet: $query")
         privilegePoliciesEnforcer.checkGet()
-        privilegeFinderService.getRoleOrNull(query.identifier)
-            .let(::RoleGetResult)
+        RoleGetResult(privilegeFinderService.getRoleOrNull(query.identifier))
     }
 
     @Bean
     override fun roleList(): RoleListFunction = f2Function { query ->
         logger.info("roleList: $query")
         privilegePoliciesEnforcer.checkList()
-        privilegeFinderService.listRoles(
-            targets = query.target?.let { listOf(RoleTarget.valueOf(it)) }
-        ).let(::RoleListResult)
+        RoleListResult(
+            privilegeFinderService.listRoles(
+                targets = query.target?.let { listOf(RoleTarget.valueOf(it)) }
+            )
+        )
     }
 
     @Bean

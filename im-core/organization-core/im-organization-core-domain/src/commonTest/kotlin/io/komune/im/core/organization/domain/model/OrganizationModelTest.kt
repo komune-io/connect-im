@@ -18,14 +18,14 @@ class OrganizationModelTest {
         roles = listOf("admin"),
         enabled = true,
         disabledBy = null,
-        creationDate = 1656938975000,
+        creationDate = 1_656_938_975_000,
         disabledDate = null
     )
 
     @Test
     fun equalityIsStructural() {
         assertEquals(model(), model())
-        assertNotEquals(model(), model(id = "org-2"))
+        assertNotEquals(illegal = model(), actual = model(id = "org-2"))
     }
 
     @Test
@@ -33,13 +33,13 @@ class OrganizationModelTest {
         // `identifier` is the human-facing slug; `id` is Keycloak's group id.
         val organization = model()
 
-        assertEquals("komune", organization.identifier)
-        assertEquals("org-1", organization.id)
+        assertEquals(expected = "komune", actual = organization.identifier)
+        assertEquals(expected = "org-1", actual = organization.id)
     }
 
     @Test
     fun attributesCarryArbitraryKeys() {
-        assertEquals("12345678900011", model().attributes["siret"])
+        assertEquals(expected = "12345678900011", actual = model().attributes["siret"])
     }
 
     @Test
@@ -54,8 +54,8 @@ class OrganizationModelTest {
     fun copyKeepsUntouchedFields() {
         val disabled = model().copy(enabled = false, disabledBy = "admin-1", disabledDate = 1)
 
-        assertEquals(false, disabled.enabled)
-        assertEquals("Komune", disabled.displayName)
-        assertEquals(listOf("admin"), disabled.roles)
+        assertEquals(expected = false, actual = disabled.enabled)
+        assertEquals(expected = "Komune", actual = disabled.displayName)
+        assertEquals(expected = listOf("admin"), actual = disabled.roles)
     }
 }

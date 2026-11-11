@@ -18,7 +18,7 @@ class WelcomeEmailAdminResourceProviderFactory : AdminRealmResourceProviderFacto
         realm: RealmModel,
         auth: AdminPermissionEvaluator,
         adminEvent: AdminEventBuilder
-    ) = WelcomeEmailAdminResource(session, realm, auth, adminEvent)
+    ) = WelcomeEmailAdminResource(session = session, realm = realm, auth = auth, adminEvent = adminEvent)
     override fun init(config: Config.Scope?) { /* No-op */ }
     override fun postInit(factory: KeycloakSessionFactory?) { /* No-op */ }
     override fun close() { /* No-op */ }

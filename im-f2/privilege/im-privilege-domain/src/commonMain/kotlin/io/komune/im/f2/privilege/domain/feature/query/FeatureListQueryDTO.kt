@@ -26,6 +26,7 @@ interface FeatureListQueryDTO
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 class FeatureListQuery: FeatureListQueryDTO
 
@@ -45,6 +46,7 @@ interface FeatureListResultDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class FeatureListResult(
     override val items: List<Feature>

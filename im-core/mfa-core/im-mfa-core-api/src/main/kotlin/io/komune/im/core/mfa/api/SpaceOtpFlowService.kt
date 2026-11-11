@@ -9,11 +9,6 @@ import org.springframework.stereotype.Service
 @Service
 class SpaceOtpFlowService {
 
-    companion object {
-        const val OTP_FLOW_USER_ATTRIBUTE = "mfa"
-        const val OTP_FLOW_USER_ATTRIBUTE_VALUE = "OTP"
-    }
-
     suspend fun create(keycloakClientProvider: KeycloakClientProvider, space: String) {
         val keycloakClient = keycloakClientProvider.getClient(space)
         val authFlowsClient = keycloakClient.keycloak.realm(space).flows()
@@ -36,5 +31,10 @@ class SpaceOtpFlowService {
         realmRepresentation.browserFlow = ImMfaPasswordOtpFlow.name
         realmRepresentation.resetCredentialsFlow = ImResetPasswordFlow.name
         realmResource.update(realmRepresentation)
+    }
+
+    companion object {
+        const val OTP_FLOW_USER_ATTRIBUTE = "mfa"
+        const val OTP_FLOW_USER_ATTRIBUTE_VALUE = "OTP"
     }
 }

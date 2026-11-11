@@ -3,6 +3,7 @@ package io.komune.im.keycloak.plugin.event.listener.http
 import io.komune.im.keycloak.plugin.domain.model.KeycloakPluginIds
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.keycloak.provider.ProviderFactory
 
 /**
  * Keycloak discovers this provider by the id returned from `getId()`, matched against
@@ -20,7 +21,7 @@ class HttpEventListenerProviderFactoryTest {
     @Test
     fun `the legacy factory registers the same listener under the pre-rename id`() {
         @Suppress("DEPRECATION")
-        val legacyId = io.komune.im.keycloak.plugin.domain.model.KeycloakPluginIds.EVENT_WEBHOOK_LEGACY
+        val legacyId = KeycloakPluginIds.EVENT_WEBHOOK_LEGACY
 
         assertThat(LegacyHttpEventListenerProviderFactory().id).isEqualTo(legacyId)
     }
@@ -35,7 +36,7 @@ class HttpEventListenerProviderFactoryTest {
 
     @Test
     fun `implements the SPI factory keycloak loads through ServiceLoader`() {
-        assertThat(org.keycloak.provider.ProviderFactory::class.java)
+        assertThat(ProviderFactory::class.java)
             .isAssignableFrom(HttpEventListenerProviderFactory::class.java)
     }
 }

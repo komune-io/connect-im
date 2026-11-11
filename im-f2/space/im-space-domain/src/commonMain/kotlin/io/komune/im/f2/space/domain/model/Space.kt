@@ -40,6 +40,7 @@ interface SpaceDTO {
     val locales: List<String>?
 }
 
+@JsExport
 @Serializable
 data class Space(
     override val identifier: SpaceIdentifier,

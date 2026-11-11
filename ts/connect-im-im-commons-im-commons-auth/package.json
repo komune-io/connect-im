@@ -1,0 +1,12 @@
+{
+  "name": "connect-im-im-commons-im-commons-auth",
+  "version": "0.0.0",
+  "types": "kotlin/connect-im-im-commons-im-commons-auth.d.mts",
+  "devDependencies": {},
+  "dependencies": {
+    "@js-joda/core": "3.2.0"
+  },
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "bundledDependencies": []
+}

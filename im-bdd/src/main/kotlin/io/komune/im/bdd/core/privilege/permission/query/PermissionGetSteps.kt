@@ -5,13 +5,12 @@ import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.f2.privilege.api.PermissionEndpoint
 import io.komune.im.f2.privilege.domain.permission.query.PermissionGetQuery
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.data.TestContextKey
 
-class PermissionGetSteps: En, ImCucumberStepsDefinition() {
-
-    @Autowired
-    private lateinit var permissionEndpoint: PermissionEndpoint
+/** Cucumber steps: permission get. */
+class PermissionGetSteps(
+    private val permissionEndpoint: PermissionEndpoint,
+): En, ImCucumberStepsDefinition() {
 
     init {
         DataTableType(::permissionGetParams)

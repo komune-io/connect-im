@@ -11,34 +11,37 @@ class RedirectUrlExtentionTest {
 
     @Test
     fun aBareUrlGetsASlashWildcard() {
-        assertEquals("https://app.example.com/*", "https://app.example.com".addWildcard())
+        assertEquals(expected = "https://app.example.com/*", actual = "https://app.example.com".addWildcard())
     }
 
     @Test
     fun aTrailingSlashGetsOnlyTheStar() {
-        assertEquals("https://app.example.com/*", "https://app.example.com/".addWildcard())
+        assertEquals(expected = "https://app.example.com/*", actual = "https://app.example.com/".addWildcard())
     }
 
     @Test
     fun anAlreadyWildcardedUrlIsLeftAlone() {
-        assertEquals("https://app.example.com/*", "https://app.example.com/*".addWildcard())
+        assertEquals(expected = "https://app.example.com/*", actual = "https://app.example.com/*".addWildcard())
     }
 
     @Test
     fun isIdempotent() {
         val once = "https://app.example.com".addWildcard()
 
-        assertEquals(once, once.addWildcard())
+        assertEquals(expected = once, actual = once.addWildcard())
     }
 
     @Test
     fun aPathIsPreserved() {
-        assertEquals("https://app.example.com/callback/*", "https://app.example.com/callback".addWildcard())
+        assertEquals(
+            expected = "https://app.example.com/callback/*",
+            actual = "https://app.example.com/callback".addWildcard()
+        )
     }
 
     @Test
     fun aStarThatIsNotSlashStarStillGetsSuffixed() {
         // "…/foo*" is not the "/*" suffix, so it is treated as an ordinary path
-        assertEquals("https://app.example.com/foo*/*", "https://app.example.com/foo*".addWildcard())
+        assertEquals(expected = "https://app.example.com/foo*/*", actual = "https://app.example.com/foo*".addWildcard())
     }
 }

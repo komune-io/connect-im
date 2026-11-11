@@ -9,15 +9,19 @@ import io.komune.im.commons.model.PermissionIdentifier
 import io.komune.im.f2.privilege.api.PermissionEndpoint
 import io.komune.im.f2.privilege.domain.permission.command.PermissionDefineCommand
 import java.util.UUID
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 
-class PermissionDefineSteps: En, ImCucumberStepsDefinition() {
+/** Cucumber steps: permission define. */
+class PermissionDefineSteps(
+    private val permissionEndpoint: PermissionEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    @Autowired
-    private lateinit var permissionEndpoint: PermissionEndpoint
-
-    private lateinit var command: PermissionDefineCommand
+    private var commandOrNull: PermissionDefineCommand? = null
+    private var command: PermissionDefineCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::permissionDefineParams)

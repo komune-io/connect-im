@@ -17,12 +17,12 @@ fun RoleRepresentation.toPermission() = PermissionModel(
         ?.map { it.parseJsonTo(Array<FeatureIdentifier>::class.java) }
 )
 
-fun PermissionModel.toRoleRepresentation() = RoleRepresentation().also {
-    it.id = id.ifEmpty { null }
-    it.name = identifier
-    it.description = description
-    it.clientRole = false
-    it.attributes = mapOf(
+fun PermissionModel.toRoleRepresentation() = RoleRepresentation().also { representation ->
+    representation.id = id.ifEmpty { null }
+    representation.name = identifier
+    representation.description = description
+    representation.clientRole = false
+    representation.attributes = mapOf(
         Privilege::type.name to listOf(type.name),
         PermissionModel::features.name to features?.map(List<FeatureIdentifier>::toJson).orEmpty(),
     )

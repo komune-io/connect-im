@@ -9,9 +9,7 @@ import org.keycloak.models.KeycloakSessionFactory
 
 class DbSchemaMigrationProviderFactory: JpaEntityProviderFactory {
 
-    override fun create(p0: KeycloakSession?): JpaEntityProvider {
-        return DbSchemaMigrationProvider()
-    }
+    override fun create(p0: KeycloakSession?): JpaEntityProvider = DbSchemaMigrationProvider()
 
     override fun init(config: Config.Scope) { /* No-op */ }
     override fun postInit(factory: KeycloakSessionFactory) { /* No-op */ }

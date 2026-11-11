@@ -13,6 +13,7 @@ data class KeycloakHttpEvent(
     val error: String?,
     val details: Map<String, String>?
 ) {
+    @Suppress("DataClassContainsFunctions") // Jackson writes it as the webhook payload's `verifyEmail` field
     fun isVerifyEmail() = type == "VERIFY_EMAIL"
         || type == "CUSTOM_REQUIRED_ACTION" && details?.get(Details.CUSTOM_REQUIRED_ACTION) == "VERIFY_EMAIL"
 }

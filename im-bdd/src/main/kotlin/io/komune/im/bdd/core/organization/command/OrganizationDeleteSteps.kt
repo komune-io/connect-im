@@ -8,15 +8,20 @@ import io.komune.im.bdd.core.organization.data.organization
 import io.komune.im.core.organization.domain.command.OrganizationCoreDeleteCommand
 import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.command.OrganizationDeleteCommand
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
-class OrganizationDeleteSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var organizationEndpoint: OrganizationEndpoint
+/** Cucumber steps: organization delete. */
+class OrganizationDeleteSteps(
+    private val organizationEndpoint: OrganizationEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: OrganizationDeleteCommand
+    private var commandOrNull: OrganizationDeleteCommand? = null
+    private var command: OrganizationDeleteCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::organizationDeleteParams)
@@ -64,7 +69,7 @@ class OrganizationDeleteSteps: En, ImCucumberStepsDefinition() {
         command = OrganizationCoreDeleteCommand(
             id = context.organizationIds.safeGet(params.identifier)
         )
-        organizationEndpoint.organizationDelete().invoke(command).id
+        val _ = organizationEndpoint.organizationDelete().invoke(command)
     }
 
     private fun organizationDeleteParams(entry: Map<String, String>?): OrganizationDeleteParams {

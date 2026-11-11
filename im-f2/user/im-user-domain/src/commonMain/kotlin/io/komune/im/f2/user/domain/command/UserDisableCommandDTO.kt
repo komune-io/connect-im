@@ -9,7 +9,7 @@ import kotlin.js.JsName
 import kotlinx.serialization.Serializable
 
 /**
- * Disable a user
+ * Disable a user.
  * @d2 function
  * @parent [io.komune.im.f2.user.domain.D2UserPage]
  * @order 70
@@ -40,6 +40,7 @@ interface UserDisableCommandDTO: Command {
      * To anonymize custom attributes, see `attributes` field.
      * @example true
      */
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val anonymize: Boolean
 
     /**
@@ -53,6 +54,7 @@ interface UserDisableCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserDisableCommand(
     override val id: UserId,
@@ -76,6 +78,7 @@ interface UserDisabledEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserDisabledEvent(
     override val id: UserId

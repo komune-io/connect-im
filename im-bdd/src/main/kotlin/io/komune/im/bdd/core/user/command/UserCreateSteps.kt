@@ -10,16 +10,21 @@ import io.komune.im.commons.model.OrganizationId
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserCreateCommand
 import java.util.UUID
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extractList
 
-class UserCreateSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+/** Cucumber steps: user create. */
+class UserCreateSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: UserCreateCommand
+    private var commandOrNull: UserCreateCommand? = null
+    private var command: UserCreateCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::userCreateParams)
@@ -60,7 +65,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
                 val userId = context.userIds.lastUsed
 
                 val client = keycloakClientProvider.getClient()
-                AssertionBdd.user(client).assertThatId(userId).hasFields(
+                AssertionBdd.user(client).assertThatId(userId).hasFields { fields -> fields.copy(
                     email = command.email,
                     givenName = command.givenName,
                     familyName = command.familyName,
@@ -70,7 +75,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
                     memberOf = command.memberOf,
                     attributes = buildAttributesMap(command.attributes, command.memberOf).orEmpty(),
                     isApiKey = false
-                )
+                ) }
             }
         }
 
@@ -115,7 +120,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
             ),
             phone = entry?.get("phone") ?: "0600000000",
             roles = entry?.extractList<String>("roles")?.map { context.roleIdentifiers[it] ?: it }.orEmpty(),
-            sendEmailLink = false,
+            isEmailLinkSent = false,
             memberOf = entry?.get("memberOf").parseNullableOrDefault(null),
             attributes = userAttributesParams(entry),
             isEmailVerified = true
@@ -131,7 +136,7 @@ class UserCreateSteps: En, ImCucumberStepsDefinition() {
         val address: Address?,
         val phone: String?,
         val roles: List<String>,
-        val sendEmailLink: Boolean,
+        val isEmailLinkSent: Boolean,
         val memberOf: OrganizationId?,
         val attributes: Map<String, String>,
         val isEmailVerified: Boolean

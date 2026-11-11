@@ -12,8 +12,19 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ConditionalOnBean(FsConfig::class)
 class UserFsConfig(
-    private val fileClient: FileClient
+    fileClient: FileClient
 ) {
+    init {
+        runBlocking {
+            val command = FileInitPublicDirectoryCommand(
+                objectType = objectType,
+                objectId = "*",
+                directory = directory
+            )
+            fileClient.initPublicDirectory(listOf(command))
+        }
+    }
+
     companion object {
         const val objectType = "user"
         const val directory = "images"
@@ -25,16 +36,5 @@ class UserFsConfig(
             directory = directory,
             name = name
         )
-    }
-
-    init {
-        runBlocking {
-            val command = FileInitPublicDirectoryCommand(
-                objectType = objectType,
-                objectId = "*",
-                directory = directory
-            )
-            fileClient.initPublicDirectory(listOf(command))
-        }
     }
 }

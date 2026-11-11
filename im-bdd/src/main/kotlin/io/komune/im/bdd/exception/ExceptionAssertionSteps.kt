@@ -2,7 +2,6 @@ package io.komune.im.bdd.exception
 
 import f2.spring.exception.ConflictException
 import f2.spring.exception.ForbiddenAccessException
-import f2.spring.exception.MessageConverterException
 import f2.spring.exception.NotFoundException
 import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
@@ -35,7 +34,6 @@ class ExceptionAssertionSteps: En, ImCucumberStepsDefinition()  {
 
     @Suppress("MagicNumber")
     private fun Int.toExceptionClass() = when (this) {
-        400 -> MessageConverterException::class
         403 -> ForbiddenAccessException::class
         404 -> NotFoundException::class
         409 -> ConflictException::class

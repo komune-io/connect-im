@@ -30,6 +30,7 @@ interface PermissionGetQueryDTO {
     val identifier: PermissionIdentifier
 }
 
+@JsExport
 @Serializable
 data class PermissionGetQuery(
     override val identifier: PermissionIdentifier
@@ -43,7 +44,7 @@ data class PermissionGetQuery(
 @JsName("PermissionGetResultDTO")
 interface PermissionGetResultDTO {
     /**
-     * Permission matching the given identifier, or null if not found
+     * Permission matching the given identifier, or null if not found.
      */
     val item: PermissionDTO?
 }
@@ -51,6 +52,7 @@ interface PermissionGetResultDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class PermissionGetResult(
     override val item: Permission?

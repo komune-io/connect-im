@@ -5,9 +5,7 @@ class SimpleCache<K: Any, V>(
 ) {
     private val cache = mutableMapOf<K, V>()
 
-    suspend fun get(key: K): V {
-        return cache.getOrPut(key) { fetch(key) }
-    }
+    suspend fun get(key: K): V = cache.getOrPut(key) { fetch(key) }
 
     fun register(key: K, value: V) {
         cache[key] = value

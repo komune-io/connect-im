@@ -1,5 +1,6 @@
 package io.komune.im.f2.organization.lib.model.insee
 
+@Suppress("BooleanPropertyNaming") // wire names: the INSEE API fields
 data class InseePeriod(
     val dateFin: String?,
     val dateDebut: String?,

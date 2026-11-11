@@ -13,8 +13,6 @@ dependencies {
     implementation(project(":im-core:client-core:im-client-core-api"))
 
     implementation(project(":im-f2:privilege:im-privilege-lib"))
-    implementation(project(":im-f2:space:im-space-lib"))
-    implementation(project(":im-f2:user:im-user-lib"))
 
     implementation(project(":im-keycloak:keycloak-plugin:im-keycloak-plugin-domain"))
 

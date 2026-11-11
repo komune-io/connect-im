@@ -50,7 +50,12 @@ class AuthenticationFlowDsl(val alias: String) {
 
 class SubFlow(val alias: String): FlowObject {
     var type: FlowType = FlowType.BASIC_FLOW
-    lateinit var provider: AuthenticationProvider
+    private var providerOrNull: AuthenticationProvider? = null
+    var provider: AuthenticationProvider
+        get() = checkNotNull(providerOrNull) { "provider has not been set" }
+        set(value) {
+            providerOrNull = value
+        }
     var description: String? = null
     var requirement: Requirement = Requirement.ALTERNATIVE
     val subObjects = arrayListOf<FlowObject>()
@@ -78,7 +83,12 @@ class SubFlow(val alias: String): FlowObject {
 }
 
 open class Execution: FlowObject {
-    lateinit var provider: AuthenticationProvider
+    private var providerOrNull: AuthenticationProvider? = null
+    var provider: AuthenticationProvider
+        get() = checkNotNull(providerOrNull) { "provider has not been set" }
+        set(value) {
+            providerOrNull = value
+        }
     var requirement: Requirement = Requirement.REQUIRED
     open var config: Map<String, String>? = null
 }
@@ -93,6 +103,10 @@ class ConditionalLoa : Execution() {
     var loaConditionLevel: Int = 0
     var loaMaxAge: Int = 0
 
+    override var config: Map<String, String>?
+        get() = buildConfig()
+        set(_) {}
+
     init {
         provider = AuthenticationProvider.CONDITIONAL_LEVEL_OF_AUTHENTICATION
     }
@@ -103,12 +117,7 @@ class ConditionalLoa : Execution() {
             "loa-max-age" to loaMaxAge.toString()
         )
     }
-
-    override var config: Map<String, String>?
-        get() = buildConfig()
-        set(_) {}
 }
 
-fun authenticationFlow(alias: String, block: AuthenticationFlowDsl.() -> Unit): AuthenticationFlowDsl {
-    return AuthenticationFlowDsl(alias).apply(block)
-}
+fun authenticationFlow(alias: String, block: AuthenticationFlowDsl.() -> Unit): AuthenticationFlowDsl =
+    AuthenticationFlowDsl(alias).apply(block)

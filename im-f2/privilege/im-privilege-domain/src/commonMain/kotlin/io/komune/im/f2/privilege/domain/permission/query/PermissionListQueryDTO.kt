@@ -26,6 +26,7 @@ interface PermissionListQueryDTO
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 class PermissionListQuery: PermissionListQueryDTO
 
@@ -45,6 +46,7 @@ interface PermissionListResultDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class PermissionListResult(
     override val items: List<Permission>

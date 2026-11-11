@@ -9,15 +9,19 @@ import io.komune.im.commons.model.FeatureIdentifier
 import io.komune.im.f2.privilege.api.FeatureEndpoint
 import io.komune.im.f2.privilege.domain.feature.command.FeatureDefineCommand
 import java.util.UUID
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 
-class FeatureDefineSteps: En, ImCucumberStepsDefinition() {
+/** Cucumber steps: feature define. */
+class FeatureDefineSteps(
+    private val featureEndpoint: FeatureEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    @Autowired
-    private lateinit var featureEndpoint: FeatureEndpoint
-
-    private lateinit var command: FeatureDefineCommand
+    private var commandOrNull: FeatureDefineCommand? = null
+    private var command: FeatureDefineCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::featureDefineParams)

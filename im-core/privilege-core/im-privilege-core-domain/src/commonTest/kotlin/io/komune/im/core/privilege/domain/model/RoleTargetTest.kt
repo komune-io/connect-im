@@ -13,19 +13,19 @@ class RoleTargetTest {
     @Test
     fun coversEveryEntityRolesCanApplyTo() {
         assertEquals(
-            setOf("ORGANIZATION", "USER", "API_KEY"),
-            RoleTarget.entries.map { it.name }.toSet()
+            expected = setOf("ORGANIZATION", "USER", "API_KEY"),
+            actual = RoleTarget.entries.map { it.name }.toSet()
         )
     }
 
     @Test
     fun apiKeyKeepsItsUnderscoreSpelling() {
-        assertEquals("API_KEY", RoleTarget.API_KEY.name)
+        assertEquals(expected = "API_KEY", actual = RoleTarget.API_KEY.name)
     }
 
     @Test
     fun valueOfRoundTripsForEveryEntry() {
-        RoleTarget.entries.forEach { assertEquals(it, RoleTarget.valueOf(it.name)) }
+        RoleTarget.entries.forEach { assertEquals(expected = it, actual = RoleTarget.valueOf(it.name)) }
     }
 
     @Test

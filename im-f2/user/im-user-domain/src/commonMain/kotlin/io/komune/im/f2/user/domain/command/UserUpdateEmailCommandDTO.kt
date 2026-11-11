@@ -35,12 +35,14 @@ interface UserUpdateEmailCommandDTO: Command {
      * Whether to send a verification email after a successful update.
      * @example true
      */
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val sendVerificationEmail: Boolean
 }
 
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserUpdateEmailCommand(
     override val id: UserId,
@@ -63,6 +65,7 @@ interface UserUpdatedEmailEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserUpdatedEmailEvent(
     override val id: UserId

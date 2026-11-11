@@ -10,12 +10,10 @@ import io.komune.im.apikey.lib.service.ORGANIZATION_FIELD_API_KEYS
 import io.komune.im.apikey.lib.service.apiKeys
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.PrivilegeIdentifier
-import io.komune.im.commons.utils.mapAsync
+import io.komune.im.commons.utils.forEachAsync
 import io.komune.im.commons.utils.toJson
 import io.komune.im.core.client.api.ClientCoreAggregateService
 import io.komune.im.core.client.domain.command.ClientCreateCommand
-import io.komune.im.core.organization.api.OrganizationCoreAggregateService
-import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.organization.domain.command.OrganizationCoreSetSomeAttributesCommand
 import io.komune.im.core.organization.domain.model.OrganizationModel
 import io.komune.im.core.privilege.api.PrivilegeCoreFinderService
@@ -36,16 +34,15 @@ class ApiKeyAggregateService(
     private val clientCoreAggregateService: ClientCoreAggregateService,
     private val keycloakClientProvider: KeycloakClientProvider,
     private val privilegeCoreFinderService: PrivilegeCoreFinderService,
-    private val organizationCoreAggregateService: OrganizationCoreAggregateService,
-    private val organizationCoreFinderService: OrganizationCoreFinderService,
+    private val organizations: OrganizationCoreServices,
     private val userCoreAggregateService: UserCoreAggregateService
 ) {
     private val logger = LoggerFactory.getLogger(ApiKeyAggregateService::class.java)
 
     suspend fun findByName(name: String, organizationId: OrganizationId): ApiKey? {
-        val organization = organizationCoreFinderService.get(organizationId)
+        val organization = organizations.finder.get(organizationId)
         val keyIdentifier = toKeyIdentifier(organization, name)
-        return apiKeyFinderService.getOrNullByIdentifierAndOrganizationId(
+        return apiKeyFinderService.getOrNullInOrganization(
             keyIdentifier, organizationId
         )
     }
@@ -55,13 +52,13 @@ class ApiKeyAggregateService(
         command: ApiKeyOrganizationAddKeyCommand
     ): ApiKeyOrganizationAddedEvent {
         checkRoles(command.roles)
-        val organization = organizationCoreFinderService.get(command.organizationId)
+        val organization = organizations.finder.get(command.organizationId)
         val client = keycloakClientProvider.getClient()
 
         val keyIdentifier = toKeyIdentifier(organization, command.name)
         val keySecret = command.secret ?: UUID.randomUUID().toString()
 
-        val keyId = ClientCreateCommand(
+        val keyId = clientCoreAggregateService.create(ClientCreateCommand(
             identifier = keyIdentifier,
             secret = keySecret,
             isPublicClient = false,
@@ -70,7 +67,7 @@ class ApiKeyAggregateService(
             authorizationServicesEnabled = false,
             isStandardFlowEnabled = false,
             additionalAccessTokenClaim = listOf(UserModel::memberOf.name),
-        ).let { clientCoreAggregateService.create(it).id }
+        )).id
 
         val newApiKey = ApiKeyModel(
             id = keyId,
@@ -80,19 +77,19 @@ class ApiKeyAggregateService(
             creationDate = System.currentTimeMillis()
         )
         val apiKeys = organization.apiKeys() + newApiKey
-        OrganizationCoreSetSomeAttributesCommand(
+        val _ = organizations.aggregate.setSomeAttributes(OrganizationCoreSetSomeAttributesCommand(
             id = organization.id,
             attributes = mapOf(ORGANIZATION_FIELD_API_KEYS to apiKeys.toJson())
-        ).let { organizationCoreAggregateService.setSomeAttributes(it) }
+        ))
 
         val serviceAccountUser = client.client(keyId).serviceAccountUser
-        UserCoreDefineCommand(
+        val _ = userCoreAggregateService.define(UserCoreDefineCommand(
             id = serviceAccountUser.id,
             memberOf = command.organizationId,
             attributes = mapOf("display_name" to command.name),
             roles = command.roles,
             isApiKey = true
-        ).let { userCoreAggregateService.define(it) }
+        ))
 
         return ApiKeyOrganizationAddedEvent(
             organizationId = organization.id,
@@ -118,7 +115,7 @@ class ApiKeyAggregateService(
         val client = keycloakClientProvider.getClient()
 
         val user = apiKeyFinderService.getUserOfKey(command.id)
-        val organizationId = user.memberOf!!
+        val organizationId = checkNotNull(user.memberOf) { "API key [${command.id}] belongs to no organization" }
 
         @Suppress("TooGenericExceptionCaught")
         try {
@@ -127,11 +124,11 @@ class ApiKeyAggregateService(
             logger.error("Error while deleting client", e)
         }
 
-        val apiKeys = organizationCoreFinderService.get(organizationId).apiKeys()
-        OrganizationCoreSetSomeAttributesCommand(
+        val apiKeys = organizations.finder.get(organizationId).apiKeys()
+        val _ = organizations.aggregate.setSomeAttributes(OrganizationCoreSetSomeAttributesCommand(
             id = organizationId,
             attributes = mapOf(ORGANIZATION_FIELD_API_KEYS to apiKeys.filter { it.id != command.id }.toJson())
-        ).let { organizationCoreAggregateService.setSomeAttributes(it) }
+        ))
 
         return ApikeyRemoveEvent(
             id = command.id,
@@ -140,8 +137,8 @@ class ApiKeyAggregateService(
     }
 
     private suspend fun checkRoles(roles: List<PrivilegeIdentifier>) {
-        roles.mapAsync {
-            val privilege = privilegeCoreFinderService.getPrivilege(it)
+        roles.forEachAsync { role ->
+            val privilege = privilegeCoreFinderService.getPrivilege(role)
             privilege.checkTarget(RoleTarget.API_KEY)
         }
     }

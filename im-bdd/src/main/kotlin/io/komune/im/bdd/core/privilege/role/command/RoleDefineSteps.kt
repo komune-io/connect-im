@@ -12,16 +12,20 @@ import io.komune.im.core.privilege.domain.model.RoleTarget
 import io.komune.im.f2.privilege.api.RoleEndpoint
 import io.komune.im.f2.privilege.domain.role.command.RoleDefineCommand
 import java.util.UUID
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.parser.extractList
 
-class RoleDefineSteps: En, ImCucumberStepsDefinition() {
+/** Cucumber steps: role define. */
+class RoleDefineSteps(
+    private val roleEndpoint: RoleEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    @Autowired
-    private lateinit var roleEndpoint: RoleEndpoint
-
-    private lateinit var command: RoleDefineCommand
+    private var commandOrNull: RoleDefineCommand? = null
+    private var command: RoleDefineCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::roleDefineParams)
@@ -59,14 +63,15 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
 
         Then("The role should be defined") {
             step {
-                AssertionBdd.role(keycloakClientProvider.getClient()).assertThatId(command.identifier).hasFields(
+                AssertionBdd.role(keycloakClientProvider.getClient()).assertThatId(command.identifier)
+                    .hasFields { fields -> fields.copy(
                     identifier = command.identifier,
                     description = command.description,
                     targets = command.targets.map { RoleTarget.valueOf(it) },
                     locale = command.locale,
                     bindings = command.bindings.orEmpty().mapKeys { (target) -> RoleTarget.valueOf(target) },
                     permissions = command.permissions.orEmpty()
-                )
+                ) }
             }
         }
     }
@@ -89,10 +94,10 @@ class RoleDefineSteps: En, ImCucumberStepsDefinition() {
                 ?: context.roleIdentifiers.lastUsedOrNull.orRandom(),
             description = entry?.get(RoleDefineParams::description.name) ?: UUID.randomUUID().toString(),
             targets = entry?.extractList<RoleTarget>(RoleDefineParams::targets.name).orEmpty(),
-            locale = entry?.get(RoleDefineParams::locale.name)?.parseJson() ?: emptyMap(),
-            bindings = entry?.get(RoleDefineParams::bindings.name)
-                ?.parseJson<Map<String, List<RoleIdentifier>>>()
-                ?.mapKeys { (key) -> RoleTarget.valueOf(key) },
+            locale = entry?.get(RoleDefineParams::locale.name)?.parseJson<Map<String, String>>().orEmpty(),
+            bindings = entry?.get(RoleDefineParams::bindings.name)?.run {
+                parseJson<Map<String, List<RoleIdentifier>>>().mapKeys { (key) -> RoleTarget.valueOf(key) }
+            },
             permissions = entry?.extractList(RoleDefineParams::permissions.name),
         )
     }

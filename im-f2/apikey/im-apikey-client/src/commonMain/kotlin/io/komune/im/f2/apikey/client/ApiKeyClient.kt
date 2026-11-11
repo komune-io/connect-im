@@ -21,8 +21,6 @@ import io.komune.im.apikey.domain.query.ApiKeyPageFunction
 import io.komune.im.apikey.domain.query.ApiKeyPageQuery
 import io.komune.im.apikey.domain.query.ApiKeyPageResult
 import io.ktor.client.plugins.HttpTimeout
-import kotlin.js.JsExport
-
 
 fun F2Client.apiKeyClient(): F2SupplierSingle<ApiKeyClient> = f2SupplierSingle {
     ApiKeyClient(this)
@@ -36,7 +34,7 @@ fun apiKeyClient(
         F2ClientBuilder.get(urlBase) {
             install(HttpTimeout) {
                 @Suppress("MagicNumber")
-                requestTimeoutMillis = 60000
+                requestTimeoutMillis = 60_000
             }
             install(F2Auth) {
                 this.getAuth = getAuth
@@ -45,10 +43,12 @@ fun apiKeyClient(
     )
 }
 
-@JsExport
 open class ApiKeyClient(private val client: F2Client): ApiKeyApi {
     override fun apiKeyGet(): ApiKeyGetFunction = client.function<ApiKeyGetQuery, ApiKeyGetResult>(this::apiKeyGet.name)
-    override fun apiKeyPage(): ApiKeyPageFunction = client.function<ApiKeyPageQuery, ApiKeyPageResult>(this::apiKeyPage.name)
-    override fun apiKeyCreate(): ApiKeyOrganizationAddFunction = client.function<ApiKeyOrganizationAddKeyCommand, ApiKeyOrganizationAddedEvent>(this::apiKeyCreate.name)
-    override fun apiKeyRemove(): ApikeyRemoveFunction = client.function<ApikeyRemoveCommand, ApikeyRemoveEvent>(this::apiKeyRemove.name)
+    override fun apiKeyPage(): ApiKeyPageFunction =
+        client.function<ApiKeyPageQuery, ApiKeyPageResult>(this::apiKeyPage.name)
+    override fun apiKeyCreate(): ApiKeyOrganizationAddFunction =
+        client.function<ApiKeyOrganizationAddKeyCommand, ApiKeyOrganizationAddedEvent>(this::apiKeyCreate.name)
+    override fun apiKeyRemove(): ApikeyRemoveFunction =
+        client.function<ApikeyRemoveCommand, ApikeyRemoveEvent>(this::apiKeyRemove.name)
 }

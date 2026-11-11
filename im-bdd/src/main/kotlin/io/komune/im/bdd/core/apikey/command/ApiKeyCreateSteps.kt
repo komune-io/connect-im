@@ -10,18 +10,21 @@ import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.apikey.data.apiKey
 import io.komune.im.bdd.core.apikey.data.client
 import io.komune.im.bdd.core.user.data.user
-import org.assertj.core.api.Assertions
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extractList
 
-class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
+/** Cucumber steps: api key create. */
+class ApiKeyCreateSteps(
+    private val apikeyEndpoint: ApiKeyEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    @Autowired
-    private lateinit var apikeyEndpoint: ApiKeyEndpoint
-
-    private lateinit var command: ApiKeyOrganizationAddKeyCommand
+    private var commandOrNull: ApiKeyOrganizationAddKeyCommand? = null
+    private var command: ApiKeyOrganizationAddKeyCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::apiKeyCreateParams)
@@ -92,32 +95,31 @@ class ApiKeyCreateSteps: En, ImCucumberStepsDefinition() {
         val client = keycloakClientProvider.getClient()
         val assertionApiKey = AssertionBdd.apiKey(client)
         val apiKeyId = context.apikeyIds.safeGet(params.identifier)
-        val apiKey = assertionApiKey.findById(apiKeyId)
+        val apiKey = checkNotNull(assertionApiKey.findById(apiKeyId)) { "API key [$apiKeyId] not found" }
 
-        Assertions.assertThat(apiKey).isNotNull
-        assertionApiKey.assertThat(apiKey!!).hasFields(
+        assertionApiKey.assertThat(apiKey).hasFields(
             identifier = params.keyIdentifier ?: apiKey.identifier,
             name = params.name ?: apiKey.name,
             roles = params.roles ?: apiKey.roles,
         )
 
-        AssertionBdd.client(client).assertThatId(apiKeyId).hasFields(
+        AssertionBdd.client(client).assertThatId(apiKeyId).hasFields { fields -> fields.copy(
             identifier = apiKey.identifier,
             isPublicClient = false,
             isDirectAccessGrantsEnabled = false,
             isServiceAccountsEnabled = true,
             isStandardFlowEnabled = false
-        )
+        ) }
 
         val user = client.client(apiKeyId).serviceAccountUser
         val memberOf = params.organization?.let(context.organizationIds::safeGet)
             ?: user.attributes?.get("memberOf")?.firstOrNull()
-        AssertionBdd.user(client).assertThat(user).hasFields(
+        AssertionBdd.user(client).assertThat(user).hasFields { fields -> fields.copy(
             memberOf = memberOf,
             roles = params.roles ?: apiKey.roles,
-            enabled = true,
+            isEnabled = true,
             isApiKey = true
-        )
+        ) }
     }
 
     private fun apiKeyCreateParams(entry: Map<String, String>?): ApiKeyCreateParams {

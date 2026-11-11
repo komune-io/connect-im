@@ -40,6 +40,7 @@ interface PermissionDefineCommandDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class PermissionDefineCommand(
     override val identifier: PermissionIdentifier,
@@ -62,6 +63,7 @@ interface PermissionDefinedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class PermissionDefinedEvent(
     override val identifier: PermissionIdentifier

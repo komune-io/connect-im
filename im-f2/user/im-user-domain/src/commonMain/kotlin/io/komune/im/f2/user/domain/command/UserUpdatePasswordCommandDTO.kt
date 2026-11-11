@@ -38,6 +38,7 @@ interface UserUpdatePasswordCommandDTO: Command {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserUpdatePasswordCommand(
     override val id: UserId,
@@ -60,6 +61,7 @@ interface UserUpdatedPasswordEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserUpdatedPasswordEvent(
     override val id: UserId

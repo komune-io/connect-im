@@ -30,6 +30,7 @@ interface AddressDTO {
     val city: String
 }
 
+@JsExport
 @Serializable
 data class Address(
     override val street: String,

@@ -18,7 +18,7 @@ typealias UserEnableFunction = F2Function<UserEnableCommand, UserEnabledEvent>
 @JsName("UserEnableCommandDTO")
 interface UserEnableCommandDTO {
     /**
-     * User id to enable
+     * User id to enable.
      */
     val id: UserId
 }
@@ -26,6 +26,7 @@ interface UserEnableCommandDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserEnableCommand(
     override val id: UserId
@@ -39,7 +40,7 @@ data class UserEnableCommand(
 @JsName("UserEnabledEventDTO")
 interface UserEnabledEventDTO : Event {
     /**
-     * User id enabled
+     * User id enabled.
      */
     val id: UserId
 }
@@ -47,6 +48,7 @@ interface UserEnabledEventDTO : Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserEnabledEvent(
     override val id: UserId

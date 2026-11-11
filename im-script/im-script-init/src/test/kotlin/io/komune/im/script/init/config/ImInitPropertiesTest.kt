@@ -17,6 +17,7 @@ class ImInitPropertiesTest {
         )
 
         assertThat(properties.rootClient).isEqualTo(credentials)
+        @Suppress("DEPRECATION")
         assertThat(properties.imMasterClient).isNull()
     }
 

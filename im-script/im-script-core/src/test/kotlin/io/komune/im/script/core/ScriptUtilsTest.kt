@@ -1,5 +1,7 @@
 package io.komune.im.script.core
 
+import io.komune.im.commons.utils.ConfigurationException
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,9 +15,9 @@ class ScriptUtilsTest {
     fun `succeeds on the first attempt without retrying`() = runTest {
         var attempts = 0
 
-        val success = retryOnThrow("action", logger = logger) { attempts++ }
+        val isSuccess = retryOnThrow(actionName = "action", logger = logger) { attempts++ }
 
-        assertThat(success).isTrue()
+        assertThat(isSuccess).isTrue()
         assertThat(attempts).isEqualTo(1)
     }
 
@@ -23,12 +25,12 @@ class ScriptUtilsTest {
     fun `retries until the action stops throwing`() = runTest {
         var attempts = 0
 
-        val success = retryOnThrow("action", retryDelayMillis = 0, logger = logger) {
+        val isSuccess = retryOnThrow(actionName = "action", retryDelayMillis = 0, logger = logger) {
             attempts++
             if (attempts < 3) error("not yet")
         }
 
-        assertThat(success).isTrue()
+        assertThat(isSuccess).isTrue()
         assertThat(attempts).isEqualTo(3)
     }
 
@@ -36,12 +38,12 @@ class ScriptUtilsTest {
     fun `gives up after maxRetries and reports failure rather than throwing`() = runTest {
         var attempts = 0
 
-        val success = retryOnThrow("action", maxRetries = 2, retryDelayMillis = 0, logger = logger) {
+        val isSuccess = retryOnThrow(actionName = "action", maxRetries = 2, retryDelayMillis = 0, logger = logger) {
             attempts++
             error("always fails")
         }
 
-        assertThat(success).isFalse()
+        assertThat(isSuccess).isFalse()
         assertThat(attempts).isEqualTo(2)
     }
 
@@ -49,11 +51,32 @@ class ScriptUtilsTest {
     fun `the default retry budget is five attempts`() = runTest {
         var attempts = 0
 
-        retryOnThrow("action", retryDelayMillis = 0, logger = logger) {
+        val isSuccess = retryOnThrow(actionName = "action", retryDelayMillis = 0, logger = logger) {
             attempts++
             error("always fails")
         }
 
+        assertThat(isSuccess).isFalse()
         assertThat(attempts).isEqualTo(5)
+    }
+
+    @Test
+    fun `a configuration error is thrown at once, without a retry`() = runTest {
+        var attempts = 0
+
+        val thrown = try {
+            val isSuccess = retryOnThrow(actionName = "action", retryDelayMillis = 0, logger = logger) {
+                attempts++
+                throw ConfigurationException("missing")
+            }
+            error("returned $isSuccess")
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: ConfigurationException) {
+            e
+        }
+
+        assertThat(thrown).hasMessage("missing")
+        assertThat(attempts).isEqualTo(1)
     }
 }

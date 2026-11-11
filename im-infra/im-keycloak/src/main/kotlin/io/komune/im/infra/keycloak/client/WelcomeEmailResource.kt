@@ -9,12 +9,17 @@ import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
 
 internal interface WelcomeEmailResource {
-    @PUT
     @Path("admin/realms/{realm}/${KeycloakPluginIds.WELCOME_EMAIL}/users/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    fun send(
+    fun user(
         @PathParam("realm") realm: String,
         @PathParam("id") id: String,
+    ): WelcomeEmailUserResource
+}
+
+internal interface WelcomeEmailUserResource {
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    fun send(
         @QueryParam("client_id") clientId: String?,
         @QueryParam("redirect_uri") redirectUri: String?,
         @QueryParam("lifespan") lifespan: Int,

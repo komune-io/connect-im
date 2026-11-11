@@ -27,7 +27,7 @@ class FsConfig {
                 FS - Loggin with space[${im.getAuth().space}]
                      Realm[${im.getAuth().master.realmId}]
                      ClientId[${im.getAuth().master.clientId}]
-             """.trimIndent())
+            """.trimIndent())
             im.getAuth().master
         }
     )

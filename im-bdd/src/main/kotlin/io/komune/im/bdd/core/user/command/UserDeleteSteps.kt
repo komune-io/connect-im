@@ -8,15 +8,20 @@ import io.komune.im.bdd.core.user.data.user
 import io.komune.im.core.user.domain.command.UserCoreDeleteCommand
 import io.komune.im.f2.user.api.UserEndpoint
 import io.komune.im.f2.user.domain.command.UserDeleteCommand
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
-class UserDeleteSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var userEndpoint: UserEndpoint
+/** Cucumber steps: user delete. */
+class UserDeleteSteps(
+    private val userEndpoint: UserEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: UserDeleteCommand
+    private var commandOrNull: UserDeleteCommand? = null
+    private var command: UserDeleteCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::userDeleteParams)
@@ -64,7 +69,7 @@ class UserDeleteSteps: En, ImCucumberStepsDefinition() {
         command = UserCoreDeleteCommand(
             id = context.userIds.safeGet(params.identifier)
         )
-        userEndpoint.userDelete().invoke(command).id
+        val _ = userEndpoint.userDelete().invoke(command)
     }
 
     private fun userDeleteParams(entry: Map<String, String>?): UserDeleteParams {

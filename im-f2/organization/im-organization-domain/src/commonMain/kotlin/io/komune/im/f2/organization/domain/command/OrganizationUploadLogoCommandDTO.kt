@@ -53,7 +53,7 @@ data class OrganizationUploadedLogoEvent(
     override val id: OrganizationId,
 
     /**
-     * Public URL of the newly uploaded logo
+     * Public URL of the newly uploaded logo.
      */
     override val url: String
 ): OrganizationUploadedLogoEventDTO

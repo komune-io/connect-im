@@ -5,6 +5,7 @@ import f2.dsl.cqrs.page.PageDTO
 import f2.dsl.cqrs.page.map
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.RoleIdentifier
+import io.komune.im.core.organization.api.OrganizationCoreFilter
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.organization.domain.model.OrganizationModel
 import io.komune.im.f2.organization.domain.model.Organization
@@ -16,6 +17,7 @@ import io.komune.im.f2.organization.lib.model.toOrganization
 import io.komune.im.f2.organization.lib.model.toRef
 import io.komune.im.f2.organization.lib.service.InseeHttpClient
 import io.komune.im.f2.privilege.lib.PrivilegeFinderService
+import kotlin.coroutines.cancellation.CancellationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -24,17 +26,13 @@ class OrganizationFinderService(
     private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val privilegeFinderService: PrivilegeFinderService
 ) {
-    suspend fun getOrNull(id: OrganizationId): Organization? {
-        return organizationCoreFinderService.getOrNull(id)?.toDTOInternal()
-    }
+    suspend fun getOrNull(id: OrganizationId): Organization? =
+        organizationCoreFinderService.getOrNull(id)?.toDTOInternal()
 
-    suspend fun getRefOrNull(id: OrganizationId): OrganizationRef? {
-        return organizationCoreFinderService.getOrNull(id)?.toRef()
-    }
+    suspend fun getRefOrNull(id: OrganizationId): OrganizationRef? =
+        organizationCoreFinderService.getOrNull(id)?.toRef()
 
-    suspend fun get(id: OrganizationId): Organization {
-        return organizationCoreFinderService.get(id).toDTOInternal()
-    }
+    suspend fun get(id: OrganizationId): Organization = organizationCoreFinderService.get(id).toDTOInternal()
 
     @Suppress("SwallowedException", "TooGenericExceptionCaught")
     suspend fun getFromInsee(siret: String): Organization? {
@@ -42,39 +40,41 @@ class OrganizationFinderService(
             inseeHttpClient?.getOrganizationBySiret(siret)
                 ?.etablissement
                 ?.toOrganization()
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             null
         }
     }
 
     suspend fun page(
-        name: String? = null,
-        roles: Collection<RoleIdentifier>? = null,
-        attributes: Map<String, String>? = null,
-        status: Collection<OrganizationStatus>? = null,
-        withDisabled: Boolean = false,
+        filter: OrganizationFilter = OrganizationFilter(),
         offset: OffsetPagination? = null,
     ): PageDTO<Organization> {
-        val attributesFilters = attributes
+        val attributesFilters = filter.attributes
             .orEmpty()
-            .mapValues { (_, filter) -> ({ attribute: String? -> attribute == filter }) }
+            .mapValues { (_, expected) -> { attribute: String? -> attribute == expected } }
         val additionalAttributesFilters = listOfNotNull(
-            status?.let { OrganizationDTO::status.name to ({ attribute: String? -> attribute in status.map(
-                OrganizationStatus::name) }) }
+            filter.status?.let { status ->
+                val names = status.map(OrganizationStatus::name)
+                OrganizationDTO::status.name to { attribute: String? -> attribute in names }
+            }
         ).toMap()
 
         return organizationCoreFinderService.page(
-            name = name,
-            roles = roles,
-            attributes = attributesFilters + additionalAttributesFilters,
-            withDisabled = withDisabled,
+            OrganizationCoreFilter(
+                name = filter.name,
+                roles = filter.roles,
+                attributes = attributesFilters + additionalAttributesFilters,
+                isDisabledIncluded = filter.isDisabledIncluded,
+            ),
             offset = offset,
         ).map { it.toDTOInternal() }
     }
 
-    suspend fun listRefs(withDisabled: Boolean = false): List<OrganizationRef> {
+    suspend fun listRefs(isDisabledIncluded: Boolean = false): List<OrganizationRef> {
         return organizationCoreFinderService.page(
-            withDisabled = withDisabled,
+            OrganizationCoreFilter(isDisabledIncluded = isDisabledIncluded),
         ).items.map(OrganizationModel::toRef)
     }
 
@@ -82,3 +82,12 @@ class OrganizationFinderService(
         getRole = privilegeFinderService::getRole
     )
 }
+
+/** What [OrganizationFinderService.page] keeps; a null criterion keeps everything. */
+data class OrganizationFilter(
+    val name: String? = null,
+    val roles: Collection<RoleIdentifier>? = null,
+    val attributes: Map<String, String>? = null,
+    val status: Collection<OrganizationStatus>? = null,
+    val isDisabledIncluded: Boolean = false,
+)

@@ -7,6 +7,6 @@ import s2.bdd.data.parser.EntryParser
 @Configuration
 class RoleTargetParser: EntryParser<RoleTarget>(
     output = RoleTarget::class,
-    parseErrorMessage = "Expected ${RoleTarget::class.simpleName} value",
+    parseErrorMessage = "Expected RoleTarget value",
     parser = RoleTarget::valueOf
 )

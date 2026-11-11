@@ -10,18 +10,20 @@ import io.komune.im.bdd.core.space.data.space
 import io.komune.im.commons.model.SpaceIdentifier
 import io.komune.im.f2.space.api.SpaceEndpoint
 import io.komune.im.f2.space.domain.command.SpaceDefineCommand
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 
-class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
+/** Cucumber steps: space create. */
+class SpaceCreateSteps(
+    private val imConfig: IMProperties,
+    private val spaceEndpoint: SpaceEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    @Autowired
-    private lateinit var imConfig: IMProperties
-
-    @Autowired
-    private lateinit var spaceEndpoint: SpaceEndpoint
-
-    private lateinit var command: SpaceDefineCommand
+    private var commandOrNull: SpaceDefineCommand? = null
+    private var command: SpaceDefineCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::spaceCreateParams)
@@ -63,7 +65,9 @@ class SpaceCreateSteps: En, ImCucumberStepsDefinition() {
                     val keycloakClient = keycloakClientProvider.getClient()
                     AssertionBdd.space(keycloakClient).exists(command.identifier)
 
-                    val spaceMasterClient = keycloakClient.getClientByIdentifier("${command.identifier}-realm")!!
+                    val spaceMasterClient = checkNotNull(
+                        keycloakClient.getClientByIdentifier("${command.identifier}-realm")
+                    ) { "Client [${command.identifier}-realm] not found" }
                     val spaceMasterClientRoles = keycloakClient.client(spaceMasterClient.id).roles().list()
                     AssertionBdd.client(keycloakClient).assertThatIdentifier(imConfig.keycloak.clientId)
                         .hasClientRoles(spaceMasterClient.id, spaceMasterClientRoles.map { it.name })

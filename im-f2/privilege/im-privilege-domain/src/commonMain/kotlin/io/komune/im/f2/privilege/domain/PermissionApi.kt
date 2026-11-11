@@ -11,13 +11,13 @@ import io.komune.im.f2.privilege.domain.permission.query.PermissionListFunction
 interface PermissionApi: PermissionCommandApi, PermissionQueryApi
 
 interface PermissionCommandApi {
-    /** Create or update a permission */
+    /** Create or update a permission. */
     fun permissionDefine(): PermissionDefineFunction
 }
 
 interface PermissionQueryApi {
-    /** Get a permission by identifier */
+    /** Get a permission by identifier. */
     fun permissionGet(): PermissionGetFunction
-    /** Get a list of permissions */
+    /** Get a list of permissions. */
     fun permissionList(): PermissionListFunction
 }

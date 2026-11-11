@@ -32,6 +32,7 @@ interface UserGetQueryDTO: Query {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserGetQuery(
     override val id: UserId
@@ -52,6 +53,7 @@ interface UserGetResultDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserGetResult(
     override val item: User?

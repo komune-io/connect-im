@@ -28,6 +28,7 @@ interface OrganizationGetFromInseeQueryDTO: Query {
  * @d2 query
  * @parent [OrganizationGetFromInseeFunction]
  */
+@JsExport
 @Serializable
 data class OrganizationGetFromInseeQuery(
     /**
@@ -47,6 +48,7 @@ interface OrganizationGetFromInseeResultDTO: Event {
  * @d2 result
  * @parent [OrganizationGetFromInseeFunction]
  */
+@JsExport
 @Serializable
 data class OrganizationGetFromInseeResult(
     /**

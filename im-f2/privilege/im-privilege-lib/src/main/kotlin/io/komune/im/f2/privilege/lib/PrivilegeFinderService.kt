@@ -33,32 +33,21 @@ class PrivilegeFinderService(
             .toDTOCached()
     }
 
-    suspend fun getRoleOrNull(identifier: RoleIdentifier): Role? {
-        return getPrivilegeOrNull(identifier)
-            ?.takeIf { it is Role } as Role?
-    }
+    suspend fun getRoleOrNull(identifier: RoleIdentifier): Role? = getPrivilegeOrNull(identifier) as? Role
 
-    suspend fun getRole(identifier: RoleIdentifier): Role {
-        return getRoleOrNull(identifier) ?: throw NotFoundException("Role", identifier)
-    }
+    suspend fun getRole(identifier: RoleIdentifier): Role =
+        getRoleOrNull(identifier) ?: throw NotFoundException(name = "Role", id = identifier)
 
-    suspend fun getPermissionOrNull(identifier: PermissionIdentifier): Permission? {
-        return getPrivilegeOrNull(identifier)
-            ?.takeIf { it is Permission } as Permission?
-    }
+    suspend fun getPermissionOrNull(identifier: PermissionIdentifier): Permission? =
+        getPrivilegeOrNull(identifier) as? Permission
 
-    suspend fun getPermission(identifier: PermissionIdentifier): Permission {
-        return getPermissionOrNull(identifier) ?: throw NotFoundException("Permission", identifier)
-    }
+    suspend fun getPermission(identifier: PermissionIdentifier): Permission =
+        getPermissionOrNull(identifier) ?: throw NotFoundException(name = "Permission", id = identifier)
 
-    suspend fun getFeatureOrNull(identifier: FeatureIdentifier): Feature? {
-        return getPrivilegeOrNull(identifier)
-            ?.takeIf { it is Feature } as Feature?
-    }
+    suspend fun getFeatureOrNull(identifier: FeatureIdentifier): Feature? = getPrivilegeOrNull(identifier) as? Feature
 
-    suspend fun getFeature(identifier: FeatureIdentifier): Feature {
-        return getFeatureOrNull(identifier) ?: throw NotFoundException("Feature", identifier)
-    }
+    suspend fun getFeature(identifier: FeatureIdentifier): Feature =
+        getFeatureOrNull(identifier) ?: throw NotFoundException(name = "Feature", id = identifier)
 
     suspend fun listRoles(
         targets: Collection<RoleTarget>? = null

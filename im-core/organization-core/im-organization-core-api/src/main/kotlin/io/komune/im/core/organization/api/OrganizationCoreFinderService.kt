@@ -30,19 +30,13 @@ class OrganizationCoreFinderService : CoreService(CacheName.Organization) {
         }
     }
 
-    suspend fun get(id: OrganizationId): OrganizationModel {
-        return getOrNull(id) ?: throw NotFoundException("Organization", id)
-    }
+    suspend fun get(id: OrganizationId): OrganizationModel =
+        getOrNull(id) ?: throw NotFoundException(name = "Organization", id = id)
 
     suspend fun page(
-        ids: Collection<OrganizationId>? = null,
-        identifier: String? = null,
-        name: String? = null,
-        roles: Collection<RoleIdentifier>? = null,
-        attributes: Map<String, (String?) -> Boolean>? = null,
-        withDisabled: Boolean = false,
+        filter: OrganizationCoreFilter = OrganizationCoreFilter(),
         offset: OffsetPagination? = null,
-    ): PageDTO<OrganizationModel> {
+    ): PageDTO<OrganizationModel> = with(filter) {
         val client = keycloakClientProvider.getClient()
 
         val compositeRoles = client.roles().list().associate { role ->
@@ -52,16 +46,29 @@ class OrganizationCoreFinderService : CoreService(CacheName.Organization) {
 
         val groups = client.groups()
             .groups("", 0, Int.MAX_VALUE, false)
+            .asSequence()
             .map(GroupRepresentation::toOrganization)
             .filter { organization ->
                 organization.id.matches(ids)
-                    && (withDisabled || organization.enabled)
+                    && (isDisabledIncluded || organization.enabled)
                     && (attributes == null || attributes.all { (key, match) -> match(organization.attributes[key]) })
                     && (identifier == null || organization.identifier.contains(identifier, true))
                     && (name == null || organization.displayName.contains(name, true))
-                    && (organization.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles))
-            }.sortedByDescending(OrganizationModel::creationDate)
+                    && organization.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles)
+            }
+            .sortedByDescending(OrganizationModel::creationDate)
+            .toList()
 
-        return groups.page(offset)
+        groups.page(offset)
     }
 }
+
+/** What [OrganizationCoreFinderService.page] keeps; a null criterion keeps everything. */
+data class OrganizationCoreFilter(
+    val ids: Collection<OrganizationId>? = null,
+    val identifier: String? = null,
+    val name: String? = null,
+    val roles: Collection<RoleIdentifier>? = null,
+    val attributes: Map<String, (String?) -> Boolean>? = null,
+    val isDisabledIncluded: Boolean = false,
+)

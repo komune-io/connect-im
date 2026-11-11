@@ -4,6 +4,7 @@ import f2.dsl.cqrs.Command
 import f2.dsl.cqrs.Event
 import f2.dsl.fnc.F2Function
 import io.komune.im.commons.model.Address
+import io.komune.im.commons.model.AddressDTO
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.model.UserId
@@ -25,6 +26,7 @@ typealias UserCreateFunction = F2Function<UserCreateCommand, UserCreatedEvent>
  */
 @JsExport
 @JsName("UserCreateCommandDTO")
+@Suppress("ComplexInterface") // wire contract: one field per JSON property clients send
 interface UserCreateCommandDTO: Command {
     /**
      * @ref [io.komune.im.f2.user.domain.model.UserDTO.email]
@@ -52,7 +54,7 @@ interface UserCreateCommandDTO: Command {
      * @ref [io.komune.im.f2.user.domain.model.UserDTO.address]
      * @default null
      */
-    val address: Address?
+    val address: AddressDTO?
 
     /**
      * @ref [io.komune.im.f2.user.domain.model.UserDTO.phone]
@@ -96,6 +98,7 @@ interface UserCreateCommandDTO: Command {
      * @example true
      * @default false
      */
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val sendResetPassword: Boolean
 
     /**
@@ -103,12 +106,14 @@ interface UserCreateCommandDTO: Command {
      * @example true
      * @default true
      */
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val sendVerifyEmail: Boolean
 }
 
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserCreateCommand(
     override val email: String,
@@ -141,6 +146,7 @@ interface UserCreatedEventDTO: Event {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class UserCreatedEvent(
     override val id: UserId

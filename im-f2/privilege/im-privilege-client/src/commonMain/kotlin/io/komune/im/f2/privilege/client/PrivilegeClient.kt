@@ -38,7 +38,6 @@ import io.komune.im.f2.privilege.domain.role.query.RoleListFunction
 import io.komune.im.f2.privilege.domain.role.query.RoleListQuery
 import io.komune.im.f2.privilege.domain.role.query.RoleListResult
 import io.ktor.client.plugins.HttpTimeout
-import kotlin.js.JsExport
 
 fun F2Client.privilegeClient(): F2SupplierSingle<PrivilegeClient> = f2SupplierSingle {
     PrivilegeClient(this)
@@ -52,7 +51,7 @@ fun privilegeClient(
         F2ClientBuilder.get(urlBase) {
             install(HttpTimeout) {
                 @Suppress("MagicNumber")
-                requestTimeoutMillis = 60000
+                requestTimeoutMillis = 60_000
             }
             install(F2Auth) {
                 this.getAuth = getAuth
@@ -61,17 +60,23 @@ fun privilegeClient(
     )
 }
 
-@JsExport
 open class PrivilegeClient(private val client: F2Client): FeatureApi, RoleApi, PermissionApi {
-    override fun featureDefine(): FeatureDefineFunction = client.function<FeatureDefineCommand, FeatureDefinedEvent>(this::featureDefine.name)
-    override fun featureGet(): FeatureGetFunction = client.function<FeatureGetQuery, FeatureGetResult>(this::featureGet.name)
-    override fun featureList(): FeatureListFunction = client.function<FeatureListQuery, FeatureListResult>(this::featureList.name)
+    override fun featureDefine(): FeatureDefineFunction =
+        client.function<FeatureDefineCommand, FeatureDefinedEvent>(this::featureDefine.name)
+    override fun featureGet(): FeatureGetFunction =
+        client.function<FeatureGetQuery, FeatureGetResult>(this::featureGet.name)
+    override fun featureList(): FeatureListFunction =
+        client.function<FeatureListQuery, FeatureListResult>(this::featureList.name)
 
-    override fun permissionDefine(): PermissionDefineFunction = client.function<PermissionDefineCommand, PermissionDefinedEvent>(this::permissionDefine.name)
-    override fun permissionGet(): PermissionGetFunction = client.function<PermissionGetQuery, PermissionGetResult>(this::permissionGet.name)
-    override fun permissionList(): PermissionListFunction = client.function<PermissionListQuery, PermissionListResult>(this::permissionList.name)
+    override fun permissionDefine(): PermissionDefineFunction =
+        client.function<PermissionDefineCommand, PermissionDefinedEvent>(this::permissionDefine.name)
+    override fun permissionGet(): PermissionGetFunction =
+        client.function<PermissionGetQuery, PermissionGetResult>(this::permissionGet.name)
+    override fun permissionList(): PermissionListFunction =
+        client.function<PermissionListQuery, PermissionListResult>(this::permissionList.name)
 
-    override fun roleDefine(): RoleDefineFunction = client.function<RoleDefineCommand, RoleDefinedEvent>(this::roleDefine.name)
+    override fun roleDefine(): RoleDefineFunction =
+        client.function<RoleDefineCommand, RoleDefinedEvent>(this::roleDefine.name)
     override fun roleGet(): RoleGetFunction = client.function<RoleGetQuery, RoleGetResult>(this::roleGet.name)
     override fun roleList(): RoleListFunction = client.function<RoleListQuery, RoleListResult>(this::roleList.name)
 }

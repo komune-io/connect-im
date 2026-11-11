@@ -18,9 +18,10 @@ class AssertionPermission(
     override suspend fun findById(id: PermissionIdentifier): RoleRepresentation? = client.role(id).toRepresentation()
     override suspend fun assertThat(entity: RoleRepresentation) = PermissionAssert(entity)
 
-    inner class PermissionAssert(
+    class PermissionAssert(
         private val permission: RoleRepresentation
     ) {
+        @IgnorableReturnValue
         fun hasFields(
             id: PermissionId = permission.id,
             identifier: PermissionIdentifier = permission.name,
@@ -34,6 +35,7 @@ class AssertionPermission(
             Assertions.assertThat(permission.description).isEqualTo(description)
         }
 
+        @IgnorableReturnValue
         fun matches(permission: Permission) = hasFields(
             id = permission.id,
             identifier = permission.identifier,

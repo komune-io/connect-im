@@ -29,49 +29,60 @@ class AssertionOrganization(
     }
     override suspend fun assertThat(entity: GroupRepresentation) = OrganizationAssert(entity)
 
-    inner class OrganizationAssert(
+    class OrganizationAssert(
         private val group: GroupRepresentation
     ) {
         private val groupAttributes = group.attributes.orEmpty()
         private val singleAttributes = groupAttributes
-            .mapValues { (_, values) -> values.firstOrNull() }
-            .filterValues { !it.isNullOrBlank() } as Map<String, String>
+            .mapNotNull { (key, values) -> values.firstOrNull()?.takeIf { it.isNotBlank() }?.let { key to it } }
+            .toMap()
 
         private val groupSiret: String? = singleAttributes[Organization::siret.name]
         private val groupDescription: String? = singleAttributes[Organization::description.name]
         private val groupAddress: Address? = singleAttributes[Organization::address.name]?.parseJson()
         private val groupWebsite: String? = singleAttributes[Organization::website.name]
-        private val groupEnabled: Boolean = singleAttributes[Organization::enabled.name].toBoolean()
+        private val isGroupEnabled: Boolean = singleAttributes[Organization::enabled.name].toBoolean()
         private val groupCreationDate: Long = singleAttributes[Organization::creationDate.name]?.toLong() ?: 0
         private val groupStatus: String? = singleAttributes[Organization::status.name]
 
-        fun hasFields(
-            id: OrganizationId = group.id,
-            siret: String? = groupSiret,
-            name: String = group.name,
-            description: String? = groupDescription,
-            address: Address? = groupAddress,
-            website: String? = groupWebsite,
-            attributes: Map<String, String> = singleAttributes,
-            roles: List<String>? = group.realmRoles,
-            enabled: Boolean = groupEnabled,
-            creationDate: Long = groupCreationDate,
-            status: String? = groupStatus,
-        ) = also {
-            Assertions.assertThat(group.id).isEqualTo(id)
-            Assertions.assertThat(groupSiret).isEqualTo(siret)
-            Assertions.assertThat(group.name).isEqualTo(name)
-            Assertions.assertThat(groupDescription).isEqualTo(description)
-            Assertions.assertThat(groupAddress).isEqualTo(address)
-            Assertions.assertThat(groupWebsite).isEqualTo(website)
-            Assertions.assertThat(singleAttributes).containsAllEntriesOf(attributes)
-            Assertions.assertThat(roles).isEqualTo(roles)
-            Assertions.assertThat(groupEnabled).isEqualTo(enabled)
-            Assertions.assertThat(groupCreationDate).isEqualTo(creationDate)
-            Assertions.assertThat(groupStatus).isNotNull().isEqualTo(status)
+        /** What the asserted entity holds, as fields to compare. */
+        fun actual() = OrganizationFields(
+            id = group.id,
+            siret = groupSiret,
+            name = group.name,
+            description = groupDescription,
+            address = groupAddress,
+            website = groupWebsite,
+            attributes = singleAttributes,
+            roles = group.realmRoles,
+            isEnabled = isGroupEnabled,
+            creationDate = groupCreationDate,
+            status = groupStatus,
+        )
+
+        /** Asserts the entity holds [expected], its own fields by default. */
+        @IgnorableReturnValue
+        fun hasFields(expected: OrganizationFields = actual()) = also {
+            Assertions.assertThat(group.id).isEqualTo(expected.id)
+            Assertions.assertThat(groupSiret).isEqualTo(expected.siret)
+            Assertions.assertThat(group.name).isEqualTo(expected.name)
+            Assertions.assertThat(groupDescription).isEqualTo(expected.description)
+            Assertions.assertThat(groupAddress).isEqualTo(expected.address)
+            Assertions.assertThat(groupWebsite).isEqualTo(expected.website)
+            Assertions.assertThat(singleAttributes).containsAllEntriesOf(expected.attributes)
+            Assertions.assertThat(group.realmRoles).isEqualTo(expected.roles)
+            Assertions.assertThat(isGroupEnabled).isEqualTo(expected.isEnabled)
+            Assertions.assertThat(groupCreationDate).isEqualTo(expected.creationDate)
+            Assertions.assertThat(groupStatus).isNotNull().isEqualTo(expected.status)
         }
 
-        fun matches(organization: Organization) = hasFields(
+        /** Compares the entity with its own fields as [change] rewrites them. */
+        @IgnorableReturnValue
+        inline fun hasFields(change: (OrganizationFields) -> OrganizationFields) = hasFields(change(actual()))
+
+        /** Asserts the entity holds the fields of the given model. */
+        @IgnorableReturnValue
+        fun matches(organization: Organization) = hasFields { fields -> fields.copy(
             id = organization.id,
             siret = organization.siret,
             name = organization.name,
@@ -80,11 +91,12 @@ class AssertionOrganization(
             website = organization.website,
             attributes = organization.attributes,
             roles = organization.roles.map(Role::identifier),
-            enabled = organization.enabled,
+            isEnabled = organization.enabled,
             creationDate = organization.creationDate,
             status = organization.status
-        )
+        ) }
 
+        @IgnorableReturnValue
         fun isAnonym() = also {
             Assertions.assertThat(group.name).isEqualTo("anonymous")
             Assertions.assertThat(groupDescription).isNull()
@@ -93,3 +105,18 @@ class AssertionOrganization(
         }
     }
 }
+
+/** The fields an organization assertion compares. */
+data class OrganizationFields(
+    val id: OrganizationId,
+    val siret: String?,
+    val name: String,
+    val description: String?,
+    val address: Address?,
+    val website: String?,
+    val attributes: Map<String, String>,
+    val roles: List<String>?,
+    val isEnabled: Boolean,
+    val creationDate: Long,
+    val status: String?,
+)

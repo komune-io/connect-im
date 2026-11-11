@@ -8,7 +8,6 @@ import io.komune.im.f2.privilege.domain.role.model.RoleDTO
 import kotlin.js.JsExport
 import kotlinx.serialization.Serializable
 
-
 /**
  * Representation of an organization.
  * @D2 model
@@ -16,6 +15,7 @@ import kotlinx.serialization.Serializable
  * @order 10
  */
 @JsExport
+@Suppress("ComplexInterface") // wire contract: one field per JSON property clients read
 interface OrganizationDTO {
     /**
      * Identifier of the organization.
@@ -72,10 +72,11 @@ interface OrganizationDTO {
      * Status of the organization. See [OrganizationStatus].
      * @example "VALIDATED"
      */
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val enabled: Boolean
 
     /**
-     * Specifies if the organization is enabled or not
+     * Specifies if the organization is enabled or not.
      * @example true
      */
     val status: String
@@ -102,6 +103,7 @@ interface OrganizationDTO {
 /**
  * @d2 inherit
  */
+@JsExport
 @Serializable
 data class Organization(
     override val id: OrganizationId,

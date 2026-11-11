@@ -13,8 +13,6 @@ class InseeClientConfig {
     @Bean
     fun inseeHttpClient(
         inseeProperties: InseeProperties?
-    ): InseeHttpClient? {
-        return inseeProperties?.let { InseeHttpClient(inseeProperties) }
-    }
+    ): InseeHttpClient? = inseeProperties?.let { InseeHttpClient(inseeProperties) }
 
 }

@@ -11,16 +11,21 @@ import io.komune.im.f2.organization.api.OrganizationEndpoint
 import io.komune.im.f2.organization.domain.command.OrganizationCreateCommand
 import io.komune.im.f2.organization.domain.model.OrganizationStatus
 import java.util.UUID
-import org.springframework.beans.factory.annotation.Autowired
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 import s2.bdd.data.parser.extract
 
-class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
-    @Autowired
-    private lateinit var organizationEndpoint: OrganizationEndpoint
+/** Cucumber steps: organization create. */
+class OrganizationCreateSteps(
+    private val organizationEndpoint: OrganizationEndpoint,
+): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: OrganizationCreateCommand
+    private var commandOrNull: OrganizationCreateCommand? = null
+    private var command: OrganizationCreateCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::organizationInitParams)
@@ -60,16 +65,16 @@ class OrganizationCreateSteps: En, ImCucumberStepsDefinition() {
             step {
                 val organizationId = context.organizationIds.lastUsed
                 val client = keycloakClientProvider.getClient()
-                AssertionBdd.organization(client).assertThatId(organizationId).hasFields(
+                AssertionBdd.organization(client).assertThatId(organizationId).hasFields { fields -> fields.copy(
                     siret = command.siret,
                     name = command.name,
                     description = command.description,
                     address = command.address,
                     website = command.website,
                     roles = command.roles,
-                    attributes = command.attributes ?: emptyMap(),
+                    attributes = command.attributes.orEmpty(),
                     status = command.status
-                )
+                ) }
             }
         }
     }
