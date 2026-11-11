@@ -64,7 +64,7 @@ class OrganizationDeleteSteps(
         command = OrganizationCoreDeleteCommand(
             id = context.organizationIds.safeGet(params.identifier)
         )
-        organizationEndpoint.organizationDelete().invoke(command).id
+        val _ = organizationEndpoint.organizationDelete().invoke(command)
     }
 
     private fun organizationDeleteParams(entry: Map<String, String>?): OrganizationDeleteParams {

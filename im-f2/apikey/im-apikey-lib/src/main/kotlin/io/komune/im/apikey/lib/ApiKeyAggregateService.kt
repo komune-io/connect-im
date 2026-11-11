@@ -10,7 +10,7 @@ import io.komune.im.apikey.lib.service.ORGANIZATION_FIELD_API_KEYS
 import io.komune.im.apikey.lib.service.apiKeys
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.PrivilegeIdentifier
-import io.komune.im.commons.utils.mapAsync
+import io.komune.im.commons.utils.forEachAsync
 import io.komune.im.commons.utils.toJson
 import io.komune.im.core.client.api.ClientCoreAggregateService
 import io.komune.im.core.client.domain.command.ClientCreateCommand
@@ -137,7 +137,7 @@ class ApiKeyAggregateService(
     }
 
     private suspend fun checkRoles(roles: List<PrivilegeIdentifier>) {
-        roles.mapAsync {
+        roles.forEachAsync {
             val privilege = privilegeCoreFinderService.getPrivilege(it)
             privilege.checkTarget(RoleTarget.API_KEY)
         }

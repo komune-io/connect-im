@@ -80,6 +80,7 @@ class AssertionUser(
         )
 
         /** Asserts the entity holds [expected], its own fields by default. */
+        @IgnorableReturnValue
         fun hasFields(expected: UserFields = actual()) = also {
             Assertions.assertThat(userMemberOf).isEqualTo(expected.memberOf)
             Assertions.assertThat(user.email.orEmpty()).isEqualTo(expected.email)
@@ -97,8 +98,10 @@ class AssertionUser(
         }
 
         /** Compares the entity with its own fields as [change] rewrites them. */
+        @IgnorableReturnValue
         inline fun hasFields(change: (UserFields) -> UserFields) = hasFields(change(actual()))
 
+        @IgnorableReturnValue
         fun isAnonymized() = also {
             Assertions.assertThat(user.email).endsWith("@anonymous.com")
             Assertions.assertThat(user.firstName).isEqualTo("anonymous")
@@ -107,6 +110,7 @@ class AssertionUser(
         }
 
         /** Asserts the entity holds the fields of the given model. */
+        @IgnorableReturnValue
         fun matches(other: User) = hasFields { fields -> fields.copy(
             memberOf = other.memberOf?.id,
             email = other.email,

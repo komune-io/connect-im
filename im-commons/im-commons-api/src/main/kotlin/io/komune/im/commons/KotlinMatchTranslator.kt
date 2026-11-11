@@ -34,7 +34,7 @@ fun <E, F> Collection<E>.match(matcher: Match<F>?, getField: (E) -> Collection<F
 
 private fun <F> match(field: F, matcher: Match<F>): Boolean {
     return when {
-        matcher.negative -> !match(field, matcher.not())
+        matcher.isNegative -> !match(field, matcher.not())
         else -> when (matcher) {
             is CollectionMatch -> match(field, matcher)
             is ExactMatch -> match(field, matcher)

@@ -1,7 +1,6 @@
 {
   "name": "connect-im-im-f2-apikey-im-apikey-client",
   "version": "0.0.0",
-  "main": "kotlin/connect-im-im-f2-apikey-im-apikey-client.mjs",
   "types": "kotlin/connect-im-im-f2-apikey-im-apikey-client.d.mts",
   "devDependencies": {},
   "dependencies": {

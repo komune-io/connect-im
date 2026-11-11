@@ -49,11 +49,12 @@ class ScriptUtilsTest {
     fun `the default retry budget is five attempts`() = runTest {
         var attempts = 0
 
-        retryOnThrow("action", retryDelayMillis = 0, logger = logger) {
+        val success = retryOnThrow("action", retryDelayMillis = 0, logger = logger) {
             attempts++
             error("always fails")
         }
 
+        assertThat(success).isFalse()
         assertThat(attempts).isEqualTo(5)
     }
 }

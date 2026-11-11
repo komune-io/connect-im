@@ -21,6 +21,7 @@ class AssertionFeature(
     inner class FeatureAssert(
         private val feature: RoleRepresentation
     ) {
+        @IgnorableReturnValue
         fun hasFields(
             id: FeatureId = feature.id,
             identifier: FeatureIdentifier = feature.name,
@@ -34,6 +35,7 @@ class AssertionFeature(
             Assertions.assertThat(feature.description).isEqualTo(description)
         }
 
+        @IgnorableReturnValue
         fun matches(feature: Feature) = hasFields(
             id = feature.id,
             identifier = feature.identifier,

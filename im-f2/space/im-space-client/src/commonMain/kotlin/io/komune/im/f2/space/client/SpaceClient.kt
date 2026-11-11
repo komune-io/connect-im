@@ -21,7 +21,6 @@ import io.komune.im.f2.space.domain.query.SpacePageFunction
 import io.komune.im.f2.space.domain.query.SpacePageQuery
 import io.komune.im.f2.space.domain.query.SpacePageResult
 import io.ktor.client.plugins.HttpTimeout
-import kotlin.js.JsExport
 
 fun F2Client.spaceClient(): F2SupplierSingle<SpaceClient> = f2SupplierSingle {
     SpaceClient(this)
@@ -44,7 +43,6 @@ fun spaceClient(
     )
 }
 
-@JsExport
 open class SpaceClient(private val client: F2Client): SpaceApi {
     override fun spaceDefine(): SpaceDefineFunction =
         client.function<SpaceDefineCommand, SpaceDefinedEvent>(this::spaceDefine.name)

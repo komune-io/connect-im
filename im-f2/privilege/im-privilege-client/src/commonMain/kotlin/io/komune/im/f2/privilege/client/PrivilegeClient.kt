@@ -38,7 +38,6 @@ import io.komune.im.f2.privilege.domain.role.query.RoleListFunction
 import io.komune.im.f2.privilege.domain.role.query.RoleListQuery
 import io.komune.im.f2.privilege.domain.role.query.RoleListResult
 import io.ktor.client.plugins.HttpTimeout
-import kotlin.js.JsExport
 
 fun F2Client.privilegeClient(): F2SupplierSingle<PrivilegeClient> = f2SupplierSingle {
     PrivilegeClient(this)
@@ -61,7 +60,6 @@ fun privilegeClient(
     )
 }
 
-@JsExport
 open class PrivilegeClient(private val client: F2Client): FeatureApi, RoleApi, PermissionApi {
     override fun featureDefine(): FeatureDefineFunction =
         client.function<FeatureDefineCommand, FeatureDefinedEvent>(this::featureDefine.name)

@@ -90,7 +90,7 @@ class OrganizationUpdateSteps(
             attributes = params.attributes,
             status = params.status.name
         )
-        organizationEndpoint.organizationUpdate().invoke(command).id
+        val _ = organizationEndpoint.organizationUpdate().invoke(command)
     }
 
     private fun organizationUpdateParams(

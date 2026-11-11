@@ -1,7 +1,6 @@
 {
   "name": "connect-im-im-f2-privilege-im-privilege-client",
   "version": "0.0.0",
-  "main": "kotlin/connect-im-im-f2-privilege-im-privilege-client.mjs",
   "types": "kotlin/connect-im-im-f2-privilege-im-privilege-client.d.mts",
   "devDependencies": {},
   "dependencies": {

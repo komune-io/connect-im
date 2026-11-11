@@ -61,7 +61,7 @@ class UserUpdateEmailSteps(
             email = params.email
         )
 
-        userEndpoint.userUpdateEmail().invoke(command).id
+        val _ = userEndpoint.userUpdateEmail().invoke(command)
     }
 
     private fun userUpdateEmailParams(entry: Map<String, String>?): UserUpdateEmailParams {

@@ -4,7 +4,7 @@ import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.privilege.permission.data.permission
-import io.komune.im.commons.utils.mapAsync
+import io.komune.im.commons.utils.forEachAsync
 import io.komune.im.f2.privilege.domain.permission.model.Permission
 import org.assertj.core.api.Assertions
 import s2.bdd.assertion.AssertionBdd
@@ -49,7 +49,7 @@ class PermissionQuerySteps: En, ImCucumberStepsDefinition() {
         Assertions.assertThat(fetchedIdentifiers).containsExactlyInAnyOrderElementsOf(expectedIdentifiers)
 
         val permissionAsserter = AssertionBdd.permission(keycloakClientProvider.getClient())
-        fetchedPermissions.mapAsync { permission ->
+        fetchedPermissions.forEachAsync { permission ->
             permissionAsserter.assertThatId(permission.identifier).matches(permission)
         }
     }

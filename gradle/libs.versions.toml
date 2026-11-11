@@ -4,9 +4,6 @@ connect = "0.28.0-SNAPSHOT"
 keycloak = "26.1.4"
 keycloakAdmin = "26.0.4"
 freemarker = "2.3.32"
-paketoBuilder = "0.0.211"
-paketoBuilderDigest = "sha256:8da9782949bb9f39f4b9d8079216531fe2791286fe33bbf450e533949cfbcc91"
-paketoHealthChecker = "2.14.2"
 shadowJar = "9.6.1"
 
 [libraries]

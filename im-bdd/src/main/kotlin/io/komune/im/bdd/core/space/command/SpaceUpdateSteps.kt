@@ -25,7 +25,7 @@ class SpaceUpdateSteps(
 
         When("I update the space with locales {string}") { locales: String ->
             step {
-                SpaceDefineCommand(
+                val _ = SpaceDefineCommand(
                     identifier = context.spaceIdentifiers.lastUsed,
                     displayName = null,
                     smtp = null,

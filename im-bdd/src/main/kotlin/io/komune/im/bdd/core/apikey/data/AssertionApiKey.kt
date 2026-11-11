@@ -48,6 +48,7 @@ class AssertionApiKey(
     inner class ApiKeyAssert(
         private val apiKey: ApiKeyModel
     ) {
+        @IgnorableReturnValue
         fun hasFields(
             id: ApiKeyId = apiKey.id,
             identifier: ApiKeyIdentifier = apiKey.identifier,
@@ -60,6 +61,7 @@ class AssertionApiKey(
             Assertions.assertThat(roles).isEqualTo(roles)
         }
 
+        @IgnorableReturnValue
         fun matches(apiKey: ApiKey) = hasFields(
             id = apiKey.id,
             identifier = apiKey.identifier,

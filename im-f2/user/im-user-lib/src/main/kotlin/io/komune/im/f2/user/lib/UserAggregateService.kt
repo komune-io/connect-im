@@ -6,7 +6,7 @@ import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.PrivilegeIdentifier
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.utils.EmptyAddress
-import io.komune.im.commons.utils.mapAsync
+import io.komune.im.commons.utils.forEachAsync
 import io.komune.im.commons.utils.toJson
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.privilege.api.PrivilegeCoreFinderService
@@ -178,8 +178,10 @@ class UserAggregateService(
 
 
     suspend fun disableMultiFactorAuthentication(command: UserDisableMfaCommand): UserDisabledMfavent {
-        userCoreAggregateService.removeCredentials(UserCoreRemoveCredentialsCommand(command.id, CredentialType.OTP))
-        return UserDisabledMfavent(command.id)
+        val event = userCoreAggregateService.removeCredentials(
+            UserCoreRemoveCredentialsCommand(command.id, CredentialType.OTP)
+        )
+        return UserDisabledMfavent(event.id)
     }
 
     private suspend fun checkOrganizationExist(organizationId: OrganizationId?) {
@@ -187,7 +189,7 @@ class UserAggregateService(
     }
 
     private suspend fun checkRoles(roles: List<PrivilegeIdentifier>) {
-        roles.mapAsync {
+        roles.forEachAsync {
             val privilege = privilegeCoreFinderService.getPrivilege(it)
             privilege.checkTarget(RoleTarget.USER)
         }

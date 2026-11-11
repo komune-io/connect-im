@@ -21,6 +21,7 @@ class AssertionPermission(
     inner class PermissionAssert(
         private val permission: RoleRepresentation
     ) {
+        @IgnorableReturnValue
         fun hasFields(
             id: PermissionId = permission.id,
             identifier: PermissionIdentifier = permission.name,
@@ -34,6 +35,7 @@ class AssertionPermission(
             Assertions.assertThat(permission.description).isEqualTo(description)
         }
 
+        @IgnorableReturnValue
         fun matches(permission: Permission) = hasFields(
             id = permission.id,
             identifier = permission.identifier,

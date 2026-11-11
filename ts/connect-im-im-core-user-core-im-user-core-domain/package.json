@@ -1,7 +1,6 @@
 {
   "name": "connect-im-im-core-user-core-im-user-core-domain",
   "version": "0.0.0",
-  "main": "kotlin/connect-im-im-core-user-core-im-user-core-domain.mjs",
   "types": "kotlin/connect-im-im-core-user-core-im-user-core-domain.d.mts",
   "devDependencies": {},
   "dependencies": {

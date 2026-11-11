@@ -36,7 +36,6 @@ import io.komune.im.f2.organization.domain.query.OrganizationRefListFunction
 import io.komune.im.f2.organization.domain.query.OrganizationRefListQuery
 import io.komune.im.f2.organization.domain.query.OrganizationRefListResult
 import io.ktor.client.plugins.HttpTimeout
-import kotlin.js.JsExport
 
 fun F2Client.organizationClient(): F2SupplierSingle<OrganizationClient> = f2SupplierSingle {
     OrganizationClient(this)
@@ -60,7 +59,6 @@ fun organizationClient(
     )
 }
 
-@JsExport
 open class OrganizationClient(private val client: F2Client) : OrganizationApi {
 
     override fun organizationGet(): OrganizationGetFunction =

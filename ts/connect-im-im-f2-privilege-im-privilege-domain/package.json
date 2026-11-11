@@ -1,7 +1,6 @@
 {
   "name": "connect-im-im-f2-privilege-im-privilege-domain",
   "version": "0.0.0",
-  "main": "kotlin/connect-im-im-f2-privilege-im-privilege-domain.mjs",
   "types": "kotlin/connect-im-im-f2-privilege-im-privilege-domain.d.mts",
   "devDependencies": {},
   "dependencies": {

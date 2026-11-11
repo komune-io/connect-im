@@ -21,7 +21,6 @@ import io.komune.im.apikey.domain.query.ApiKeyPageFunction
 import io.komune.im.apikey.domain.query.ApiKeyPageQuery
 import io.komune.im.apikey.domain.query.ApiKeyPageResult
 import io.ktor.client.plugins.HttpTimeout
-import kotlin.js.JsExport
 
 
 fun F2Client.apiKeyClient(): F2SupplierSingle<ApiKeyClient> = f2SupplierSingle {
@@ -45,7 +44,6 @@ fun apiKeyClient(
     )
 }
 
-@JsExport
 open class ApiKeyClient(private val client: F2Client): ApiKeyApi {
     override fun apiKeyGet(): ApiKeyGetFunction = client.function<ApiKeyGetQuery, ApiKeyGetResult>(this::apiKeyGet.name)
     override fun apiKeyPage(): ApiKeyPageFunction =

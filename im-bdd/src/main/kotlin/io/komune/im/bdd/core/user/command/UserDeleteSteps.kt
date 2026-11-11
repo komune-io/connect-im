@@ -64,7 +64,7 @@ class UserDeleteSteps(
         command = UserCoreDeleteCommand(
             id = context.userIds.safeGet(params.identifier)
         )
-        userEndpoint.userDelete().invoke(command).id
+        val _ = userEndpoint.userDelete().invoke(command)
     }
 
     private fun userDeleteParams(entry: Map<String, String>?): UserDeleteParams {

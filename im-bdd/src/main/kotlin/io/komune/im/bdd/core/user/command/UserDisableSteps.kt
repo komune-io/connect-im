@@ -75,7 +75,7 @@ class UserDisableSteps(
             anonymize = params.anonymize,
             attributes = null
         )
-        userEndpoint.userDisable().invoke(command).id
+        val _ = userEndpoint.userDisable().invoke(command)
     }
 
     private fun userDisableParams(entry: Map<String, String>?): UserDisableParams {

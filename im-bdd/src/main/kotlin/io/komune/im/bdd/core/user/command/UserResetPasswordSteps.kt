@@ -46,7 +46,7 @@ class UserResetPasswordSteps(
         command = UserResetPasswordCommand(
             id = context.userIds.safeGet(params.identifier)
         )
-        userEndpoint.userResetPassword().invoke(command).id
+        val _ = userEndpoint.userResetPassword().invoke(command)
     }
 
     private fun userResetPasswordParams(entry: Map<String, String>?): UserResetPasswordParams {

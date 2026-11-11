@@ -1,7 +1,6 @@
 {
   "name": "connect-im-im-core-client-core-im-client-core-domain",
   "version": "0.0.0",
-  "main": "kotlin/connect-im-im-core-client-core-im-client-core-domain.mjs",
   "types": "kotlin/connect-im-im-core-client-core-im-client-core-domain.d.mts",
   "devDependencies": {},
   "dependencies": {

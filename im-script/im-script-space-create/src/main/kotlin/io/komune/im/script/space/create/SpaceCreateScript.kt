@@ -80,12 +80,12 @@ class SpaceCreateScript(
 
     private suspend fun configureRealm(properties: SpaceCreateProperties) {
         logger.info("Initializing IM features...")
-        initImFeatures()
-        logger.info("Initialized IM features")
+        val features = initImFeatures()
+        logger.info("Initialized IM features: $features")
 
         logger.info("Initializing IM permissions...")
-        initImPermissions()
-        logger.info("Initialized IM permissions")
+        val permissions = initImPermissions()
+        logger.info("Initialized IM permissions: $permissions")
 
         logger.info("Granting default IM permissions to every user...")
         initDefaultRolePermissions()
@@ -100,8 +100,8 @@ class SpaceCreateScript(
         logger.info("Initialized Event Webhook")
 
         logger.info("Initializing Space Root Client...")
-        properties.rootClient?.initImClient(properties.spaceIdentifier)
-        logger.info("Initialized Space Root Client")
+        val rootClient = properties.rootClient?.initImClient(properties.spaceIdentifier)
+        logger.info("Initialized Space Root Client: $rootClient")
 
         properties.adminUsers?.forEach { adminUser ->
             logger.info("Initializing Admin user [${adminUser.email}]...")
@@ -117,7 +117,7 @@ class SpaceCreateScript(
             logger.info("Space[${properties.spaceIdentifier}] already created")
         } else {
             logger.info("Space create: $${properties}")
-            spaceServices.aggregate.define(
+            val _ = spaceServices.aggregate.define(
                 SpaceDefineCommand(
                     identifier = properties.spaceIdentifier,
                     displayName = properties.displayName,

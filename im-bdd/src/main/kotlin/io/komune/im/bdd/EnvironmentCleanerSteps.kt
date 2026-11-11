@@ -1,7 +1,7 @@
 package io.komune.im.bdd
 
 import io.cucumber.java8.En
-import io.komune.im.commons.utils.mapAsync
+import io.komune.im.commons.utils.forEachAsync
 import io.komune.im.infra.keycloak.client.KeycloakClient
 
 class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
@@ -30,13 +30,13 @@ class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun KeycloakClient.cleanKeycloakUsers() {
-        users().list().mapAsync { user ->
+        users().list().forEachAsync { user ->
             user(user.id).remove()
         }
     }
 
     private suspend fun KeycloakClient.cleanKeycloakOrganizations() {
-        groups().groups().mapAsync { group ->
+        groups().groups().forEachAsync { group ->
             group(group.id).remove()
         }
     }
@@ -50,7 +50,7 @@ class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun KeycloakClient.cleanKeycloakClients() {
-        clients().findAll().mapAsync { clientObj ->
+        clients().findAll().forEachAsync { clientObj ->
             if (clientObj.clientId.startsWith("tr-")) {
                 client(clientObj.id).remove()
             }
@@ -58,7 +58,7 @@ class EnvironmentCleanerSteps: En, ImCucumberStepsDefinition() {
     }
 
     private suspend fun KeycloakClient.cleanKeycloakSpaces() {
-        context.spaceIdentifiers.items.mapAsync {
+        context.spaceIdentifiers.items.forEachAsync {
             realm(it).remove()
         }
     }

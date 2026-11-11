@@ -50,7 +50,6 @@ import io.komune.im.f2.user.domain.query.UserPageFunction
 import io.komune.im.f2.user.domain.query.UserPageQuery
 import io.komune.im.f2.user.domain.query.UserPageResult
 import io.ktor.client.plugins.HttpTimeout
-import kotlin.js.JsExport
 
 fun F2Client.userClient(): F2SupplierSingle<UserClient> = f2SupplierSingle {
     UserClient(this)
@@ -74,7 +73,6 @@ fun userClient(
 }
 
 /** The user queries over F2. */
-@JsExport
 open class UserQueryClient(private val client: F2Client): UserQueryApi {
     override fun userGet(): UserGetFunction = client.function<UserGetQuery, UserGetResult>(this::userGet.name)
     override fun userGetByEmail(): UserGetByEmailFunction =
@@ -85,7 +83,6 @@ open class UserQueryClient(private val client: F2Client): UserQueryApi {
 }
 
 /** The user commands over F2. */
-@JsExport
 open class UserCommandClient(private val client: F2Client): UserCommandApi {
     override fun userCreate(): UserCreateFunction =
         client.function<UserCreateCommand, UserCreatedEvent>(this::userCreate.name)
@@ -108,7 +105,6 @@ open class UserCommandClient(private val client: F2Client): UserCommandApi {
 }
 
 /** Every user function over F2: the queries of [UserQueryClient] and the commands of [UserCommandClient]. */
-@JsExport
 open class UserClient(client: F2Client): UserApi,
     UserQueryApi by UserQueryClient(client),
     UserCommandApi by UserCommandClient(client)

@@ -9,6 +9,7 @@ import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.RoleIdentifier
 import io.komune.im.commons.utils.ParserUtils
 import io.komune.im.commons.utils.mapAsync
+import io.komune.im.commons.utils.mapNotNullAsync
 import io.komune.im.f2.organization.domain.command.OrganizationCreateCommand
 import io.komune.im.f2.organization.domain.model.OrganizationStatus
 import io.komune.im.f2.organization.lib.OrganizationFilter
@@ -66,18 +67,23 @@ class SpaceConfigScript(
 
     suspend fun config(
         auth: AuthSubRealm, properties: SpaceConfigProperties
-    ): Any = withContext(AuthContext(auth)) {
+    ): Unit = withContext(AuthContext(auth)) {
 
         logger.info("Verify Realm[${auth.space}] exists and update it if needed...")
         properties.verifyAndUpdateSpace()
 
-        initFeatures(properties.features)
-        initPermissions(properties.permissions)
-        initRoles(properties.roles)
-        initWebClients(properties.webClients)
-        initAppClients(properties.appClients)
-        initOrganizations(properties.organizations)
-        initUsers(properties.users)
+        val features = initFeatures(properties.features)
+        val permissions = initPermissions(properties.permissions)
+        val roles = initRoles(properties.roles)
+        val webClients = initWebClients(properties.webClients)
+        val appClients = initAppClients(properties.appClients)
+        val organizations = initOrganizations(properties.organizations)
+        val users = initUsers(properties.users)
+        logger.info(
+            "Realm[${auth.space}] configured: ${features.size} features, ${permissions.size} permissions, " +
+                "${roles.size} roles, ${webClients.size} web clients, ${appClients.size} app clients, " +
+                "${organizations.size} organizations, ${users.size} users"
+        )
     }
 
     private suspend fun initFeatures(
@@ -176,7 +182,7 @@ class SpaceConfigScript(
     private suspend fun initOrganizations(
         organizations: List<OrganizationData>?
     ) = organizations.initNotEmpty("Organizations") { items ->
-        items.mapAsync { organization ->
+        items.mapNotNullAsync { organization ->
             val organizationId = try {
                 OrganizationCreateCommand(
                     siret = organization.siret,
@@ -195,13 +201,15 @@ class SpaceConfigScript(
                     .page(OrganizationFilter(name = organization.name))
                     .items
                 if (organizationsCreated.isEmpty() || organizationsCreated.size > 1) {
-                    return@mapAsync
+                    return@mapNotNullAsync null
                 }
                 organizationsCreated.first().id
             }
 
-            initUsers(organization.users, organization, organizationId)
-            initApiKeys(organization.apiKeys, organization, organizationId)
+            val users = initUsers(organization.users, organization, organizationId)
+            val apiKeys = initApiKeys(organization.apiKeys, organization, organizationId)
+            logger.info("Organization[${organization.name}]: ${users.size} users, ${apiKeys.size} API keys")
+            organizationId
         }
     }
 

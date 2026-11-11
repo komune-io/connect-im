@@ -1,4 +1,7 @@
 pluginManagement {
+    // One fixers version for the build: the catalogue's, which the settings plugin also checks.
+    val fixersVersion = settingsDir.resolve("gradle/libs.versions.toml").readLines()
+        .firstNotNullOf { Regex("^fixers\\s*=\\s*\"([^\"]+)\"").find(it)?.groupValues?.get(1) }
     repositories {
         gradlePluginPortal()
         mavenCentral()
@@ -8,27 +11,13 @@ pluginManagement {
             mavenContent { snapshotsOnly() }
         }
     }
+    plugins {
+        id("io.komune.fixers.gradle.settings") version fixersVersion
+    }
 }
 
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-        maven {
-            url = uri("https://central.sonatype.com/repository/maven-snapshots")
-            content { includeGroupByRegex("io\\.komune(\\..*)?") }
-            mavenContent { snapshotsOnly() }
-        }
-    }
-    versionCatalogs {
-        val fixersVersion = file("gradle/libs.versions.toml")
-            .readLines()
-            .firstNotNullOfOrNull {
-                Regex("^fixers\\s*=\\s*\"([^\"]+)\"").find(it)?.groupValues?.get(1)
-            } ?: error("fixers version not found in gradle/libs.versions.toml")
-        create("catalogue") {
-            from("io.komune.f2:f2-gradle-catalog:$fixersVersion")
-        }
-    }
+plugins {
+    id("io.komune.fixers.gradle.settings")
 }
 
 rootProject.name = "connect-im"

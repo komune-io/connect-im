@@ -57,6 +57,7 @@ class AssertionRole(
         )
 
         /** Asserts the entity holds [expected], its own fields by default. */
+        @IgnorableReturnValue
         fun hasFields(expected: RoleFields = actual()) = also {
             Assertions.assertThat(
                 role.attributes?.get(Role::type.name)?.firstOrNull()
@@ -71,6 +72,7 @@ class AssertionRole(
         }
 
         /** Compares the entity with its own fields as [change] rewrites them. */
+        @IgnorableReturnValue
         inline fun hasFields(change: (RoleFields) -> RoleFields) = hasFields(change(actual()))
 
         suspend fun matches(role: Role): Unit = coroutineScope {

@@ -1,7 +1,6 @@
 {
   "name": "connect-im-im-f2-space-im-space-client",
   "version": "0.0.0",
-  "main": "kotlin/connect-im-im-f2-space-im-space-client.mjs",
   "types": "kotlin/connect-im-im-f2-space-im-space-client.d.mts",
   "devDependencies": {},
   "dependencies": {

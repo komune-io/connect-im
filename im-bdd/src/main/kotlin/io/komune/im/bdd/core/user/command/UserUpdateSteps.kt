@@ -112,7 +112,7 @@ class UserUpdateSteps(
             attributes = params.attributes,
         )
 
-        userEndpoint.userUpdate().invoke(command).id
+        val _ = userEndpoint.userUpdate().invoke(command)
     }
 
     private fun userUpdateParams(entry: Map<String, String>?): UserUpdateParams {

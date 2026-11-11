@@ -41,7 +41,7 @@ class UserPoliciesEnforcer(
     /** Checks the authed user may update [cmd]'s user, its organization and its roles. */
     suspend fun enforceUpdate(cmd: UserUpdateCommand) = enforceAuthed { _ ->
         checkUpdate(cmd.id)
-        enforceMemberOf(cmd)
+        val _ = enforceMemberOf(cmd)
         enforceRoles(cmd)
     }
     suspend fun checkConfigureMfa(userId: UserId) = checkAuthed("configure mfa") { authedUser ->

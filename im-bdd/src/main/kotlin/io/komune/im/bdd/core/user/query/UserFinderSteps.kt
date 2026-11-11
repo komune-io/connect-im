@@ -4,7 +4,7 @@ import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import io.komune.im.bdd.ImCucumberStepsDefinition
 import io.komune.im.bdd.core.user.data.user
-import io.komune.im.commons.utils.mapAsync
+import io.komune.im.commons.utils.forEachAsync
 import io.komune.im.f2.user.domain.model.User
 import org.assertj.core.api.Assertions
 import s2.bdd.assertion.AssertionBdd
@@ -54,7 +54,7 @@ class UserFinderSteps: En, ImCucumberStepsDefinition() {
 
         val client = keycloakClientProvider.getClient()
         val userAsserter = AssertionBdd.user(client)
-        context.fetched.users.mapAsync { user ->
+        context.fetched.users.forEachAsync { user ->
             userAsserter.assertThatId(user.id).matches(user)
         }
     }

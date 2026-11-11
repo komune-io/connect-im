@@ -18,9 +18,7 @@ class SimpleCacheTest {
         var fetches = 0
         val cache = SimpleCache<String, String> { fetches++; "value" }
 
-        cache.get("a")
-        cache.get("a")
-        cache.get("a")
+        repeat(3) { assertThat(cache.get("a")).isEqualTo("value") }
 
         assertThat(fetches).isEqualTo(1)
     }
@@ -30,8 +28,8 @@ class SimpleCacheTest {
         var fetches = 0
         val cache = SimpleCache<String, String> { fetches++; it }
 
-        cache.get("a")
-        cache.get("b")
+        assertThat(cache.get("a")).isEqualTo("a")
+        assertThat(cache.get("b")).isEqualTo("b")
 
         assertThat(fetches).isEqualTo(2)
     }
@@ -51,7 +49,7 @@ class SimpleCacheTest {
     fun `register overwrites an already cached value`() = runTest {
         val cache = SimpleCache<String, String> { "fetched" }
 
-        cache.get("a")
+        assertThat(cache.get("a")).isEqualTo("fetched")
         cache.register("a", "replaced")
 
         assertThat(cache.get("a")).isEqualTo("replaced")

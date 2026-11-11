@@ -6,6 +6,7 @@ import io.komune.im.commons.auth.AuthenticationProvider
 import io.komune.im.commons.model.OrganizationId
 import io.komune.im.commons.model.PrivilegeIdentifier
 import io.komune.im.commons.utils.EmptyAddress
+import io.komune.im.commons.utils.forEachAsync
 import io.komune.im.core.organization.api.OrganizationCoreAggregateService
 import io.komune.im.core.organization.api.OrganizationCoreFinderService
 import io.komune.im.core.organization.domain.command.OrganizationCoreDefineCommand
@@ -35,8 +36,6 @@ import io.komune.im.f2.user.domain.command.UserUpdateCommand
 import io.komune.im.f2.user.lib.UserAggregateService
 import io.komune.im.f2.user.lib.UserFilter
 import io.komune.im.f2.user.lib.UserFinderService
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import org.springframework.stereotype.Service
 
@@ -161,13 +160,9 @@ class OrganizationAggregateService(
         return organizationCoreAggregateService.delete(command)
     }
 
-    private suspend fun checkRoles(roles: List<PrivilegeIdentifier>) = coroutineScope {
-        roles.map {
-            async {
-                val privilege = privilegeCoreFinderService.getPrivilege(it)
-                privilege.checkTarget(RoleTarget.ORGANIZATION)
-            }
-        }.awaitAll()
+    private suspend fun checkRoles(roles: List<PrivilegeIdentifier>) = roles.forEachAsync {
+        val privilege = privilegeCoreFinderService.getPrivilege(it)
+        privilege.checkTarget(RoleTarget.ORGANIZATION)
     }
 
     /**
@@ -177,7 +172,7 @@ class OrganizationAggregateService(
     private suspend fun refreshUsersOf(id: OrganizationId) {
         val users = userFinderService.page(UserFilter(organizationIds = listOf(id)))
         users.items.forEach { user ->
-            userAggregateService.update(
+            val _ = userAggregateService.update(
                 UserUpdateCommand(
                     id = user.id,
                     givenName = user.givenName,

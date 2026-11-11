@@ -1,7 +1,6 @@
 {
   "name": "connect-im-im-f2-user-im-user-client",
   "version": "0.0.0",
-  "main": "kotlin/connect-im-im-f2-user-im-user-client.mjs",
   "types": "kotlin/connect-im-im-f2-user-im-user-client.d.mts",
   "devDependencies": {},
   "dependencies": {

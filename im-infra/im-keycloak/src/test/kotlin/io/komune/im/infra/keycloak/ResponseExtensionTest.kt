@@ -77,7 +77,7 @@ class ResponseExtensionTest {
 
     @Test
     fun `handleResponseError throws instead of returning a bogus id on failure`() {
-        assertThatThrownBy { response(409, body = "exists").handleResponseError("user") }
+        assertThatThrownBy { val id = response(409, body = "exists").handleResponseError("user"); error("returned $id") }
             .isInstanceOf(ConflictException::class.java)
     }
 }

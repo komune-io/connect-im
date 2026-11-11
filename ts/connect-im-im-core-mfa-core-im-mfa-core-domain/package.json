@@ -1,7 +1,6 @@
 {
   "name": "connect-im-im-core-mfa-core-im-mfa-core-domain",
   "version": "0.0.0",
-  "main": "kotlin/connect-im-im-core-mfa-core-im-mfa-core-domain.mjs",
   "types": "kotlin/connect-im-im-core-mfa-core-im-mfa-core-domain.d.mts",
   "devDependencies": {},
   "dependencies": {

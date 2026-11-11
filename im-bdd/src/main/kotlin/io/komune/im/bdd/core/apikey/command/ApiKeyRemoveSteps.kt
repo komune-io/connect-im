@@ -73,7 +73,7 @@ class ApiKeyRemoveSteps(
             id = context.apikeyIds[params.identifier] ?: params.identifier
         )
         context.apikeyIds[params.identifier] = null
-        apikeyEndpoint.apiKeyRemove().invoke(command)
+        val _ = apikeyEndpoint.apiKeyRemove().invoke(command)
     }
 
     private suspend fun assertApiKey(id: ApiKeyId) {
