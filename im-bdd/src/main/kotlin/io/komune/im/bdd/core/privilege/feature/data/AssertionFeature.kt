@@ -18,7 +18,7 @@ class AssertionFeature(
     override suspend fun findById(id: FeatureIdentifier): RoleRepresentation? = client.role(id).toRepresentation()
     override suspend fun assertThat(entity: RoleRepresentation) = FeatureAssert(entity)
 
-    inner class FeatureAssert(
+    class FeatureAssert(
         private val feature: RoleRepresentation
     ) {
         @IgnorableReturnValue

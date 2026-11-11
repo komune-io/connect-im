@@ -30,9 +30,8 @@ class OrganizationCoreFinderService : CoreService(CacheName.Organization) {
         }
     }
 
-    suspend fun get(id: OrganizationId): OrganizationModel {
-        return getOrNull(id) ?: throw NotFoundException("Organization", id)
-    }
+    suspend fun get(id: OrganizationId): OrganizationModel =
+        getOrNull(id) ?: throw NotFoundException(name = "Organization", id = id)
 
     suspend fun page(
         filter: OrganizationCoreFilter = OrganizationCoreFilter(),
@@ -47,15 +46,18 @@ class OrganizationCoreFinderService : CoreService(CacheName.Organization) {
 
         val groups = client.groups()
             .groups("", 0, Int.MAX_VALUE, false)
+            .asSequence()
             .map(GroupRepresentation::toOrganization)
             .filter { organization ->
                 organization.id.matches(ids)
-                    && (withDisabled || organization.enabled)
+                    && (isDisabledIncluded || organization.enabled)
                     && (attributes == null || attributes.all { (key, match) -> match(organization.attributes[key]) })
                     && (identifier == null || organization.identifier.contains(identifier, true))
                     && (name == null || organization.displayName.contains(name, true))
-                    && (organization.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles))
-            }.sortedByDescending(OrganizationModel::creationDate)
+                    && organization.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles)
+            }
+            .sortedByDescending(OrganizationModel::creationDate)
+            .toList()
 
         groups.page(offset)
     }
@@ -68,5 +70,5 @@ data class OrganizationCoreFilter(
     val name: String? = null,
     val roles: Collection<RoleIdentifier>? = null,
     val attributes: Map<String, (String?) -> Boolean>? = null,
-    val withDisabled: Boolean = false,
+    val isDisabledIncluded: Boolean = false,
 )

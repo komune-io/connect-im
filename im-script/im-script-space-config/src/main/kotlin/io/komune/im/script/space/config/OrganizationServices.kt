@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 
 /** The organization services the space configuration writes and reads with, API keys included. */
 @Service
-class OrganizationServices(
+data class OrganizationServices(
     val aggregate: OrganizationAggregateService,
     val finder: OrganizationFinderService,
     val apiKeys: ApiKeyAggregateService,

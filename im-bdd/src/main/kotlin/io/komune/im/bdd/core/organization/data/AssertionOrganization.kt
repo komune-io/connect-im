@@ -29,7 +29,7 @@ class AssertionOrganization(
     }
     override suspend fun assertThat(entity: GroupRepresentation) = OrganizationAssert(entity)
 
-    inner class OrganizationAssert(
+    class OrganizationAssert(
         private val group: GroupRepresentation
     ) {
         private val groupAttributes = group.attributes.orEmpty()
@@ -41,7 +41,7 @@ class AssertionOrganization(
         private val groupDescription: String? = singleAttributes[Organization::description.name]
         private val groupAddress: Address? = singleAttributes[Organization::address.name]?.parseJson()
         private val groupWebsite: String? = singleAttributes[Organization::website.name]
-        private val groupEnabled: Boolean = singleAttributes[Organization::enabled.name].toBoolean()
+        private val isGroupEnabled: Boolean = singleAttributes[Organization::enabled.name].toBoolean()
         private val groupCreationDate: Long = singleAttributes[Organization::creationDate.name]?.toLong() ?: 0
         private val groupStatus: String? = singleAttributes[Organization::status.name]
 
@@ -55,7 +55,7 @@ class AssertionOrganization(
             website = groupWebsite,
             attributes = singleAttributes,
             roles = group.realmRoles,
-            enabled = groupEnabled,
+            isEnabled = isGroupEnabled,
             creationDate = groupCreationDate,
             status = groupStatus,
         )
@@ -71,7 +71,7 @@ class AssertionOrganization(
             Assertions.assertThat(groupWebsite).isEqualTo(expected.website)
             Assertions.assertThat(singleAttributes).containsAllEntriesOf(expected.attributes)
             Assertions.assertThat(group.realmRoles).isEqualTo(expected.roles)
-            Assertions.assertThat(groupEnabled).isEqualTo(expected.enabled)
+            Assertions.assertThat(isGroupEnabled).isEqualTo(expected.isEnabled)
             Assertions.assertThat(groupCreationDate).isEqualTo(expected.creationDate)
             Assertions.assertThat(groupStatus).isNotNull().isEqualTo(expected.status)
         }
@@ -91,7 +91,7 @@ class AssertionOrganization(
             website = organization.website,
             attributes = organization.attributes,
             roles = organization.roles.map(Role::identifier),
-            enabled = organization.enabled,
+            isEnabled = organization.enabled,
             creationDate = organization.creationDate,
             status = organization.status
         ) }
@@ -116,7 +116,7 @@ data class OrganizationFields(
     val website: String?,
     val attributes: Map<String, String>,
     val roles: List<String>?,
-    val enabled: Boolean,
+    val isEnabled: Boolean,
     val creationDate: Long,
     val status: String?,
 )

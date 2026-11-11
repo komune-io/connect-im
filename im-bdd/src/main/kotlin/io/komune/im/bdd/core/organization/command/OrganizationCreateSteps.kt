@@ -20,7 +20,12 @@ class OrganizationCreateSteps(
     private val organizationEndpoint: OrganizationEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: OrganizationCreateCommand
+    private var commandOrNull: OrganizationCreateCommand? = null
+    private var command: OrganizationCreateCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::organizationInitParams)

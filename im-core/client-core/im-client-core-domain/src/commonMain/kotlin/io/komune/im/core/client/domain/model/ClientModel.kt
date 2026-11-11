@@ -8,6 +8,7 @@ data class ClientModel(
     val identifier: ClientIdentifier,
     val isDirectAccessGrantsEnabled: Boolean,
     val isServiceAccountsEnabled: Boolean,
+    @Suppress("BooleanPropertyNaming") // mirrors Keycloak's ClientRepresentation.authorizationServicesEnabled
     val authorizationServicesEnabled: Boolean,
     val isStandardFlowEnabled: Boolean,
     val isPublicClient: Boolean,

@@ -19,20 +19,6 @@ import org.keycloak.representations.IDToken
 class UserRealmRoleFeatureMapper : AbstractOIDCProtocolMapper(), OIDCAccessTokenMapper, OIDCIDTokenMapper,
     UserInfoTokenMapper {
 
-    companion object {
-        const val PROVIDER_ID = KeycloakPluginIds.MAPPER_REALM_ROLE_FEATURE
-
-        private val CONFIG_PROPERTIES = mutableListOf(
-            ProviderConfigProperty().also {
-                it.name = ProtocolMapperUtils.MULTIVALUED
-                it.label = ProtocolMapperUtils.MULTIVALUED_LABEL
-                it.helpText = ProtocolMapperUtils.MULTIVALUED_HELP_TEXT
-                it.type = ProviderConfigProperty.BOOLEAN_TYPE
-                it.defaultValue = "true"
-            }
-        ).also { OIDCAttributeMapperHelper.addAttributeConfig(it, UserRealmRoleFeatureMapper::class.java) }
-    }
-
     override fun getId() = PROVIDER_ID
     override fun getHelpText() = "Map user realm roles to a token claim, filtered by feature flags."
     override fun getDisplayCategory() = TOKEN_MAPPER_CATEGORY
@@ -91,5 +77,19 @@ class UserRealmRoleFeatureMapper : AbstractOIDCProtocolMapper(), OIDCAccessToken
         return roleFeatureRules.any {
             it.all { feature -> feature in features }
         }
+    }
+
+    companion object {
+        const val PROVIDER_ID = KeycloakPluginIds.MAPPER_REALM_ROLE_FEATURE
+
+        private val CONFIG_PROPERTIES = mutableListOf(
+            ProviderConfigProperty().also { property ->
+                property.name = ProtocolMapperUtils.MULTIVALUED
+                property.label = ProtocolMapperUtils.MULTIVALUED_LABEL
+                property.helpText = ProtocolMapperUtils.MULTIVALUED_HELP_TEXT
+                property.type = ProviderConfigProperty.BOOLEAN_TYPE
+                property.defaultValue = "true"
+            }
+        ).also { OIDCAttributeMapperHelper.addAttributeConfig(it, UserRealmRoleFeatureMapper::class.java) }
     }
 }

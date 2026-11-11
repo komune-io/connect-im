@@ -9,7 +9,5 @@ import org.springframework.context.annotation.Configuration
 class ScriptApplication
 
 fun main(vararg args: String) {
-	SpringApplication(ScriptApplication::class.java).run {
-		run(*args)
-	}
+    SpringApplication(ScriptApplication::class.java).run(*args).use { }
 }

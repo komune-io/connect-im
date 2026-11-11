@@ -14,7 +14,7 @@ class NotFoundExceptionAssertionSteps: En, S2CucumberStepsDefinition() {
 
         Then("The {string} should not be found") { objectName: String ->
             val lastUsedKey = context.entityLists[objectName]?.lastUsedKey
-            assert(lastUsedKey.toString())
+            assert(lastUsedKey?.toString() ?: "null")
         }
 
     }

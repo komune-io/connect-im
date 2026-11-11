@@ -45,7 +45,7 @@ class AssertionApiKey(
     }
     override suspend fun assertThat(entity: ApiKeyModel) = ApiKeyAssert(entity)
 
-    inner class ApiKeyAssert(
+    class ApiKeyAssert(
         private val apiKey: ApiKeyModel
     ) {
         @IgnorableReturnValue

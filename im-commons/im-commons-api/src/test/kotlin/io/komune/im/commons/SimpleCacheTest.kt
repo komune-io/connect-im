@@ -26,7 +26,7 @@ class SimpleCacheTest {
     @Test
     fun `different keys fetch independently`() = runTest {
         var fetches = 0
-        val cache = SimpleCache<String, String> { fetches++; it }
+        val cache = SimpleCache<String, String> { key -> fetches++; key }
 
         assertThat(cache.get("a")).isEqualTo("a")
         assertThat(cache.get("b")).isEqualTo("b")
@@ -39,7 +39,7 @@ class SimpleCacheTest {
         var fetches = 0
         val cache = SimpleCache<String, String> { fetches++; "fetched" }
 
-        cache.register("a", "registered")
+        cache.register(key = "a", value = "registered")
 
         assertThat(cache.get("a")).isEqualTo("registered")
         assertThat(fetches).isZero()
@@ -50,7 +50,7 @@ class SimpleCacheTest {
         val cache = SimpleCache<String, String> { "fetched" }
 
         assertThat(cache.get("a")).isEqualTo("fetched")
-        cache.register("a", "replaced")
+        cache.register(key = "a", value = "replaced")
 
         assertThat(cache.get("a")).isEqualTo("replaced")
     }

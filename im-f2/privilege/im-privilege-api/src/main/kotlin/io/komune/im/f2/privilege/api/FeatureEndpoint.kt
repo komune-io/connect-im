@@ -26,15 +26,14 @@ class FeatureEndpoint(
     override fun featureGet(): FeatureGetFunction = f2Function { query ->
         logger.info("featureGet: $query")
         privilegePoliciesEnforcer.checkGet()
-        privilegeFinderService.getFeatureOrNull(query.identifier)
-            .let(::FeatureGetResult)
+        FeatureGetResult(privilegeFinderService.getFeatureOrNull(query.identifier))
     }
 
     @Bean
     override fun featureList(): FeatureListFunction = f2Function { query ->
         logger.info("featureList: $query")
         privilegePoliciesEnforcer.checkList()
-        privilegeFinderService.listFeatures().let(::FeatureListResult)
+        FeatureListResult(privilegeFinderService.listFeatures())
     }
 
     @Bean

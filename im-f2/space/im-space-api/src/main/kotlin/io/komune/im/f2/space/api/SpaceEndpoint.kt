@@ -30,7 +30,7 @@ class SpaceEndpoint(
     override fun spaceGet(): SpaceGetFunction = f2Function { query ->
         logger.info("spaceGet: $query")
         spacePoliciesEnforcer.checkGet(query.id)
-        spaceFinderService.getOrNull(query.id).let(::SpaceGetResult)
+        SpaceGetResult(spaceFinderService.getOrNull(query.id))
     }
 
     @Bean

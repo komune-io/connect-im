@@ -20,17 +20,13 @@ class UserFinderService(
     private val userCoreFinderService: UserCoreFinderService,
     private val userToDTOTransformer: UserToDTOTransformer
 ) {
-    suspend fun getOrNull(id: UserId): User? {
-        return userCoreFinderService.getOrNull(id).let { userToDTOTransformer.transform(it) }
-    }
+    suspend fun getOrNull(id: UserId): User? =
+        userCoreFinderService.getOrNull(id).let { userToDTOTransformer.transform(it) }
 
-    suspend fun get(id: UserId): User {
-        return userCoreFinderService.get(id).let { userToDTOTransformer.transform(it) }
-    }
+    suspend fun get(id: UserId): User = userCoreFinderService.get(id).let { userToDTOTransformer.transform(it) }
 
-    suspend fun getByEmailOrNull(email: String): User? {
-        return userCoreFinderService.getByEmailOrNull(email).let { userToDTOTransformer.transform(it) }
-    }
+    suspend fun getByEmailOrNull(email: String): User? =
+        userCoreFinderService.getByEmailOrNull(email).let { userToDTOTransformer.transform(it) }
 
     suspend fun page(
         filter: UserFilter = UserFilter(),
@@ -50,7 +46,7 @@ class UserFinderService(
                 email = filter.email,
                 roles = filter.roles,
                 attributes = filter.attributes,
-                withDisabled = filter.withDisabled,
+                isDisabledIncluded = filter.isDisabledIncluded,
             ),
             offset = offset
         ).let { userToDTOTransformer.transform(it) }
@@ -66,5 +62,5 @@ data class UserFilter(
     val email: String? = null,
     val roles: Collection<RoleIdentifier>? = null,
     val attributes: Map<String, String>? = null,
-    val withDisabled: Boolean = false,
+    val isDisabledIncluded: Boolean = false,
 )

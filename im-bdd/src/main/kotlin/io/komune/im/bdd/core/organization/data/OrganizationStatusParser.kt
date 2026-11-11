@@ -7,6 +7,6 @@ import s2.bdd.data.parser.EntryParser
 @Configuration
 class OrganizationStatusParser: EntryParser<OrganizationStatus>(
     output = OrganizationStatus::class,
-    parseErrorMessage = "Expected ${OrganizationStatus::class.simpleName} value",
+    parseErrorMessage = "Expected OrganizationStatus value",
     parser = OrganizationStatus::valueOf
 )

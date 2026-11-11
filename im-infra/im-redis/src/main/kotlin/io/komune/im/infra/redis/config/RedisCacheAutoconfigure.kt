@@ -11,14 +11,9 @@ import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializ
 import org.springframework.data.redis.serializer.RedisSerializationContext
 import tools.jackson.databind.ObjectMapper
 
-
 @ConditionalOnProperty(prefix = "spring.redis", name = ["password"])
 @Configuration
 class RedisCacheAutoconfigure {
-
-    companion object {
-        const val CACHE_TTL_MINUTE = 60L
-    }
 
     @Bean
     fun cacheConfiguration(objectMapper: ObjectMapper): RedisCacheConfiguration? {
@@ -34,8 +29,9 @@ class RedisCacheAutoconfigure {
     fun redisCache(
         cacheManager: CacheManager,
         objectMapper: ObjectMapper,
-    ): RedisCache {
-        return RedisCache(cacheManager, objectMapper)
-    }
+    ): RedisCache = RedisCache(cacheManager, objectMapper)
 
+    companion object {
+        const val CACHE_TTL_MINUTE = 60L
+    }
 }

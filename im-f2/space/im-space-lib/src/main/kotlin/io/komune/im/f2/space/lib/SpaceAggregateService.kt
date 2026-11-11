@@ -34,18 +34,6 @@ class SpaceAggregateService(
 
     private val logger = LoggerFactory.getLogger(SpaceAggregateService::class.java)
 
-    companion object {
-        const val ACCESS_TOKEN_LIFESPAN = 28800
-        const val SSO_SESSSION_IDLE_TIMEOUT = 604800
-        const val SSO_SESSION_MAX_LIFESPAN = 259200
-        const val ACTION_TOKEN_GENERATED_BY_USER_LIFESPAN = 900
-        const val IS_VERIFY_EMAIL = true
-        const val ID_RESET_PASSWORD_ALLOWED = true
-        const val PASSWORD_POLICY = "length(8)"
-        const val BASE_THEME = "keycloak"
-        const val IS_INTERNATIONALIZATION_ENABLED = true
-    }
-
     suspend fun define(
         command: SpaceDefineCommand
     ): SpaceDefinedEvent = withAuth(authenticationResolver.getAuth(), "master") {
@@ -86,11 +74,11 @@ class SpaceAggregateService(
         val authClientId = clientCoreFinderService.getByIdentifier(auth.clientId).id
         val realmClientId = clientCoreFinderService.getByIdentifier("${command.identifier}-realm").id
         val realmClientRoles = clientCoreFinderService.listClientRoles(realmClientId)
-        ClientGrantClientRolesCommand(
+        val _ = clientCoreAggregateService.grantClientRoles(ClientGrantClientRolesCommand(
             id = authClientId,
             providerClientId = realmClientId,
             roles = realmClientRoles
-        ).let { clientCoreAggregateService.grantClientRoles(it) }
+        ))
         logger.info("Granted client roles for space with identifier: ${command.identifier}")
 
         // Invalidate token to force refresh and pick up newly granted roles
@@ -131,9 +119,8 @@ class SpaceAggregateService(
             val client = keycloakClientProvider.getClient()
             val acrLoaMap = objectMapper.writeValueAsString(ImMfaPasswordOtpFlowAcr.asKeycloakMap())
             val settings = client.realm(command.identifier)
-                .toRepresentation().apply {
-                    attributes["acr.loa.map"] = acrLoaMap
-                }
+                .toRepresentation()
+                .apply { attributes["acr.loa.map"] = acrLoaMap }
             client.realm(command.identifier).update(settings)
 
             logger.info("Create custom otp flow[${ImMfaPasswordOtpFlow.name}]: ${command.identifier}")
@@ -171,27 +158,41 @@ class SpaceAggregateService(
         realm = command.identifier
         logger.info("Setting displayName to ${command.displayName ?: this.displayName ?: command.identifier}")
         displayName = command.displayName ?: this.displayName ?: command.identifier
-        command.sslRequired?.let {
-            logger.info("Setting sslRequired to $it")
-            sslRequired = it
+        val requestedSslRequired = command.sslRequired
+        if (requestedSslRequired != null) {
+            logger.info("Setting sslRequired to {}", requestedSslRequired)
+            sslRequired = requestedSslRequired
         }
-        logger.info("Setting smtpServer to ${command.smtp}")
+        logger.info("Setting smtpServer to {}", command.smtp)
         smtpServer = command.smtp
-        logger.info("Setting loginTheme to ${command.theme}")
+        logger.info("Setting loginTheme to {}", command.theme)
         loginTheme = command.theme
-        logger.info("Setting emailTheme to ${command.theme}")
+        logger.info("Setting emailTheme to {}", command.theme)
         emailTheme = command.theme
-        logger.info("Setting locales to ${command.locales}")
+        logger.info("Setting locales to {}", command.locales)
         applyLocales(command.locales)
-        command.settings?.let { settings ->
-            logger.info("Setting isRegistrationAllowed to ${settings.registrationAllowed}")
+        val settings = command.settings
+        if (settings != null) {
+            logger.info("Setting isRegistrationAllowed to {}", settings.registrationAllowed)
             isRegistrationAllowed = settings.registrationAllowed
-            logger.info("Setting isResetPasswordAllowed to ${settings.resetPasswordAllowed}")
+            logger.info("Setting isResetPasswordAllowed to {}", settings.resetPasswordAllowed)
             isResetPasswordAllowed = settings.resetPasswordAllowed
-            logger.info("Setting isRegistrationEmailAsUsername to ${settings.registrationEmailAsUsername}")
+            logger.info("Setting isRegistrationEmailAsUsername to {}", settings.registrationEmailAsUsername)
             isRegistrationEmailAsUsername = settings.registrationEmailAsUsername
-            logger.info("Setting isRememberMe to ${settings.rememberMe}")
+            logger.info("Setting isRememberMe to {}", settings.rememberMe)
             isRememberMe = settings.rememberMe
         }
+    }
+
+    companion object {
+        const val ACCESS_TOKEN_LIFESPAN = 28_800
+        const val SSO_SESSSION_IDLE_TIMEOUT = 604_800
+        const val SSO_SESSION_MAX_LIFESPAN = 259_200
+        const val ACTION_TOKEN_GENERATED_BY_USER_LIFESPAN = 900
+        const val IS_VERIFY_EMAIL = true
+        const val ID_RESET_PASSWORD_ALLOWED = true
+        const val PASSWORD_POLICY = "length(8)"
+        const val BASE_THEME = "keycloak"
+        const val IS_INTERNATIONALIZATION_ENABLED = true
     }
 }

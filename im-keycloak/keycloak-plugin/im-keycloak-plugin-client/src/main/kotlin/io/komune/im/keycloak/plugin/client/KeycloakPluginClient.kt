@@ -20,19 +20,11 @@ import org.keycloak.representations.AccessTokenResponse
 class KeycloakPluginClient(
     private val keycloakBaseUrl: String
 ) {
-    companion object {
-        private val httpClient = HttpClient(CIO) {
-            install(ContentNegotiation) {
-                jackson()
-            }
-        }
-    }
-
     /** Asks the plugin for an action token, authenticated by [bearerToken]; null unless Keycloak answers OK. */
     suspend fun generateActionToken(request: ActionTokenRequest, bearerToken: String): String? {
         val response = httpClient.get(actionTokenUrl(keycloakBaseUrl, request)) {
-            header("Content-Type", ContentType.Application.Json)
-            header("Authorization", "Bearer $bearerToken")
+            header(key = "Content-Type", value = ContentType.Application.Json)
+            header(key = "Authorization", value = "Bearer $bearerToken")
         }
 
         return response.body<String?>().takeIf { response.status == HttpStatusCode.OK }
@@ -52,15 +44,25 @@ class KeycloakPluginClient(
     }
 
     private fun buildUrl(realm: String) = "${keycloakBaseUrl.removeSuffix("/")}/realms/$realm"
+
+    companion object {
+        private val httpClient = HttpClient(CIO) {
+            install(ContentNegotiation) {
+                jackson()
+            }
+        }
+    }
 }
 
 /** Where the action token of [request] is asked for, every parameter URL-encoded. */
 internal fun actionTokenUrl(keycloakBaseUrl: String, request: ActionTokenRequest): String =
     URLBuilder("${keycloakBaseUrl.removeSuffix("/")}/realms/${request.realm}/${KeycloakPluginIds.ACTION_TOKEN}").apply {
-        parameters.append("client_id", request.clientId)
-        parameters.append("action", request.action)
-        parameters.append("user_id", request.userId)
-        request.redirectUri?.let { parameters.append("redirect_uri", it) }
+        parameters.append(name = "client_id", value = request.clientId)
+        parameters.append(name = "action", value = request.action)
+        parameters.append(name = "user_id", value = request.userId)
+        if (request.redirectUri != null) {
+            parameters.append(name = "redirect_uri", value = request.redirectUri)
+        }
     }.buildString()
 
 /** The action token to ask for: who, in which realm, for which client and action. */

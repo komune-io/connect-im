@@ -25,11 +25,11 @@ typealias UserPageFunction = F2Function<UserPageQuery, UserPageResult>
 @JsExport
 @JsName("UserPageQueryDTO")
 interface UserPageQueryDTO: Query {
-	/**
-	 * Filter on user organization id.
+    /**
+     * Filter on user organization id.
      * @default null
      */
-	val organizationId: OrganizationId?
+    val organizationId: OrganizationId?
 
     /**
      * Filter on user organization name.
@@ -37,48 +37,49 @@ interface UserPageQueryDTO: Query {
      */
     val organizationName: String?
 
-	/**
-	 * Search string filtering on the firstname and lastname of the user. Case insensitive.
+    /**
+     * Search string filtering on the firstname and lastname of the user. Case insensitive.
      * @example "john"
      * @default null
      */
-	val name: String?
+    val name: String?
 
-	/**
-	 * Search string filtering on the email of the user. Case insensitive.
+    /**
+     * Search string filtering on the email of the user. Case insensitive.
      * @example "john"
      * @default null
      */
-	val email: String?
+    val email: String?
 
-	/**
-	 * Filter on user roles.
+    /**
+     * Filter on user roles.
      * @default null
      */
-	val role: String?
+    val role: String?
 
-	/**
-	 * Filter on user roles
+    /**
+     * Filter on user roles.
      * @example [["tr_orchestrator_admin"]]
      * @default null
-	 */
-	val roles: List<String>?
+     */
+    val roles: List<String>?
 
-	/**
-	 * Arbitrary attributes filter.
+    /**
+     * Arbitrary attributes filter.
      * @example [io.komune.im.f2.user.domain.model.UserDTO.attributes]
      * @default null
-	 */
-	val attributes: Map<String, String>?
+     */
+    val attributes: Map<String, String>?
 
-	/**
-	 * If false, filter out the disabled users.
+    /**
+     * If false, filter out the disabled users.
      * @default false
-	 */
-	val withDisabled: Boolean
+     */
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
+    val withDisabled: Boolean
 
-	val offset: Int?
-	val limit: Int?
+    val offset: Int?
+    val limit: Int?
 }
 
 /**
@@ -112,7 +113,7 @@ interface UserPageResultDTO: PageDTO<UserDTO> {
     override val items: List<UserDTO>
 
     /**
-     * Total count of users matching the filters
+     * Total count of users matching the filters.
      */
     override val total: Int
 }

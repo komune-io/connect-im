@@ -90,11 +90,12 @@ class SpaceConfigScript(
         features: List<FeatureData>?
     ) = features.initNotEmpty("Features") { items ->
         items.mapAsync { feature ->
-            init("Feature[${feature.name}]", logger, {
-                privilegeServices.finder.getPrivilegeOrNull(feature.name)
-            }, {
-                privilegeServices.aggregate.define(feature.toCommand())
-            })
+            init(
+                logPrefix = "Feature[${feature.name}]",
+                logger = logger,
+                find = { privilegeServices.finder.getPrivilegeOrNull(feature.name) },
+                create = { privilegeServices.aggregate.define(feature.toCommand()) }
+            )
         }
     }
 
@@ -102,11 +103,12 @@ class SpaceConfigScript(
         permissions: List<PermissionData>?
     ) = permissions.initNotEmpty("Permissions") { items ->
         items.mapAsync { permission ->
-            init("Permission[${permission.name}]", logger, {
-                privilegeServices.finder.getPrivilegeOrNull(permission.name)
-            }, {
-                privilegeServices.aggregate.define(permission.toCommand())
-            })
+            init(
+                logPrefix = "Permission[${permission.name}]",
+                logger = logger,
+                find = { privilegeServices.finder.getPrivilegeOrNull(permission.name) },
+                create = { privilegeServices.aggregate.define(permission.toCommand()) }
+            )
         }
     }
 
@@ -132,12 +134,13 @@ class SpaceConfigScript(
         val existingRoles = (definedRoles + permissions + features).map(PrivilegeDTO::identifier).toMutableSet()
 
         val remainingRoles = items.filter { it.name !in existingRoles }.toMutableSet()
-        var anyRoleInitialized = true
+        var isAnyRoleInitialized = true
 
-        while (remainingRoles.isNotEmpty() && anyRoleInitialized) {
+        while (remainingRoles.isNotEmpty() && isAnyRoleInitialized) {
             remainingRoles.filter { role -> role.permissions.orEmpty().all { it in existingRoles } }
-                .also { anyRoleInitialized = it.isNotEmpty() }
-                .mapAsync { role -> privilegeServices.aggregate.define(role.toCommand()) }.forEach { role ->
+                .also { isAnyRoleInitialized = it.isNotEmpty() }
+                .mapAsync { role -> privilegeServices.aggregate.define(role.toCommand()) }
+                .forEach { role ->
                     remainingRoles.removeIf { it.name == role.identifier }
                     existingRoles.add(role.identifier)
                 }
@@ -149,33 +152,36 @@ class SpaceConfigScript(
         }
 
         items.map { role ->
-            init("Role[${role.name}]", logger, {
-                privilegeServices.finder.getPrivilegeOrNull(role.name)?.identifier
-            }, {
-                privilegeServices.aggregate.define(role.toCommand()).identifier
-            })
+            init(
+                logPrefix = "Role[${role.name}]",
+                logger = logger,
+                find = { privilegeServices.finder.getPrivilegeOrNull(role.name)?.identifier },
+                create = { privilegeServices.aggregate.define(role.toCommand()).identifier }
+            )
         }
     }
 
     private suspend fun SpaceConfigProperties.verifyAndUpdateSpace() {
         val space = spaceServices.finder.get(spaceIdentifier)
         if (theme != null || locales != null) {
-            SpaceDefineCommand(
-                identifier = space.identifier,
-                displayName = space.displayName,
-                theme = theme ?: space.theme,
-                smtp = space.smtp,
-                locales = locales ?: space.locales,
-                mfa = mfa,
-                settings = settings?.let {
-                    SpaceSettings(
-                        registrationAllowed = settings.login.registrationAllowed,
-                        rememberMe = settings.login.rememberMe,
-                        resetPasswordAllowed = settings.login.resetPasswordAllowed,
-                        registrationEmailAsUsername = settings.login.registrationEmailAsUsername
-                    )
-                }
-            ).let { spaceServices.aggregate.define(it) }
+            val _ = spaceServices.aggregate.define(
+                SpaceDefineCommand(
+                    identifier = space.identifier,
+                    displayName = space.displayName,
+                    theme = theme ?: space.theme,
+                    smtp = space.smtp,
+                    locales = locales ?: space.locales,
+                    mfa = mfa,
+                    settings = settings?.let {
+                        SpaceSettings(
+                            registrationAllowed = settings.login.registrationAllowed,
+                            rememberMe = settings.login.rememberMe,
+                            resetPasswordAllowed = settings.login.resetPasswordAllowed,
+                            registrationEmailAsUsername = settings.login.registrationEmailAsUsername
+                        )
+                    }
+                )
+            )
         }
     }
 
@@ -183,34 +189,35 @@ class SpaceConfigScript(
         organizations: List<OrganizationData>?
     ) = organizations.initNotEmpty("Organizations") { items ->
         items.mapNotNullAsync { organization ->
-            val organizationId = try {
-                OrganizationCreateCommand(
-                    siret = organization.siret,
-                    name = organization.name,
-                    description = organization.description,
-                    address = organization.address,
-                    website = null,
-                    roles = organization.roles,
-                    parentOrganizationId = null,
-                    attributes = organization.attributes,
-                    status = OrganizationStatus.VALIDATED.name
-                ).let { organizationServices.aggregate.create(it).id }
-            } catch (e: ConflictException) {
-                logger.debug("Organization[${organization.name}] already exists", e)
-                val organizationsCreated = organizationServices.finder
-                    .page(OrganizationFilter(name = organization.name))
-                    .items
-                if (organizationsCreated.isEmpty() || organizationsCreated.size > 1) {
-                    return@mapNotNullAsync null
-                }
-                organizationsCreated.first().id
+            createOrFindOrganization(organization)?.also { organizationId ->
+                val users = initUsers(organization.users, organization, organizationId)
+                val apiKeys = initApiKeys(organization.apiKeys, organization, organizationId)
+                logger.info("Organization[${organization.name}]: ${users.size} users, ${apiKeys.size} API keys")
             }
-
-            val users = initUsers(organization.users, organization, organizationId)
-            val apiKeys = initApiKeys(organization.apiKeys, organization, organizationId)
-            logger.info("Organization[${organization.name}]: ${users.size} users, ${apiKeys.size} API keys")
-            organizationId
         }
+    }
+
+    private suspend fun createOrFindOrganization(organization: OrganizationData): OrganizationId? = try {
+        organizationServices.aggregate.create(
+            OrganizationCreateCommand(
+                siret = organization.siret,
+                name = organization.name,
+                description = organization.description,
+                address = organization.address,
+                website = null,
+                roles = organization.roles,
+                parentOrganizationId = null,
+                attributes = organization.attributes,
+                status = OrganizationStatus.VALIDATED.name
+            )
+        ).id
+    } catch (e: ConflictException) {
+        logger.debug("Organization[${organization.name}] already exists", e)
+        organizationServices.finder
+            .page(OrganizationFilter(name = organization.name))
+            .items
+            .singleOrNull()
+            ?.id
     }
 
     private suspend fun <T, R> List<T>?.initNotEmpty(
@@ -231,23 +238,28 @@ class SpaceConfigScript(
         users: List<UserData>?, organization: OrganizationData? = null, organizationId: OrganizationId? = null
     ) = users.initNotEmpty("Users", organization) { items ->
         items.mapAsync { user ->
-            init("User[email: ${user.email}]", logger, {
-                userServices.finder.getByEmailOrNull(user.email)
-            }, {
-                UserCreateCommand(
-                    email = user.email,
-                    password = user.password,
-                    givenName = user.firstname,
-                    familyName = user.lastname,
-                    roles = user.roles,
-                    memberOf = organizationId,
-                    attributes = user.attributes,
-                    sendVerifyEmail = false,
-                    isEmailVerified = true,
-                    isPasswordTemporary = false,
-                    sendResetPassword = false
-                ).let { userServices.aggregate.create(it) }
-            })
+            init(
+                logPrefix = "User[email: ${user.email}]",
+                logger = logger,
+                find = { userServices.finder.getByEmailOrNull(user.email) },
+                create = {
+                    userServices.aggregate.create(
+                        UserCreateCommand(
+                            email = user.email,
+                            password = user.password,
+                            givenName = user.firstname,
+                            familyName = user.lastname,
+                            roles = user.roles,
+                            memberOf = organizationId,
+                            attributes = user.attributes,
+                            sendVerifyEmail = false,
+                            isEmailVerified = true,
+                            isPasswordTemporary = false,
+                            sendResetPassword = false
+                        )
+                    )
+                }
+            )
         }
     }
 
@@ -256,13 +268,23 @@ class SpaceConfigScript(
     ): List<ApiKeyId> = keys.initNotEmpty("ApiKeys", organization) {
         // do not make async, as it saves the keys in organization attributes
         keys?.map { key ->
-            init("Key[Name: ${key.name}, OrganizationId $organizationId]", logger, {
-                organizationServices.apiKeys.findByName(key.name, organizationId)?.id
-            }, {
-                ApiKeyOrganizationAddKeyCommand(
-                    organizationId = organizationId, name = key.name, secret = key.secret, roles = key.roles.orEmpty()
-                ).let { organizationServices.apiKeys.create(it).id }
-            })
+            init(
+                logPrefix = "Key[Name: ${key.name}, OrganizationId $organizationId]",
+                logger = logger,
+                find = {
+                    organizationServices.apiKeys.findByName(name = key.name, organizationId = organizationId)?.id
+                },
+                create = {
+                    organizationServices.apiKeys.create(
+                        ApiKeyOrganizationAddKeyCommand(
+                            organizationId = organizationId,
+                            name = key.name,
+                            secret = key.secret,
+                            roles = key.roles.orEmpty()
+                        )
+                    ).id
+                }
+            )
         }.orEmpty()
     }
 }

@@ -10,7 +10,7 @@ import kotlin.js.JsName
 @JsName("ApiKeyPolicies")
 object ApiKeyPolicies {
     /**
-     * User can get an apikey
+     * User can get an apikey.
      */
     fun canGet(authedUser: AuthedUserDTO, apikeyId: String): Boolean {
         return authedUser.hasRole(ImPermission.IM_APIKEY_READ)
@@ -18,24 +18,18 @@ object ApiKeyPolicies {
     }
 
     /**
-     * User can list apikeys
+     * User can list apikeys.
      */
-    fun canPage(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_APIKEY_READ)
-    }
+    fun canPage(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_APIKEY_READ)
 
     /**
-     * User can create an apikey
+     * User can create an apikey.
      */
-    fun canCreate(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_APIKEY_WRITE)
-    }
+    fun canCreate(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_APIKEY_WRITE)
 
     /**
-     * User can delete an apikey
+     * User can delete an apikey.
      */
-    fun canDelete(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_APIKEY_WRITE)
-    }
+    fun canDelete(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_APIKEY_WRITE)
 
 }

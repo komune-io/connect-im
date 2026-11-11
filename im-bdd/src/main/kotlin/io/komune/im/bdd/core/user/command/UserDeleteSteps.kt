@@ -16,7 +16,12 @@ class UserDeleteSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: UserDeleteCommand
+    private var commandOrNull: UserDeleteCommand? = null
+    private var command: UserDeleteCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::userDeleteParams)

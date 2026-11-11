@@ -47,7 +47,7 @@ data class RoleGetQuery(
 @JsName("RoleGetResultDTO")
 interface RoleGetResultDTO {
     /**
-     * Role matching the given identifier, or null if not found
+     * Role matching the given identifier, or null if not found.
      */
     val item: RoleDTO?
 }

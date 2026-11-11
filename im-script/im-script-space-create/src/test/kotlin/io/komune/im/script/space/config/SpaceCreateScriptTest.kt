@@ -32,7 +32,7 @@ class SpaceCreateScriptTest: SpringTestConfiguration() {
     lateinit var keycloakClientProvider: KeycloakClientProvider
 
     @Test
-    fun sslRequiredMustBeAppliedToCreatedSpace(): Unit = runTest {
+    fun sslRequiredMustBeAppliedToCreatedSpace() = runTest {
         val spaceName = "im-test-${UUID.randomUUID().hashCode().absoluteValue}"
         val clientId = defaultSpaceRootClientId(spaceName)
         val data = SpaceCreateProperties(
@@ -55,7 +55,7 @@ class SpaceCreateScriptTest: SpringTestConfiguration() {
     }
 
     @Test
-    fun spaceRootClientMustBeCreated(): Unit = runTest {
+    fun spaceRootClientMustBeCreated() = runTest {
         val spaceName = "im-test-${UUID.randomUUID().hashCode().absoluteValue}"
         val clientId = defaultSpaceRootClientId(spaceName)
         val data = SpaceCreateProperties(
@@ -78,7 +78,7 @@ class SpaceCreateScriptTest: SpringTestConfiguration() {
         }
     }
     @Test
-    fun defaultRoleMustHoldTheSelfPermissionsOnNewAndExistingSpaces(): Unit = runTest {
+    fun defaultRoleMustHoldTheSelfPermissionsOnNewAndExistingSpaces() = runTest {
         val spaceName = "im-test-${UUID.randomUUID().hashCode().absoluteValue}"
         val data = SpaceCreateProperties(identifier = spaceName)
         val selfPermissions = listOf("im_user_self", "im_organization_read_own")

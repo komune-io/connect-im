@@ -12,13 +12,7 @@ class WebhookSignatureVerifierTest {
     private val verifier = WebhookSignatureVerifier("shared-secret")
     private val payload = """{"type":"REGISTER","userId":"user-1"}"""
 
-    private fun validHeader() = "sha256=" + WebhookSignatureVerifier("shared-secret")
-        .let { v ->
-            // round-trip through verify() to obtain a signature the verifier accepts
-            v.javaClass.getDeclaredMethod("generateSignature", String::class.java)
-                .apply { isAccessible = true }
-                .invoke(v, payload) as String
-        }
+    private fun validHeader() = "sha256=" + WebhookSignatureVerifier("shared-secret").generateSignature(payload)
 
     @Test
     fun `accepts a signature it generated itself`() {
@@ -45,15 +39,12 @@ class WebhookSignatureVerifierTest {
 
     @Test
     fun `rejects a signature for a different payload`() {
-        assertThat(verifier.verify("""{"type":"LOGIN"}""", validHeader())).isFalse()
+        assertThat(verifier.verify(payload = """{"type":"LOGIN"}""", signatureHeader = validHeader())).isFalse()
     }
 
     @Test
     fun `rejects a signature made with a different secret`() {
-        val otherSignature = WebhookSignatureVerifier("another-secret")
-            .javaClass.getDeclaredMethod("generateSignature", String::class.java)
-            .apply { isAccessible = true }
-            .invoke(WebhookSignatureVerifier("another-secret"), payload) as String
+        val otherSignature = WebhookSignatureVerifier("another-secret").generateSignature(payload)
 
         assertThat(verifier.verify(payload, "sha256=$otherSignature")).isFalse()
     }

@@ -17,6 +17,7 @@ import io.komune.im.f2.organization.lib.model.toOrganization
 import io.komune.im.f2.organization.lib.model.toRef
 import io.komune.im.f2.organization.lib.service.InseeHttpClient
 import io.komune.im.f2.privilege.lib.PrivilegeFinderService
+import kotlin.coroutines.cancellation.CancellationException
 import org.springframework.stereotype.Service
 
 @Service
@@ -25,17 +26,13 @@ class OrganizationFinderService(
     private val organizationCoreFinderService: OrganizationCoreFinderService,
     private val privilegeFinderService: PrivilegeFinderService
 ) {
-    suspend fun getOrNull(id: OrganizationId): Organization? {
-        return organizationCoreFinderService.getOrNull(id)?.toDTOInternal()
-    }
+    suspend fun getOrNull(id: OrganizationId): Organization? =
+        organizationCoreFinderService.getOrNull(id)?.toDTOInternal()
 
-    suspend fun getRefOrNull(id: OrganizationId): OrganizationRef? {
-        return organizationCoreFinderService.getOrNull(id)?.toRef()
-    }
+    suspend fun getRefOrNull(id: OrganizationId): OrganizationRef? =
+        organizationCoreFinderService.getOrNull(id)?.toRef()
 
-    suspend fun get(id: OrganizationId): Organization {
-        return organizationCoreFinderService.get(id).toDTOInternal()
-    }
+    suspend fun get(id: OrganizationId): Organization = organizationCoreFinderService.get(id).toDTOInternal()
 
     @Suppress("SwallowedException", "TooGenericExceptionCaught")
     suspend fun getFromInsee(siret: String): Organization? {
@@ -43,6 +40,8 @@ class OrganizationFinderService(
             inseeHttpClient?.getOrganizationBySiret(siret)
                 ?.etablissement
                 ?.toOrganization()
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             null
         }
@@ -54,11 +53,11 @@ class OrganizationFinderService(
     ): PageDTO<Organization> {
         val attributesFilters = filter.attributes
             .orEmpty()
-            .mapValues { (_, expected) -> ({ attribute: String? -> attribute == expected }) }
+            .mapValues { (_, expected) -> { attribute: String? -> attribute == expected } }
         val additionalAttributesFilters = listOfNotNull(
             filter.status?.let { status ->
                 val names = status.map(OrganizationStatus::name)
-                OrganizationDTO::status.name to ({ attribute: String? -> attribute in names })
+                OrganizationDTO::status.name to { attribute: String? -> attribute in names }
             }
         ).toMap()
 
@@ -67,15 +66,15 @@ class OrganizationFinderService(
                 name = filter.name,
                 roles = filter.roles,
                 attributes = attributesFilters + additionalAttributesFilters,
-                withDisabled = filter.withDisabled,
+                isDisabledIncluded = filter.isDisabledIncluded,
             ),
             offset = offset,
         ).map { it.toDTOInternal() }
     }
 
-    suspend fun listRefs(withDisabled: Boolean = false): List<OrganizationRef> {
+    suspend fun listRefs(isDisabledIncluded: Boolean = false): List<OrganizationRef> {
         return organizationCoreFinderService.page(
-            OrganizationCoreFilter(withDisabled = withDisabled),
+            OrganizationCoreFilter(isDisabledIncluded = isDisabledIncluded),
         ).items.map(OrganizationModel::toRef)
     }
 
@@ -90,5 +89,5 @@ data class OrganizationFilter(
     val roles: Collection<RoleIdentifier>? = null,
     val attributes: Map<String, String>? = null,
     val status: Collection<OrganizationStatus>? = null,
-    val withDisabled: Boolean = false,
+    val isDisabledIncluded: Boolean = false,
 )

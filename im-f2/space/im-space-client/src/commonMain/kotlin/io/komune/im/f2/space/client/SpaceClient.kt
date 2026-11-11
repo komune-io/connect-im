@@ -34,7 +34,7 @@ fun spaceClient(
         F2ClientBuilder.get(urlBase) {
             install(HttpTimeout) {
                 @Suppress("MagicNumber")
-                requestTimeoutMillis = 60000
+                requestTimeoutMillis = 60_000
             }
             install(F2Auth) {
                 this.getAuth = getAuth

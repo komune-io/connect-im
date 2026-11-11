@@ -38,7 +38,7 @@ class WebhookSignatureVerifier(
         val expectedSignature = signatureHeader.removePrefix("sha256=")
         val actualSignature = generateSignature(payload)
 
-        return secureCompare(expectedSignature, actualSignature)
+        return constantTimeEquals(expected = expectedSignature, actual = actualSignature)
     }
 
     /**
@@ -55,17 +55,14 @@ class WebhookSignatureVerifier(
         return hash.joinToString("") { "%02x".format(Locale.ROOT, it) }
     }
 
-    /**
-     * Constant-time string comparison to prevent timing attacks.
-     */
-    private fun secureCompare(a: String, b: String): Boolean {
-        if (a.length != b.length) {
+    private fun constantTimeEquals(expected: String, actual: String): Boolean {
+        if (expected.length != actual.length) {
             return false
         }
 
         var result = 0
-        for (i in a.indices) {
-            result = result or (a[i].code xor b[i].code)
+        for (i in expected.indices) {
+            result = result or (expected[i].code xor actual[i].code)
         }
         return result == 0
     }

@@ -27,12 +27,12 @@ object WebhookClient {
         val payload = objectMapper.writeValueAsString(event)
 
         httpClient.post(url) {
-            header("Content-Type", ContentType.Application.Json)
+            header(key = "Content-Type", value = ContentType.Application.Json)
 
             // Add HMAC signature if secret is provided
-            secret?.let {
-                val signature = generateHmacSignature(payload, it)
-                header("X-Webhook-Signature", "sha256=$signature")
+            secret?.let { key ->
+                val signature = generateHmacSignature(payload = payload, secret = key)
+                header(key = "X-Webhook-Signature", value = "sha256=$signature")
             }
 
             // Use the same serialized payload for both signature and body

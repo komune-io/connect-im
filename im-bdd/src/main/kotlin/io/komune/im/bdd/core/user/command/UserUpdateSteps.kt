@@ -18,7 +18,12 @@ class UserUpdateSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: UserUpdateCommand
+    private var commandOrNull: UserUpdateCommand? = null
+    private var command: UserUpdateCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::userUpdateParams)
@@ -75,14 +80,14 @@ class UserUpdateSteps(
                 val userId = context.userIds.lastUsed
                 val client = keycloakClientProvider.getClient()
                 dataTable.asList(UserUpdateParams::class.java).filterNotNull()
-                    .forEach {
+                    .forEach { params ->
                         AssertionBdd.user(client).assertThatId(userId).hasFields { fields -> fields.copy(
-                            givenName = it.givenName,
-                            familyName = it.familyName,
-                            address = it.address,
-                            phone = it.phone,
-                            roles = it.roles,
-                            attributes = it.attributes,
+                            givenName = params.givenName,
+                            familyName = params.familyName,
+                            address = params.address,
+                            phone = params.phone,
+                            roles = params.roles,
+                            attributes = params.attributes,
                         ) }
                     }
             }

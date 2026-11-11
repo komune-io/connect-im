@@ -26,7 +26,7 @@ class AssertionOrganizationRef(
     }
     override suspend fun assertThat(entity: GroupRepresentation) = OrganizationRefAssert(entity)
 
-    inner class OrganizationRefAssert(
+    class OrganizationRefAssert(
         private val group: GroupRepresentation
     ) {
         @IgnorableReturnValue

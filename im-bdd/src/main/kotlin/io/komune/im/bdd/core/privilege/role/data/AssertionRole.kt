@@ -33,8 +33,9 @@ class AssertionRole(
 
         private val roleBindings: Map<RoleTarget, List<RoleIdentifier>> = role.attributes?.get(Role::bindings.name)
             ?.firstOrNull()
-            ?.parseJson<Map<String, List<RoleIdentifier>>>()
-            ?.mapKeys { (target) -> RoleTarget.valueOf(target) }
+            ?.run {
+                parseJson<Map<String, List<RoleIdentifier>>>().mapKeys { (target) -> RoleTarget.valueOf(target) }
+            }
             .orEmpty()
 
         private val roleLocale: Map<String, String> = role.attributes?.get(Role::locale.name)

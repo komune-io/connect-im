@@ -31,9 +31,7 @@ class UserCoreFinderService(
         }
     }
 
-    suspend fun get(id: UserId): UserModel {
-        return getOrNull(id) ?: throw NotFoundException("User", id)
-    }
+    suspend fun get(id: UserId): UserModel = getOrNull(id) ?: throw NotFoundException(name = "User", id = id)
 
     suspend fun hasCredentials(id: UserId): Boolean = handleErrors("Error while fetching credentials of user [$id]") {
         keycloakClientProvider.getClient().user(id).credentials().isNotEmpty()
@@ -65,11 +63,11 @@ class UserCoreFinderService(
         users.filter { user ->
             user.id.matches(ids)
                 && user.memberOf.matches(organizationIds)
-                && (withDisabled || user.enabled)
+                && (isDisabledIncluded || user.enabled)
                 && (attributes == null || attributes.all { (key, value) -> user.attributes[key] == value })
                 && (email == null || user.email.contains(email, true))
-                && (name == null || ("${user.givenName} ${user.familyName}").contains(name, true))
-                && (user.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles))
+                && (name == null || "${user.givenName} ${user.familyName}".contains(name, true))
+                && user.roles.flatMap { compositeRoles[it].orEmpty() + it }.toSet().matches(roles)
         }.sortedByDescending(UserModel::creationDate)
             .page(offset)
     }
@@ -109,5 +107,5 @@ data class UserCoreFilter(
     val email: String? = null,
     val roles: Collection<RoleIdentifier>? = null,
     val attributes: Map<String, String>? = null,
-    val withDisabled: Boolean = false,
+    val isDisabledIncluded: Boolean = false,
 )

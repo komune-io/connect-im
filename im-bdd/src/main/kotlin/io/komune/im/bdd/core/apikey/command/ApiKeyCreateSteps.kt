@@ -19,7 +19,12 @@ class ApiKeyCreateSteps(
     private val apikeyEndpoint: ApiKeyEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: ApiKeyOrganizationAddKeyCommand
+    private var commandOrNull: ApiKeyOrganizationAddKeyCommand? = null
+    private var command: ApiKeyOrganizationAddKeyCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::apiKeyCreateParams)
@@ -112,7 +117,7 @@ class ApiKeyCreateSteps(
         AssertionBdd.user(client).assertThat(user).hasFields { fields -> fields.copy(
             memberOf = memberOf,
             roles = params.roles ?: apiKey.roles,
-            enabled = true,
+            isEnabled = true,
             isApiKey = true
         ) }
     }

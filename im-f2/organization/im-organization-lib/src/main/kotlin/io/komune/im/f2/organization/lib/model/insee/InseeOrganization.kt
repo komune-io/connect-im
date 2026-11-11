@@ -10,6 +10,7 @@ data class InseeOrganization(
     val anneeEffectifsEtablissement: String?,
     val activitePrincipaleRegistreMetiersEtablissement: String?,
     val dateDernierTraitementEtablissement: String?,
+    @Suppress("BooleanPropertyNaming") // wire name: the INSEE API field
     val etablissementSiege: Boolean?,
     val nombrePeriodesEtablissement: Int?,
     val uniteLegale: InseeLegalUnit?,

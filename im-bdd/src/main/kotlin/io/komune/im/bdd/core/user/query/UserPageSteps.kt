@@ -34,7 +34,7 @@ class UserPageSteps(
             name = params.name,
             email = params.email,
             role = params.role,
-            withDisabled = params.withDisable,
+            withDisabled = params.isWithDisabled,
             offset = params.offset,
             limit = params.limit,
             attributes = null
@@ -46,7 +46,7 @@ class UserPageSteps(
         name = entry?.get("name"),
         email = entry?.get("email"),
         role = entry?.get("role"),
-        withDisable = entry?.get("withDisabled").toBoolean(),
+        isWithDisabled = entry?.get("withDisabled").toBoolean(),
         offset = entry?.get("offset")?.toInt(),
         limit = entry?.get("limit")?.toInt(),
     )
@@ -56,7 +56,7 @@ class UserPageSteps(
         val name: String?,
         val email: String?,
         val role: String?,
-        val withDisable: Boolean,
+        val isWithDisabled: Boolean,
         val offset: Int?,
         val limit: Int?
     )

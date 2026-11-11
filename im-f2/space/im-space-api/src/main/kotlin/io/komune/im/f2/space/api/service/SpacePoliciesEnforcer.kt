@@ -9,20 +9,28 @@ import org.springframework.stereotype.Service
 class SpacePoliciesEnforcer: PolicyEnforcer() {
 
     @Suppress("UnusedParameter")
-    suspend fun checkGet(spaceIdentifier: SpaceIdentifier) = checkAuthed("get space") { authedUser ->
-        SpacePolicies.canGet(authedUser)
+    suspend fun checkGet(spaceIdentifier: SpaceIdentifier) {
+        checkAuthed("get space") { authedUser ->
+            SpacePolicies.canGet(authedUser)
+        }
     }
 
-    suspend fun checkPage() = checkAuthed("page spaces") { authedUser ->
-        SpacePolicies.canPage(authedUser)
+    suspend fun checkPage() {
+        checkAuthed("page spaces") { authedUser ->
+            SpacePolicies.canPage(authedUser)
+        }
     }
 
-    suspend fun checkDefine() = checkAuthed("define a space") { authedUser ->
-        SpacePolicies.canDefine(authedUser)
+    suspend fun checkDefine() {
+        checkAuthed("define a space") { authedUser ->
+            SpacePolicies.canDefine(authedUser)
+        }
     }
 
-    suspend fun checkDelete() = checkAuthed("delete a space") { authedUser ->
-        SpacePolicies.canDelete(authedUser)
+    suspend fun checkDelete() {
+        checkAuthed("delete a space") { authedUser ->
+            SpacePolicies.canDelete(authedUser)
+        }
     }
 
 }

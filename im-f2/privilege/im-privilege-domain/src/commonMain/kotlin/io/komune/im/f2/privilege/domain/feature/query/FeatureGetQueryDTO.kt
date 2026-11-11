@@ -44,7 +44,7 @@ data class FeatureGetQuery(
 @JsName("FeatureGetResultDTO")
 interface FeatureGetResultDTO {
     /**
-     * Feature matching the given identifier, or null if not found
+     * Feature matching the given identifier, or null if not found.
      */
     val item: FeatureDTO?
 }

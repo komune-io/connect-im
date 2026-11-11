@@ -14,7 +14,12 @@ class UserUpdateEmailSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: UserUpdateEmailCommand
+    private var commandOrNull: UserUpdateEmailCommand? = null
+    private var command: UserUpdateEmailCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::userUpdateEmailParams)

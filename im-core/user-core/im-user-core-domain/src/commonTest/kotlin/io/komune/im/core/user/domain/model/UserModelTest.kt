@@ -22,7 +22,7 @@ class UserModelTest {
         attributes = mapOf("age" to "42"),
         enabled = true,
         disabledBy = null,
-        creationDate = 1656938975000,
+        creationDate = 1_656_938_975_000,
         disabledDate = null
     , isApiKey = isApiKey)
 
@@ -34,7 +34,7 @@ class UserModelTest {
 
     @Test
     fun aUserWithNoOrganizationIsRepresentable() {
-        assertEquals(null, model(memberOf = null).memberOf)
+        assertEquals(expected = null, actual = model(memberOf = null).memberOf)
     }
 
     @Test
@@ -47,7 +47,7 @@ class UserModelTest {
         val disabled = model().copy(enabled = false, disabledBy = "admin-1", disabledDate = 1)
 
         assertFalse(disabled.enabled)
-        assertEquals("admin-1", disabled.disabledBy)
-        assertEquals("john@komune.io", disabled.email)
+        assertEquals(expected = "admin-1", actual = disabled.disabledBy)
+        assertEquals(expected = "john@komune.io", actual = disabled.email)
     }
 }

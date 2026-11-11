@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 /** The organization core services API keys are stored with. */
 @Service
-class OrganizationCoreServices(
+data class OrganizationCoreServices(
     val aggregate: OrganizationCoreAggregateService,
     val finder: OrganizationCoreFinderService,
 )

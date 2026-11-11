@@ -14,11 +14,12 @@ data class IMProperties(
     val theme: String? = null,
     val keycloak: KeycloakProperties
 )
-class OrganizationProperties(
+data class OrganizationProperties(
     val insee: InseeProperties?
 )
 
-class UserProperties(
+data class UserProperties(
+    @Suppress("BooleanPropertyNaming") // wire name: the connect.im.user.email-as-username config key
     val emailAsUsername: Boolean = false,
     val defaultRoleIdentifiers: String = "",
     val welcomeLinkLifespanSeconds: Int = DEFAULT_WELCOME_LINK_LIFESPAN_SECONDS,
@@ -28,17 +29,21 @@ class UserProperties(
     }
 }
 
-class KeycloakProperties(
+data class KeycloakProperties(
     val url: String,
     val realm: String,
     val clientId: String,
     val clientSecret: String
-)
+) {
+    override fun toString() = "KeycloakProperties(url=$url, realm=$realm, clientId=$clientId, clientSecret=***)"
+}
 
-class InseeProperties(
+data class InseeProperties(
     val sireneApi: String,
     val token: String
-)
+) {
+    override fun toString() = "InseeProperties(sireneApi=$sireneApi, token=***)"
+}
 
 suspend fun KeycloakProperties.toAuthRealm(): AuthSubRealm {
     val space = AuthenticationProvider.getTenant()

@@ -18,7 +18,12 @@ class SpaceCreateSteps(
     private val spaceEndpoint: SpaceEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: SpaceDefineCommand
+    private var commandOrNull: SpaceDefineCommand? = null
+    private var command: SpaceDefineCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::spaceCreateParams)

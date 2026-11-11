@@ -22,7 +22,6 @@ import io.komune.im.apikey.domain.query.ApiKeyPageQuery
 import io.komune.im.apikey.domain.query.ApiKeyPageResult
 import io.ktor.client.plugins.HttpTimeout
 
-
 fun F2Client.apiKeyClient(): F2SupplierSingle<ApiKeyClient> = f2SupplierSingle {
     ApiKeyClient(this)
 }
@@ -35,7 +34,7 @@ fun apiKeyClient(
         F2ClientBuilder.get(urlBase) {
             install(HttpTimeout) {
                 @Suppress("MagicNumber")
-                requestTimeoutMillis = 60000
+                requestTimeoutMillis = 60_000
             }
             install(F2Auth) {
                 this.getAuth = getAuth

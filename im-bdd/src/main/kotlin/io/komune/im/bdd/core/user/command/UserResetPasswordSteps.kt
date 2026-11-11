@@ -12,7 +12,12 @@ class UserResetPasswordSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: UserResetPasswordCommand
+    private var commandOrNull: UserResetPasswordCommand? = null
+    private var command: UserResetPasswordCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::userResetPasswordParams)

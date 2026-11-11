@@ -20,7 +20,8 @@ typealias OrganizationRefListFunction = F2Function<OrganizationRefListQuery, Org
 @JsExport
 @JsName("OrganizationRefListQueryDTO")
 interface OrganizationRefListQueryDTO: Query {
-	val withDisabled: Boolean
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
+    val withDisabled: Boolean
 }
 
 /**
@@ -30,17 +31,17 @@ interface OrganizationRefListQueryDTO: Query {
 @JsExport
 @Serializable
 data class OrganizationRefListQuery(
-	/**
-	 * If false, filter out the disabled organizations. (default: false)
-	 * @example false
-	 */
-	override val withDisabled: Boolean = false,
+    /**
+     * If false, filter out the disabled organizations. (default: false)
+     * @example false
+     */
+    override val withDisabled: Boolean = false,
 ): OrganizationRefListQueryDTO
 
 @JsExport
 @JsName("OrganizationRefListResultDTO")
 interface OrganizationRefListResultDTO: Event {
-	val items: List<OrganizationRefDTO>
+    val items: List<OrganizationRefDTO>
 }
 
 /**
@@ -50,8 +51,8 @@ interface OrganizationRefListResultDTO: Event {
 @JsExport
 @Serializable
 data class OrganizationRefListResult(
-	/**
-	 * All Organization Refs.
-	 */
-	override val items: List<OrganizationRef>
+    /**
+     * All Organization Refs.
+     */
+    override val items: List<OrganizationRef>
 ): OrganizationRefListResultDTO

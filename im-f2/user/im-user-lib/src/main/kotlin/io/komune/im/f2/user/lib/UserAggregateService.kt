@@ -54,10 +54,10 @@ class UserAggregateService(
     private val properties: IMProperties
 ) {
     suspend fun create(command: UserCreateCommand): UserCreatedEvent {
-        checkOrganizationExist(command.memberOf)
+        command.memberOf?.let { memberOf -> checkOrganizationExist(memberOf) }
         checkRoles(command.roles)
 
-        val userId = UserCoreDefineCommand(
+        val userId = userCoreAggregateService.define(UserCoreDefineCommand(
             id = null,
             email = command.email,
             givenName = command.givenName,
@@ -71,7 +71,7 @@ class UserAggregateService(
                 command.address?.let { UserDTO::address.name to it.toJson() },
                 command.phone?.let { UserDTO::phone.name to it },
             )).toMap(),
-        ).let { userCoreAggregateService.define(it).id }
+        )).id
 
         val actions = listOfNotNull(
             VERIFY_EMAIL.takeIf { command.sendVerifyEmail },
@@ -79,37 +79,37 @@ class UserAggregateService(
         )
 
         if (actions.isNotEmpty()) {
-            UserCoreSendEmailCommand(
+            val _ = userCoreAggregateService.sendEmail(UserCoreSendEmailCommand(
                 id = userId,
                 actions = actions,
                 reason = creationEmailReason(actions)
-            ).let { userCoreAggregateService.sendEmail(it) }
+            ))
         }
 
         return UserCreatedEvent(userId)
     }
 
     suspend fun resetPassword(command: UserResetPasswordCommand): UserResetPasswordEvent {
-        UserCoreSendEmailCommand(
+        val _ = userCoreAggregateService.sendEmail(UserCoreSendEmailCommand(
             id = command.id,
             actions = listOf(UPDATE_PASSWORD),
             reason = resetEmailReason(userCoreFinderService.hasCredentials(command.id))
-        ).let { userCoreAggregateService.sendEmail(it) }
+        ))
         return UserResetPasswordEvent(command.id)
     }
 
     suspend fun updatePassword(command: UserUpdatePasswordCommand): UserUpdatedPasswordEvent {
-        UserCoreDefineCommand(
+        val _ = userCoreAggregateService.define(UserCoreDefineCommand(
             id = command.id,
             password = command.password,
             isPasswordTemporary = false
-        ).let { userCoreAggregateService.define(it) }
+        ))
         return UserUpdatedPasswordEvent(command.id)
     }
 
     suspend fun update(command: UserUpdateCommand): UserUpdatedEvent {
         checkRoles(command.roles)
-        val event = UserCoreDefineCommand(
+        val event = userCoreAggregateService.define(UserCoreDefineCommand(
             id = command.id,
             givenName = command.givenName,
             familyName = command.familyName,
@@ -119,36 +119,36 @@ class UserAggregateService(
                 command.address?.let { UserDTO::address.name to it.toJson() },
                 command.phone?.let { UserDTO::phone.name to it },
             )).toMap(),
-        ).let { userCoreAggregateService.define(it) }
+        ))
 
         return UserUpdatedEvent(event.id)
     }
 
     suspend fun updateEmail(command: UserUpdateEmailCommand): UserUpdatedEmailEvent {
-        UserCoreDefineCommand(
+        val _ = userCoreAggregateService.define(UserCoreDefineCommand(
             id = command.id,
             email = command.email,
             isEmailVerified = false
-        ).let { userCoreAggregateService.define(it) }
+        ))
 
         if (command.sendVerificationEmail) {
-            UserCoreSendEmailCommand(
+            val _ = userCoreAggregateService.sendEmail(UserCoreSendEmailCommand(
                 id = command.id,
                 actions = listOf(VERIFY_EMAIL)
-            ).let { userCoreAggregateService.sendEmail(it) }
+            ))
         }
 
         return UserUpdatedEmailEvent(command.id)
     }
 
     suspend fun disable(command: UserDisableCommand): UserDisabledEvent {
-        UserCoreDisableCommand(
+        val _ = userCoreAggregateService.disable(UserCoreDisableCommand(
             id = command.id,
             disabledBy = command.disabledBy ?: AuthenticationProvider.getAuthedUser()?.id.orEmpty()
-        ).let { userCoreAggregateService.disable(it) }
+        ))
 
         if (command.anonymize) {
-            UserCoreDefineCommand(
+            val _ = userCoreAggregateService.define(UserCoreDefineCommand(
                 id = command.id,
                 email = "${command.id}@anonymous.com",
                 givenName = "anonymous",
@@ -158,39 +158,37 @@ class UserAggregateService(
                     UserDTO::phone.name to "",
                 )),
                 isEmailVerified = false
-            ).let { userCoreAggregateService.define(it) }
+            ))
         }
 
         return UserDisabledEvent(command.id)
     }
 
     suspend fun enable(command: UserEnableCommand): UserEnabledEvent {
-        UserCoreEnableCommand(
+        val _ = userCoreAggregateService.enable(UserCoreEnableCommand(
             id = command.id
-        ).let { userCoreAggregateService.enable(it) }
+        ))
 
         return UserEnabledEvent(command.id)
     }
 
-    suspend fun delete(command: UserDeleteCommand): UserDeletedEvent {
-        return userCoreAggregateService.delete(command)
-    }
+    suspend fun delete(command: UserDeleteCommand): UserDeletedEvent = userCoreAggregateService.delete(command)
 
 
-    suspend fun disableMultiFactorAuthentication(command: UserDisableMfaCommand): UserDisabledMfavent {
+    suspend fun disableMfa(command: UserDisableMfaCommand): UserDisabledMfavent {
         val event = userCoreAggregateService.removeCredentials(
             UserCoreRemoveCredentialsCommand(command.id, CredentialType.OTP)
         )
         return UserDisabledMfavent(event.id)
     }
 
-    private suspend fun checkOrganizationExist(organizationId: OrganizationId?) {
-        organizationId?.let { organizationCoreFinderService.get(it) }
+    private suspend fun checkOrganizationExist(organizationId: OrganizationId) {
+        val _ = organizationCoreFinderService.get(organizationId)
     }
 
     private suspend fun checkRoles(roles: List<PrivilegeIdentifier>) {
-        roles.forEachAsync {
-            val privilege = privilegeCoreFinderService.getPrivilege(it)
+        roles.forEachAsync { role ->
+            val privilege = privilegeCoreFinderService.getPrivilege(role)
             privilege.checkTarget(RoleTarget.USER)
         }
     }
@@ -199,23 +197,26 @@ class UserAggregateService(
         organizationId: OrganizationId?,
         roles: List<RoleIdentifier>
     ): List<RoleIdentifier> {
-        return organizationId?.let {
-            val organizationRoles = organizationCoreFinderService.get(organizationId).roles.flatMap { roleIdentifier ->
-                val privilege = privilegeCoreFinderService.getPrivilege(roleIdentifier)
-                if (PrivilegeType.ROLE == privilege.type){
-                    (privilege as RoleModel).bindings[RoleTarget.USER].orEmpty()
-                } else listOf()
+        if (organizationId == null) {
+            return roles
+        }
+        val organizationRoles = organizationCoreFinderService.get(organizationId).roles.flatMap { roleIdentifier ->
+            val privilege = privilegeCoreFinderService.getPrivilege(roleIdentifier)
+            if (PrivilegeType.ROLE == privilege.type) {
+                (privilege as RoleModel).bindings[RoleTarget.USER].orEmpty()
+            } else {
+                emptyList()
             }
-            roles.filter { role ->
-                organizationRoles.contains(role)
-            }.ifEmpty {
-                properties.user?.defaultRoleIdentifiers
-                    ?.split(",")
-                    ?.map(String::trim)
-                    ?.filter(String::isNotBlank)
-                    .orEmpty()
-            }
-        } ?: roles
+        }
+        return roles.filter { role ->
+            organizationRoles.contains(role)
+        }.ifEmpty {
+            properties.user?.run {
+                defaultRoleIdentifiers.split(",").mapNotNull { identifier ->
+                    identifier.trim().takeIf(String::isNotBlank)
+                }
+            }.orEmpty()
+        }
     }
 }
 

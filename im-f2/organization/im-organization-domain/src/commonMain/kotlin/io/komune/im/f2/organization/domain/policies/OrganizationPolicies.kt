@@ -12,7 +12,7 @@ import kotlin.js.JsName
 @JsName("OrganizationPolicies")
 object OrganizationPolicies {
     /**
-     * User can get an organization
+     * User can get an organization.
      */
     fun canGet(authedUser: AuthedUserDTO, organizationId: String): Boolean {
         return authedUser.hasRole(ImPermission.IM_ORGANIZATION_READ)
@@ -20,49 +20,40 @@ object OrganizationPolicies {
     }
 
     /**
-     * User can list organizations
+     * User can list organizations.
      */
-    fun canList(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_ORGANIZATION_READ)
-    }
+    fun canList(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_ORGANIZATION_READ)
 
     /**
-     * User can list organizations ref
+     * User can list organizations ref.
      */
     fun checkRefList(authedUser: AuthedUserDTO?) = authedUser != null
             && authedUser.hasOneOfRoles(ImPermission.IM_ORGANIZATION_READ, ImPermission.IM_MY_ORGANIZATION_READ)
 
     /**
-     * User can create an organization
+     * User can create an organization.
      */
-    fun canCreate(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE)
-    }
+    fun canCreate(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE)
 
     /**
-     * User can update the given organization
+     * User can update the given organization.
      */
     fun canUpdate(authedUser: AuthedUserDTO, organizationId: OrganizationId): Boolean {
         return authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE)
                 || authedUser.hasRole(ImPermission.IM_MY_ORGANIZATION_WRITE) && authedUser.memberOf == organizationId
     }
 
-    fun canUpdateStatus(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_ORGANIZATION_STATUS_WRITE)
-    }
+    fun canUpdateStatus(authedUser: AuthedUserDTO): Boolean =
+        authedUser.hasRole(ImPermission.IM_ORGANIZATION_STATUS_WRITE)
 
     /**
-     * User can disable an organization
+     * User can disable an organization.
      */
-    fun canDisable(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE)
-    }
+    fun canDisable(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE)
 
     /**
-     * User can delete an organization
+     * User can delete an organization.
      */
-    fun canDelete(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE)
-    }
+    fun canDelete(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE)
 
 }

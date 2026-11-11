@@ -34,7 +34,7 @@ fun PrivilegeCoreDefineCommand.toPrivilege(id: PrivilegeId?): Privilege = when (
 }
 
 fun Privilege.checkTarget(target: RoleTarget) {
-    if (this !is RoleModel || (targets.isNotEmpty() && target !in targets)) {
+    if (this !is RoleModel || targets.isNotEmpty() && target !in targets) {
         throw PrivilegeWrongTargetException(identifier, target)
     }
 }

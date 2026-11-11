@@ -54,14 +54,14 @@ class OrganizationEndpoint(
     override fun organizationGet(): OrganizationGetFunction = f2Function { query ->
         logger.info("organizationGet: $query")
         organizationPoliciesEnforcer.checkGet(query.id)
-        organizationFinderService.getOrNull(query.id).let(::OrganizationGetResult)
+        OrganizationGetResult(organizationFinderService.getOrNull(query.id))
     }
 
     @Bean
     override fun organizationRefGet(): OrganizationRefGetFunction = f2Function { query ->
         logger.info("organizationRefGet: $query")
         organizationPoliciesEnforcer.checkGet(query.id)
-        organizationFinderService.getRefOrNull(query.id).let(::OrganizationRefGetResult)
+        OrganizationRefGetResult(organizationFinderService.getRefOrNull(query.id))
     }
 
     /**
@@ -71,7 +71,7 @@ class OrganizationEndpoint(
     override fun organizationGetFromInsee(): OrganizationGetFromInseeFunction = f2Function { query ->
         logger.info("organizationGetFromInsee: $query")
         organizationPoliciesEnforcer.checkList()
-        organizationFinderService.getFromInsee(query.siret).let(::OrganizationGetFromInseeResult)
+        OrganizationGetFromInseeResult(organizationFinderService.getFromInsee(query.siret))
     }
 
 
@@ -94,16 +94,16 @@ class OrganizationEndpoint(
                 roles = roles,
                 attributes = query.attributes,
                 status = query.status?.map(OrganizationStatus::valueOf),
-                withDisabled = query.withDisabled ?: false,
+                isDisabledIncluded = query.withDisabled == true,
             ),
             offset = OffsetPagination(
                 offset = query.offset ?: 0,
                 limit = query.limit ?: Int.MAX_VALUE
             ),
-        ).let {
+        ).let { page ->
             OrganizationPageResult(
-                items = it.items,
-                total = it.total
+                items = page.items,
+                total = page.total
             )
         }
     }
@@ -116,7 +116,7 @@ class OrganizationEndpoint(
     override fun organizationRefList(): OrganizationRefListFunction = f2Function { query ->
         logger.info("organizationRefList: $query")
         organizationPoliciesEnforcer.checkRefList()
-        organizationFinderService.listRefs(query.withDisabled).let(::OrganizationRefListResult)
+        OrganizationRefListResult(organizationFinderService.listRefs(query.withDisabled))
     }
 
     /**
@@ -144,7 +144,7 @@ class OrganizationEndpoint(
     }
 
     /**
-     * Upload a logo for a given organization
+     * Upload a logo for a given organization.
      */
     @PostMapping("/organizationUploadLogo")
     suspend fun organizationUploadLogo(

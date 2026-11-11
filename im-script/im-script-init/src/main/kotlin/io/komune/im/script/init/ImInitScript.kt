@@ -64,20 +64,24 @@ class ImInitScript(
 
     private suspend fun ClientCredentials.initImClient() {
         val clientId = clientId ?: DEFAULT_ROOT_CLIENT_ID
-        val imClientId = AppClient(
-            clientId = clientId,
-            clientSecret = clientSecret,
-            roles = listOf("admin"),
-            realmManagementRoles = emptyList(),
-            homeUrl = null
-        ).let { clientInitService.initAppClient(it) }
+        val imClientId = clientInitService.initAppClient(
+            AppClient(
+                clientId = clientId,
+                clientSecret = clientSecret,
+                roles = listOf("admin"),
+                realmManagementRoles = emptyList(),
+                homeUrl = null
+            )
+        )
 
         val realmClientId = clientCoreFinderService.getByIdentifier("master-realm").id
         val realmClientRoles = clientCoreFinderService.listClientRoles(realmClientId)
-        ClientGrantClientRolesCommand(
-            id = imClientId,
-            providerClientId = realmClientId,
-            roles = realmClientRoles
-        ).let { clientCoreAggregateService.grantClientRoles(it) }
+        val _ = clientCoreAggregateService.grantClientRoles(
+            ClientGrantClientRolesCommand(
+                id = imClientId,
+                providerClientId = realmClientId,
+                roles = realmClientRoles
+            )
+        )
     }
 }

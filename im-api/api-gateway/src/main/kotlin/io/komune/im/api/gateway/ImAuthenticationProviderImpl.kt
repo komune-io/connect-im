@@ -11,7 +11,5 @@ class ImAuthenticationProviderImpl(
     private val imConfig: IMProperties
 ): ImAuthenticationProvider {
 
-    override suspend fun getAuth(): AuthSubRealm {
-        return imConfig.keycloak.toAuthRealm()
-    }
+    override suspend fun getAuth(): AuthSubRealm = imConfig.keycloak.toAuthRealm()
 }

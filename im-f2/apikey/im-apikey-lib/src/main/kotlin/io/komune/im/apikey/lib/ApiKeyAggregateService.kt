@@ -42,7 +42,7 @@ class ApiKeyAggregateService(
     suspend fun findByName(name: String, organizationId: OrganizationId): ApiKey? {
         val organization = organizations.finder.get(organizationId)
         val keyIdentifier = toKeyIdentifier(organization, name)
-        return apiKeyFinderService.getOrNullByIdentifierAndOrganizationId(
+        return apiKeyFinderService.getOrNullInOrganization(
             keyIdentifier, organizationId
         )
     }
@@ -58,7 +58,7 @@ class ApiKeyAggregateService(
         val keyIdentifier = toKeyIdentifier(organization, command.name)
         val keySecret = command.secret ?: UUID.randomUUID().toString()
 
-        val keyId = ClientCreateCommand(
+        val keyId = clientCoreAggregateService.create(ClientCreateCommand(
             identifier = keyIdentifier,
             secret = keySecret,
             isPublicClient = false,
@@ -67,7 +67,7 @@ class ApiKeyAggregateService(
             authorizationServicesEnabled = false,
             isStandardFlowEnabled = false,
             additionalAccessTokenClaim = listOf(UserModel::memberOf.name),
-        ).let { clientCoreAggregateService.create(it).id }
+        )).id
 
         val newApiKey = ApiKeyModel(
             id = keyId,
@@ -77,19 +77,19 @@ class ApiKeyAggregateService(
             creationDate = System.currentTimeMillis()
         )
         val apiKeys = organization.apiKeys() + newApiKey
-        OrganizationCoreSetSomeAttributesCommand(
+        val _ = organizations.aggregate.setSomeAttributes(OrganizationCoreSetSomeAttributesCommand(
             id = organization.id,
             attributes = mapOf(ORGANIZATION_FIELD_API_KEYS to apiKeys.toJson())
-        ).let { organizations.aggregate.setSomeAttributes(it) }
+        ))
 
         val serviceAccountUser = client.client(keyId).serviceAccountUser
-        UserCoreDefineCommand(
+        val _ = userCoreAggregateService.define(UserCoreDefineCommand(
             id = serviceAccountUser.id,
             memberOf = command.organizationId,
             attributes = mapOf("display_name" to command.name),
             roles = command.roles,
             isApiKey = true
-        ).let { userCoreAggregateService.define(it) }
+        ))
 
         return ApiKeyOrganizationAddedEvent(
             organizationId = organization.id,
@@ -125,10 +125,10 @@ class ApiKeyAggregateService(
         }
 
         val apiKeys = organizations.finder.get(organizationId).apiKeys()
-        OrganizationCoreSetSomeAttributesCommand(
+        val _ = organizations.aggregate.setSomeAttributes(OrganizationCoreSetSomeAttributesCommand(
             id = organizationId,
             attributes = mapOf(ORGANIZATION_FIELD_API_KEYS to apiKeys.filter { it.id != command.id }.toJson())
-        ).let { organizations.aggregate.setSomeAttributes(it) }
+        ))
 
         return ApikeyRemoveEvent(
             id = command.id,
@@ -137,8 +137,8 @@ class ApiKeyAggregateService(
     }
 
     private suspend fun checkRoles(roles: List<PrivilegeIdentifier>) {
-        roles.forEachAsync {
-            val privilege = privilegeCoreFinderService.getPrivilege(it)
+        roles.forEachAsync { role ->
+            val privilege = privilegeCoreFinderService.getPrivilege(role)
             privilege.checkTarget(RoleTarget.API_KEY)
         }
     }

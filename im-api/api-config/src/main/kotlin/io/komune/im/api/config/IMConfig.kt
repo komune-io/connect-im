@@ -13,7 +13,5 @@ class IMConfig {
 
     @Bean
     @ConditionalOnBean(IMProperties::class)
-    fun inseeProperties(imProperties: IMProperties): InseeProperties? {
-        return imProperties.organization?.insee
-    }
+    fun inseeProperties(imProperties: IMProperties): InseeProperties? = imProperties.organization?.insee
 }

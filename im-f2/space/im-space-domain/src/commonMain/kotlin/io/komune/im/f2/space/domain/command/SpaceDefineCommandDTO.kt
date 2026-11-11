@@ -80,6 +80,7 @@ data class SpaceDefineCommand(
  * @d2 inherit
  */
 @JsExport
+@Suppress("BooleanPropertyNaming") // wire names: the JSON fields clients read
 interface SpaceSettingsDTO {
     val registrationAllowed: Boolean?
     val rememberMe: Boolean?

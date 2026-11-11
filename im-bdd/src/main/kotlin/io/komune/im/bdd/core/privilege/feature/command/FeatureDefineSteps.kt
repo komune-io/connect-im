@@ -16,7 +16,12 @@ class FeatureDefineSteps(
     private val featureEndpoint: FeatureEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: FeatureDefineCommand
+    private var commandOrNull: FeatureDefineCommand? = null
+    private var command: FeatureDefineCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::featureDefineParams)

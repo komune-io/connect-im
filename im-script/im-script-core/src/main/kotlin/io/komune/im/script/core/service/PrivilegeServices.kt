@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 /** The privilege services a script writes and reads with. */
 @Service
-class PrivilegeServices(
+data class PrivilegeServices(
     val aggregate: PrivilegeAggregateService,
     val finder: PrivilegeFinderService,
 )

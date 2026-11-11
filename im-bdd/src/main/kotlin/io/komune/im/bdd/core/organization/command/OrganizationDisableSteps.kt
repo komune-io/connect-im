@@ -13,13 +13,26 @@ import org.assertj.core.api.Assertions
 import s2.bdd.assertion.AssertionBdd
 import s2.bdd.data.TestContextKey
 
+private const val IDENTIFIER_COLUMN = "identifier"
+
 /** Cucumber steps: organization disable. */
 class OrganizationDisableSteps(
     private val organizationEndpoint: OrganizationEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: OrganizationDisableCommand
-    private lateinit var event: OrganizationDisabledEvent
+    private var commandOrNull: OrganizationDisableCommand? = null
+    private var command: OrganizationDisableCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
+
+    private var eventOrNull: OrganizationDisabledEvent? = null
+    private var event: OrganizationDisabledEvent
+        get() = checkNotNull(eventOrNull) { "No event has been set" }
+        set(value) {
+            eventOrNull = value
+        }
 
     init {
         DataTableType(::organizationDisableParams)
@@ -61,7 +74,7 @@ class OrganizationDisableSteps(
                 val client = keycloakClientProvider.getClient()
                 val assertThat = AssertionBdd.organization(client).assertThatId(organizationId)
 
-                assertThat.hasFields { fields -> fields.copy(enabled = false) }
+                assertThat.hasFields { fields -> fields.copy(isEnabled = false) }
                 if (command.anonymize) {
                    assertThat.isAnonym()
                 }
@@ -72,7 +85,7 @@ class OrganizationDisableSteps(
             step {
                 val rows = dataTable.asMaps()
                 Assertions.assertThat(event.userIds).containsExactlyInAnyOrderElementsOf(
-                    rows.map { context.userIds.safeGet(requireNotNull(it["identifier"])) }
+                    rows.map { context.userIds.safeGet(requireNotNull(it[IDENTIFIER_COLUMN])) }
                 )
             }
         }
@@ -82,8 +95,8 @@ class OrganizationDisableSteps(
                 val client = keycloakClientProvider.getClient()
                 dataTable.asMaps().forEach { row ->
                     AssertionBdd.user(client)
-                        .assertThatId(context.userIds.safeGet(requireNotNull(row["identifier"])))
-                        .hasFields { fields -> fields.copy(enabled = false, disabledBy = row["disabledBy"]) }
+                        .assertThatId(context.userIds.safeGet(requireNotNull(row[IDENTIFIER_COLUMN])))
+                        .hasFields { fields -> fields.copy(isEnabled = false, disabledBy = row["disabledBy"]) }
                 }
             }
         }
@@ -93,7 +106,7 @@ class OrganizationDisableSteps(
         command = OrganizationDisableCommand(
             id = context.organizationIds.safeGet(params.identifier),
             disabledBy = params.disabledBy,
-            anonymize = params.anonymize,
+            anonymize = params.isAnonymized,
             attributes = null,
             userAttributes = null
         )
@@ -102,15 +115,15 @@ class OrganizationDisableSteps(
 
     private fun organizationDisableParams(entry: Map<String, String>?): OrganizationDisableParams {
         return OrganizationDisableParams(
-            identifier = entry?.get("identifier") ?: context.organizationIds.lastUsedKey,
+            identifier = entry?.get(IDENTIFIER_COLUMN) ?: context.organizationIds.lastUsedKey,
             disabledBy = entry?.get("disabledBy"),
-            anonymize = entry?.get("anonymize").toBoolean()
+            isAnonymized = entry?.get("anonymize").toBoolean()
         )
     }
 
     private data class OrganizationDisableParams(
         val identifier: TestContextKey,
         val disabledBy: String?,
-        val anonymize: Boolean
+        val isAnonymized: Boolean
     )
 }

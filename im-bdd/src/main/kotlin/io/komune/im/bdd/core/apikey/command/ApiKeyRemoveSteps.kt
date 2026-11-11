@@ -18,7 +18,12 @@ class ApiKeyRemoveSteps(
     private val apikeyEndpoint: ApiKeyEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: ApikeyRemoveCommand
+    private var commandOrNull: ApikeyRemoveCommand? = null
+    private var command: ApikeyRemoveCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::apiKeyRemoveParams)

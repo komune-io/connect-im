@@ -19,7 +19,12 @@ class UserCreateSteps(
     private val userEndpoint: UserEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: UserCreateCommand
+    private var commandOrNull: UserCreateCommand? = null
+    private var command: UserCreateCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::userCreateParams)
@@ -115,7 +120,7 @@ class UserCreateSteps(
             ),
             phone = entry?.get("phone") ?: "0600000000",
             roles = entry?.extractList<String>("roles")?.map { context.roleIdentifiers[it] ?: it }.orEmpty(),
-            sendEmailLink = false,
+            isEmailLinkSent = false,
             memberOf = entry?.get("memberOf").parseNullableOrDefault(null),
             attributes = userAttributesParams(entry),
             isEmailVerified = true
@@ -131,7 +136,7 @@ class UserCreateSteps(
         val address: Address?,
         val phone: String?,
         val roles: List<String>,
-        val sendEmailLink: Boolean,
+        val isEmailLinkSent: Boolean,
         val memberOf: OrganizationId?,
         val attributes: Map<String, String>,
         val isEmailVerified: Boolean

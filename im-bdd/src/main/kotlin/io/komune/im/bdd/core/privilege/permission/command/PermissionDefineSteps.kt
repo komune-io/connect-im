@@ -16,7 +16,12 @@ class PermissionDefineSteps(
     private val permissionEndpoint: PermissionEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: PermissionDefineCommand
+    private var commandOrNull: PermissionDefineCommand? = null
+    private var command: PermissionDefineCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::permissionDefineParams)

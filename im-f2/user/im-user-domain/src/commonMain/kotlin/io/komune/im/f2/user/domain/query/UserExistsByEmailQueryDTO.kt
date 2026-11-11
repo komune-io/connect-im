@@ -46,6 +46,7 @@ interface UserExistsByEmailResultDTO: Event {
      * True if the user exists, false else.
      * @example true
      */
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val item: Boolean
 }
 

@@ -21,7 +21,12 @@ class OrganizationUpdateSteps(
     private val organizationEndpoint: OrganizationEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: OrganizationUpdateCommand
+    private var commandOrNull: OrganizationUpdateCommand? = null
+    private var command: OrganizationUpdateCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::organizationUpdateParams)
@@ -107,7 +112,7 @@ class OrganizationUpdateSteps(
             identifier = identifier,
             name = entry?.get("name") ?: organization.name,
             description = entry?.get("description"),
-            address = if (addressKeys.none { entry?.get(it) != null }) {
+            address = if (addressKeys.all { entry?.get(it) == null }) {
                 organization.address
             } else {
                 val current = organization.address
@@ -137,11 +142,6 @@ class OrganizationUpdateSteps(
 
     private fun organizationAttributesParams(entry: Map<String, String>?): Map<String, String>? {
         if (entry == null) return null
-        val job = entry["job"]
-        return if (job != null) {
-             mapOf(
-                "job" to job
-            )
-        } else null
+        return entry["job"]?.let { job -> mapOf("job" to job) }
     }
 }

@@ -49,12 +49,12 @@ class F2ErrorStatusTest(
 
         @Bean
         fun notFoundFunction(): F2Function<String, String> = f2Function {
-            throw NotFoundException("User", it)
+            throw NotFoundException(name = "User", id = it)
         }
 
         @Bean
         fun conflictFunction(): F2Function<String, String> = f2Function {
-            throw ConflictException("User", "email", it)
+            throw ConflictException(entity = "User", property = "email", value = it)
         }
 
         @Bean
@@ -70,44 +70,55 @@ class F2ErrorStatusTest(
 
     private fun call(function: String, body: String = "[\"id\"]"): WebTestClient.ResponseSpec =
         WebTestClient.bindToServer().baseUrl("http://localhost:$port").build()
-            .post().uri("/$function")
+            .post()
+            .uri("/$function")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(body)
             .exchange()
 
     @Test
-    fun `a refused policy answers 403 without its message`() {
+    fun `a refused policy answers 403 with its message`() {
         call("forbiddenFunction").expectStatus().isForbidden
             .expectBody()
-            .jsonPath("$.refusal").isEqualTo("http.FORBIDDEN")
-            .jsonPath("$.message").doesNotExist()
+            .jsonPath("$.refusal")
+            .isEqualTo("http.FORBIDDEN")
+            .jsonPath("$.message")
+            .isEqualTo("User [u] is not authorized to get users")
     }
 
     @Test
     fun `a missing entity answers 404`() {
         call("notFoundFunction").expectStatus().isNotFound
-            .expectBody().jsonPath("$.refusal").isEqualTo("http.NOT_FOUND")
+            .expectBody()
+            .jsonPath("$.refusal")
+            .isEqualTo("http.NOT_FOUND")
     }
 
     @Test
     fun `a conflict answers 409`() {
         call("conflictFunction").expectStatus().isEqualTo(409)
-            .expectBody().jsonPath("$.refusal").isEqualTo("http.CONFLICT")
+            .expectBody()
+            .jsonPath("$.refusal")
+            .isEqualTo("http.CONFLICT")
     }
 
     @Test
     fun `a missing required field answers 400 naming it`() {
-        call("queryFunction", "[{}]").expectStatus().isBadRequest
+        call(function = "queryFunction", body = "[{}]").expectStatus().isBadRequest
             .expectBody()
-            .jsonPath("$.refusal").isEqualTo("http.INVALID_PAYLOAD")
-            .jsonPath("$.parameters.parameter").isEqualTo("id")
+            .jsonPath("$.refusal")
+            .isEqualTo("http.INVALID_PAYLOAD")
+            .jsonPath("$.parameters.parameter")
+            .isEqualTo("id")
     }
 
     @Test
     fun `an unexpected error still answers 500 without its message`() {
         call("failingFunction").expectStatus().isEqualTo(500)
             .expectBody()
-            .jsonPath("$.refusal").isEqualTo("http.UNEXPECTED")
-            .jsonPath("$.message").doesNotExist()
+            .jsonPath("$.refusal")
+            .isEqualTo("http.UNEXPECTED")
+            .jsonPath("$.message")
+            .doesNotExist()
     }
 }

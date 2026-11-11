@@ -10,31 +10,23 @@ import kotlin.js.JsName
 @JsName("SpacePolicies")
 object SpacePolicies {
     /**
-     * User can get a space
+     * User can get a space.
      */
-    fun canGet(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_SPACE_READ)
-    }
+    fun canGet(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_SPACE_READ)
 
     /**
-     * User can list spaces
+     * User can list spaces.
      */
-    fun canPage(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_SPACE_READ)
-    }
+    fun canPage(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_SPACE_READ)
 
     /**
-     * User can create a space
+     * User can create a space.
      */
-    fun canDefine(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_SPACE_WRITE)
-    }
+    fun canDefine(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_SPACE_WRITE)
 
     /**
-     * User can delete a space
+     * User can delete a space.
      */
-    fun canDelete(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_SPACE_WRITE)
-    }
+    fun canDelete(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_SPACE_WRITE)
 
 }

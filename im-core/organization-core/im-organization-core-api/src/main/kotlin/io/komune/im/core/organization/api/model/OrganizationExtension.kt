@@ -17,7 +17,7 @@ fun GroupRepresentation.toOrganization(): OrganizationModel {
         address = singleAttributes[OrganizationModel::address.name]?.parseJson(),
         attributes = singleAttributes,
         roles = realmRoles,
-        enabled = singleAttributes[OrganizationModel::enabled.name]?.toBoolean() ?: true,
+        enabled = singleAttributes[OrganizationModel::enabled.name]?.toBoolean() != false,
         disabledBy = singleAttributes[OrganizationModel::disabledBy.name],
         creationDate = singleAttributes[OrganizationModel::creationDate.name]?.toLong() ?: 0,
         disabledDate = singleAttributes[OrganizationModel::disabledDate.name]?.toLong()

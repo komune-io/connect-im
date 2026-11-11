@@ -17,6 +17,7 @@ import kotlinx.serialization.Serializable
  * @order 10
  */
 @JsExport
+@Suppress("ComplexInterface") // wire contract: one field per JSON property clients read
 interface UserDTO {
     /**
      * Id of the user.
@@ -72,7 +73,7 @@ interface UserDTO {
     val roles: List<RoleDTO>
 
     /**
-     * Multifactor authentication enabled
+     * Multifactor authentication enabled.
      * @example [ "OTP" ]
      */
     val mfa: List<String>?
@@ -87,6 +88,7 @@ interface UserDTO {
      * Specifies if the user is enabled or not.
      * @example true
      */
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val enabled: Boolean
 
     /**

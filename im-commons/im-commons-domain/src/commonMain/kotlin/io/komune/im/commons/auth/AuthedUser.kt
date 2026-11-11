@@ -14,7 +14,7 @@ interface AuthedUserDTO {
     val roles: Array<String>?
 
     /**
-     * Authentication Context Class Reference
+     * Authentication Context Class Reference.
      */
     val acr: String?
 }

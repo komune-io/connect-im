@@ -83,7 +83,7 @@ class UserEndpoint(
                 name = enforcedQuery.name,
                 email = enforcedQuery.email,
                 attributes = enforcedQuery.attributes,
-                withDisabled = enforcedQuery.withDisabled,
+                isDisabledIncluded = enforcedQuery.withDisabled,
             ),
             offset = OffsetPagination(
                 offset = enforcedQuery.offset ?: 0,
@@ -117,7 +117,7 @@ class UserEndpoint(
     override fun userDisableMfa(): UserDisableMfaFunction = f2Function { command ->
         logger.info("userDisableMfa: $command")
         policiesEnforcer.checkDisableMfa(command.id)
-        userAggregateService.disableMultiFactorAuthentication(command)
+        userAggregateService.disableMfa(command)
     }
 
     @Bean

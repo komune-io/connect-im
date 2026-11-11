@@ -35,6 +35,7 @@ interface UserUpdateEmailCommandDTO: Command {
      * Whether to send a verification email after a successful update.
      * @example true
      */
+    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val sendVerificationEmail: Boolean
 }
 

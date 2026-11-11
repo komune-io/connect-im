@@ -13,6 +13,8 @@ import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.parametersOf
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 open class ClientJvm(
     baseUrl: String,
@@ -32,8 +34,11 @@ open class Client(
 ) {
     val httpClient = httpClientBuilder.build(baseUrl)
 
+    @PublishedApi
+    internal val logger: Logger = LoggerFactory.getLogger(Client::class.java)
+
     protected suspend inline fun <reified T> get(path: String, withAuth: Boolean = true): T {
-        println("GET $path")
+        logger.info("GET {}", path)
         return httpClient.httpClient.get {
             basicSetup(path, withAuth)
         }.body()
@@ -50,14 +55,14 @@ open class Client(
         formData: Map<String, String>,
         withAuth: Boolean = true
     ): T {
-        println("POST formdata $path")
+        logger.info("POST formdata {}", path)
         return httpClient.httpClient.post {
             formDataSetup(path, formData, withAuth)
         }.body()
     }
 
     protected suspend inline fun <reified T> put(path: String, jsonBody: Any, withAuth: Boolean = true): T {
-        println("PUT json $path")
+        logger.info("PUT json {}", path)
         return httpClient.httpClient.put {
             jsonSetup(path, jsonBody, withAuth)
         }.body()
@@ -68,7 +73,7 @@ open class Client(
         formData: Map<String, String>,
         withAuth: Boolean = true
     ): T {
-        println("PUT formdata $path")
+        logger.info("PUT formdata {}", path)
         return httpClient.httpClient.put {
             formDataSetup(path, formData, withAuth)
         }.body()
@@ -94,7 +99,7 @@ open class Client(
     protected suspend fun HttpRequestBuilder.basicSetup(path: String, withAuth: Boolean) {
         if (withAuth) {
             generateBearerToken()?.let { token ->
-                header("Authorization", "Bearer $token")
+                header(key = "Authorization", value = "Bearer $token")
             }
         }
         url("$baseUrl/$path")

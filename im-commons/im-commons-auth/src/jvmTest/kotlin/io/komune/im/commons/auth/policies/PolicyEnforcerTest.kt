@@ -1,6 +1,7 @@
 package io.komune.im.commons.auth.policies
 
 import f2.dsl.fnc.F2Function
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
@@ -37,12 +38,19 @@ class PolicyEnforcerTest {
     @Test
     fun `enforce runs before the wrapped function, so a rejected value never reaches it`() = runTest {
         val handled = mutableListOf<String>()
-        val recording = F2Function<String, String> { msgs -> msgs.map { handled.add(it); it } }
+        val recording = F2Function<String, String> { msgs -> msgs.map { value -> handled.add(value); value } }
         val guarded = enforce(recording) { error("denied") }
 
-        val outcome = runCatching { guarded.invoke(flowOf("a")).toList() }
+        val thrown = try {
+            guarded.invoke(flowOf("a")).toList()
+            null
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: IllegalStateException) {
+            e
+        }
 
-        assertThat(outcome.exceptionOrNull()).hasMessage("denied")
+        assertThat(thrown).hasMessage("denied")
         assertThat(handled).isEmpty()
     }
 
@@ -58,12 +66,19 @@ class PolicyEnforcerTest {
     @Test
     fun `verify rejecting stops the value reaching the handler`() = runTest {
         val handled = mutableListOf<String>()
-        val recording = F2Function<String, String> { msgs -> msgs.map { handled.add(it); it } }
+        val recording = F2Function<String, String> { msgs -> msgs.map { value -> handled.add(value); value } }
         val guarded = verify(recording) { error("denied") }
 
-        val outcome = runCatching { guarded.invoke(flowOf("a")).toList() }
+        val thrown = try {
+            guarded.invoke(flowOf("a")).toList()
+            null
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: IllegalStateException) {
+            e
+        }
 
-        assertThat(outcome.exceptionOrNull()).hasMessage("denied")
+        assertThat(thrown).hasMessage("denied")
         assertThat(handled).isEmpty()
     }
 
@@ -82,8 +97,15 @@ class PolicyEnforcerTest {
     fun `verifyAfter rejecting the result surfaces as a failure`() = runTest {
         val guarded = verifyAfter(echo) { error("not yours") }
 
-        val outcome = runCatching { guarded.invoke(flowOf("a")).toList() }
+        val thrown = try {
+            guarded.invoke(flowOf("a")).toList()
+            null
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: IllegalStateException) {
+            e
+        }
 
-        assertThat(outcome.isFailure).isTrue()
+        assertThat(thrown).isNotNull()
     }
 }

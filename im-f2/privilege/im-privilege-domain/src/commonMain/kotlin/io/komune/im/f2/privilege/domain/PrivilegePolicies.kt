@@ -7,15 +7,9 @@ import kotlin.js.JsExport
 
 @JsExport
 object PrivilegePolicies {
-    fun canGet(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_ROLE_READ)
-    }
+    fun canGet(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_ROLE_READ)
 
-    fun canList(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_ROLE_READ)
-    }
+    fun canList(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_ROLE_READ)
 
-    fun canDefine(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_ROLE_WRITE)
-    }
+    fun canDefine(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_ROLE_WRITE)
 }

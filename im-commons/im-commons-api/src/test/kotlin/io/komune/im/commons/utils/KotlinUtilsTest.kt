@@ -1,5 +1,6 @@
 package io.komune.im.commons.utils
 
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -42,9 +43,14 @@ class KotlinUtilsTest {
 
     @Test
     fun `a throwing transform propagates rather than being swallowed`() = runTest {
-        val outcome = runCatching { listOf(1, 2).mapAsync { if (it == 2) error("boom") else it } }
+        val thrown = try {
+            listOf(1, 2).mapAsync { if (it == 2) error("boom") else it }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: IllegalStateException) {
+            e
+        }
 
-        assertThat(outcome.isFailure).isTrue()
-        assertThat(outcome.exceptionOrNull()).isInstanceOf(IllegalStateException::class.java)
+        assertThat(thrown).isInstanceOf(IllegalStateException::class.java)
     }
 }

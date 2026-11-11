@@ -7,8 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired
 open class CachedService(
     protected val cacheName: CacheName
 ) {
-    @Autowired
-    protected lateinit var redisCache: RedisCache
+    private var injectedRedisCache: RedisCache? = null
+
+    @set:Autowired
+    protected var redisCache: RedisCache
+        get() = checkNotNull(injectedRedisCache) { "RedisCache has not been injected" }
+        set(value) {
+            injectedRedisCache = value
+        }
 
     protected suspend inline fun <reified R> query(
         id: String,

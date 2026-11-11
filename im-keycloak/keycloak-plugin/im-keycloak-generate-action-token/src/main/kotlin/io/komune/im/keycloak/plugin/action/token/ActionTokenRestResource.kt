@@ -25,7 +25,11 @@ class ActionTokenRestResource(
         @QueryParam("action") action: String,
         @QueryParam("lifespan") lifespan: Int,
     ): String {
-        checkResourceAccess("realm-management", "manage-users", "Does not have permission to generate action token")
+        checkResourceAccess(
+            client = "realm-management",
+            role = "manage-users",
+            message = "Does not have permission to generate action token"
+        )
         return ExecuteActionsActionToken(
             userId,
             lifespan,

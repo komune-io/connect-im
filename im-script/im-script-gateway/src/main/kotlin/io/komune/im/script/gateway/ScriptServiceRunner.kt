@@ -5,6 +5,7 @@ import io.komune.im.script.core.retryOnThrow
 import io.komune.im.script.init.ImInitScript
 import io.komune.im.script.space.config.SpaceConfigScript
 import io.komune.im.script.space.create.SpaceCreateScript
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
@@ -22,20 +23,24 @@ class ScriptServiceRunner(
 
     private val logger = LoggerFactory.getLogger(ScriptServiceRunner::class.java)
 
-    override fun run(vararg args: String) = runBlocking {
-        try {
-            runScript("Init", imInitScript::run)
-            runScript("Realm-Create", spaceCreateScript::run)
-            runScript("Realm-Config", spaceConfigService::run)
-        } catch (_: RuntimeException) {
-        } finally {
-            context.close()
+    override fun run(vararg args: String) {
+        runBlocking {
+            try {
+                runScript("Init", imInitScript::run)
+                runScript("Realm-Create", spaceCreateScript::run)
+                runScript("Realm-Config", spaceConfigService::run)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: RuntimeException) {
+            } finally {
+                context.close()
+            }
         }
     }
 
     @Suppress("TooGenericExceptionThrown")
     suspend fun runScript(script: String, block: suspend () -> Unit) {
-        val success = retryOnThrow(
+        val isSuccess = retryOnThrow(
             actionName = script,
             maxRetries = imRetryProperties.max,
             retryDelayMillis = imRetryProperties.delayMillis,
@@ -44,7 +49,7 @@ class ScriptServiceRunner(
             block()
         }
 
-        if (!success) {
+        if (!isSuccess) {
             throw RuntimeException("Failed to run script $script")
         }
     }

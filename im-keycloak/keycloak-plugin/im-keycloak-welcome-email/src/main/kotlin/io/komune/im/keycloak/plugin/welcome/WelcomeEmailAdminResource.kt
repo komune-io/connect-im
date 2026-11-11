@@ -92,13 +92,15 @@ class WelcomeEmailAdminResource(
         } catch (e: EmailException) {
             ServicesLogger.LOGGER.failedToSendActionsEmail(e)
             throw ErrorResponse.error(
-                "Failed to send welcome email: ${e.message}",
+                "Failed to send welcome email: ${e.message ?: "null"}",
                 Response.Status.INTERNAL_SERVER_ERROR
             )
         }
 
-        adminEvent.resource(ResourceType.USER).operation(OperationType.ACTION)
-            .resourcePath(session.context.uri).success()
+        adminEvent.resource(ResourceType.USER)
+            .operation(OperationType.ACTION)
+            .resourcePath(session.context.uri)
+            .success()
         return Response.noContent().build()
     }
 
@@ -123,15 +125,18 @@ class WelcomeEmailAdminResource(
         if (!user.isEnabled) throw badRequest("User is disabled")
         if (redirectUri != null && clientId == null) throw badRequest("Client id missing")
 
-        val client: ClientModel = (if (clientId != null) realm.getClientByClientId(clientId)
-            else SystemClientUtil.getSystemClient(realm))
-            ?: throw badRequest("Client doesn't exist")
+        val foundClient: ClientModel? = if (clientId != null) {
+            realm.getClientByClientId(clientId)
+        } else {
+            SystemClientUtil.getSystemClient(realm)
+        }
+        val client: ClientModel = foundClient ?: throw badRequest("Client doesn't exist")
         if (!client.isEnabled) throw badRequest("Client is not enabled")
 
         val verified = redirectUri?.let {
             RedirectUtils.verifyRedirectUri(session, it, client) ?: throw badRequest("Invalid redirect uri.")
         }
-        return Target(client.clientId, verified)
+        return Target(clientId = client.clientId, redirectUri = verified)
     }
 
     private fun badRequest(message: String) = ErrorResponse.error(message, Response.Status.BAD_REQUEST)

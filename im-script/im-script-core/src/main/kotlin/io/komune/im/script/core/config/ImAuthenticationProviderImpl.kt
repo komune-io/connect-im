@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class ImAuthenticationProviderImpl: ImAuthenticationProvider {
-    override suspend fun getAuth(): AuthSubRealm {
-        return checkNotNull(currentAuth()) { "No authentication in the current context" }
-    }
+    override suspend fun getAuth(): AuthSubRealm =
+        checkNotNull(currentAuth()) { "No authentication in the current context" }
 }

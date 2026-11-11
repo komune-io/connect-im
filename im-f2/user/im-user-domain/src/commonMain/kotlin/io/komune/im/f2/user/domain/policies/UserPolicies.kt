@@ -15,30 +15,28 @@ import kotlin.js.JsName
 @JsName("UserPolicies")
 object UserPolicies {
     /**
-     * User can get a user
+     * User can get a user.
      */
     fun canGet(authedUser: AuthedUserDTO, user: UserDTO?): Boolean {
         return authedUser.hasRole(ImPermission.IM_USER_READ)
-                || user != null && isMySelf(authedUser, user)
+                || user != null && isMySelfWithMyUserRole(authedUser, user)
                 || user != null && isMyOrganizationMember(authedUser, user)
     }
 
     /**
-     * User can list users
+     * User can list users.
      */
-    fun canPage(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasOneOfRoles(ImPermission.IM_USER_READ)
-    }
+    fun canPage(authedUser: AuthedUserDTO): Boolean = authedUser.hasOneOfRoles(ImPermission.IM_USER_READ)
 
 
     /**
-     * User can list users ref
+     * User can list users ref.
      */
     fun checkRefList(authedUser: AuthedUserDTO) =
         authedUser.hasOneOfRoles(ImPermission.IM_USER_READ, ImPermission.IM_MY_ORGANIZATION_READ)
 
     /**
-     * User can create a user
+     * User can create a user.
      */
     fun canCreate(authedUser: AuthedUserDTO, organizationId: OrganizationId?): Boolean {
         return authedUser.hasRole(ImPermission.IM_USER_WRITE)
@@ -46,46 +44,37 @@ object UserPolicies {
     }
 
     /**
-     * User can update the given user
+     * User can update the given user.
      */
-    fun canUpdate(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return canWriteUser(authedUser, user)
-    }
+    fun canUpdate(authedUser: AuthedUserDTO, user: UserDTO): Boolean = canWriteUser(authedUser, user)
 
     /**
-     * User can update member of the given user
+     * User can update member of the given user.
      */
-    fun canUpdateMemberOf(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE)
-    }
+    fun canUpdateMemberOf(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE)
 
     /**
-     * User can update roles of the given user
+     * User can update roles of the given user.
      */
-    fun canUpdateRole(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasRole(ImPermission.IM_USER_ROLE_WRITE)
-    }
+    fun canUpdateRole(authedUser: AuthedUserDTO): Boolean = authedUser.hasRole(ImPermission.IM_USER_ROLE_WRITE)
 
     /**
-     * User can disable a user
+     * User can disable a user.
      */
-    fun canDisable(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return canWriteUser(authedUser, user) && isNotMySelf(authedUser, user)
-    }
+    fun canDisable(authedUser: AuthedUserDTO, user: UserDTO): Boolean =
+        canWriteUser(authedUser, user) && isNotMySelf(authedUser, user)
 
     /**
-     * User can enable a user
+     * User can enable a user.
      */
-    fun canEnable(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return canWriteUser(authedUser, user) && isNotMySelf(authedUser, user)
-    }
+    fun canEnable(authedUser: AuthedUserDTO, user: UserDTO): Boolean =
+        canWriteUser(authedUser, user) && isNotMySelf(authedUser, user)
 
     /**
-     * User can delete a user
+     * User can delete a user.
      */
-    fun canDelete(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return canWriteUser(authedUser, user) && isNotMySelf(authedUser, user)
-    }
+    fun canDelete(authedUser: AuthedUserDTO, user: UserDTO): Boolean =
+        canWriteUser(authedUser, user) && isNotMySelf(authedUser, user)
 }
 
 /**
@@ -95,42 +84,32 @@ object UserPolicies {
 @JsName("UserMfaPolicies")
 object UserMfaPolicies {
     /**
-     * User can configure mfa
+     * User can configure mfa.
      */
-    fun canConfigureMfa(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return isMySelf(authedUser, user)
-    }
+    fun canConfigureMfa(authedUser: AuthedUserDTO, user: UserDTO): Boolean = isMySelfWithMyUserRole(authedUser, user)
 
     /**
-     * User can disable mfa
+     * User can disable mfa.
      */
-    fun canDisableMfa(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-        return isMySelf(authedUser, user) && !authedUser.hasRole(ImPermission.IM_FORCE_MFA_OTP)
-    }
+    fun canDisableMfa(authedUser: AuthedUserDTO, user: UserDTO): Boolean =
+        isMySelfWithMyUserRole(authedUser, user) && !authedUser.hasRole(ImPermission.IM_FORCE_MFA_OTP)
 
     /**
-     * User can disable mfa
+     * User can disable mfa.
      */
-    fun canDisableMfaAcr(authedUser: AuthedUserDTO): Boolean {
-        return authedUser.hasAcr(ImMfaPasswordOtpFlowAcr.PASSWORD_OTP.key)
-    }
+    fun canDisableMfaAcr(authedUser: AuthedUserDTO): Boolean =
+        authedUser.hasAcr(ImMfaPasswordOtpFlowAcr.PASSWORD_OTP.key)
 }
 
 private fun canWriteUser(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-    return (isMySelf(authedUser, user) || authedUser.hasRole(ImPermission.IM_USER_WRITE))
+    return (isMySelfWithMyUserRole(authedUser, user) || authedUser.hasRole(ImPermission.IM_USER_WRITE))
         && (authedUser.memberOf == user.memberOf?.id || authedUser.hasRole(ImPermission.IM_ORGANIZATION_WRITE))
 }
 
-private fun isNotMySelf(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-    return authedUser.id != user.id
-}
+private fun isNotMySelf(authedUser: AuthedUserDTO, user: UserDTO): Boolean = authedUser.id != user.id
 
-/**
- * The token acts on its own account and was granted the right to.
- */
-private fun isMySelf(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
-    return authedUser.id == user.id && authedUser.hasRole(ImPermission.IM_MY_USER)
-}
+private fun isMySelfWithMyUserRole(authedUser: AuthedUserDTO, user: UserDTO): Boolean =
+    authedUser.id == user.id && authedUser.hasRole(ImPermission.IM_MY_USER)
 
 private fun isMyOrganizationMember(authedUser: AuthedUserDTO, user: UserDTO): Boolean {
     return authedUser.memberOf != null

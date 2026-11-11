@@ -16,7 +16,7 @@ class AssertionSpace(
     override suspend fun findById(id: SpaceIdentifier): RealmRepresentation? = client.realm(id).toRepresentation()
     override suspend fun assertThat(entity: RealmRepresentation) = SpaceAssert(entity)
 
-    inner class SpaceAssert(
+    class SpaceAssert(
         private val space: RealmRepresentation
     ) {
         @IgnorableReturnValue

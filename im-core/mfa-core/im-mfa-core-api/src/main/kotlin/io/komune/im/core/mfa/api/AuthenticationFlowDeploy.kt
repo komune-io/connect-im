@@ -28,10 +28,10 @@ private fun List<FlowObject>.create(parentAlias: String, authFlowsClient: Authen
         when (subObject) {
             is SubFlow -> deploySubFlow(authFlowsClient, parentAlias, subObject)
             is Execution -> authFlowsClient.addExecution(
-                parentAlias,
-                subObject.provider,
-                subObject.requirement,
-                subObject.config
+                parent = parentAlias,
+                provider = subObject.provider,
+                requirement = subObject.requirement,
+                config = subObject.config
             )
         }
     }

@@ -38,9 +38,8 @@ class AssertionUser(
         Assertions.assertThat(getByEmail(email)).isNull()
     }
 
-    private fun getByEmail(email: String): UserRepresentation? {
-        return client.users().search("", "", "", email, 0, 1).firstOrNull()
-    }
+    private fun getByEmail(email: String): UserRepresentation? =
+        client.users().search("", "", "", email, 0, 1).firstOrNull()
 
     inner class UserAssert(
         private val user: UserRepresentation
@@ -54,7 +53,7 @@ class AssertionUser(
         private val userPhone: String? = singleAttributes[User::phone.name]
         private val userDisabledBy: UserId? = singleAttributes[User::disabledBy.name]
         private val userDisabledDate: Long? = singleAttributes[User::disabledDate.name]?.toLong()
-        private val userIsApiKey: Boolean = singleAttributes[UserModel::isApiKey.name].toBoolean()
+        private val isUserApiKey: Boolean = singleAttributes[UserModel::isApiKey.name].toBoolean()
         private val userRoles = client.user(user.id)
             .roles()
             .realmLevel()
@@ -72,11 +71,11 @@ class AssertionUser(
             phone = userPhone,
             roles = userRoles,
             attributes = singleAttributes,
-            enabled = user.isEnabled,
+            isEnabled = user.isEnabled,
             disabledBy = userDisabledBy,
             creationDate = user.createdTimestamp,
             disabledDate = userDisabledDate,
-            isApiKey = userIsApiKey,
+            isApiKey = isUserApiKey,
         )
 
         /** Asserts the entity holds [expected], its own fields by default. */
@@ -90,11 +89,11 @@ class AssertionUser(
             Assertions.assertThat(userPhone).isEqualTo(expected.phone)
             Assertions.assertThat(userRoles).containsExactlyInAnyOrderElementsOf(expected.roles)
             Assertions.assertThat(singleAttributes).containsAllEntriesOf(expected.attributes)
-            Assertions.assertThat(user.isEnabled).isEqualTo(expected.enabled)
+            Assertions.assertThat(user.isEnabled).isEqualTo(expected.isEnabled)
             Assertions.assertThat(user.createdTimestamp).isEqualTo(expected.creationDate)
             Assertions.assertThat(userDisabledBy).isEqualTo(expected.disabledBy)
             Assertions.assertThat(userDisabledDate).isEqualTo(expected.disabledDate)
-            Assertions.assertThat(userIsApiKey).isEqualTo(expected.isApiKey)
+            Assertions.assertThat(isUserApiKey).isEqualTo(expected.isApiKey)
         }
 
         /** Compares the entity with its own fields as [change] rewrites them. */
@@ -120,7 +119,7 @@ class AssertionUser(
             phone = other.phone,
             roles = other.roles.map(Role::identifier),
             attributes = other.attributes,
-            enabled = other.enabled,
+            isEnabled = other.enabled,
             creationDate = other.creationDate,
             disabledDate = other.disabledDate,
             disabledBy = other.disabledBy
@@ -138,7 +137,7 @@ data class UserFields(
     val phone: String?,
     val roles: List<RoleIdentifier>,
     val attributes: Map<String, String>,
-    val enabled: Boolean,
+    val isEnabled: Boolean,
     val disabledBy: UserId?,
     val creationDate: Long,
     val disabledDate: Long?,

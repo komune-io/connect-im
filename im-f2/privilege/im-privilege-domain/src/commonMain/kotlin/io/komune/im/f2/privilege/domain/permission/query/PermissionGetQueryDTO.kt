@@ -44,7 +44,7 @@ data class PermissionGetQuery(
 @JsName("PermissionGetResultDTO")
 interface PermissionGetResultDTO {
     /**
-     * Permission matching the given identifier, or null if not found
+     * Permission matching the given identifier, or null if not found.
      */
     val item: PermissionDTO?
 }

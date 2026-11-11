@@ -29,11 +29,11 @@ class ApiKeyFinderService(
     suspend fun getOrNullByIdentifier(id: ApiKeyIdentifier): ApiKey? {
         val user = getUserOfKeyOrNull(id)
         return user?.memberOf?.let { memberOf ->
-            getOrNullByIdentifierAndOrganizationId(id, memberOf)
+            getOrNullInOrganization(id, memberOf)
         }
     }
 
-    suspend fun getOrNullByIdentifierAndOrganizationId(
+    suspend fun getOrNullInOrganization(
         id: ApiKeyIdentifier,
         organizationId: OrganizationId
     ): ApiKey? {
@@ -54,13 +54,10 @@ class ApiKeyFinderService(
             ?.let { apiKeyToDTOTransformer.transform(it) }
     }
 
-    suspend fun get(id: ApiKeyId): ApiKey {
-        return getOrNull(id) ?: throw NotFoundException("ApiKey", id)
-    }
+    suspend fun get(id: ApiKeyId): ApiKey = getOrNull(id) ?: throw NotFoundException(name = "ApiKey", id = id)
 
-    suspend fun getUserOfKey(id: ApiKeyId): UserModel {
-        return getUserOfKeyOrNull(id) ?: throw NotFoundException("User of ApiKey", id)
-    }
+    suspend fun getUserOfKey(id: ApiKeyId): UserModel =
+        getUserOfKeyOrNull(id) ?: throw NotFoundException(name = "User of ApiKey", id = id)
 
     suspend fun getUserOfKeyOrNull(id: ApiKeyId): UserModel? {
         @Suppress("SwallowedException")
@@ -82,8 +79,8 @@ class ApiKeyFinderService(
                 ids = filter.organizationId?.let(::setOf),
                 roles = filter.role?.let(::setOf),
                 attributes = filter.attributes.orEmpty()
-                    .mapValues { (_, expected) -> ({ attribute: String? -> attribute == expected }) },
-                withDisabled = filter.withDisabled,
+                    .mapValues { (_, expected) -> { attribute: String? -> attribute == expected } },
+                isDisabledIncluded = filter.isDisabledIncluded,
             )
         ).items
 
@@ -99,9 +96,8 @@ class ApiKeyFinderService(
         )
     }
 
-    private fun List<ApiKeyModel>.filteredByName(search: String?): List<ApiKeyModel> {
-        return search?.let { this.filter { apiKey -> apiKey.name.contains(search, true) } } ?: this
-    }
+    private fun List<ApiKeyModel>.filteredByName(search: String?): List<ApiKeyModel> =
+        search?.let { this.filter { apiKey -> apiKey.name.contains(search, true) } } ?: this
 }
 
 /** What [ApiKeyFinderService.page] keeps; a null criterion keeps everything. */
@@ -110,5 +106,5 @@ data class ApiKeyFilter(
     val organizationId: OrganizationId? = null,
     val role: String? = null,
     val attributes: Map<String, String>? = null,
-    val withDisabled: Boolean = false,
+    val isDisabledIncluded: Boolean = false,
 )

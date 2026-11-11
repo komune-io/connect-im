@@ -28,9 +28,7 @@ class ClientCoreFinderService(
         }
     }
 
-    suspend fun get(id: ClientId): ClientModel {
-        return getOrNull(id) ?: throw NotFoundException("Client", id)
-    }
+    suspend fun get(id: ClientId): ClientModel = getOrNull(id) ?: throw NotFoundException(name = "Client", id = id)
 
     suspend fun getByIdentifierOrNull(identifier: ClientIdentifier): ClientModel? {
         val keycloakClient = keycloakClientProvider.getClient()
@@ -42,9 +40,8 @@ class ClientCoreFinderService(
         }
     }
 
-    suspend fun getByIdentifier(identifier: ClientIdentifier): ClientModel {
-        return getByIdentifierOrNull(identifier) ?: throw NotFoundException("Client with identifier", identifier)
-    }
+    suspend fun getByIdentifier(identifier: ClientIdentifier): ClientModel = getByIdentifierOrNull(identifier)
+        ?: throw NotFoundException(name = "Client with identifier", id = identifier)
 
     suspend fun listClientRoles(id: ClientId): List<String> {
         val keycloakClient = keycloakClientProvider.getClient()

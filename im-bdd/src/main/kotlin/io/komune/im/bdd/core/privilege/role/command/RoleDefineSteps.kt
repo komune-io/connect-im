@@ -20,7 +20,12 @@ class RoleDefineSteps(
     private val roleEndpoint: RoleEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: RoleDefineCommand
+    private var commandOrNull: RoleDefineCommand? = null
+    private var command: RoleDefineCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::roleDefineParams)
@@ -90,9 +95,9 @@ class RoleDefineSteps(
             description = entry?.get(RoleDefineParams::description.name) ?: UUID.randomUUID().toString(),
             targets = entry?.extractList<RoleTarget>(RoleDefineParams::targets.name).orEmpty(),
             locale = entry?.get(RoleDefineParams::locale.name)?.parseJson<Map<String, String>>().orEmpty(),
-            bindings = entry?.get(RoleDefineParams::bindings.name)
-                ?.parseJson<Map<String, List<RoleIdentifier>>>()
-                ?.mapKeys { (key) -> RoleTarget.valueOf(key) },
+            bindings = entry?.get(RoleDefineParams::bindings.name)?.run {
+                parseJson<Map<String, List<RoleIdentifier>>>().mapKeys { (key) -> RoleTarget.valueOf(key) }
+            },
             permissions = entry?.extractList(RoleDefineParams::permissions.name),
         )
     }

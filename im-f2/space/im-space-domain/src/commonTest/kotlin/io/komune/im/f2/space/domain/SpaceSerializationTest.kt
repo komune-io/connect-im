@@ -22,7 +22,7 @@ class SpaceSerializationTest {
     fun roundTripsWithoutLoss() {
         val encoded = json.encodeToString(Space.serializer(), space)
 
-        assertEquals(space, json.decodeFromString(Space.serializer(), encoded))
+        assertEquals(expected = space, actual = json.decodeFromString(Space.serializer(), encoded))
     }
 
     @Test
@@ -40,9 +40,9 @@ class SpaceSerializationTest {
             json.encodeToString(Space.serializer(), bare)
         )
 
-        assertEquals("my-space", decoded.identifier)
-        assertEquals(null, decoded.displayName)
-        assertEquals(null, decoded.smtp)
+        assertEquals(expected = "my-space", actual = decoded.identifier)
+        assertEquals(expected = null, actual = decoded.displayName)
+        assertEquals(expected = null, actual = decoded.smtp)
     }
 
     @Test
@@ -60,6 +60,6 @@ class SpaceSerializationTest {
             json.encodeToString(Space.serializer(), space)
         )
 
-        assertEquals("smtp.example.com", decoded.smtp?.get("host"))
+        assertEquals(expected = "smtp.example.com", actual = decoded.smtp?.get("host"))
     }
 }

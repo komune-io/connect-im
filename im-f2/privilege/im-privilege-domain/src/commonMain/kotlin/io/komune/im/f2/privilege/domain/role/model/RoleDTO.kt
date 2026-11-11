@@ -10,7 +10,7 @@ import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 /**
- * Named collection of permissions
+ * Named collection of permissions.
  * @d2 model
  * @parent [io.komune.im.f2.privilege.domain.D2RolePage]
  * @order 10

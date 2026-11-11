@@ -12,7 +12,6 @@ import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
 import org.slf4j.LoggerFactory
 
-
 object KeycloakClientBuilder {
     private const val CONNECTION_TTL: Long = 30
     private const val CONNECTION_POOL_SIZE = 10
@@ -69,6 +68,7 @@ object KeycloakClientBuilder {
         fun forAuthedRealm() = forRealm(null)
     }
 
+    @Suppress("MissingUseCall") // the shared pooled client lives until the next reset closes it
     fun reset() {
         logger.info("Closed and cleared RESTEasy client")
         resteasyClient.close()

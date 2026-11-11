@@ -3,6 +3,7 @@ package io.komune.im.keycloak.plugin.db.schema.migration
 import io.komune.im.keycloak.plugin.domain.model.KeycloakPluginIds
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.keycloak.provider.ProviderFactory
 
 /**
  * Keycloak discovers this provider by the id returned from `getId()`, matched against
@@ -19,7 +20,7 @@ class DbSchemaMigrationProviderFactoryTest {
 
     @Test
     fun `implements the SPI factory keycloak loads through ServiceLoader`() {
-        assertThat(org.keycloak.provider.ProviderFactory::class.java)
+        assertThat(ProviderFactory::class.java)
             .isAssignableFrom(DbSchemaMigrationProviderFactory::class.java)
     }
 }

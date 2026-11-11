@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 /** The user services a script writes and reads with. */
 @Service
-class UserServices(
+data class UserServices(
     val aggregate: UserAggregateService,
     val finder: UserFinderService,
 )

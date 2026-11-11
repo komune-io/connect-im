@@ -18,7 +18,7 @@ class AssertionPermission(
     override suspend fun findById(id: PermissionIdentifier): RoleRepresentation? = client.role(id).toRepresentation()
     override suspend fun assertThat(entity: RoleRepresentation) = PermissionAssert(entity)
 
-    inner class PermissionAssert(
+    class PermissionAssert(
         private val permission: RoleRepresentation
     ) {
         @IgnorableReturnValue

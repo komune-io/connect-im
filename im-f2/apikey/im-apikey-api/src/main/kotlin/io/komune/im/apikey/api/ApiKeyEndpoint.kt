@@ -37,7 +37,7 @@ class ApiKeyEndpoint(
     fun apiKeyGet(): ApiKeyGetFunction = f2Function { query ->
         logger.info("apiKeyGet: $query")
         apikeyPoliciesEnforcer.checkGet(query.id)
-        apiKeyFinderService.getOrNull(query.id).let(::ApiKeyGetResult)
+        ApiKeyGetResult(apiKeyFinderService.getOrNull(query.id))
     }
 
     /**
@@ -55,7 +55,7 @@ class ApiKeyEndpoint(
                 organizationId = enforcedQuery.organizationId,
                 role = enforcedQuery.role,
                 attributes = enforcedQuery.attributes,
-                withDisabled = enforcedQuery.withDisabled ?: false,
+                isDisabledIncluded = enforcedQuery.withDisabled == true,
             ),
             offset = OffsetPagination(
                 offset = enforcedQuery.offset ?: 0,

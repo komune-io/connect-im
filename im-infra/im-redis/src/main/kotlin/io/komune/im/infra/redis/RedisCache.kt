@@ -17,10 +17,6 @@ class RedisCache(
     val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
-    companion object {
-        val logger: Logger = LoggerFactory.getLogger(RedisCache::class.java)
-    }
-
     suspend fun <T> evictIfPresent(cacheName: CacheName, vararg id: String, exec: suspend () -> T): T {
         logger.debug("Cache[$cacheName] - evict[${id}]")
         val key = SimpleKey(id)
@@ -34,20 +30,19 @@ class RedisCache(
         vararg objectId: Any,
         crossinline fetch: suspend () -> T
     ): T {
-        return getCache(cacheName)?.let { cache ->
-            val key = SimpleKey(objectId)
-            val value = cache.get(key)?.get() as String?
-            if (value != null) {
-                logger.debug("Cache[$cacheName] - id[${objectId.joinToString(", ")} - $key] found in cache")
-                objectMapper.readValue(value)
-            } else {
-                logger.debug("Cache[$cacheName] - id[$key] not found in cache")
-                fetch()?.also { newVal ->
-                    putInCache<T>(newVal, cache, key)
-                }
-
+        val cache = getCache(cacheName) ?: return fetch()
+        val key = SimpleKey(objectId)
+        val value = cache.get(key)?.get()
+        val result: T? = if (value != null) {
+            logger.debug("Cache[$cacheName] - id[${objectId.joinToString(", ")} - $key] found in cache")
+            objectMapper.readValue<T>(value as String)
+        } else {
+            logger.debug("Cache[$cacheName] - id[$key] not found in cache")
+            fetch()?.also { newVal ->
+                putInCache<T>(newVal, cache, key)
             }
-        } ?: fetch()
+        }
+        return result ?: fetch()
     }
 
     suspend inline fun <reified T> putInCache(
@@ -64,4 +59,8 @@ class RedisCache(
     fun getCache(cacheName: CacheName) = cacheManager?.getCache(cacheName.getName())
 
     private fun CacheName.getName() = name.lowercase()
+
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(RedisCache::class.java)
+    }
 }

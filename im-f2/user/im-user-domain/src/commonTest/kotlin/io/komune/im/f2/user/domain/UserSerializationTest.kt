@@ -29,7 +29,7 @@ class UserSerializationTest {
         enabled = true,
         disabledBy = null,
         mfa = listOf("OTP"),
-        creationDate = 1656938975000,
+        creationDate = 1_656_938_975_000,
         disabledDate = null
     )
 
@@ -37,7 +37,7 @@ class UserSerializationTest {
     fun roundTripsWithoutLoss() {
         val encoded = json.encodeToString(User.serializer(), user)
 
-        assertEquals(user, json.decodeFromString(User.serializer(), encoded))
+        assertEquals(expected = user, actual = json.decodeFromString(User.serializer(), encoded))
     }
 
     @Test
@@ -63,11 +63,11 @@ class UserSerializationTest {
             json.encodeToString(User.serializer(), minimal)
         )
 
-        assertEquals(null, decoded.memberOf)
-        assertEquals(null, decoded.address)
-        assertEquals(null, decoded.phone)
-        assertEquals(null, decoded.mfa)
-        assertEquals(null, decoded.disabledDate)
+        assertEquals(expected = null, actual = decoded.memberOf)
+        assertEquals(expected = null, actual = decoded.address)
+        assertEquals(expected = null, actual = decoded.phone)
+        assertEquals(expected = null, actual = decoded.mfa)
+        assertEquals(expected = null, actual = decoded.disabledDate)
     }
 
     @Test
@@ -84,6 +84,6 @@ class UserSerializationTest {
             json.encodeToString(User.serializer(), user.copy(attributes = emptyMap()))
         )
 
-        assertEquals(emptyMap<String, String>(), decoded.attributes)
+        assertEquals(expected = emptyMap<String, String>(), actual = decoded.attributes)
     }
 }

@@ -11,13 +11,13 @@ import io.komune.im.f2.privilege.domain.role.query.RoleListFunction
 interface RoleApi: RoleCommandApi, RoleQueryApi
 
 interface RoleCommandApi {
-    /** Create or update a role */
+    /** Create or update a role. */
     fun roleDefine(): RoleDefineFunction
 }
 
 interface RoleQueryApi {
-    /** Get a role by identifier */
+    /** Get a role by identifier. */
     fun roleGet(): RoleGetFunction
-    /** Get a list of roles */
+    /** Get a list of roles. */
     fun roleList(): RoleListFunction
 }

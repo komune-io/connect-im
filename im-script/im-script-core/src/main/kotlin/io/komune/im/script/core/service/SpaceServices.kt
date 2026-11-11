@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 /** The space services a script writes and reads with. */
 @Service
-class SpaceServices(
+data class SpaceServices(
     val aggregate: SpaceAggregateService,
     val finder: SpaceFinderService,
 )

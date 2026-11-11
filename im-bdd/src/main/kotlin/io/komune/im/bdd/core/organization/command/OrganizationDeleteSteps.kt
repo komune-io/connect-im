@@ -16,7 +16,12 @@ class OrganizationDeleteSteps(
     private val organizationEndpoint: OrganizationEndpoint,
 ): En, ImCucumberStepsDefinition() {
 
-    private lateinit var command: OrganizationDeleteCommand
+    private var commandOrNull: OrganizationDeleteCommand? = null
+    private var command: OrganizationDeleteCommand
+        get() = checkNotNull(commandOrNull) { "No command has been set" }
+        set(value) {
+            commandOrNull = value
+        }
 
     init {
         DataTableType(::organizationDeleteParams)

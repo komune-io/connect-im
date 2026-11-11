@@ -29,9 +29,7 @@ class SpaceFinderService: CoreService(CacheName.Space) {
         }
     }
 
-    suspend fun get(id: SpaceIdentifier): Space {
-        return getOrNull(id) ?: throw NotFoundException("Space", id)
-    }
+    suspend fun get(id: SpaceIdentifier): Space = getOrNull(id) ?: throw NotFoundException(name = "Space", id = id)
 
     suspend fun page(
         search: String? = null,

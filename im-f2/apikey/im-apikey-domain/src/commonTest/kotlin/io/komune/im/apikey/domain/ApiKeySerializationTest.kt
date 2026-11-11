@@ -15,14 +15,14 @@ class ApiKeySerializationTest {
         name = "CI key",
         identifier = "ci-key",
         roles = emptyList(),
-        creationDate = 1656938975000
+        creationDate = 1_656_938_975_000
     )
 
     @Test
     fun roundTripsWithoutLoss() {
         val encoded = json.encodeToString(ApiKey.serializer(), apiKey)
 
-        assertEquals(apiKey, json.decodeFromString(ApiKey.serializer(), encoded))
+        assertEquals(expected = apiKey, actual = json.decodeFromString(ApiKey.serializer(), encoded))
     }
 
     @Test
