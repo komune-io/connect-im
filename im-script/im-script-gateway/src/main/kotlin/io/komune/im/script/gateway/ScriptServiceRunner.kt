@@ -24,21 +24,30 @@ class ScriptServiceRunner(
     private val logger = LoggerFactory.getLogger(ScriptServiceRunner::class.java)
 
     override fun run(vararg args: String) {
-        try {
-            runBlocking {
-                runScripts(
-                    scripts = listOf(
-                        "Init" to imInitScript::run,
-                        "Realm-Create" to spaceCreateScript::run,
-                        "Realm-Config" to spaceConfigService::run,
-                    ),
-                    retry = imRetryProperties,
-                    logger = logger,
-                )
-            }
-        } finally {
-            context.close()
-        }
+        runThenClose(
+            context = context,
+            scripts = listOf(
+                "Init" to imInitScript::run,
+                "Realm-Create" to spaceCreateScript::run,
+                "Realm-Config" to spaceConfigService::run,
+            ),
+            retry = imRetryProperties,
+            logger = logger,
+        )
+    }
+}
+
+/** Runs [scripts], then closes [context] whatever happened; a failed script leaves with its error. */
+internal fun runThenClose(
+    context: ConfigurableApplicationContext,
+    scripts: List<Pair<String, suspend () -> Unit>>,
+    retry: ImRetryProperties,
+    logger: Logger,
+) {
+    try {
+        runBlocking { runScripts(scripts = scripts, retry = retry, logger = logger) }
+    } finally {
+        context.close()
     }
 }
 

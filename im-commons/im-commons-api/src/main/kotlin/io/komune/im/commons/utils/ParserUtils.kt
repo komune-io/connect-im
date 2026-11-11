@@ -8,6 +8,7 @@ import java.net.MalformedURLException
 import java.net.URL
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
+import tools.jackson.core.JacksonException
 
 const val FILE = "file:"
 
@@ -18,33 +19,38 @@ object ParserUtils {
         configPath: String,
         clazz: Class<T>,
         classLoader: ClassLoader = Thread.currentThread().contextClassLoader
-    ): T {
-        try {
-            logger.info("Loading configuration from json file [$configPath]...")
-            return readFile(filename = configPath, classLoader = classLoader) { stream -> stream.parseTo(clazz) }
-                ?: throw ConfigurationException("Configuration file [$configPath] not found")
-        } catch (e: IOException) {
-            val message = "Error configuration from json file [${configPath}]"
-            logger.error(message, e)
-            throw ConfigurationException(message, e)
-        }
+    ): T = readConfiguration(configPath) {
+        readFile(filename = configPath, classLoader = classLoader) { stream -> stream.parseTo(clazz) }
     }
 
     fun <T> getConfiguration(
         configPath: String,
         clazz: Class<Array<T>>,
         classLoader: ClassLoader = Thread.currentThread().contextClassLoader
-    ): List<T> {
-        try {
-            logger.info("Loading configuration from json file [$configPath]...")
-            return readFile(filename = configPath, classLoader = classLoader) { stream -> stream.parseJsonTo(clazz) }
-                ?: throw ConfigurationException("Configuration file [$configPath] not found")
-        } catch (e: IOException) {
-            val message = "Error configuration from json file [${configPath}]"
-            logger.error(message, e)
-            throw ConfigurationException(message, e)
-        }
+    ): List<T> = readConfiguration(configPath) {
+        readFile(filename = configPath, classLoader = classLoader) { stream -> stream.parseJsonTo(clazz) }
     }
+
+    private fun <R> readConfiguration(configPath: String, read: () -> R?): R {
+        logger.info("Loading configuration from json file [$configPath]...")
+        val configuration = try {
+            read()
+        } catch (e: IOException) {
+            unreadable(configPath, e)
+        } catch (e: JacksonException) {
+            unreadable(configPath, e)
+        }
+        return configuration ?: notFound(configPath)
+    }
+
+    private fun unreadable(configPath: String, cause: Exception): Nothing {
+        val message = "Error configuration from json file [${configPath}]"
+        logger.error(message, cause)
+        throw ConfigurationException(message, cause)
+    }
+
+    private fun notFound(configPath: String): Nothing =
+        throw ConfigurationException("Configuration file [$configPath] not found")
 
     @Throws(MalformedURLException::class)
     private fun <R> readFile(

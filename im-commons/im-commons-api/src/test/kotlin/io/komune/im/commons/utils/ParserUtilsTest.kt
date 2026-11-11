@@ -1,7 +1,9 @@
 package io.komune.im.commons.utils
 
+import java.io.File
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 class ParserUtilsTest {
 
@@ -14,6 +16,14 @@ class ParserUtilsTest {
     @Test
     fun `a missing classpath configuration is a configuration error`() {
         assertThatThrownBy { load("nowhere/missing.json") }
+            .isInstanceOf(ConfigurationException::class.java)
+    }
+
+    @Test
+    fun `a malformed configuration file is a configuration error`(@TempDir directory: File) {
+        val file = File(directory, "malformed.json").apply { writeText("{ not json") }
+
+        assertThatThrownBy { load("file:${file.absolutePath}") }
             .isInstanceOf(ConfigurationException::class.java)
     }
 

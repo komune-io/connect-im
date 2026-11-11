@@ -5,8 +5,10 @@ import io.komune.im.script.core.config.properties.ImRetryProperties
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
+import org.springframework.context.support.GenericApplicationContext
 
 class ScriptServiceRunnerTest {
 
@@ -53,5 +55,35 @@ class ScriptServiceRunnerTest {
 
         assertThat(thrown).hasMessage("missing")
         assertThat(attempts).isEqualTo(1)
+    }
+
+    @Test
+    fun `a failing script leaves the runner with its error and the context closed`() {
+        GenericApplicationContext().use { context ->
+            context.refresh()
+
+            assertThatThrownBy {
+                runThenClose(
+                    context = context,
+                    scripts = listOf("failing" to { error("down") }),
+                    retry = retry,
+                    logger = logger,
+                )
+            }.hasMessage("Failed to run script failing")
+            assertThat(context.isActive).isFalse()
+        }
+    }
+
+    @Test
+    fun `a successful run closes the context too`() {
+        GenericApplicationContext().use { context ->
+            context.refresh()
+            var runs = 0
+
+            runThenClose(context = context, scripts = listOf("ok" to { runs++ }), retry = retry, logger = logger)
+
+            assertThat(runs).isEqualTo(1)
+            assertThat(context.isActive).isFalse()
+        }
     }
 }
