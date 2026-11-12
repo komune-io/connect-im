@@ -26,7 +26,6 @@ typealias UserCreateFunction = F2Function<UserCreateCommand, UserCreatedEvent>
  */
 @JsExport
 @JsName("UserCreateCommandDTO")
-@Suppress("ComplexInterface") // wire contract: one field per JSON property clients send
 interface UserCreateCommandDTO: Command {
     /**
      * @ref [io.komune.im.f2.user.domain.model.UserDTO.email]
@@ -98,7 +97,6 @@ interface UserCreateCommandDTO: Command {
      * @example true
      * @default false
      */
-    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val sendResetPassword: Boolean
 
     /**
@@ -106,7 +104,6 @@ interface UserCreateCommandDTO: Command {
      * @example true
      * @default true
      */
-    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val sendVerifyEmail: Boolean
 }
 

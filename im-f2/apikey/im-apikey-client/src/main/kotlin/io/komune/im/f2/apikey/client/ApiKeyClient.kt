@@ -33,7 +33,6 @@ fun apiKeyClient(
     ApiKeyClient(
         F2ClientBuilder.get(urlBase) {
             install(HttpTimeout) {
-                @Suppress("MagicNumber")
                 requestTimeoutMillis = 60_000
             }
             install(F2Auth) {

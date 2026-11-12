@@ -49,7 +49,6 @@ interface OrganizationPageQueryDTO: Query {
      * If false, filter out the disabled organizations. (default: false)
      * @example false
      */
-    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val withDisabled: Boolean?
     val offset: Int?
     val limit: Int?

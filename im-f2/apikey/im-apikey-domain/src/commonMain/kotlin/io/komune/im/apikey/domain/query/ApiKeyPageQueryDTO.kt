@@ -47,7 +47,6 @@ interface ApiKeyPageQueryDTO : Query {
      * @example false
      * @default false
      */
-    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val withDisabled: Boolean?
 
     /**

@@ -13,7 +13,6 @@ data class UserModel(
     val roles: List<RoleIdentifier>,
     val mfa: List<String>,
     val attributes: Map<String, String>,
-    @Suppress("BooleanPropertyNaming") // mirrors the wire field UserDTO.enabled
     val enabled: Boolean,
     val disabledBy: UserId?,
     val creationDate: Long,
