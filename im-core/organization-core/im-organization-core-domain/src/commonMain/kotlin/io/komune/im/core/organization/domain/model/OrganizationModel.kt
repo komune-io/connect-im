@@ -15,6 +15,7 @@ data class OrganizationModel(
     val address: Address?,
     val attributes: Map<String, String>,
     val roles: List<RoleIdentifier>,
+    // Stored name: OrganizationModel::enabled.name is the Keycloak attribute key.
     val enabled: Boolean,
     val disabledBy: UserId?,
     val creationDate: Long,

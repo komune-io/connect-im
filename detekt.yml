@@ -15,8 +15,9 @@ complexity:
 naming:
   BooleanPropertyNaming:
     excludes:
-      # Domain DTOs and models are the wire: their field names (enabled, withDisabled,
-      # sendResetPassword, ...) are the JSON and TypeScript contract consumers read and send.
+      # A domain field name is not ours to rename: the F2 DTOs carry the JSON and TypeScript
+      # contract consumers read and send (withDisabled, sendResetPassword, ...), and the core
+      # models take Keycloak's own names (enabled, ...).
       - '**/*-domain/src/commonMain/**'
 
 style:
