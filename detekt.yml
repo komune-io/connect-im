@@ -20,20 +20,6 @@ naming:
       - '**/*-domain/src/commonMain/**'
 
 style:
-  MagicNumber:
-    excludes:
-      # Detekt's default excludes.
-      - '**/test/**'
-      - '**/androidTest/**'
-      - '**/commonTest/**'
-      - '**/jvmTest/**'
-      - '**/androidUnitTest/**'
-      - '**/androidInstrumentedTest/**'
-      - '**/jsTest/**'
-      - '**/iosTest/**'
-      - '**/*.kts'
-      # Each F2 client sets the request timeout of its HTTP client, and only that.
-      - '**/im-f2/*/im-*-client/src/main/**'
   UnnecessaryParentheses:
     # Parentheses that spell out how `||` and `&&`, or `?:` and a comparison, group are kept.
     allowForUnclearPrecedence: true

@@ -22,6 +22,8 @@ import io.komune.im.apikey.domain.query.ApiKeyPageQuery
 import io.komune.im.apikey.domain.query.ApiKeyPageResult
 import io.ktor.client.plugins.HttpTimeout
 
+private const val REQUEST_TIMEOUT_MILLIS = 60_000L
+
 fun F2Client.apiKeyClient(): F2SupplierSingle<ApiKeyClient> = f2SupplierSingle {
     ApiKeyClient(this)
 }
@@ -33,7 +35,7 @@ fun apiKeyClient(
     ApiKeyClient(
         F2ClientBuilder.get(urlBase) {
             install(HttpTimeout) {
-                requestTimeoutMillis = 60_000
+                requestTimeoutMillis = REQUEST_TIMEOUT_MILLIS
             }
             install(F2Auth) {
                 this.getAuth = getAuth
