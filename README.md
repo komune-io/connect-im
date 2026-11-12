@@ -157,13 +157,27 @@ kcadm.sh add-roles -r "$REALM" --rname "$DEFAULT_ROLE" \
 ## Getting Started
 
 ### SDKs
-Use the following dependencies in your Kotlin project to manage Users, Organizations, and Roles:
+IM publishes, under the group `io.komune.im`, the Kotlin Multiplatform modules a client needs: the
+domains and the clients. Use the root coordinate; Gradle resolves its `-jvm` or `-js` variant.
 
-```yaml
-implementation("io.komune.im:user-domain:${Versions.im}")
-implementation("io.komune.im:organization-domain:${Versions.im}")
-implementation("io.komune.im:role-domain:${Versions.im}")
+| Kind | Coordinates |
+|---|---|
+| Clients (JVM) | `im-apikey-client`, `im-organization-client`, `im-privilege-client`, `im-space-client`, `im-user-client` |
+| Domains | `im-apikey-domain`, `im-organization-domain`, `im-privilege-domain`, `im-space-domain`, `im-user-domain` |
+| Shared domains | `im-commons-domain`, `im-commons-auth`, `im-mfa-core-domain`, `im-organization-core-domain`, `im-privilege-core-domain`, `im-user-core-domain` |
+
+```kotlin
+implementation("io.komune.im:im-user-domain:${Versions.im}")
+implementation("io.komune.im:im-user-client:${Versions.im}")
 ```
+
+The server side is not published since 0.28.0: it is IM's own and ships in the `im-gateway`,
+`im-script` and `im-keycloak` images. These coordinates have no 0.28.0 and later:
+`api-config`, `im-apikey-api`, `im-apikey-lib`, `im-client-core-api`, `im-client-core-domain`,
+`im-commons-api`, `im-commons-core`, `im-keycloak`, `im-keycloak-plugin-client`,
+`im-keycloak-plugin-domain`, `im-mfa-core-api`, `im-organization-api`, `im-organization-core-api`,
+`im-organization-lib`, `im-privilege-api`, `im-privilege-core-api`, `im-privilege-lib`, `im-redis`,
+`im-space-api`, `im-space-lib`, `im-user-api`, `im-user-core-api`, `im-user-lib`.
 
 ### Clients
 The clients provided use Ktor and should be singletons:
