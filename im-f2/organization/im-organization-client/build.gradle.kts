@@ -1,17 +1,17 @@
 plugins {
-    id("io.komune.fixers.gradle.kotlin.mpp")
+    id("io.komune.fixers.gradle.kotlin.jvm")
     id("io.komune.fixers.gradle.publish")
     kotlin("plugin.serialization")
 }
 
 dependencies {
-    commonMainApi(project(":im-f2:organization:im-organization-domain"))
-    commonMainApi(catalogue.client.core)
-    commonMainApi(catalogue.client.ktor)
-    commonMainApi(catalogue.client.ktor.http)
-    commonMainApi(libs.ktor.client.auth)
-    jvmMainImplementation(libs.ktor.serialization.jackson)
+    api(project(":im-f2:organization:im-organization-domain"))
+    api(catalogue.client.core)
+    api(catalogue.client.ktor)
+    api(catalogue.client.ktor.http)
+    api(libs.ktor.client.auth)
+    implementation(libs.ktor.serialization.jackson)
 
-    jvmTestImplementation(libs.bundles.junit)
-    jvmTestImplementation(kotlin("reflect"))
+    testImplementation(libs.bundles.junit)
+    testImplementation(kotlin("reflect"))
 }
