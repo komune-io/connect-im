@@ -51,6 +51,8 @@ import io.komune.im.f2.user.domain.query.UserPageQuery
 import io.komune.im.f2.user.domain.query.UserPageResult
 import io.ktor.client.plugins.HttpTimeout
 
+private const val REQUEST_TIMEOUT_MILLIS = 60_000L
+
 fun F2Client.userClient(): F2SupplierSingle<UserClient> = f2SupplierSingle {
     UserClient(this)
 }
@@ -62,8 +64,7 @@ fun userClient(
     UserClient(
         F2ClientBuilder.get(urlBase) {
             install(HttpTimeout) {
-                @Suppress("MagicNumber")
-                requestTimeoutMillis = 60_000
+                requestTimeoutMillis = REQUEST_TIMEOUT_MILLIS
             }
             install(F2Auth) {
                 this.getAuth = getAuth

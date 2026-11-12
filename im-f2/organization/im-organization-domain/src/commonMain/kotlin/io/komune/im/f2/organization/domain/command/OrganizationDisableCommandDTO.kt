@@ -36,7 +36,6 @@ interface OrganizationDisableCommandDTO: Command {
      * To anonymize custom attributes, see `attributes` field.
      * @example true
      */
-    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val anonymize: Boolean
 
     /**

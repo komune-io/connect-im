@@ -75,7 +75,6 @@ interface UserPageQueryDTO: Query {
      * If false, filter out the disabled users.
      * @default false
      */
-    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val withDisabled: Boolean
 
     val offset: Int?

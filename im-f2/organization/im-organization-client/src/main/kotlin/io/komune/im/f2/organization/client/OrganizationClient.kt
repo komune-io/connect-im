@@ -37,6 +37,8 @@ import io.komune.im.f2.organization.domain.query.OrganizationRefListQuery
 import io.komune.im.f2.organization.domain.query.OrganizationRefListResult
 import io.ktor.client.plugins.HttpTimeout
 
+private const val REQUEST_TIMEOUT_MILLIS = 60_000L
+
 fun F2Client.organizationClient(): F2SupplierSingle<OrganizationClient> = f2SupplierSingle {
     OrganizationClient(this)
 }
@@ -49,8 +51,7 @@ fun organizationClient(
     OrganizationClient(
         F2ClientBuilder.get(urlBase) {
             install(HttpTimeout) {
-                @Suppress("MagicNumber")
-                requestTimeoutMillis = 60_000
+                requestTimeoutMillis = REQUEST_TIMEOUT_MILLIS
             }
             install(F2Auth) {
                 this.getAuth = getAuth

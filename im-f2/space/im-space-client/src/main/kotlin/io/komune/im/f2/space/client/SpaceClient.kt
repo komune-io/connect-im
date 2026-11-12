@@ -22,6 +22,8 @@ import io.komune.im.f2.space.domain.query.SpacePageQuery
 import io.komune.im.f2.space.domain.query.SpacePageResult
 import io.ktor.client.plugins.HttpTimeout
 
+private const val REQUEST_TIMEOUT_MILLIS = 60_000L
+
 fun F2Client.spaceClient(): F2SupplierSingle<SpaceClient> = f2SupplierSingle {
     SpaceClient(this)
 }
@@ -33,8 +35,7 @@ fun spaceClient(
     SpaceClient(
         F2ClientBuilder.get(urlBase) {
             install(HttpTimeout) {
-                @Suppress("MagicNumber")
-                requestTimeoutMillis = 60_000
+                requestTimeoutMillis = REQUEST_TIMEOUT_MILLIS
             }
             install(F2Auth) {
                 this.getAuth = getAuth

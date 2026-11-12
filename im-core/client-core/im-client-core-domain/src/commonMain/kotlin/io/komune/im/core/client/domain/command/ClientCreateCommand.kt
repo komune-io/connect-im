@@ -11,7 +11,6 @@ data class ClientCreateCommand(
     val isPublicClient: Boolean,
     val isDirectAccessGrantsEnabled: Boolean,
     val isServiceAccountsEnabled: Boolean,
-@Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val authorizationServicesEnabled: Boolean,
     val isStandardFlowEnabled: Boolean,
     val rootUrl: String? = null,

@@ -20,7 +20,6 @@ typealias OrganizationRefListFunction = F2Function<OrganizationRefListQuery, Org
 @JsExport
 @JsName("OrganizationRefListQueryDTO")
 interface OrganizationRefListQueryDTO: Query {
-    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val withDisabled: Boolean
 }
 

@@ -15,7 +15,6 @@ import kotlinx.serialization.Serializable
  * @order 10
  */
 @JsExport
-@Suppress("ComplexInterface") // wire contract: one field per JSON property clients read
 interface OrganizationDTO {
     /**
      * Identifier of the organization.
@@ -72,7 +71,6 @@ interface OrganizationDTO {
      * Status of the organization. See [OrganizationStatus].
      * @example "VALIDATED"
      */
-    @Suppress("BooleanPropertyNaming") // wire name: the JSON field clients read
     val enabled: Boolean
 
     /**

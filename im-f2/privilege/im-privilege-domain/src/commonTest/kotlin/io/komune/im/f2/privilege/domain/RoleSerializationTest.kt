@@ -79,7 +79,7 @@ class RoleSerializationTest {
         assertEquals(expected = 1, actual = decoded.bindings["ORGANIZATION"]?.size)
         assertEquals(
             expected = "tr_orchestrator_admin",
-            actual = decoded.bindings["ORGANIZATION"]?.run { first().identifier }
+            actual = decoded.bindings["ORGANIZATION"]?.first()?.identifier
         )
     }
 
