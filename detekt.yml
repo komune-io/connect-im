@@ -1,0 +1,39 @@
+# The exceptions this repository takes from the fixers Detekt configuration, read on top of it.
+# A key here replaces the same key underneath, lists included: an `excludes` restates the rule's
+# default excludes. A decision local to one site stays a reasoned @Suppress at that site.
+
+complexity:
+  ComplexInterface:
+    excludes:
+      # A domain DTO interface declares one member per field of the JSON and TypeScript contract.
+      - '**/*-domain/src/commonMain/**'
+  ReplaceSafeCallChainWithRun:
+    # Its `x?.run { member }` resolves names against the receiver, and the `?.let` form is refused
+    # by UnnecessaryLet: a safe-call chain says the same thing plainly.
+    active: false
+
+naming:
+  BooleanPropertyNaming:
+    excludes:
+      # Domain DTOs and models are the wire: their field names (enabled, withDisabled,
+      # sendResetPassword, ...) are the JSON and TypeScript contract consumers read and send.
+      - '**/*-domain/src/commonMain/**'
+
+style:
+  MagicNumber:
+    excludes:
+      # Detekt's default excludes.
+      - '**/test/**'
+      - '**/androidTest/**'
+      - '**/commonTest/**'
+      - '**/jvmTest/**'
+      - '**/androidUnitTest/**'
+      - '**/androidInstrumentedTest/**'
+      - '**/jsTest/**'
+      - '**/iosTest/**'
+      - '**/*.kts'
+      # Each F2 client sets the request timeout of its HTTP client, and only that.
+      - '**/im-f2/*/im-*-client/src/main/**'
+  UnnecessaryParentheses:
+    # Parentheses that spell out how `||` and `&&`, or `?:` and a comparison, group are kept.
+    allowForUnclearPrecedence: true
