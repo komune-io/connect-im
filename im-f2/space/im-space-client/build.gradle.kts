@@ -1,16 +1,15 @@
 plugins {
-    id("io.komune.fixers.gradle.kotlin.mpp")
+    id("io.komune.fixers.gradle.kotlin.jvm")
     id("io.komune.fixers.gradle.publish")
-    id("io.komune.fixers.gradle.npm")
 }
 
 dependencies {
-    commonMainApi(project(":im-f2:space:im-space-domain"))
-    commonMainApi(catalogue.client.core)
-    commonMainApi(catalogue.client.ktor)
-    commonMainApi(catalogue.client.ktor.http)
-    commonMainApi(libs.ktor.client.auth)
+    api(project(":im-f2:space:im-space-domain"))
+    api(catalogue.client.core)
+    api(catalogue.client.ktor)
+    api(catalogue.client.ktor.http)
+    api(libs.ktor.client.auth)
 
-    jvmTestImplementation(libs.bundles.junit)
-    jvmTestImplementation(kotlin("reflect"))
+    testImplementation(libs.bundles.junit)
+    testImplementation(kotlin("reflect"))
 }
