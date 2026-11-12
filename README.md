@@ -165,6 +165,7 @@ domains and the clients. Use the root coordinate; Gradle resolves its `-jvm` or 
 | Clients (JVM only) | `im-apikey-client`, `im-organization-client`, `im-privilege-client`, `im-space-client`, `im-user-client` |
 | Domains | `im-apikey-domain`, `im-organization-domain`, `im-privilege-domain`, `im-space-domain`, `im-user-domain` |
 | Shared domains | `im-commons-domain`, `im-commons-auth`, `im-mfa-core-domain`, `im-organization-core-domain`, `im-privilege-core-domain`, `im-user-core-domain` |
+| Keycloak plugin SDK (JVM) | `im-keycloak-plugin-client`, `im-keycloak-plugin-domain`: verify and read the webhooks of IM's Keycloak plugin |
 
 ```kotlin
 implementation("io.komune.im:im-user-domain:${Versions.im}")
@@ -174,8 +175,7 @@ implementation("io.komune.im:im-user-client:${Versions.im}")
 The server side is not published since 0.28.0: it is IM's own and ships in the `im-gateway`,
 `im-script` and `im-keycloak` images. These coordinates have no 0.28.0 and later:
 `api-config`, `im-apikey-api`, `im-apikey-lib`, `im-client-core-api`, `im-client-core-domain`,
-`im-commons-api`, `im-commons-core`, `im-keycloak`, `im-keycloak-plugin-client`,
-`im-keycloak-plugin-domain`, `im-mfa-core-api`, `im-organization-api`, `im-organization-core-api`,
+`im-commons-api`, `im-commons-core`, `im-keycloak`, `im-mfa-core-api`, `im-organization-api`, `im-organization-core-api`,
 `im-organization-lib`, `im-privilege-api`, `im-privilege-core-api`, `im-privilege-lib`, `im-redis`,
 `im-space-api`, `im-space-lib`, `im-user-api`, `im-user-core-api`, `im-user-lib`.
 
