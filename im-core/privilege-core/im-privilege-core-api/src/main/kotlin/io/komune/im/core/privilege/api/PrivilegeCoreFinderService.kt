@@ -45,7 +45,7 @@ class PrivilegeCoreFinderService(
             .filter { privilege ->
                 listOf(
                     privilege.type.matches(types),
-                    targets == null || privilege is RoleModel && privilege.targets.matches(targets)
+                    targets == null || (privilege is RoleModel && privilege.targets.matches(targets))
                 ).all { it }
             }
     }

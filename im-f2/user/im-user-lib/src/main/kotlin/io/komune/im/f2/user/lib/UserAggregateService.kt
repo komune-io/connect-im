@@ -211,11 +211,10 @@ class UserAggregateService(
         return roles.filter { role ->
             organizationRoles.contains(role)
         }.ifEmpty {
-            properties.user?.run {
-                defaultRoleIdentifiers.split(",").mapNotNull { identifier ->
-                    identifier.trim().takeIf(String::isNotBlank)
-                }
-            }.orEmpty()
+            properties.user?.defaultRoleIdentifiers
+                ?.split(",")
+                ?.mapNotNull { identifier -> identifier.trim().takeIf(String::isNotBlank) }
+                .orEmpty()
         }
     }
 }

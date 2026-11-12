@@ -16,7 +16,8 @@ fun RoleRepresentation.toRole() = RoleModel(
     description = description.orEmpty(),
     targets = attributes?.get(RoleModel::targets.name).orEmpty().map { RoleTarget.valueOf(it) },
     bindings = attributes?.get(RoleModel::bindings.name)?.firstOrNull()
-        ?.run { parseJson<Map<String, List<RoleIdentifier>>?>()?.mapKeys { (target) -> RoleTarget.valueOf(target) } }
+        ?.parseJson<Map<String, List<RoleIdentifier>>?>()
+        ?.mapKeys { (target) -> RoleTarget.valueOf(target) }
         .orEmpty(),
     locale = attributes?.get(RoleModel::locale.name)?.firstOrNull()?.parseJson<Map<String, String>>().orEmpty(),
     permissions = attributes?.get(RoleModel::permissions.name).orEmpty(),
