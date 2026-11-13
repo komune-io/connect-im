@@ -5,11 +5,6 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        maven {
-            url = uri("https://central.sonatype.com/repository/maven-snapshots")
-            content { includeGroupByRegex("io\\.komune(\\..*)?") }
-            mavenContent { snapshotsOnly() }
-        }
     }
     plugins {
         id("io.komune.fixers.gradle.settings") version fixersVersion
