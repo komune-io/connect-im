@@ -20,6 +20,9 @@ export declare interface KtOpaque<N extends string> {
  * does, Jackson and F2's `Json` read it as `null`. An instance of a class that is neither of the
  * two above is not told apart from a plain object, and a `Long` beyond 2^53 loses its precision
  * as a JavaScript number.
+ *
+ * These types require `strictNullChecks`: without it, `null` extends every property's type, so
+ * every property of a `Json<T>` is optional.
  */
 export type Json<T> =
     T extends { asJsReadonlyArrayView(): ReadonlyArray<infer E> } ? Json<E>[]
