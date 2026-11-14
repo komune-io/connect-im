@@ -1,6 +1,6 @@
 [versions]
 fixers = "0.48.0"
-connect = "0.28.0-SNAPSHOT"
+connect = "0.28.0"
 keycloak = "26.1.4"
 keycloakAdmin = "26.0.4"
 freemarker = "2.3.32"
